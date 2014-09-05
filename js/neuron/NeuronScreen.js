@@ -25,7 +25,7 @@ define( function( require ) {
     Screen.call( this, neuronSimString, null /* no icon, single-screen sim */,
       function() { return new NeuronModel(); },
       function( model ) { return new NeuronScreenView( model ); },
-      { backgroundColor: 'black' }
+      { backgroundColor: '#ccfefa' }
     );
   }
 

@@ -12,6 +12,12 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var ScreenView = require( 'JOIST/ScreenView' );
   var ResetAllButton = require( 'SCENERY_PHET/ResetAllButton' );
+  var Image = require( 'SCENERY/nodes/Image' );
+  var HSlider = require( 'SUN/HSlider' );
+  var Property = require( 'AXON/Property' );
+
+  // images
+  var mockupImage = require( 'image!NEURON/neuron-mockup.png' );
 
   /**
    * Constructor for the NeuronView
@@ -20,7 +26,7 @@ define( function( require ) {
    */
   function NeuronView( neuronModel ) {
 
-    ScreenView.call( this );
+    ScreenView.call( this, {layoutBounds: ScreenView.UPDATED_LAYOUT_BOUNDS} );
 
     // Create and add the Reset All Button in the bottom right
     //TODO: Wire up the reset all button to the model's reset function
@@ -32,6 +38,13 @@ define( function( require ) {
       bottom: this.layoutBounds.maxY - 10
     } );
     this.addChild( resetAllButton );
+
+    //Show the mock-up and a slider to change its transparency
+    var mockupOpacityProperty = new Property( 1 );
+    var image = new Image( mockupImage, {pickable: false} );
+    mockupOpacityProperty.linkAttribute( image, 'opacity' );
+    this.addChild( image );
+    this.addChild( new HSlider( mockupOpacityProperty, {min: 0, max: 1}, {top: 10, left: 10} ) );
   }
 
   return inherit( ScreenView, NeuronView, {
