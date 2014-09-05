@@ -40,7 +40,7 @@ define( function( require ) {
     this.addChild( resetAllButton );
 
     //Show the mock-up and a slider to change its transparency
-    var mockupOpacityProperty = new Property( 1 );
+    var mockupOpacityProperty = new Property( 0.8 );
     var image = new Image( mockupImage, {pickable: false} );
     mockupOpacityProperty.linkAttribute( image, 'opacity' );
     this.addChild( image );
