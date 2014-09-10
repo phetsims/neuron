@@ -27,6 +27,7 @@ define( function( require ) {
       function( model ) { return new NeuronScreenView( model ); },
       { backgroundColor: '#ccfefa' }
     );
+
   }
 
   return inherit( Screen, NeuronScreen );
