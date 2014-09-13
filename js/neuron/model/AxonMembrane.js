@@ -1,4 +1,44 @@
 //// Copyright 2002-2011, University of Colorado
+
+/**
+ * Model representation for the axon membrane.  Represents it as a cross
+ * section and a shape that is intended to look like the body of the axon
+ * receding into the distance.
+ *
+ * @author John Blanco
+ * @author Sharfudeen Ashraf
+ */
+define( function( require ) {
+  'use strict';
+
+  //imports
+  var inherit = require( 'PHET_CORE/inherit' );
+  var PropertySet = require( 'AXON/PropertySet' );
+
+  // Fixed membrane characteristics.
+  var MEMBRANE_THICKNESS = 4;  // In nanometers, obtained from web research.
+  var DEFAULT_DIAMETER = 150; // In nanometers.
+  var BODY_LENGTH = DEFAULT_DIAMETER * 1.5;
+  var BODY_TILT_ANGLE = Math.PI / 4;
+
+  function AxonMembrane() {
+
+  }
+
+  return inherit(PropertySet, AxonMembrane, {
+
+    getMembraneThickness: function() {
+      return MEMBRANE_THICKNESS;
+    },
+
+    getCrossSectionDiameter: function() {
+      return DEFAULT_DIAMETER;
+    }
+  });
+
+} );
+
+
 //
 //package edu.colorado.phet.neuron.model;
 //
@@ -26,11 +66,7 @@
 //  // Class Data
 //  //----------------------------------------------------------------------------
 //
-//  // Fixed membrane characteristics.
-//  public static final double MEMBRANE_THICKNESS = 4;  // In nanometers, obtained from web research.
-//  private static final double DEFAULT_DIAMETER = 150; // In nanometers.
-//  private static final double BODY_LENGTH = DEFAULT_DIAMETER * 1.5;
-//  private static final double BODY_TILT_ANGLE = Math.PI/4;
+
 //
 //  //----------------------------------------------------------------------------
 //  // Instance Data
@@ -78,13 +114,7 @@
 //      crossSectionEllipseShape.getWidth(), crossSectionEllipseShape.getHeight());
 //  }
 //
-//  public double getMembraneThickness(){
-//    return MEMBRANE_THICKNESS;
-//  }
-//
-//  public double getCrossSectionDiameter(){
-//    return DEFAULT_DIAMETER;
-//  }
+
 //
 //  public Shape getAxonBodyShape(){
 //    return bodyShape;

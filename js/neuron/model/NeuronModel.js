@@ -13,10 +13,11 @@
 define( function( require ) {
   'use strict';
 
-  // modules
+  // imports
   var inherit = require( 'PHET_CORE/inherit' );
   var PropertySet = require( 'AXON/PropertySet' );
   var Rectangle = require( 'DOT/Rectangle' );
+  var AxonMembrane = require( 'NEURON/neuron/model/AxonMembrane' );
 
   var RAND = {
     nextDouble: function() {
@@ -106,21 +107,42 @@ define( function( require ) {
    */
   function NeuronModel() {
 
-    PropertySet.call( this, {} );
+    PropertySet.call(this,{});
+    var thisModel = this;
 
+
+    //----------------------------------------------------------------------------
+    // Instance Data
+    //----------------------------------------------------------------------------
     // List of the particles that come and go when the simulation is working
     // in real time.
-    var transientParticles = [];
+    thisModel.transientParticles = [];
 
 
-    console.log( "Rand Double  " + RAND.nextDouble() );
+    // Backup of the transient particles, used to restore them when returning
+    // to live mode after doing playback.
+    thisModel.transientParticlesBackup = [];
+
+    // Particles that are "in the background", meaning that they are always
+    // present and they don't cross the membrane.
+    thisModel.backgroundParticles = [];
+
+    // List of particles that are shown during playback.
+    thisModel.playbackParticles = [];
+
+    thisModel.axonMembrane = new AxonMembrane();
+    thisModel.membraneChannels = [];
+    thisModel.crossSectionInnerRadius = (thisModel.axonMembrane.getCrossSectionDiameter() - thisModel.axonMembrane.getMembraneThickness()) / 2;
+    thisModel.crossSectionOuterRadius = (thisModel.axonMembrane.getCrossSectionDiameter() + thisModel.axonMembrane.getMembraneThickness()) / 2;
+
+
   }
 
   return inherit( PropertySet, NeuronModel, {
 
-    // Called by the animation loop. Optional, so if your model has no animation, you can omit this.
-    step: function( dt ) {
-      // Handle model animation here.
+    // Called by the animation loop
+    step: function( simulationTimeChange ) {
+      console.log( "Step Animation" );
     }
   } );
 } );
@@ -161,44 +183,23 @@ define( function( require ) {
 
 
 //
-//  //----------------------------------------------------------------------------
-//  // Instance Data
-//  //----------------------------------------------------------------------------
-//
-//  // List of the particles that come and go when the simulation is working
-//  // in real time.
-//  private ArrayList<Particle> transientParticles = new ArrayList<Particle>();
-//
-//  // Backup of the transient particles, used to restore them when returning
-//  // to live mode after doing playback.
-//  private ArrayList<Particle> transientParticlesBackup = new ArrayList<Particle>();
-//
-//  // Particles that are "in the background", meaning that they are always
-//  // present and they don't cross the membrane.
-//  private ArrayList<Particle> backgroundParticles = new ArrayList<Particle>();
-//
-//  // List of particles that are shown during playback.
-//  private ArrayList<PlaybackParticle> playbackParticles = new ArrayList<PlaybackParticle>();
-//
-//  private final AxonMembrane axonMembrane = new AxonMembrane();
-//  private final ConstantDtClock clock;
-//  private ArrayList<MembraneChannel> membraneChannels = new ArrayList<MembraneChannel>();
-//  private final double crossSectionInnerRadius;
-//  private final double crossSectionOuterRadius;
-//  private EventListenerList listeners = new EventListenerList();
-//  private IHodgkinHuxleyModel hodgkinHuxleyModel = new ModifiedHodgkinHuxleyModel();
-//  private boolean potentialChartVisible = DEFAULT_FOR_MEMBRANE_CHART_VISIBILITY;
-//  private boolean allIonsSimulated = DEFAULT_FOR_SHOW_ALL_IONS; // Controls whether all ions, or just those near membrane, are simulated.
-//  private boolean chargesShown = DEFAULT_FOR_CHARGES_SHOWN; // Controls whether charges are depicted.
-//  private boolean concentrationReadoutVisible = DEFAULT_FOR_CONCENTRATION_READOUT_SHOWN; // Controls whether concentration readings are depicted.
-//  private boolean stimulasLockout = false;
-//  private double previousMembranePotential = 0;
-//  private double sodiumInteriorConcentration = NOMINAL_SODIUM_INTERIOR_CONCENTRATION;
-//  private double sodiumExteriorConcentration = NOMINAL_SODIUM_EXTERIOR_CONCENTRATION;
-//  private double potassiumInteriorConcentration = NOMINAL_POTASSIUM_INTERIOR_CONCENTRATION;
-//  private double potassiumExteriorConcentration = NOMINAL_POTASSIUM_EXTERIOR_CONCENTRATION;
-//  private boolean playbackParticlesVisible = false;
-//  private NeuronModelState neuronModelPlaybackState = null;
+
+//private final ConstantDtClock clock;
+
+//private EventListenerList listeners = new EventListenerList();
+//private IHodgkinHuxleyModel hodgkinHuxleyModel = new ModifiedHodgkinHuxleyModel();
+//private boolean potentialChartVisible = DEFAULT_FOR_MEMBRANE_CHART_VISIBILITY;
+//private boolean allIonsSimulated = DEFAULT_FOR_SHOW_ALL_IONS; // Controls whether all ions, or just those near membrane, are simulated.
+//private boolean chargesShown = DEFAULT_FOR_CHARGES_SHOWN; // Controls whether charges are depicted.
+//private boolean concentrationReadoutVisible = DEFAULT_FOR_CONCENTRATION_READOUT_SHOWN; // Controls whether concentration readings are depicted.
+//private boolean stimulasLockout = false;
+//private double previousMembranePotential = 0;
+//private double sodiumInteriorConcentration = NOMINAL_SODIUM_INTERIOR_CONCENTRATION;
+//private double sodiumExteriorConcentration = NOMINAL_SODIUM_EXTERIOR_CONCENTRATION;
+//private double potassiumInteriorConcentration = NOMINAL_POTASSIUM_INTERIOR_CONCENTRATION;
+//private double potassiumExteriorConcentration = NOMINAL_POTASSIUM_EXTERIOR_CONCENTRATION;
+//private boolean playbackParticlesVisible = false;
+//private NeuronModelState neuronModelPlaybackState = null;
 //
 //  //----------------------------------------------------------------------------
 //  // Constructors
@@ -211,8 +212,7 @@ define( function( require ) {
 //
 //    this.clock = clock;
 //
-//    crossSectionInnerRadius = (axonMembrane.getCrossSectionDiameter() - axonMembrane.getMembraneThickness()) / 2;
-//    crossSectionOuterRadius = (axonMembrane.getCrossSectionDiameter() + axonMembrane.getMembraneThickness()) / 2;
+
 //
 //    /**
 //     * Listen to the clock for ticks, starts, pauses, etc, that can affect
