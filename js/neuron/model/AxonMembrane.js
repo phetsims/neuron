@@ -6,7 +6,7 @@
  * receding into the distance.
  *
  * @author John Blanco
- * @author Sharfudeen Ashraf
+ * @author Sharfudeen Ashraf (for Ghent University)
  */
 define( function( require ) {
   'use strict';
@@ -14,6 +14,8 @@ define( function( require ) {
   //imports
   var inherit = require( 'PHET_CORE/inherit' );
   var PropertySet = require( 'AXON/PropertySet' );
+  var Vector2 = require( 'DOT/Vector2' );
+  var Shape = require( 'KITE/Shape' );
 
   // Fixed membrane characteristics.
   var MEMBRANE_THICKNESS = 4;  // In nanometers, obtained from web research.
@@ -23,9 +25,81 @@ define( function( require ) {
 
   function AxonMembrane() {
 
+    var thisModel = this;
+
+    var createAxonBodyShape = function() {
+      thisModel.axonBodyShape = new Shape();
+      // Points that define the body shape.
+      thisModel.vanishingPoint = new Vector2( BODY_LENGTH * Math.cos( BODY_TILT_ANGLE ), BODY_LENGTH * Math.sin( BODY_TILT_ANGLE ) );
+
+      // Find the two points at which the shape will intersect the outer
+      // edge of the cross section.
+      var r = thisModel.getCrossSectionDiameter() / 2 + thisModel.getMembraneThickness() / 2;
+      var theta = BODY_TILT_ANGLE + Math.PI * 0.45; // Multiplier tweaked a bit for improved appearance.
+      thisModel.intersectionPointA = new Vector2( r * Math.cos( theta ), r * Math.sin( theta ) );
+      theta += Math.PI;
+      thisModel.intersectionPointB = new Vector2( r * Math.cos( theta ), r * Math.sin( theta ) );
+
+      // Define the control points for the two curves.  Note that there is
+      // some tweaking in here, so change as needed to get the desired look.
+      // If you can figure it out, that is.  Hints: The shape is drawn
+      // starting as a curve from the vanishing point to intersection point
+      // A, then a line to intersection point B, then as a curve back to the
+      // vanishing point.
+
+      var angleToVanishingPt = Math.atan2( thisModel.vanishingPoint.x - thisModel.intersectionPointA.y, thisModel.vanishingPoint.x - thisModel.intersectionPointA.x );
+      var ctrlPtRadius = thisModel.intersectionPointA.distance( thisModel.vanishingPoint ) * 0.33;
+      thisModel.cntrlPtA1 = new Vector2(
+          thisModel.intersectionPointA.x + ctrlPtRadius * Math.cos( angleToVanishingPt + 0.15 ),
+          thisModel.intersectionPointA.y + ctrlPtRadius * Math.sin( angleToVanishingPt + 0.15 ) );
+      ctrlPtRadius = thisModel.intersectionPointA.distance( thisModel.vanishingPoint ) * 0.67;
+      thisModel.cntrlPtA2 = new Vector2(
+          thisModel.intersectionPointA.x + ctrlPtRadius * Math.cos( angleToVanishingPt - 0.5 ),
+          thisModel.intersectionPointA.y + ctrlPtRadius * Math.sin( angleToVanishingPt - 0.5 ) );
+
+      var angleToIntersectionPt = Math.atan2( thisModel.intersectionPointB.y - thisModel.vanishingPoint.y,
+          thisModel.intersectionPointB.x - thisModel.intersectionPointB.x );
+      ctrlPtRadius = thisModel.intersectionPointB.distance( thisModel.vanishingPoint ) * 0.33;
+      thisModel.cntrlPtB1 = new Vector2(
+          thisModel.vanishingPoint.x + ctrlPtRadius * Math.cos( angleToIntersectionPt + 0.1 ),
+          thisModel.vanishingPoint.y + ctrlPtRadius * Math.sin( angleToIntersectionPt + 0.1 ) );
+      ctrlPtRadius = thisModel.intersectionPointB.distance( thisModel.vanishingPoint ) * 0.67;
+      thisModel.cntrlPtB2 = new Vector2(
+          thisModel.vanishingPoint.x + ctrlPtRadius * Math.cos( angleToIntersectionPt - 0.25 ),
+          thisModel.vanishingPoint.y + ctrlPtRadius * Math.sin( angleToIntersectionPt - 0.25 ) );
+
+      // Create the curves that define the boundaries of the body.
+      thisModel.curveA = new Shape()
+        .moveTo( thisModel.vanishingPoint.x, thisModel.vanishingPoint.y )
+        .cubicCurveTo( thisModel.cntrlPtB1.x, thisModel.cntrlPtB1.y, thisModel.cntrlPtB2.x, thisModel.cntrlPtB2.y, thisModel.intersectionPointB.x,
+        thisModel.intersectionPointB.y );
+      thisModel.curveB = new Shape()
+        .moveTo( thisModel.vanishingPoint.x, thisModel.vanishingPoint.y )
+        .cubicCurveTo( thisModel.cntrlPtB1.x,
+        thisModel.cntrlPtB1.y, thisModel.cntrlPtB2.x, thisModel.cntrlPtB2.y, thisModel.intersectionPointB.x,
+        thisModel.intersectionPointB.y );
+
+
+      // Set up the shape of the neuron body.
+      _.each( thisModel.curveA.subpaths.slice().reverse(), function( subpath ) {
+        thisModel.axonBodyShape.addSubpath( subpath );
+      } );
+
+      _.each( thisModel.curveB.subpaths, function( subpath ) {
+        thisModel.axonBodyShape.addSubpath( subpath );
+      } );
+
+      thisModel.axonBodyShape.lineTo( thisModel.intersectionPointA.x, thisModel.intersectionPointA.y );
+
+
+    };
+
+    createAxonBodyShape();
+
+
   }
 
-  return inherit(PropertySet, AxonMembrane, {
+  return inherit( PropertySet, AxonMembrane, {
 
     getMembraneThickness: function() {
       return MEMBRANE_THICKNESS;
@@ -34,7 +108,7 @@ define( function( require ) {
     getCrossSectionDiameter: function() {
       return DEFAULT_DIAMETER;
     }
-  });
+  } );
 
 } );
 
@@ -86,16 +160,7 @@ define( function( require ) {
 //  // Traveling action potential that moves down the membrane.
 //  private TravelingActionPotential travelingActionPotential;
 //
-//  // Points that define the body shape.
-//  private Point2D vanishingPoint;
-//  private Point2D intersectionPointA;
-//  private Point2D intersectionPointB;
-//  private Point2D cntrlPtA1;
-//  private Point2D cntrlPtA2;
-//  private Point2D cntrlPtB1;
-//  private Point2D cntrlPtB2;
-//  private CubicCurve2D curveA;
-//  private CubicCurve2D curveB;
+
 //
 //  //----------------------------------------------------------------------------
 //  // Constructor
@@ -160,63 +225,7 @@ define( function( require ) {
 //   * view, so its creation is a little unusual.
 //   */
 //  private Shape createAxonBodyShape(){
-//
-//    GeneralPath axonBodyShape = new GeneralPath();
-//
-//    vanishingPoint = new Point2D.Double(BODY_LENGTH * Math.cos(BODY_TILT_ANGLE),
-//        BODY_LENGTH * Math.sin(BODY_TILT_ANGLE));
-//
-//    // Find the two points at which the shape will intersect the outer
-//    // edge of the cross section.
-//    double r = getCrossSectionDiameter() / 2 + getMembraneThickness() / 2;
-//    double theta = BODY_TILT_ANGLE + Math.PI * 0.45; // Multiplier tweaked a bit for improved appearance.
-//    intersectionPointA = new Point2D.Double(r * Math.cos(theta), r * Math.sin(theta));
-//    theta += Math.PI;
-//    intersectionPointB = new Point2D.Double(r * Math.cos(theta), r * Math.sin(theta));
-//
-//    // Define the control points for the two curves.  Note that there is
-//    // some tweaking in here, so change as needed to get the desired look.
-//    // If you can figure it out, that is.  Hints: The shape is drawn
-//    // starting as a curve from the vanishing point to intersection point
-//    // A, then a line to intersection point B, then as a curve back to the
-//    // vanishing point.
-//    double ctrlPtRadius;
-//    double angleToVanishingPt = Math.atan2(vanishingPoint.getY() - intersectionPointA.getY(),
-//        vanishingPoint.getX() - intersectionPointA.getX());
-//    ctrlPtRadius = intersectionPointA.distance(vanishingPoint) * 0.33;
-//    cntrlPtA1 = new Point2D.Double(
-//        intersectionPointA.getX() + ctrlPtRadius * Math.cos(angleToVanishingPt + 0.15),
-//        intersectionPointA.getY() + ctrlPtRadius * Math.sin(angleToVanishingPt + 0.15));
-//    ctrlPtRadius = intersectionPointA.distance(vanishingPoint) * 0.67;
-//    cntrlPtA2 = new Point2D.Double(
-//        intersectionPointA.getX() + ctrlPtRadius * Math.cos(angleToVanishingPt - 0.5),
-//        intersectionPointA.getY() + ctrlPtRadius * Math.sin(angleToVanishingPt - 0.5));
-//
-//    double angleToIntersectionPt = Math.atan2(intersectionPointB.getY() - vanishingPoint.getY(),
-//        intersectionPointB.getX() - intersectionPointB.getX());
-//    ctrlPtRadius = intersectionPointB.distance(vanishingPoint) * 0.33;
-//    cntrlPtB1 = new Point2D.Double(
-//        vanishingPoint.getX() + ctrlPtRadius * Math.cos(angleToIntersectionPt + 0.1),
-//        vanishingPoint.getY() + ctrlPtRadius * Math.sin(angleToIntersectionPt + 0.1));
-//    ctrlPtRadius = intersectionPointB.distance(vanishingPoint) * 0.67;
-//    cntrlPtB2 = new Point2D.Double(
-//        vanishingPoint.getX() + ctrlPtRadius * Math.cos(angleToIntersectionPt - 0.25),
-//        vanishingPoint.getY() + ctrlPtRadius * Math.sin(angleToIntersectionPt - 0.25));
-//
-//    // Create the curves that define the boundaries of the body.
-//    curveA = new CubicCurve2D.Double(vanishingPoint.getX(), vanishingPoint.getY(), cntrlPtA2.getX(),
-//      cntrlPtA2.getY(), cntrlPtA1.getX(), cntrlPtA1.getY(), intersectionPointA.getX(),
-//      intersectionPointA.getY());
-//    curveB = new CubicCurve2D.Double(vanishingPoint.getX(), vanishingPoint.getY(), cntrlPtB1.getX(),
-//      cntrlPtB1.getY(), cntrlPtB2.getX(), cntrlPtB2.getY(), intersectionPointB.getX(),
-//      intersectionPointB.getY());
-//
-//    // Set up the shape of the neuron body.
-//    axonBodyShape.append(ReversePathIterator.getReversePathIterator(curveA), false);
-//    axonBodyShape.append(curveB, false);
-//    axonBodyShape.lineTo((float)intersectionPointA.getX(), (float)intersectionPointA.getY());
-//
-//    return axonBodyShape;
+
 //  }
 //
 //  /**

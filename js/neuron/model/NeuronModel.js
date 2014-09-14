@@ -8,7 +8,7 @@
  *
  * @author John Blanco
  * @author Sam Reid (PhET Interactive Simulations)
- * @author Sharfudeen Ashraf
+ * @author Sharfudeen Ashraf (for Ghent University)
  */
 define( function( require ) {
   'use strict';
@@ -107,7 +107,7 @@ define( function( require ) {
    */
   function NeuronModel() {
 
-    PropertySet.call(this,{});
+    PropertySet.call( this, {} );
     var thisModel = this;
 
 
@@ -142,7 +142,7 @@ define( function( require ) {
 
     // Called by the animation loop
     step: function( simulationTimeChange ) {
-      console.log( "Step Animation" );
+      console.log(simulationTimeChange);
     }
   } );
 } );
