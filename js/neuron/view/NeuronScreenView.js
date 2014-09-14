@@ -15,6 +15,10 @@ define( function( require ) {
   var Image = require( 'SCENERY/nodes/Image' );
   var HSlider = require( 'SUN/HSlider' );
   var Property = require( 'AXON/Property' );
+  var Vector2 = require( 'DOT/Vector2' );
+  var Node = require( 'SCENERY/nodes/Node' );
+  var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
+  var AxonBodyNode = require( 'NEURON/neuron/view/AxonBodyNode' );
 
   // images
   var mockupImage = require( 'image!NEURON/neuron-mockup.png' );
@@ -26,7 +30,17 @@ define( function( require ) {
    */
   function NeuronView( neuronModel ) {
 
-    ScreenView.call( this, {layoutBounds: ScreenView.UPDATED_LAYOUT_BOUNDS} );
+    var thisView = this;
+    this.model = neuronModel;
+    ScreenView.call( thisView, {layoutBounds: ScreenView.UPDATED_LAYOUT_BOUNDS} );
+
+    // Set up the model-canvas transform.
+    // TODO:  INTERMEDIATE_RENDERING_SIZE validate
+    thisView.mvt = ModelViewTransform2.createSinglePointScaleInvertedYMapping(
+      Vector2.ZERO,
+      new Vector2( thisView.layoutBounds.width * 0.5, thisView.layoutBounds.width * 0.5 ),
+      2);  // 3.9 Scale factor - smaller numbers "zoom out", bigger ones "zoom in".
+
 
     // Create and add the Reset All Button in the bottom right
     //TODO: Wire up the reset all button to the model's reset function
@@ -45,6 +59,13 @@ define( function( require ) {
     mockupOpacityProperty.linkAttribute( image, 'opacity' );
     this.addChild( image );
     this.addChild( new HSlider( mockupOpacityProperty, {min: 0, max: 1}, {top: 10, left: 10} ) );
+
+
+    // Create the layers in the desired order.
+    var axonBodyNode = new AxonBodyNode( this.model.axonMembrane, thisView.mvt );
+    this.addChild( axonBodyNode );
+
+
   }
 
   return inherit( ScreenView, NeuronView, {

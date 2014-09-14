@@ -16,6 +16,10 @@ define( function( require ) {
   var PropertySet = require( 'AXON/PropertySet' );
   var Vector2 = require( 'DOT/Vector2' );
   var Shape = require( 'KITE/Shape' );
+  var Cubic = require( 'KITE/segments/Cubic' );
+  var Subpath = require( 'KITE/util/Subpath' );
+  var EllipticalArc = require( 'KITE/segments/EllipticalArc' );
+  var DotUtil = require( 'DOT/Util' );
 
   // Fixed membrane characteristics.
   var MEMBRANE_THICKNESS = 4;  // In nanometers, obtained from web research.
@@ -28,6 +32,7 @@ define( function( require ) {
     var thisModel = this;
 
     var createAxonBodyShape = function() {
+      // Shape of the body of the axon.
       thisModel.axonBodyShape = new Shape();
       // Points that define the body shape.
       thisModel.vanishingPoint = new Vector2( BODY_LENGTH * Math.cos( BODY_TILT_ANGLE ), BODY_LENGTH * Math.sin( BODY_TILT_ANGLE ) );
@@ -47,7 +52,7 @@ define( function( require ) {
       // A, then a line to intersection point B, then as a curve back to the
       // vanishing point.
 
-      var angleToVanishingPt = Math.atan2( thisModel.vanishingPoint.x - thisModel.intersectionPointA.y, thisModel.vanishingPoint.x - thisModel.intersectionPointA.x );
+      var angleToVanishingPt = Math.atan2( thisModel.vanishingPoint.y - thisModel.intersectionPointA.y, thisModel.vanishingPoint.x - thisModel.intersectionPointA.x );
       var ctrlPtRadius = thisModel.intersectionPointA.distance( thisModel.vanishingPoint ) * 0.33;
       thisModel.cntrlPtA1 = new Vector2(
           thisModel.intersectionPointA.x + ctrlPtRadius * Math.cos( angleToVanishingPt + 0.15 ),
@@ -71,8 +76,8 @@ define( function( require ) {
       // Create the curves that define the boundaries of the body.
       thisModel.curveA = new Shape()
         .moveTo( thisModel.vanishingPoint.x, thisModel.vanishingPoint.y )
-        .cubicCurveTo( thisModel.cntrlPtB1.x, thisModel.cntrlPtB1.y, thisModel.cntrlPtB2.x, thisModel.cntrlPtB2.y, thisModel.intersectionPointB.x,
-        thisModel.intersectionPointB.y );
+        .cubicCurveTo( thisModel.cntrlPtA2.x, thisModel.cntrlPtA2.y, thisModel.cntrlPtA1.x, thisModel.cntrlPtA1.y, thisModel.intersectionPointA.x,
+        thisModel.intersectionPointA.y );
       thisModel.curveB = new Shape()
         .moveTo( thisModel.vanishingPoint.x, thisModel.vanishingPoint.y )
         .cubicCurveTo( thisModel.cntrlPtB1.x,
@@ -80,10 +85,11 @@ define( function( require ) {
         thisModel.intersectionPointB.y );
 
 
-      // Set up the shape of the neuron body.
-      _.each( thisModel.curveA.subpaths.slice().reverse(), function( subpath ) {
-        thisModel.axonBodyShape.addSubpath( subpath );
-      } );
+      // Reverse Path Iteration for drawing
+      thisModel.axonBodyShape.moveTo( thisModel.intersectionPointA.x,
+        thisModel.intersectionPointA.y );
+      thisModel.axonBodyShape.cubicCurveTo( thisModel.cntrlPtA1.x, thisModel.cntrlPtA1.y, thisModel.cntrlPtA2.x, thisModel.cntrlPtA2.y, thisModel.vanishingPoint.x, thisModel.vanishingPoint.y );
+
 
       _.each( thisModel.curveB.subpaths, function( subpath ) {
         thisModel.axonBodyShape.addSubpath( subpath );
@@ -94,7 +100,12 @@ define( function( require ) {
 
     };
 
-    createAxonBodyShape();
+    createAxonBodyShape();//creates axonBodyShape and assigns to this model
+
+    // Shape of the cross section of the membrane.	For now, and unless there
+    // is some reason to do otherwise, the center of the cross section is
+    // positioned at the origin.
+    thisModel.crossSectionEllipseShape = new Shape().ellipse( -DEFAULT_DIAMETER / 2, -DEFAULT_DIAMETER / 2, DEFAULT_DIAMETER / 2, DEFAULT_DIAMETER / 2 );
 
 
   }
@@ -107,7 +118,13 @@ define( function( require ) {
 
     getCrossSectionDiameter: function() {
       return DEFAULT_DIAMETER;
+    },
+
+    getCrossSectionEllipseShape: function() {
+      return new Shape().ellipse( this.crossSectionEllipseShape.x, this.crossSectionEllipseShape.y,
+        this.crossSectionEllipseShape.bounds.getWidth(), this.crossSectionEllipseShape.bounds.getHeight() );
     }
+
   } );
 
 } );
@@ -148,11 +165,7 @@ define( function( require ) {
 //
 //  private ArrayList<Listener> listeners = new ArrayList<Listener>();
 //
-//  // Shape of the cross section of the membrane.	For now, and unless there
-//  // is some reason to do otherwise, the center of the cross section is
-//  // positioned at the origin.
-//  private Ellipse2D crossSectionEllipseShape = new Ellipse2D.Double(-DEFAULT_DIAMETER / 2, -DEFAULT_DIAMETER / 2,
-//    DEFAULT_DIAMETER, DEFAULT_DIAMETER);
+
 //
 //  // Shape of the body of the axon.
 //  private Shape bodyShape;
@@ -173,12 +186,7 @@ define( function( require ) {
 //  //----------------------------------------------------------------------------
 //  // Methods
 //  //----------------------------------------------------------------------------
-//
-//  public Ellipse2D getCrossSectionEllipseShape() {
-//    return new Ellipse2D.Double(crossSectionEllipseShape.getX(), crossSectionEllipseShape.getY(),
-//      crossSectionEllipseShape.getWidth(), crossSectionEllipseShape.getHeight());
-//  }
-//
+
 
 //
 //  public Shape getAxonBodyShape(){

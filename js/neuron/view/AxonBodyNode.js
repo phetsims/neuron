@@ -1,4 +1,73 @@
 //// Copyright 2002-2011, University of Colorado
+/**
+ * Representation of the axon membrane body in the view.  This is the part
+ * that the action potential travels along, and is supposed to look sort of
+ * 3D.
+ *
+ * @author John Blanco
+ * @author Sharfudeen Ashraf (for Ghent University)
+ */
+define( function( require ) {
+  'use strict';
+  //imports
+  var inherit = require( 'PHET_CORE/inherit' );
+  var PropertySet = require( 'AXON/PropertySet' );
+  var Node = require( 'SCENERY/nodes/Node' );
+  var Path = require( 'SCENERY/nodes/Path' );
+  var Line = require( 'SCENERY/nodes/Line' );
+  var Color = require( 'SCENERY/util/Color' );
+  var Vector2 = require( 'DOT/Vector2' );
+  var LinearGradient = require( 'SCENERY/util/LinearGradient' );
+
+
+  var AXON_BODY_COLOR = new Color( 221, 216, 44 );
+  var LINE_WIDTH = 2;// STROKE
+  var SHOW_GRADIENT_LINE = false;
+
+  /**
+   * Constructor for the AxonBodyNode
+   * @param {NeuronModel} axonMembraneModel
+   * @param {ModelViewTransform2} transform
+   * @constructor
+   */
+  function AxonBodyNode( axonMembraneModel, transform ) {
+    var thisNode = this;
+    Node.call( thisNode, {} );
+    thisNode.axonMembraneModel = axonMembraneModel;
+    thisNode.mvt = transform;
+
+
+    // Listen to the axon membrane for events that matter to the visual
+    // representation. TODO
+
+
+    // Add the axon body.
+    var axonBodyShape = thisNode.mvt.modelToViewShape( axonMembraneModel.axonBodyShape );
+    var axonBodyBounds = axonBodyShape.bounds;
+    var crossSectionBounds = thisNode.mvt.modelToViewShape( axonMembraneModel.getCrossSectionEllipseShape() ).bounds;
+    var gradientOrigin = new Vector2( axonBodyBounds.getMaxX(), axonBodyBounds.getMaxY() );
+    var gradientExtent = new Vector2( crossSectionBounds.getCenterX(), crossSectionBounds.getY() );
+    var axonBodyGradient = new LinearGradient( gradientOrigin.x, gradientOrigin.y, gradientExtent.x, gradientExtent.y );
+    axonBodyGradient.addColorStop( 0, AXON_BODY_COLOR.darkerColor( 0.5 ) );
+    axonBodyGradient.addColorStop( 0, AXON_BODY_COLOR.brighterColor( 0.5 ) );
+
+    var axonBody = new Path( axonBodyShape, {
+      fill: axonBodyGradient,
+      stroke: 'black',
+      lineWidth: LINE_WIDTH
+    } );
+    thisNode.addChild( axonBody );
+
+    if ( SHOW_GRADIENT_LINE ) {
+      // The following line is useful when trying to debug the gradient.
+      thisNode.addChild( new Line( gradientOrigin, gradientExtent ) );
+    }
+  }
+
+
+  return inherit( Node, AxonBodyNode );
+} )
+;
 //
 //package edu.colorado.phet.neuron.view;
 //
@@ -31,9 +100,7 @@
 //  // Class Data
 //  //----------------------------------------------------------------------------
 //
-//  private static final Color AXON_BODY_COLOR = new Color(221, 216, 44);
-//  private static final Stroke STROKE = new BasicStroke(2f);
-//  private static final boolean SHOW_GRADIENT_LINE = false;
+
 //
 //  //----------------------------------------------------------------------------
 //  // Instance Data
@@ -49,8 +116,7 @@
 //  //----------------------------------------------------------------------------
 //
 //  public AxonBodyNode( AxonMembrane axonMembraneModel, ModelViewTransform2D transform ) {
-//    this.axonMembraneModel = axonMembraneModel;
-//    this.mvt = transform;
+
 //
 //    // Listen to the axon membrane for events that matter to the visual
 //    // representation.
@@ -65,25 +131,7 @@
 //      }
 //    });
 //
-//    // Add the axon body.
-//    Shape axonBodyShape = mvt.createTransformedShape(axonMembraneModel.getAxonBodyShape());
-//    Rectangle2D axonBodyBounds = axonBodyShape.getBounds2D();
-//    Rectangle2D crossSectionBounds = mvt.createTransformedShape(axonMembraneModel.getCrossSectionEllipseShape()).getBounds2D();
-//    Point2D gradientOrigin = new Point2D.Double(axonBodyBounds.getMaxX(), axonBodyBounds.getMaxY());
-//    Point2D gradientExtent = new Point2D.Double(crossSectionBounds.getCenterX(), crossSectionBounds.getY());
-//    GradientPaint axonBodyGradient = new GradientPaint(
-//      gradientOrigin,
-//      ColorUtils.darkerColor(AXON_BODY_COLOR, 0.5),
-//      gradientExtent,
-//      ColorUtils.brighterColor(AXON_BODY_COLOR, 0.2));
-//    axonBody = new PhetPPath( axonBodyShape, axonBodyGradient, STROKE, Color.BLACK );
-//    addChild( axonBody );
-//
-//    if (SHOW_GRADIENT_LINE){
-//      // The following line is useful when trying to debug the gradient.
-//      addChild(new PhetPPath(new Line2D.Double(gradientOrigin, gradientExtent)));
-//    }
-//  }
+
 //
 //  //----------------------------------------------------------------------------
 //  // Methods
