@@ -19,6 +19,7 @@ define( function( require ) {
   var Node = require( 'SCENERY/nodes/Node' );
   var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   var AxonBodyNode = require( 'NEURON/neuron/view/AxonBodyNode' );
+  var AxonCrossSectionNode = require( 'NEURON/neuron/view/AxonCrossSectionNode' );
 
   // images
   var mockupImage = require( 'image!NEURON/neuron-mockup.png' );
@@ -35,11 +36,12 @@ define( function( require ) {
     ScreenView.call( thisView, {layoutBounds: ScreenView.UPDATED_LAYOUT_BOUNDS} );
 
     // Set up the model-canvas transform.
-    // TODO:  INTERMEDIATE_RENDERING_SIZE validate
+
+
     thisView.mvt = ModelViewTransform2.createSinglePointScaleInvertedYMapping(
       Vector2.ZERO,
-      new Vector2( thisView.layoutBounds.width * 0.5, thisView.layoutBounds.width * 0.5 ),
-      2);  // 3.9 Scale factor - smaller numbers "zoom out", bigger ones "zoom in".
+      new Vector2( thisView.layoutBounds.width * 0.45, thisView.layoutBounds.height * 0.45 ),
+      1.8 ); // 3.9 Scale factor - smaller numbers "zoom out", bigger ones "zoom in".
 
 
     // Create and add the Reset All Button in the bottom right
@@ -64,6 +66,8 @@ define( function( require ) {
     // Create the layers in the desired order.
     var axonBodyNode = new AxonBodyNode( this.model.axonMembrane, thisView.mvt );
     this.addChild( axonBodyNode );
+    var axonCrossSectionNode = new AxonCrossSectionNode( this.model.axonMembrane, thisView.mvt );
+    this.addChild( axonCrossSectionNode );
 
 
   }

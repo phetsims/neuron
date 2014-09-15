@@ -49,7 +49,7 @@ define( function( require ) {
     var gradientExtent = new Vector2( crossSectionBounds.getCenterX(), crossSectionBounds.getY() );
     var axonBodyGradient = new LinearGradient( gradientOrigin.x, gradientOrigin.y, gradientExtent.x, gradientExtent.y );
     axonBodyGradient.addColorStop( 0, AXON_BODY_COLOR.darkerColor( 0.5 ) );
-    axonBodyGradient.addColorStop( 0, AXON_BODY_COLOR.brighterColor( 0.5 ) );
+    axonBodyGradient.addColorStop( 1, AXON_BODY_COLOR.brighterColor( 0.5 ) );
 
     var axonBody = new Path( axonBodyShape, {
       fill: axonBodyGradient,
