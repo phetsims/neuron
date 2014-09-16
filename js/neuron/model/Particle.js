@@ -1,4 +1,63 @@
 //// Copyright 2002-2011, University of Colorado
+
+/**
+ * Abstract base class for a simulated particle.  It is intended that this be subclassed
+ * for each specific particle type used in the simulation.
+ *
+ * @author John Blanco
+ * @Sharfudeen Ashraf (for Ghnet University)
+ */
+
+define( function( require ) {
+  'use strict';
+
+  //imports
+  var inherit = require( 'PHET_CORE/inherit' );
+  var PropertySet = require( 'AXON/PropertySet' );
+  var Vector2 = require( 'DOT/Vector2' );
+
+  var DEFAULT_PARTICLE_RADIUS = 0.75;  // In nanometers.
+
+  /**
+   * Construct a particle.
+   *
+   * @param xPos - Initial X position of this particle.
+   * @param yPos - Initial Y position of this particle.
+   */
+  function Particle( xPos, yPos ) {
+    xPos = xPos || 0;
+    yPos = yPos || 0;
+
+    PropertySet.call( this, {
+      // Location in space of this particle, units are nano-meters.
+      position: new Vector2( xPos, yPos ),
+
+      // Opaqueness value, ranges from 0 (completely transparent) to 1
+      // (completely opaque).
+      opaqueness: 1
+    } );
+
+  }
+
+  return inherit( PropertySet, Particle, {
+    getPosition: function() {
+      return new Vector2( this.position.x, this.position.y );
+    },
+    getPositionReference: function() {
+      return this.position;
+    },
+    //subclasses must implement
+    getType: function() {
+      throw new Error( 'getType should be implemented in descendant classes.' );
+    },
+    getRadius: function() {
+      return DEFAULT_PARTICLE_RADIUS;   // Default value, override if needed to support other particles.
+    }
+
+  } );
+
+} );
+
 //
 //package edu.colorado.phet.neuron.model;
 //
@@ -6,19 +65,14 @@
 //import java.awt.geom.Point2D;
 //import java.util.ArrayList;
 //
-///**
-// * Abstract base class for a simulated particle.  It is intended that this be subclassed
-// * for each specific particle type used in the simulation.
-// *
-// * @author John Blanco
-// */
+
 //public abstract class Particle implements IMovable, IFadable, IViewableParticle {
 //
 //  //------------------------------------------------------------------------
 //  // Class data
 //  //------------------------------------------------------------------------
 //
-//  private static final double DEFAULT_PARTICLE_RADIUS = 0.75;  // In nanometers.
+
 //
 //  //------------------------------------------------------------------------
 //  // Instance data
@@ -26,15 +80,13 @@
 //
 //  protected ArrayList<IParticleListener> listeners = new ArrayList<IParticleListener>();
 //
-//  // Location in space of this particle, units are nano-meters.
-//  private Point2D.Double position;
+
 //
 //  // Motion strategy for moving this particle around.
 //  private MotionStrategy motionStrategy = new StillnessMotionStrategy();
 //
-//  // Opaqueness value, ranges from 0 (completely transparent) to 1
-//  // (completely opaque).
-//  private double opaqueness = 1;
+
+
 //
 //  // Fade strategy for fading in and out.
 //  private FadeStrategy fadeStrategy = new NullFadeStrategy();
@@ -61,46 +113,10 @@
 //  // Methods
 //  //------------------------------------------------------------------------
 //
-//  /**
-//   * Static factory method for creating a particle of the specified type.
-//   */
-//  public static Particle createParticle(ParticleType particleType){
+
 //
-//    Particle newParticle = null;
-//
-//    switch (particleType){
-//      case POTASSIUM_ION:
-//        newParticle = new PotassiumIon();
-//        break;
-//      case SODIUM_ION:
-//        newParticle = new SodiumIon();
-//        break;
-//      default:
-//        System.err.println("Error: Unrecognized particle type.");
-//        assert false;
-//    }
-//
-//    return newParticle;
-//  }
-//
-//  /* (non-Javadoc)
-//   * @see edu.colorado.phet.neuron.model.IViewableParticle#getType()
-//   */
-//  public abstract ParticleType getType();
-//
-//  /* (non-Javadoc)
-//   * @see edu.colorado.phet.neuron.model.IViewableParticle#getPosition()
-//   */
-//  public Point2D getPosition() {
-//    return new Point2D.Double(position.getX(), position.getY());
-//  }
-//
-//  /* (non-Javadoc)
-//   * @see edu.colorado.phet.neuron.model.IViewableParticle#getPositionReference()
-//   */
-//  public Point2D.Double getPositionReference() {
-//    return position;
-//  }
+
+
 //
 //  public void setPosition(Point2D newPosition) {
 //    setPosition(newPosition.getX(), newPosition.getY());
@@ -188,12 +204,7 @@
 //    this.motionStrategy = motionStrategy;
 //  }
 //
-//  /* (non-Javadoc)
-//   * @see edu.colorado.phet.neuron.model.IViewableParticle#getRadius()
-//   */
-//  public double getRadius(){
-//    return DEFAULT_PARTICLE_RADIUS;   // Default value, override if needed to support other particles.
-//  }
+
 //
 //  /* (non-Javadoc)
 //   * @see edu.colorado.phet.neuron.model.IViewableParticle#getRepresentationColor()

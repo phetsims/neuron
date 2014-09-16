@@ -16,79 +16,8 @@ define( function( require ) {
   // imports
   var inherit = require( 'PHET_CORE/inherit' );
   var PropertySet = require( 'AXON/PropertySet' );
-  var Rectangle = require( 'DOT/Rectangle' );
   var AxonMembrane = require( 'NEURON/neuron/model/AxonMembrane' );
-
-  var RAND = {
-    nextDouble: function() {
-      return Math.random();
-    }
-  };
-
-  // The following constants define the boundaries for the motion of the
-  // particles.  These boundaries are intended to be outside the view port,
-  // so that it is not apparent to the user that they exist.  We may at some
-  // point want to make these bounds dynamic and set by the view so that the
-  // user never encounters a situation where these can be seen.
-
-  var MODEL_HEIGHT = 130; // In nanometers.
-  var MODEL_WIDTH = 180; // In nanometers.
-  var PARTICLE_BOUNDS = new Rectangle( -MODEL_WIDTH / 2, -MODEL_HEIGHT / 2, MODEL_WIDTH, MODEL_HEIGHT );
-
-  // Numbers of the various types of channels that are present on the
-  // membrane.
-  var NUM_GATED_SODIUM_CHANNELS = 20;
-  var NUM_GATED_POTASSIUM_CHANNELS = 20;
-  var NUM_SODIUM_LEAK_CHANNELS = 3;
-  var NUM_POTASSIUM_LEAK_CHANNELS = 7;
-
-  // Numbers of "bulk" ions in and out of the cell when visible.
-  var NUM_SODIUM_IONS_OUTSIDE_CELL = 600;
-  var NUM_SODIUM_IONS_INSIDE_CELL = 8;
-  var NUM_POTASSIUM_IONS_OUTSIDE_CELL = 60;
-  var NUM_POTASSIUM_IONS_INSIDE_CELL = 200;
-
-  // Thresholds for determining whether an action potential should be
-  // considered to be in progress.  These values relate to the rate of flow
-  // through the gated sodium, gated potassium, and combination of the
-  // sodium and potassium leakage.  If the values from the HH model exceed
-  // any of these, and action potential is considered to be in progress.
-  // The values were determined empirically, and different HH models may
-  // require different values here.
-  var POTASSIUM_CURRENT_THRESH_FOR_ACTION_POTENTIAL = 0.001;
-  var SODIUM_CURRENT_THRESH_FOR_ACTION_POTENTIAL = 0.001;
-  var LEAKAGE_CURRENT_THRESH_FOR_ACTION_POTENTIAL = 0.444;
-
-  // Nominal concentration values.
-  var NOMINAL_SODIUM_EXTERIOR_CONCENTRATION = 145;     // In millimolar (mM)
-  var NOMINAL_SODIUM_INTERIOR_CONCENTRATION = 10;      // In millimolar (mM)
-  var NOMINAL_POTASSIUM_EXTERIOR_CONCENTRATION = 4;    // In millimolar (mM)
-  var NOMINAL_POTASSIUM_INTERIOR_CONCENTRATION = 140;  // In millimolar (mM)
-
-  // Rates at which concentration changes during action potential.  These
-  // values combined with the conductance at each time step are used to
-  // calculate the concentration changes.
-  var INTERIOR_CONCENTRATION_CHANGE_RATE_SODIUM = 0.4;
-  var EXTERIOR_CONCENTRATION_CHANGE_RATE_SODIUM = 7;
-  var INTERIOR_CONCENTRATION_CHANGE_RATE_POTASSIUM = 2.0;
-  var EXTERIOR_CONCENTRATION_CHANGE_RATE_POTASSIUM = 0.05;
-
-  // Threshold of significant difference for concentration values.
-  var CONCENTRATION_DIFF_THRESHOLD = 0.000001;
-
-  // Rate at which concentration is restored to nominal value.  Higher value
-  // means quicker restoration.
-  var CONCENTRATION_RESTORATION_FACTOR = 1000;
-
-  // Delay between the values in the HH model to the concentration readouts.
-  // This is needed to make sure that the concentration readouts don't
-  // change before visible potassium or sodium ions have crossed the
-  //membrane.
-  var CONCENTRATION_READOUT_DELAY = 0.001;  // In seconds of sim time.
-
-  // Default values of opaqueness for newly created particles.
-  var FOREGROUND_PARTICLE_DEFAULT_OPAQUENESS = 0.20;
-  var BACKGROUND_PARTICLE_DEFAULT_OPAQUENESS = 0.05;
+  var ObservableArray = require( 'AXON/ObservableArray' );
 
   // Default configuration values.
   var DEFAULT_FOR_SHOW_ALL_IONS = true;
@@ -96,9 +25,6 @@ define( function( require ) {
   var DEFAULT_FOR_CHARGES_SHOWN = false;
   var DEFAULT_FOR_CONCENTRATION_READOUT_SHOWN = false;
 
-  // Value that controls how much of a change of the membrane potential must
-  // occur before a notification is sent out.
-  var MEMBRANE_POTENTIAL_CHANGE_THRESHOLD = 0.005;
 
 
   /**
@@ -106,43 +32,30 @@ define( function( require ) {
    * @constructor
    */
   function NeuronModel() {
-
-    PropertySet.call( this, {} );
     var thisModel = this;
 
-
-    //----------------------------------------------------------------------------
-    // Instance Data
-    //----------------------------------------------------------------------------
-    // List of the particles that come and go when the simulation is working
-    // in real time.
-    thisModel.transientParticles = [];
-
-
-    // Backup of the transient particles, used to restore them when returning
-    // to live mode after doing playback.
-    thisModel.transientParticlesBackup = [];
-
-    // Particles that are "in the background", meaning that they are always
-    // present and they don't cross the membrane.
-    thisModel.backgroundParticles = [];
-
-    // List of particles that are shown during playback.
-    thisModel.playbackParticles = [];
+    PropertySet.call( thisModel, {potentialChartVisible: DEFAULT_FOR_MEMBRANE_CHART_VISIBILITY,
+      // Controls whether all ions, or just those near membrane, are simulated.
+      allIonsSimulated: DEFAULT_FOR_SHOW_ALL_IONS,
+      // Controls whether charges are depicted.
+      chargesShown: DEFAULT_FOR_CHARGES_SHOWN,
+      // Controls whether concentration readings are depicted.
+      concentrationReadoutVisible: DEFAULT_FOR_CONCENTRATION_READOUT_SHOWN,
+      stimulasLockout: false
+    } );
 
     thisModel.axonMembrane = new AxonMembrane();
-    thisModel.membraneChannels = [];
-    thisModel.crossSectionInnerRadius = (thisModel.axonMembrane.getCrossSectionDiameter() - thisModel.axonMembrane.getMembraneThickness()) / 2;
-    thisModel.crossSectionOuterRadius = (thisModel.axonMembrane.getCrossSectionDiameter() + thisModel.axonMembrane.getMembraneThickness()) / 2;
 
-
+    // List of the particles that come and go when the simulation is working
+    // in real time.
+    thisModel.transientParticles = new ObservableArray();
   }
 
   return inherit( PropertySet, NeuronModel, {
 
     // Called by the animation loop
     step: function( simulationTimeChange ) {
-      console.log(simulationTimeChange);
+      console.log( simulationTimeChange );
     }
   } );
 } );
@@ -188,11 +101,6 @@ define( function( require ) {
 
 //private EventListenerList listeners = new EventListenerList();
 //private IHodgkinHuxleyModel hodgkinHuxleyModel = new ModifiedHodgkinHuxleyModel();
-//private boolean potentialChartVisible = DEFAULT_FOR_MEMBRANE_CHART_VISIBILITY;
-//private boolean allIonsSimulated = DEFAULT_FOR_SHOW_ALL_IONS; // Controls whether all ions, or just those near membrane, are simulated.
-//private boolean chargesShown = DEFAULT_FOR_CHARGES_SHOWN; // Controls whether charges are depicted.
-//private boolean concentrationReadoutVisible = DEFAULT_FOR_CONCENTRATION_READOUT_SHOWN; // Controls whether concentration readings are depicted.
-//private boolean stimulasLockout = false;
 //private double previousMembranePotential = 0;
 //private double sodiumInteriorConcentration = NOMINAL_SODIUM_INTERIOR_CONCENTRATION;
 //private double sodiumExteriorConcentration = NOMINAL_SODIUM_EXTERIOR_CONCENTRATION;

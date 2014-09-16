@@ -1,19 +1,30 @@
-//// Copyright 2002-2011, University of Colorado
-//package edu.colorado.phet.neuron.model;
-//
-//import java.awt.Color;
-//
-//import edu.colorado.phet.neuron.NeuronConstants;
-//
-//public class PotassiumIon extends Particle {
-//
-//  @Override
-//  public ParticleType getType() {
-//    return ParticleType.POTASSIUM_ION;
-//  }
-//
-//  @Override
-//  public Color getRepresentationColor() {
-//    return NeuronConstants.POTASSIUM_COLOR;
-//  }
-//}
+// Copyright 2002-2011, University of Colorado
+/**
+ * @author John Blanco
+ * @author Sharfudeen Ashraf (for Ghent University)
+ */
+define( function( require ) {
+  'use strict';
+  //imports
+  var inherit = require( 'PHET_CORE/inherit' );
+  var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
+  var Particle = require( 'NEURON/neuron/model/Particle' );
+  var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
+
+  function PotassiumIon() {
+    Particle.call( this, {} );
+  }
+
+  return inherit( PotassiumIon, Particle, {
+
+    getType: function() {
+      return ParticleType.POTASSIUM_ION;
+    },
+    getRepresentationColor: function() {
+      return NeuronConstants.POTASSIUM_COLOR;
+    }
+  } );
+
+} );
+
+

@@ -1,4 +1,4 @@
-//// Copyright 2002-2011, University of Colorado
+// Copyright 2002-2011, University of Colorado
 
 /**
  * Model representation for the axon membrane.  Represents it as a cross
@@ -16,10 +16,7 @@ define( function( require ) {
   var PropertySet = require( 'AXON/PropertySet' );
   var Vector2 = require( 'DOT/Vector2' );
   var Shape = require( 'KITE/Shape' );
-  var Cubic = require( 'KITE/segments/Cubic' );
-  var Subpath = require( 'KITE/util/Subpath' );
-  var EllipticalArc = require( 'KITE/segments/EllipticalArc' );
-  var DotUtil = require( 'DOT/Util' );
+
 
   // Fixed membrane characteristics.
   var MEMBRANE_THICKNESS = 4;  // In nanometers, obtained from web research.
@@ -27,6 +24,9 @@ define( function( require ) {
   var BODY_LENGTH = DEFAULT_DIAMETER * 1.5;
   var BODY_TILT_ANGLE = Math.PI / 4;
 
+  /*
+   * @constructor
+   */
   function AxonMembrane() {
 
     var thisModel = this;
@@ -90,7 +90,6 @@ define( function( require ) {
         thisModel.intersectionPointA.y );
       thisModel.axonBodyShape.cubicCurveTo( thisModel.cntrlPtA1.x, thisModel.cntrlPtA1.y, thisModel.cntrlPtA2.x, thisModel.cntrlPtA2.y, thisModel.vanishingPoint.x, thisModel.vanishingPoint.y );
 
-
       _.each( thisModel.curveB.subpaths, function( subpath ) {
         thisModel.axonBodyShape.addSubpath( subpath );
       } );
@@ -105,7 +104,7 @@ define( function( require ) {
     // Shape of the cross section of the membrane.	For now, and unless there
     // is some reason to do otherwise, the center of the cross section is
     // positioned at the origin.
-    thisModel.crossSectionEllipseShape = new Shape().ellipse( -DEFAULT_DIAMETER / 2, -DEFAULT_DIAMETER / 2, DEFAULT_DIAMETER / 2, DEFAULT_DIAMETER / 2 );
+    thisModel.crossSectionEllipseShape = new Shape().ellipse( 0, 0, DEFAULT_DIAMETER / 2, DEFAULT_DIAMETER / 2 );
 
 
   }

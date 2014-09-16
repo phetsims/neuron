@@ -16,7 +16,6 @@ define( function( require ) {
   var HSlider = require( 'SUN/HSlider' );
   var Property = require( 'AXON/Property' );
   var Vector2 = require( 'DOT/Vector2' );
-  var Node = require( 'SCENERY/nodes/Node' );
   var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   var AxonBodyNode = require( 'NEURON/neuron/view/AxonBodyNode' );
   var AxonCrossSectionNode = require( 'NEURON/neuron/view/AxonCrossSectionNode' );

@@ -11,7 +11,6 @@ define( function( require ) {
   'use strict';
   //imports
   var inherit = require( 'PHET_CORE/inherit' );
-  var PropertySet = require( 'AXON/PropertySet' );
   var Node = require( 'SCENERY/nodes/Node' );
   var Path = require( 'SCENERY/nodes/Path' );
   var Line = require( 'SCENERY/nodes/Line' );

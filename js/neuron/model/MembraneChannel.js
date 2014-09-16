@@ -1,4 +1,91 @@
-//// Copyright 2002-2011, University of Colorado
+// Copyright 2002-2011, University of Colorado
+/**
+ * Abstract base class for membrane channels, which represent any channel
+ * through which atoms can go through to cross a membrane.
+ *
+ * @author John Blanco
+ * @author Sharfudeen Ashraf (for Ghent University)
+ */
+
+define( function( require ) {
+  'use strict';
+
+  // imports
+  var inherit = require( 'PHET_CORE/inherit' );
+  var PropertySet = require( 'AXON/PropertySet' );
+  var Vector2 = require( 'DOT/Vector2' );
+  var Dimension2 = require( 'DOT/Dimension2' );
+  var NullCaptureZone = require( 'NEURON/neuron/model/NullCaptureZone' );
+
+  var SIDE_HEIGHT_TO_CHANNEL_HEIGHT_RATIO = 1.3;
+  var DEFAULT_PARTICLE_VELOCITY = 40000; // In nanometers per sec of sim time.
+
+  /**
+   * @param  channelWidth
+   * @param  channelHeight
+   * @param {ParticleCapture} modelContainingParticles
+   * @constructor
+   */
+  function MembraneChannel( channelWidth, channelHeight, modelContainingParticles ) {
+    var thisChannel = this;
+
+    PropertySet.call( thisChannel, {
+      //position of the channel
+      centerLocation: new Vector2(),
+      // Variable that defines how open the channel is.Valid range is 0 to 1, 0 means fully closed, 1 is fully open.
+      openness: 0,
+      // Variable that defines how inactivated the channel is, which is distinct from openness.
+      // Valid range is 0 to 1, 0 means completely active, 1 is completely inactive.
+      inactivationAmt: 0
+    } );
+
+    // Reference to the model that contains that particles that will be moving
+    // through this channel.
+    thisChannel.modelContainingParticles = modelContainingParticles;
+
+    thisChannel.rotationalAngle = 0; // In radians.
+    // Size of channel only, i.e. where the atoms pass through.
+    thisChannel.channelSize = new Dimension2( channelWidth, channelHeight );
+    thisChannel.overallSize = new Dimension2( channelWidth * 2.1, channelHeight * SIDE_HEIGHT_TO_CHANNEL_HEIGHT_RATIO );
+
+    // Capture zones, which is where particles can be captured by this
+    // channel.  There are two, one for inside the cell and one for outside.
+    // There is generally no enforcement of which is which, so it is the
+    // developer's responsibility to position the channel appropriately on the
+    // cell membrane.
+    this.interiorCaptureZone = new NullCaptureZone();
+    this.exteriorCaptureZone = new NullCaptureZone();
+
+    // Time values that control how often this channel requests an ion to move
+    // through it.  These are initialized here to values that will cause the
+    // channel to never request any ions and must be set by the base classes
+    // in order to make capture events occur.
+    this.captureCountdownTimer = Number.POSITIVE_INFINITY;
+    this.minInterCaptureTime = Number.POSITIVE_INFINITY;
+    this.maxInterCaptureTime = Number.POSITIVE_INFINITY;
+
+    // Velocity for particles that move through this channel.
+    this.particleVelocity = DEFAULT_PARTICLE_VELOCITY;
+
+  }
+
+  return inherit( PropertySet, MembraneChannel, {
+    // Reset the channel.
+    reset: function() {
+      this.captureCountdownTimer = Number.POSITIVE_INFINITY;
+    },
+    // Returns a boolean value that says whether or not the channel should be considered open.
+    isOpen: function() {
+      // The threshold values used here are empirically determined, and can
+      // be changed if necessary.
+      return (this.openness > 0.2 && this.inactivationAmt < 0.7);
+    },
+    getParticleTypeToCapture: function() {
+      throw new Error( 'getParticleTypeToCapture should be implemented in descendant classes.' );
+    }
+  } );
+
+} );
 //
 //package edu.colorado.phet.neuron.model;
 //
@@ -14,74 +101,34 @@
 //import edu.umd.cs.piccolo.util.PDimension;
 //
 //
-///**
-// * Abstract base class for membrane channels, which represent any channel
-// * through which atoms can go through to cross a membrane.
-// *
-// * @author John Blanco
-// */
+
 //public abstract class MembraneChannel {
 //
 //  //----------------------------------------------------------------------------
 //  // Class Data
 //  //----------------------------------------------------------------------------
-//
-//  private static final double SIDE_HEIGHT_TO_CHANNEL_HEIGHT_RATIO = 1.3;
-//  protected static final Random RAND = new Random();
-//
-//  private static final double DEFAULT_PARTICLE_VELOCITY = 40000; // In nanometers per sec of sim time.
+
 //
 //  //----------------------------------------------------------------------------
 //  // Instance Data
 //  //----------------------------------------------------------------------------
 //
-//  // Reference to the model that contains that particles that will be moving
-//  // through this channel.
-//  private IParticleCapture modelContainingParticles;
-//
-//  // Member variables that control the size and position of the channel.
-//  private Point2D centerLocation = new Point2D.Double();
-//  private double rotationalAngle = 0; // In radians.
-//  private Dimension2D channelSize = new PDimension(); // Size of channel only, i.e. where the atoms pass through.
-//  private Dimension2D overallSize = new PDimension(); // Size including edges.
-//
-//  // Variable that defines how open the channel is.
-//  private double openness = 0;  // Valid range is 0 to 1, 0 means fully closed, 1 is fully open.
-//
-//  // Variable that defines how inactivated the channel is, which is distinct
-//  // from openness.
-//  private double inactivationAmt = 0;  // Valid range is 0 to 1, 0 means completely active, 1 is completely inactive.
+
+
 //
 //  // Array of listeners.
 //  private ArrayList<Listener> listeners = new ArrayList<Listener>();
 //
-//  // Capture zones, which is where particles can be captured by this
-//  // channel.  There are two, one for inside the cell and one for outside.
-//  // There is generally no enforcement of which is which, so it is the
-//  // developer's responsibility to position the channel appropriately on the
-//  // cell membrane.
-//  private CaptureZone interiorCaptureZone = new NullCaptureZone();
-//  private CaptureZone exteriorCaptureZone = new NullCaptureZone();
-//
-//  // Time values that control how often this channel requests an ion to move
-//  // through it.  These are initialized here to values that will cause the
-//  // channel to never request any ions and must be set by the base classes
-//  // in order to make capture events occur.
-//  private double captureCountdownTimer = Double.POSITIVE_INFINITY;
-//  private double minInterCaptureTime = Double.POSITIVE_INFINITY;
-//  private double maxInterCaptureTime = Double.POSITIVE_INFINITY;
-//
-//  // Velocity for particles that move through this channel.
-//  private double particleVelocity = DEFAULT_PARTICLE_VELOCITY;
+
+
 //
 //  //----------------------------------------------------------------------------
 //  // Constructor
 //  //----------------------------------------------------------------------------
 //
 //  public MembraneChannel(double channelWidth, double channelHeight, IParticleCapture modelContainingParticles){
-//    channelSize.setSize(channelWidth, channelHeight);
-//    overallSize.setSize(channelWidth * 2.1, channelHeight * SIDE_HEIGHT_TO_CHANNEL_HEIGHT_RATIO);
-//    this.modelContainingParticles = modelContainingParticles;
+
+
 //  }
 //
 //  //----------------------------------------------------------------------------
@@ -121,24 +168,7 @@
 //
 //  abstract protected ParticleType getParticleTypeToCapture();
 //
-//  /**
-//   * Reset the channel.
-//   */
-//  public void reset(){
-//    captureCountdownTimer = Double.POSITIVE_INFINITY;
-//  }
-//
-//  /**
-//   * Returns a boolean value that says whether or not the channel should be
-//   * considered open.
-//   *
-//   * @return
-//   */
-//  protected boolean isOpen(){
-//    // The threshold values used here are empirically determined, and can
-//    // be changed if necessary.
-//    return (getOpenness() > 0.2 && getInactivationAmt() < 0.7);
-//  }
+
 //
 //  /**
 //   * Determine whether the provided point is inside the channel.
