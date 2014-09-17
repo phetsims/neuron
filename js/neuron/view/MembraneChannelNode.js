@@ -166,11 +166,10 @@ define( function( require ) {
      * more like they are moving through the channel.  It is not absolutely
      * necessary to use this method for this node - it can be added to the
      * canvas like any other PNode, it just won't have the layering.
-     *
      * @param channelLayer
      * @param edgeLayer
      *
-     */
+     * */
     addToCanvas: function( channelLayer, edgeLayer ) {
       channelLayer.addChild( this.channelLayer );
       edgeLayer.addChild( this.edgeLayer );//Membrane channel maintains its own layer of 2 edge nodes
