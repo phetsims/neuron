@@ -17,7 +17,12 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var PropertySet = require( 'AXON/PropertySet' );
   var AxonMembrane = require( 'NEURON/neuron/model/AxonMembrane' );
+  var ModifiedHodgkinHuxleyModel = require( 'NEURON/neuron/model/ModifiedHodgkinHuxleyModel' );
+  var MembraneChannelTypes = require( 'NEURON/neuron/model/MembraneChannelTypes' );
+  var ParticleCapture = require( 'NEURON/neuron/model/ParticleCapture' );
   var ObservableArray = require( 'AXON/ObservableArray' );
+  var Vector2 = require( 'DOT/Vector2' );
+  var MembraneChannelFactory = require( 'NEURON/neuron/model/MembraneChannelFactory' );
 
   // Default configuration values.
   var DEFAULT_FOR_SHOW_ALL_IONS = true;
@@ -26,6 +31,13 @@ define( function( require ) {
   var DEFAULT_FOR_CONCENTRATION_READOUT_SHOWN = false;
 
 
+  // Numbers of the various types of channels that are present on the
+  // membrane.
+  var NUM_GATED_SODIUM_CHANNELS = 20;
+  var NUM_GATED_POTASSIUM_CHANNELS = 20;
+  var NUM_SODIUM_LEAK_CHANNELS = 3;
+  var NUM_POTASSIUM_LEAK_CHANNELS = 7;
+
 
   /**
    * Main constructor for NeuronModel, which contains all of the model logic for the entire sim screen.
@@ -33,7 +45,7 @@ define( function( require ) {
    */
   function NeuronModel() {
     var thisModel = this;
-
+    ParticleCapture.call( thisModel );
     PropertySet.call( thisModel, {potentialChartVisible: DEFAULT_FOR_MEMBRANE_CHART_VISIBILITY,
       // Controls whether all ions, or just those near membrane, are simulated.
       allIonsSimulated: DEFAULT_FOR_SHOW_ALL_IONS,
@@ -46,17 +58,130 @@ define( function( require ) {
 
     thisModel.axonMembrane = new AxonMembrane();
 
-    // List of the particles that come and go when the simulation is working
-    // in real time.
+    // List of the particles that come and go when the simulation is working in real time.
     thisModel.transientParticles = new ObservableArray();
+    thisModel.membraneChannels = new ObservableArray();
+    thisModel.hodgkinHuxleyModel = new ModifiedHodgkinHuxleyModel();
+
+    //TODO prop listeners to be linked
+
+    function addInitialChannels() {
+      // Add the initial channels.  The pattern is intended to be such that
+      // the potassium and sodium gated channels are right next to each
+      // other, with occasional leak channels interspersed.  There should
+      // be one or more of each type of channel on the top of the membrane
+      // so when the user zooms in, they can see all types.
+      var angle = Math.PI * 0.45;
+      var totalNumChannels = NUM_GATED_SODIUM_CHANNELS + NUM_GATED_POTASSIUM_CHANNELS + NUM_SODIUM_LEAK_CHANNELS +
+                             NUM_POTASSIUM_LEAK_CHANNELS;
+      var angleIncrement = Math.PI * 2 / totalNumChannels;
+      var gatedSodiumChansAdded = 0;
+      var gatedPotassiumChansAdded = 0;
+      var sodiumLeakChansAdded = 0;
+      var potassiumLeakChansAdded = 0;
+
+      // Add some of each type so that they are visible at the top portion
+      // of the membrane.
+      if ( NUM_SODIUM_LEAK_CHANNELS > 0 ) {
+        thisModel.addChannel( MembraneChannelTypes.SODIUM_LEAKAGE_CHANNEL, angle );
+        sodiumLeakChansAdded++;
+        angle += angleIncrement;
+      }
+      if ( NUM_GATED_POTASSIUM_CHANNELS > 0 ) {
+        thisModel.addChannel( MembraneChannelTypes.POTASSIUM_GATED_CHANNEL, angle );
+        gatedPotassiumChansAdded++;
+        angle += angleIncrement;
+      }
+      if ( NUM_GATED_SODIUM_CHANNELS > 0 ) {
+        thisModel.addChannel( MembraneChannelTypes.SODIUM_GATED_CHANNEL, angle );
+        gatedSodiumChansAdded++;
+        angle += angleIncrement;
+      }
+      if ( NUM_POTASSIUM_LEAK_CHANNELS > 0 ) {
+        thisModel.addChannel( MembraneChannelTypes.POTASSIUM_LEAKAGE_CHANNEL, angle );
+        potassiumLeakChansAdded++;
+        angle += angleIncrement;
+      }
+
+      // Now loop through the rest of the membrane's circumference adding
+      // the various types of gates.
+      for ( var i = 0; i < totalNumChannels - 4; i++ ) {
+        // Calculate the "urgency" for each type of gate.
+        var gatedSodiumUrgency = NUM_GATED_SODIUM_CHANNELS / gatedSodiumChansAdded;
+        var gatedPotassiumUrgency = NUM_GATED_POTASSIUM_CHANNELS / gatedPotassiumChansAdded;
+        var potassiumLeakUrgency = NUM_POTASSIUM_LEAK_CHANNELS / potassiumLeakChansAdded;
+        var sodiumLeakUrgency = NUM_SODIUM_LEAK_CHANNELS / sodiumLeakChansAdded;
+        var channelTypeToAdd = null;
+        if ( gatedSodiumUrgency >= gatedPotassiumUrgency && gatedSodiumUrgency >= potassiumLeakUrgency && gatedSodiumUrgency >= sodiumLeakUrgency ) {
+          // Add a gated sodium channel.
+          channelTypeToAdd = MembraneChannelTypes.SODIUM_GATED_CHANNEL;
+          gatedSodiumChansAdded++;
+        }
+        else if ( gatedPotassiumUrgency > gatedSodiumUrgency && gatedPotassiumUrgency >= potassiumLeakUrgency && gatedPotassiumUrgency >= sodiumLeakUrgency ) {
+          // Add a gated potassium channel.
+          channelTypeToAdd = MembraneChannelTypes.POTASSIUM_GATED_CHANNEL;
+          gatedPotassiumChansAdded++;
+        }
+        else if ( potassiumLeakUrgency > gatedSodiumUrgency && potassiumLeakUrgency > gatedPotassiumUrgency && potassiumLeakUrgency >= sodiumLeakUrgency ) {
+          // Add a potassium leak channel.
+          channelTypeToAdd = MembraneChannelTypes.POTASSIUM_LEAKAGE_CHANNEL;
+          potassiumLeakChansAdded++;
+        }
+        else if ( sodiumLeakUrgency > gatedSodiumUrgency && sodiumLeakUrgency > gatedPotassiumUrgency && sodiumLeakUrgency > potassiumLeakUrgency ) {
+          // Add a sodium leak channel.
+          channelTypeToAdd = MembraneChannelTypes.SODIUM_LEAKAGE_CHANNEL;
+          sodiumLeakChansAdded++;
+        }
+        else {
+          assert && assert( false ); // Should never get here, so debug if it does.
+        }
+
+        thisModel.addChannel( channelTypeToAdd, angle );
+        angle += angleIncrement;
+      }
+    }
+
+    addInitialChannels();
+    // Note: It is expected that the model will be reset once it has been
+    // created, and this will set the initial state, including adding the
+    // particles to the model.
   }
 
-  return inherit( PropertySet, NeuronModel, {
+  return inherit( ParticleCapture, NeuronModel, {
 
     // Called by the animation loop
     step: function( simulationTimeChange ) {
       console.log( simulationTimeChange );
+    },
+    /**
+     * Add the provided channel at the specified rotational location.
+     * Locations are specified in terms of where on the circle of the membrane
+     * they are, with a value of 0 being on the far right, PI/2 on the top,
+     * PI on the far left, etc.
+     * @param {MembraneChannelTypes}membraneChannelType
+     * @param angle
+     */
+    addChannel: function( membraneChannelType, angle ) {
+      var membraneChannel = MembraneChannelFactory.createMembraneChannel( membraneChannelType, this,
+        this.hodgkinHuxleyModel );
+
+      if ( !membraneChannel )//TODO not all membrane channels are implemented
+      {
+        return;
+      }
+
+      var radius = this.axonMembrane.getCrossSectionDiameter() / 2;
+      var newLocation = new Vector2( radius * Math.cos( angle ), radius * Math.sin( angle ) );
+
+      // Position the channel on the membrane.
+      membraneChannel.setRotationalAngle( angle );
+      membraneChannel.setCenterLocation( newLocation );
+
+      // Add the channel and let everyone know it exists.
+      this.membraneChannels.push( membraneChannel );
+
     }
+
   } );
 } );
 
@@ -864,27 +989,7 @@ define( function( require ) {
 //    }
 //  }
 //
-//  /**
-//   * Add the provided channel at the specified rotational location.
-//   * Locations are specified in terms of where on the circle of the membrane
-//   * they are, with a value of 0 being on the far right, PI/2 on the top,
-//   * PI on the far left, etc.
-//   */
-//  private void addChannel(MembraneChannelTypes membraneChannelType, double angle){
-//
-//    MembraneChannel membraneChannel = MembraneChannel.createMembraneChannel(membraneChannelType, this,
-//      hodgkinHuxleyModel);
-//    double radius = axonMembrane.getCrossSectionDiameter() / 2;
-//    Point2D newLocation = new Point2D.Double(radius * Math.cos(angle), radius * Math.sin(angle));
-//
-//    // Position the channel on the membrane.
-//    membraneChannel.setRotationalAngle(angle);
-//    membraneChannel.setCenterLocation(newLocation);
-//
-//    // Add the channel and let everyone know it exists.
-//    membraneChannels.add(membraneChannel);
-//    notifyChannelAdded(membraneChannel);
-//  }
+
 //
 //  /**
 //   * Place a particle at a random location inside the axon membrane.

@@ -16,9 +16,11 @@ define( function( require ) {
   var HSlider = require( 'SUN/HSlider' );
   var Property = require( 'AXON/Property' );
   var Vector2 = require( 'DOT/Vector2' );
+  var Node = require( 'SCENERY/nodes/Node' );
   var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   var AxonBodyNode = require( 'NEURON/neuron/view/AxonBodyNode' );
   var AxonCrossSectionNode = require( 'NEURON/neuron/view/AxonCrossSectionNode' );
+  var MembraneChannelNode = require( 'NEURON/neuron/view/MembraneChannelNode' );
 
   // images
   var mockupImage = require( 'image!NEURON/neuron-mockup.png' );
@@ -31,12 +33,10 @@ define( function( require ) {
   function NeuronView( neuronModel ) {
 
     var thisView = this;
-    this.model = neuronModel;
+    thisView.model = neuronModel;
     ScreenView.call( thisView, {layoutBounds: ScreenView.UPDATED_LAYOUT_BOUNDS} );
 
     // Set up the model-canvas transform.
-
-
     thisView.mvt = ModelViewTransform2.createSinglePointScaleInvertedYMapping(
       Vector2.ZERO,
       new Vector2( thisView.layoutBounds.width * 0.45, thisView.layoutBounds.height * 0.45 ),
@@ -61,12 +61,53 @@ define( function( require ) {
     this.addChild( image );
     this.addChild( new HSlider( mockupOpacityProperty, {min: 0, max: 1}, {top: 10, left: 10} ) );
 
+    var rootNode = new Node();
+    thisView.addChild( rootNode );
 
     // Create the layers in the desired order.
+    var axonBodyLayer = new Node();
+    var axonCrossSectionLayer = new Node();
+    var particleLayer = new Node();
+    var channelLayer = new Node();
+    var channelEdgeLayer = new Node();
+    var chargeSymbolLayer = new Node();
+
+
+    rootNode.addChild( axonBodyLayer );
+    rootNode.addChild( axonCrossSectionLayer );
+    rootNode.addChild( channelLayer );
+    rootNode.addChild( particleLayer );
+    rootNode.addChild( channelEdgeLayer );
+    rootNode.addChild( chargeSymbolLayer );
+
+    //TODO concentration layer Imp
+
     var axonBodyNode = new AxonBodyNode( this.model.axonMembrane, thisView.mvt );
-    this.addChild( axonBodyNode );
+    axonBodyLayer.addChild( axonBodyNode );
     var axonCrossSectionNode = new AxonCrossSectionNode( this.model.axonMembrane, thisView.mvt );
-    this.addChild( axonCrossSectionNode );
+    axonCrossSectionLayer.addChild( axonCrossSectionNode );
+
+    //Particle TODO
+
+
+    function handleChannelAdded( addedChannel ) {
+      // Create the view representation for this channel.
+      var channelNode = new MembraneChannelNode( addedChannel, thisView.mvt );
+      channelNode.addToCanvas( channelLayer, channelEdgeLayer );// it internally adds to layers, done this way for better layering
+
+      // Add the removal listener for if and when this channel is removed from the model.
+      thisView.model.membraneChannels.addItemRemovedListener( function removalListener( removedChannel ) {
+        if ( removedChannel === addedChannel ) {
+          channelNode.removeFromCanvas( channelLayer, channelEdgeLayer );
+          thisView.model.membraneChannels.removeItemRemovedListener( removalListener );
+        }
+      } );
+    }
+
+    // Add initial channel nodes.
+    thisView.model.membraneChannels.forEach( handleChannelAdded );
+    // Add a node on every new Channel Model
+    thisView.model.membraneChannels.addItemAddedListener( handleChannelAdded );
 
 
   }

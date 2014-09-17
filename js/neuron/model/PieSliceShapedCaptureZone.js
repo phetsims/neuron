@@ -49,7 +49,7 @@ define( function( require ) {
     thisZone.angleOfExtent = angleOfExtent;
   }
 
-  return inherit( PieSliceShapedCaptureZone, CaptureZone, {
+  return inherit(CaptureZone,PieSliceShapedCaptureZone, {
     isPointInZone: function( pt ) {
       return this.zoneShape.containsPoint( pt );
     },

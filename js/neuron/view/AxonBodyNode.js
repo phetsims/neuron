@@ -1,4 +1,4 @@
-//// Copyright 2002-2011, University of Colorado
+// Copyright 2002-2011, University of Colorado
 /**
  * Representation of the axon membrane body in the view.  This is the part
  * that the action potential travels along, and is supposed to look sort of

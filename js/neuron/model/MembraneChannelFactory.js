@@ -29,8 +29,8 @@ define( function( require ) {
           membraneChannel = new SodiumLeakageChannel( particleModel, hodgkinHuxleyModel );
           break;
         //Other Channel Types TODO
-        default:
-          assert && assert( false, "Error: Unrecognized channelType type." );
+        //default:
+        //  assert && assert( false, "Error: Unrecognized channelType type." );
       }
       return membraneChannel;
     }

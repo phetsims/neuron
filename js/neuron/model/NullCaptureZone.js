@@ -23,7 +23,7 @@ define( function( require ) {
     CaptureZone.call( this, {} );
   }
 
-  return inherit( NullCaptureZone, CaptureZone, {
+  return inherit(CaptureZone,NullCaptureZone, {
     //see CaptureZone
     deriveZoneShape: function() {
       return new Shape().ellipse( 0, 0, 0, 0 );

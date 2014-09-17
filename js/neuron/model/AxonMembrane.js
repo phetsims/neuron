@@ -16,12 +16,12 @@ define( function( require ) {
   var PropertySet = require( 'AXON/PropertySet' );
   var Vector2 = require( 'DOT/Vector2' );
   var Shape = require( 'KITE/Shape' );
+  var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
 
 
   // Fixed membrane characteristics.
-  var MEMBRANE_THICKNESS = 4;  // In nanometers, obtained from web research.
-  var DEFAULT_DIAMETER = 150; // In nanometers.
-  var BODY_LENGTH = DEFAULT_DIAMETER * 1.5;
+
+  var BODY_LENGTH = NeuronConstants.DEFAULT_DIAMETER * 1.5;
   var BODY_TILT_ANGLE = Math.PI / 4;
 
   /*
@@ -104,7 +104,7 @@ define( function( require ) {
     // Shape of the cross section of the membrane.	For now, and unless there
     // is some reason to do otherwise, the center of the cross section is
     // positioned at the origin.
-    thisModel.crossSectionEllipseShape = new Shape().ellipse( 0, 0, DEFAULT_DIAMETER / 2, DEFAULT_DIAMETER / 2 );
+    thisModel.crossSectionEllipseShape = new Shape().ellipse( 0, 0, NeuronConstants.DEFAULT_DIAMETER / 2, NeuronConstants.DEFAULT_DIAMETER / 2 );
 
 
   }
@@ -112,11 +112,11 @@ define( function( require ) {
   return inherit( PropertySet, AxonMembrane, {
 
     getMembraneThickness: function() {
-      return MEMBRANE_THICKNESS;
+      return NeuronConstants.MEMBRANE_THICKNESS;
     },
 
     getCrossSectionDiameter: function() {
-      return DEFAULT_DIAMETER;
+      return NeuronConstants.DEFAULT_DIAMETER;
     },
 
     getCrossSectionEllipseShape: function() {

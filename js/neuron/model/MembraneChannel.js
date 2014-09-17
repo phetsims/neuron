@@ -16,9 +16,17 @@ define( function( require ) {
   var Vector2 = require( 'DOT/Vector2' );
   var Dimension2 = require( 'DOT/Dimension2' );
   var NullCaptureZone = require( 'NEURON/neuron/model/NullCaptureZone' );
+  var Matrix3 = require( 'DOT/Matrix3' );
+  var Rectangle = require( 'DOT/Rectangle' );
+  var Color = require( 'SCENERY/util/Color' );
 
   var SIDE_HEIGHT_TO_CHANNEL_HEIGHT_RATIO = 1.3;
   var DEFAULT_PARTICLE_VELOCITY = 40000; // In nanometers per sec of sim time.
+  var RAND = {
+    nextDouble: function() {
+      return Math.random();
+    }
+  };
 
   /**
    * @param  channelWidth
@@ -42,7 +50,6 @@ define( function( require ) {
     // Reference to the model that contains that particles that will be moving
     // through this channel.
     thisChannel.modelContainingParticles = modelContainingParticles;
-
     thisChannel.rotationalAngle = 0; // In radians.
     // Size of channel only, i.e. where the atoms pass through.
     thisChannel.channelSize = new Dimension2( channelWidth, channelHeight );
@@ -53,7 +60,12 @@ define( function( require ) {
     // There is generally no enforcement of which is which, so it is the
     // developer's responsibility to position the channel appropriately on the
     // cell membrane.
+
+    // Set the "capture zone", which is a shape that represents the space
+    // from which particles may be captured.  If null is returned, this
+    // channel has no capture zone.
     this.interiorCaptureZone = new NullCaptureZone();
+
     this.exteriorCaptureZone = new NullCaptureZone();
 
     // Time values that control how often this channel requests an ion to move
@@ -70,6 +82,24 @@ define( function( require ) {
   }
 
   return inherit( PropertySet, MembraneChannel, {
+    step: function( dt ) {
+      if ( this.captureCountdownTimer !== Number.POSITIVE_INFINITY ) {
+        if ( this.isOpen() ) {
+          this.captureCountdownTimer -= dt;
+          if ( this.captureCountdownTimer <= 0 ) {
+            this.modelContainingParticles.requestParticleThroughChannel( this.getParticleTypeToCapture(), this, this.particleVelocity, this.chooseCrossingDirection() );
+            this.restartCaptureCountdownTimer( false );
+          }
+        }
+        else {
+          // If the channel is closed, the countdown timer shouldn't be
+          // running, so this code is generally hit when the membrane
+          // just became closed.  Turn off the countdown timer by
+          // setting it to infinity.
+          this.captureCountdownTimer = Number.POSITIVE_INFINITY;
+        }
+      }
+    },
     // Reset the channel.
     reset: function() {
       this.captureCountdownTimer = Number.POSITIVE_INFINITY;
@@ -82,9 +112,108 @@ define( function( require ) {
     },
     getParticleTypeToCapture: function() {
       throw new Error( 'getParticleTypeToCapture should be implemented in descendant classes.' );
+    },
+    // Determine whether the provided point is inside the channel.
+    isPointInChannel: function( pt ) {
+      // Note: A rotational angle of zero is considered to be lying on the
+      // side.  Hence the somewhat odd-looking use of height and width in
+      // the determination of the channel Rect.
+      var channelRect = new Rectangle( this.centerLocation.x - this.channelSize.height / 2,
+          this.centerLocation.y - this.channelSize.width / 2, this.channelSize.height, this.channelSize.width );
+      var rotationTransform = Matrix3.rotationAround( this.rotationalAngle, this.centerLocation.x, this.centerLocation.y );
+      var rotatedChannelRect = rotationTransform.transformed( channelRect );
+      return rotatedChannelRect.containsPoint( pt );
+    },
+    // returns a new Instance of Dimension
+    getChannelSize: function() {
+      return new Dimension2( this.channelSize.width, this.channelSize.height );
+    },
+    getCenterLocation: function() {
+      return new Vector2( this.centerLocation.x, this.centerLocation.y );
+    },
+    /**
+     * Choose the direction of crossing for the next particle to cross the
+     * membrane.  If particles only cross in one direction, this will always
+     * return the same thing.  If they can vary, this can return a different
+     * value.
+     */
+    chooseCrossingDirection: function() {
+      throw new Error( 'chooseCrossingDirection should be implemented in descendant classes.' );
+    },
+    /**
+     * Start or restart the countdown timer which is used to time the event
+     * where a particle is captured for movement across the membrane.  A
+     * boolean parameter controls whether a particle capture should occur
+     * immediately in addition to setting this timer.
+     *
+     * @param captureNow - Indicates whether a capture should be initiated
+     * now in addition to resetting the timer.  This is often set to true
+     * kicking of a cycle of particle captures.
+     */
+    restartCaptureCountdownTimer: function( captureNow ) {
+      if ( this.minInterCaptureTime !== Number.POSITIVE_INFINITY && this.maxInterCaptureTime !== Number.POSITIVE_INFINITY ) {
+        assert && assert( this.maxInterCaptureTime >= this.minInterCaptureTime );
+        this.captureCountdownTimer = this.minInterCaptureTime + RAND.nextDouble() * (this.maxInterCaptureTime - this.minInterCaptureTime);
+      }
+      else {
+        this.captureCountdownTimer = Number.POSITIVE_INFINITY;
+      }
+      if ( captureNow ) {
+        this.modelContainingParticles.requestParticleThroughChannel( this.getParticleTypeToCapture(), this, this.particleVelocity,
+          this.chooseCrossingDirection() );
+      }
+    },
+    getChannelColor: function() {
+      return Color.MAGENTA;
+    },
+    getEdgeColor: function() {
+      return Color.RED;
+    },
+    //@protected
+    setParticleVelocity: function( particleVelocity ) {
+      this.particleVelocity = particleVelocity;
+    },
+    //@protected
+    setInteriorCaptureZone: function( captureZone ) {
+      this.interiorCaptureZone = captureZone;
+    },
+
+    //@protected
+    setExteriorCaptureZone: function( captureZone ) {
+      this.exteriorCaptureZone = captureZone;
+    },
+    /**
+     * Gets a values that indicates whether this channel has an inactivation
+     * gate.  Most of the channels in this sim do not have these, so the
+     * default is to return false.  This should be overridden in subclasses
+     * that add inactivation gates to the channels.
+     *
+     * @return
+     */
+    getHasInactivationGate: function() {
+      return false;
+    },
+    //convenience method
+    getOpenness: function() {
+      return this.openness;
+    },
+    setOpenness: function() {
+      this.openness = 1;
+    },
+    setRotationalAngle: function( rotationalAngle ) {
+      this.rotationalAngle = rotationalAngle;
+      this.interiorCaptureZone.rotationalAngle = rotationalAngle;
+      this.exteriorCaptureZone.rotationalAngle = rotationalAngle;
+    },
+
+    setCenterLocation: function( newCenterLocation ) {
+      if ( !newCenterLocation.equals( this.centerLocation ) ) {
+        this.centerLocation = newCenterLocation;// will fire prop change listener
+        this.interiorCaptureZone.originPoint = newCenterLocation;
+        this.exteriorCaptureZone.originPoint = newCenterLocation;
+      }
     }
   } );
-
 } );
 //
 //package edu.colorado.phet.neuron.model;
@@ -169,38 +298,9 @@ define( function( require ) {
 //  abstract protected ParticleType getParticleTypeToCapture();
 //
 
+
 //
-//  /**
-//   * Determine whether the provided point is inside the channel.
-//   *
-//   * @param pt
-//   * @return
-//   */
-//  public boolean isPointInChannel(Point2D pt){
-//    // Note: A rotational angle of zero is considered to be lying on the
-//    // side.  Hence the somewhat odd-looking use of height and width in
-//    // the determination of the channel shape.
-//    Shape channelShape = new Rectangle2D.Double(
-//        centerLocation.getX() - channelSize.getHeight() / 2,
-//        centerLocation.getY() - channelSize.getWidth() / 2,
-//      channelSize.getHeight(),
-//      channelSize.getWidth());
-//    AffineTransform transform = AffineTransform.getRotateInstance(rotationalAngle, centerLocation.getX(), centerLocation.getY());
-//    Shape rotatedChannelShape = transform.createTransformedShape(channelShape);
-//    return rotatedChannelShape.contains(pt);
-//  }
-//
-//  /**
-//   * Gets a values that indicates whether this channel has an inactivation
-//   * gate.  Most of the channels in this sim do not have these, so the
-//   * default is to return false.  This should be overridden in subclasses
-//   * that add inactivation gates to the channels.
-//   *
-//   * @return
-//   */
-//  public boolean getHasInactivationGate(){
-//    return false;
-//  }
+
 //
 //  /**
 //   * This method is for debugging, and it provides a shape that represents
@@ -264,59 +364,8 @@ define( function( require ) {
 //    this.particleVelocity = particleVelocity;
 //  }
 //
-//  /**
-//   * Start or restart the countdown timer which is used to time the event
-//   * where a particle is captured for movement across the membrane.  A
-//   * boolean parameter controls whether a particle capture should occur
-//   * immediately in addition to setting this timer.
-//   *
-//   * @param captureNow - Indicates whether a capture should be initiated
-//   * now in addition to resetting the timer.  This is often set to true
-//   * kicking of a cycle of particle captures.
-//   */
-//  protected void restartCaptureCountdownTimer(boolean captureNow){
-//    if (minInterCaptureTime != Double.POSITIVE_INFINITY && maxInterCaptureTime != Double.POSITIVE_INFINITY){
-//      assert maxInterCaptureTime >= minInterCaptureTime;
-//      captureCountdownTimer = minInterCaptureTime + RAND.nextDouble() * (maxInterCaptureTime - minInterCaptureTime);
-//    }
-//    else{
-//      captureCountdownTimer = Double.POSITIVE_INFINITY;
-//    }
-//
-//    if (captureNow){
-//      modelContainingParticles.requestParticleThroughChannel(getParticleTypeToCapture(), this, particleVelocity,
-//        chooseCrossingDirection());
-//    }
-//  }
-//
-//  /**
-//   * Set the "capture zone", which is a shape that represents the space
-//   * from which particles may be captured.  If null is returned, this
-//   * channel has no capture zone.
-//   */
-//  public CaptureZone getInteriorCaptureZone(){
-//    return interiorCaptureZone;
-//  }
-//
-//  protected void setInteriorCaptureZone(CaptureZone captureZone){
-//    this.interiorCaptureZone = captureZone;
-//  }
-//
-//  public CaptureZone getExteriorCaptureZone(){
-//    return exteriorCaptureZone;
-//  }
-//
-//  protected void setExteriorCaptureZone(CaptureZone captureZone){
-//    this.exteriorCaptureZone = captureZone;
-//  }
-//
-//  public Dimension2D getChannelSize(){
-//    return new PDimension(channelSize);
-//  }
-//
-//  public Point2D getCenterLocation(){
-//    return new Point2D.Double(centerLocation.getX(), centerLocation.getY());
-//  }
+
+
 //
 //  public void setCenterLocation(Point2D newCenterLocation) {
 //    if (!newCenterLocation.equals(centerLocation)){
@@ -346,10 +395,7 @@ define( function( require ) {
 //  public Dimension2D getOverallSize(){
 //    return overallSize;
 //  }
-//
-//  public double getOpenness() {
-//    return openness;
-//  }
+
 //
 //  protected void setOpenness(double openness) {
 //    if (this.openness != openness){
@@ -385,13 +431,7 @@ define( function( require ) {
 //    listeners.remove(listener);
 //  }
 //
-//  /**
-//   * Choose the direction of crossing for the next particle to cross the
-//   * membrane.  If particles only cross in one direction, this will always
-//   * return the same thing.  If they can vary, this can return a different
-//   * value.
-//   */
-//  protected abstract MembraneCrossingDirection chooseCrossingDirection();
+
 //
 //  /**
 //   * This is called to remove this channel from the model.  It simply sends

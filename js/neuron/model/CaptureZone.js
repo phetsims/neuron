@@ -28,7 +28,7 @@ define( function( require ) {
     } );
   }
 
-  return inherit( CaptureZone, PropertySet, {
+  return inherit( PropertySet, CaptureZone, {
     isPointInZone: function( pt ) {
       throw new Error( 'isPointInZone should be implemented in descendant classes.' );
     },

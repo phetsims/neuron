@@ -1,4 +1,187 @@
-//// Copyright 2002-2011, University of Colorado
+// Copyright 2002-2011, University of Colorado
+/**
+ * Node that represents a membrane channel in the view.
+ * @author John Blanco
+ * @author Sharfudeen Ashraf (for Ghent University)
+ */
+define( function( require ) {
+  'use strict';
+  //imports
+  var inherit = require( 'PHET_CORE/inherit' );
+  var Node = require( 'SCENERY/nodes/Node' );
+  var Path = require( 'SCENERY/nodes/Path' );
+  var Dimension2 = require( 'DOT/Dimension2' );
+  var Color = require( 'SCENERY/util/Color' );
+  var Shape = require( 'KITE/Shape' );
+  var Vector2 = require( 'DOT/Vector2' );
+
+  /**
+   * @param {MembraneChannel} membraneChannelModel
+   * @param {ModelViewTransform2D} mvt
+   * @constructor
+   */
+  function MembraneChannelNode( membraneChannelModel, mvt ) {
+    var thisNode = this;
+    Node.call( thisNode, {} );
+    thisNode.membraneChannelModel = membraneChannelModel;
+    thisNode.mvt = mvt;
+
+    //TODO hookup with membraneChannelModel properties
+
+
+    /**
+     *  private
+     *  @param{Dimension2D} size
+     *  @param{Color} color
+     */
+    function createEdgeNode( size, color ) {
+      var shape = new Shape();
+      var width = size.width;
+      var height = size.height;
+
+      shape.moveTo( -width / 2, height / 4 );
+      shape.cubicCurveTo( -width / 2, height / 2, width / 2, height / 2, width / 2, height / 4 );
+      shape.lineTo( width / 2, -height / 4 );
+      shape.cubicCurveTo( width / 2, -height / 2, -width / 2, -height / 2, -width / 2, -height / 4 );
+      shape.close();
+
+      var edgeNode = new Path( shape, {fill: color, stroke: color.colorUtilsDarker( 0.3 )} );
+      return edgeNode;
+    }
+
+    // Create the channel representation.
+    var channel = new Path( new Shape(), {fill: membraneChannelModel.getChannelColor(), lineWidth: 0} );
+
+    // Create the edge representations.
+    var edgeNodeWidth = (membraneChannelModel.overallSize.width - membraneChannelModel.channelSize.width) / 2;
+    var edgeNodeHeight = membraneChannelModel.overallSize.height;
+    var transformedEdgeNodeSize = new Dimension2( Math.abs( mvt.modelToViewDeltaX( edgeNodeWidth ) ), Math.abs( mvt.modelToViewDeltaY( edgeNodeHeight ) ) );
+    var leftEdgeNode = createEdgeNode( transformedEdgeNodeSize, membraneChannelModel.getEdgeColor() );
+    var rightEdgeNode = createEdgeNode( transformedEdgeNodeSize, membraneChannelModel.getEdgeColor() );
+
+    // Create the layers for the channel the edges.  This makes offsets
+    // and rotations easier.see addToCanvas on why node layer is a instance member
+    thisNode.channelLayer = new Node();
+    thisNode.addChild( thisNode.channelLayer );
+    thisNode.channelLayer.addChild( channel );
+    thisNode.edgeLayer = new Node();
+    thisNode.addChild( thisNode.edgeLayer );
+    thisNode.edgeLayer.addChild( leftEdgeNode );
+    thisNode.edgeLayer.addChild( rightEdgeNode );
+
+    //gets created and updated only if channel has InactivationGate
+    var inactivationGateBallNode;
+    var inactivationGateString;
+
+    if ( membraneChannelModel.getHasInactivationGate() ) {
+
+      // Add the ball and string that make up the inactivation gate.
+      inactivationGateString = new Path( new Shape(), {lineWidth: 2, stroke: Color.BLACK} );
+      thisNode.channelLayer.addChild( inactivationGateString );
+
+      var ballDiameter = mvt.modelToViewDeltaX( membraneChannelModel.getChannelSize().width );
+      var inactivationBallShape = new Shape().ellipse( 0, 0, ballDiameter / 2, ballDiameter / 2 );
+      inactivationGateBallNode = new Path( inactivationBallShape, {fill: membraneChannelModel.getEdgeColor().colorUtilsDarker( 0.3 ), lineWidth: 1, stroke: membraneChannelModel.getEdgeColor().colorUtilsDarker( 0.3 )} );
+      thisNode.edgeLayer.addChild( inactivationGateBallNode );
+    }
+
+    //private
+    function updateRepresentation() {
+      // Set the channel width as a function of the openness of the membrane channel.
+      var channelWidth = membraneChannelModel.getChannelSize().width * membraneChannelModel.getOpenness();
+      var channelSize = new Dimension2( channelWidth, membraneChannelModel.getChannelSize().height );
+      var transformedChannelSize = new Dimension2( Math.abs( mvt.modelToViewDeltaX( channelSize.width ) ), Math.abs( mvt.modelToViewDeltaY( channelSize.height ) ) );
+
+      // Make the node a bit bigger than the channel so that the edges can
+      // be placed over it with no gaps.
+      var oversizeFactor = 1.1;
+
+      var width = transformedChannelSize.width * oversizeFactor;
+      var height = transformedChannelSize.height * oversizeFactor;
+      var edgeWidth = leftEdgeNode.width; // Assume both edges are the same size.
+
+      var path = new Shape();
+      path.moveTo( 0, 0 );
+      path.quadraticCurveTo( (width + edgeWidth) / 2, height / 8, width + edgeWidth, 0 );
+      path.lineTo( width + edgeWidth, height );
+      path.quadraticCurveTo( (width + edgeWidth) / 2, height * 7 / 8, 0, height );
+      path.close();
+
+      channel.setShape( path );
+      channel.fill = membraneChannelModel.getChannelColor();
+      channel.translate( -channel.getBounds().width / 2, -channel.getBounds().height / 2 );
+      leftEdgeNode.translate( -transformedChannelSize.width / 2 - leftEdgeNode.width / 2, 0 );
+      rightEdgeNode.translate( transformedChannelSize.width / 2 + rightEdgeNode.width / 2, 0 );
+
+      // If this membrane channel has an inactivation gate, update it.
+      if ( membraneChannelModel.getHasInactivationGate() ) {
+
+        var transformedOverallSize =
+          new Dimension2( mvt.modelToViewDeltaX( membraneChannelModel.getOverallSize().width ),
+            mvt.modelToViewDeltaY( membraneChannelModel.getOverallSize().height ) );
+
+        // Position the ball portion of the inactivation gate.
+        var channelEdgeConnectionPoint = new Vector2( leftEdgeNode.centerX,
+          leftEdgeNode.getBounds().getMaxY() );
+        var channelCenterBottomPoint = new Vector2( 0, transformedChannelSize.height / 2 );
+        var angle = -Math.PI / 2 * (1 - membraneChannelModel.getInactivationAmt());
+        var radius = (1 - membraneChannelModel.getInactivationAmt()) * transformedOverallSize.width / 2 + membraneChannelModel.getInactivationAmt() * channelEdgeConnectionPoint.distance( channelCenterBottomPoint );
+
+        var ballPosition = new Vector2( channelEdgeConnectionPoint.x + Math.cos( angle ) * radius,
+            channelEdgeConnectionPoint.y - Math.sin( angle ) * radius );
+        inactivationGateBallNode.translate( ballPosition );
+
+        // Redraw the "string" (actually a strand of protein in real life)
+        // that connects the ball to the gate.
+        var ballConnectionPoint = inactivationGateBallNode.translation;
+
+        var connectorLength = channelCenterBottomPoint.distance( ballConnectionPoint );
+        var stringShape = new Shape().cubicCurveTo( channelEdgeConnectionPoint.x, channelEdgeConnectionPoint.y, channelEdgeConnectionPoint.x + connectorLength * 0.25,
+            channelEdgeConnectionPoint.y + connectorLength * 0.5, ballConnectionPoint.x - connectorLength * 0.75,
+            ballConnectionPoint.y - connectorLength * 0.5, ballConnectionPoint.x, ballConnectionPoint.y );
+        inactivationGateString.setShape( stringShape );
+      }
+    }
+
+    //private
+    function updateLocation() {
+      thisNode.channelLayer.translate( mvt.modelToViewPosition( membraneChannelModel.getCenterLocation() ) );
+      thisNode.edgeLayer.translate( mvt.modelToViewPosition( membraneChannelModel.getCenterLocation() ) );
+
+      // Rotate based on the model element's orientation. (The Java Version rotates and then translates, here the transformation order is reversed Ashraf)
+      thisNode.channelLayer.setRotation( -membraneChannelModel.rotationalAngle + Math.PI / 2 );
+      thisNode.edgeLayer.setRotation( -membraneChannelModel.rotationalAngle + Math.PI / 2 );
+    }
+
+    // Update the representation and location.
+    updateRepresentation();
+    updateLocation();
+
+  }
+
+  return inherit( Node, MembraneChannelNode, {
+    /**
+     * Add this node to the two specified parent nodes.  This is done in order
+     * to achieve a better layering effect that allows particles to look
+     * more like they are moving through the channel.  It is not absolutely
+     * necessary to use this method for this node - it can be added to the
+     * canvas like any other PNode, it just won't have the layering.
+     *
+     * @param channelLayer
+     * @param edgeLayer
+     *
+     */
+    addToCanvas: function( channelLayer, edgeLayer ) {
+      channelLayer.addChild( this.channelLayer );
+      edgeLayer.addChild( this.edgeLayer );//Membrane channel maintains its own layer of 2 edge nodes
+    },
+    removeFromCanvas: function( channelLayer, edgeLayer ) {
+      channelLayer.removeChild( this.channelLayer );
+      edgeLayer.removeChild( this.edgeLayer );
+    }
+  } );
+
+} );
 //
 //package edu.colorado.phet.neuron.view;
 //
@@ -33,8 +216,7 @@
 //  //----------------------------------------------------------------------------
 //  // Instance Data
 //  //----------------------------------------------------------------------------
-//  private MembraneChannel membraneChannelModel;
-//  private ModelViewTransform2D mvt;
+
 //  private PNode channelLayer;
 //  private PNode edgeLayer;
 //  private PPath channel;

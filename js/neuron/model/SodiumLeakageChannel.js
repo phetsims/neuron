@@ -1,4 +1,76 @@
-//// Copyright 2002-2011, University of Colorado
+// Copyright 2002-2011, University of Colorado
+/**
+ *
+ * @author John Blanco
+ * @author Sharfudeen Ashraf (for Ghent University)
+ */
+
+define( function( require ) {
+  'use strict';
+
+  // imports
+  var inherit = require( 'PHET_CORE/inherit' );
+  var AbstractLeakChannel = require( 'NEURON/neuron/model/AbstractLeakChannel' );
+  var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
+  var PieSliceShapedCaptureZone = require( 'NEURON/neuron/model/PieSliceShapedCaptureZone' );
+  var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
+  var Color = require( 'SCENERY/util/Color' );
+
+  var CHANNEL_HEIGHT = NeuronConstants.MEMBRANE_THICKNESS * 1.2; // In nanometers.
+  var CHANNEL_WIDTH = NeuronConstants.MEMBRANE_THICKNESS * 0.50; // In nanometers.
+  var BASE_COLOR = Color.interpolateRBGA( NeuronConstants.SODIUM_COLOR, Color.YELLOW, 0.5 );
+
+  var DEFAULT_PARTICLE_VELOCITY = 7000; // In nanometers per sec of sim time.
+
+  /**
+   * @param  channelWidth
+   * @param {ParticleCapture} modelContainingParticles
+   * @param {IHodgkinHuxleyModel}hodgkinHuxleyModel
+   * @constructor
+   */
+  function SodiumLeakageChannel( modelContainingParticles, hodgkinHuxleyModel ) {
+    var thisChannel = this;
+    AbstractLeakChannel.call( thisChannel, CHANNEL_WIDTH, CHANNEL_HEIGHT, modelContainingParticles );
+    this.hodgkinHuxleyModel = hodgkinHuxleyModel;
+
+    // Set the speed at which particles will move through the channel.
+    this.setParticleVelocity( DEFAULT_PARTICLE_VELOCITY );
+
+    // Set up the capture zones for this channel.
+    this.setExteriorCaptureZone( new PieSliceShapedCaptureZone( this.getCenterLocation(), CHANNEL_WIDTH * 5, 0, Math.PI * 0.6 ) );
+    this.setInteriorCaptureZone( new PieSliceShapedCaptureZone( this.getCenterLocation(), CHANNEL_WIDTH * 5, Math.PI, Math.PI * 0.8 ) );
+
+    // Update the capture times.
+    //TODO  this.updateParticleCaptureRate( NOMINAL_LEAK_LEVEL );
+
+    // Start the capture timer now, since leak channels are always
+    // capturing particles.
+    //TODO this.restartCaptureCountdownTimer( false );
+  }
+
+  return inherit( AbstractLeakChannel, SodiumLeakageChannel, {
+    step: function( dt ) {
+      //TODO
+    },
+    getChannelColor: function() {
+      return BASE_COLOR.colorUtilsDarker( 0.15 );
+    },
+    getEdgeColor: function() {
+      return BASE_COLOR;
+    },
+    getParticleTypeToCapture: function() {
+      return ParticleType.SODIUM_ION;
+    },
+    chooseCrossingDirection: function() {
+      //TODO
+    },
+    restartCaptureCountdownTimer: function( captureNow ) {
+      //TODO
+    }
+  } );
+} )
+;
+
 //
 //package edu.colorado.phet.neuron.model;
 //
@@ -66,21 +138,7 @@
 //  //----------------------------------------------------------------------------
 //  // Methods
 //  //----------------------------------------------------------------------------
-//
-//  @Override
-//  public Color getChannelColor() {
-//    return ColorUtils.darkerColor(BASE_COLOR, 0.15);
-//  }
-//
-//  @Override
-//  public Color getEdgeColor() {
-//    return BASE_COLOR;
-//  }
-//
-//  @Override
-//  protected ParticleType getParticleTypeToCapture() {
-//    return ParticleType.SODIUM_ION;
-//  }
+
 //
 //  @Override
 //  protected MembraneCrossingDirection chooseCrossingDirection() {

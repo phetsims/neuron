@@ -1,18 +1,37 @@
+// Copyright 2002-2011, University of Colorado
+/**
+ * This class is an implementation of the Hodgkin-Huxley model that started
+ * from an example taken from the web (see Unfuddle #2121 for more info on
+ * this) but that was modified significantly to fit the needs of this
+ * simulation.  The main change is that the way that the conductance values
+ * are calculated is different, and much simpler.
+ *
+ * @author Anthony Fodor
+ * @author John Blanco
+ * @author Sharfudeen Ashraf (for Ghent University)
+ */
+
+define( function( require ) {
+  'use strict';
+
+
+
+  function ModifiedHodgkinHuxleyModel()
+  {
+    //TODO
+  }
+
+  return ModifiedHodgkinHuxleyModel;
+
+});
+
 //// Copyright 2002-2011, University of Colorado
 //package edu.colorado.phet.neuron.model;
 //
 //import edu.colorado.phet.neuron.module.NeuronDefaults;
 //
 //
-///**
-// * This class is an implementation of the Hodgkin-Huxley model that started
-// * from an example taken from the web (see Unfuddle #2121 for more info on
-// * this) but that was modified significantly to fit the needs of this
-// * simulation.  The main change is that the way that the conductance values
-// * are calculated is different, and much simpler.
-// *
-// * @author Anthony Fodor, John Blanco
-// */
+
 //public class ModifiedHodgkinHuxleyModel implements IHodgkinHuxleyModel
 //{
 //  //----------------------------------------------------------------------------
