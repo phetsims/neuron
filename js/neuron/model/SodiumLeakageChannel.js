@@ -68,8 +68,7 @@ define( function( require ) {
       //TODO
     }
   } );
-} )
-;
+} );
 
 //
 //package edu.colorado.phet.neuron.model;

@@ -1,4 +1,68 @@
-//// Copyright 2002-2011, University of Colorado
+// Copyright 2002-2011, University of Colorado
+/**
+ * A gated channel through which sodium passes when the channel is open.  This
+ * implementation has two different gates, which is apparently closer to real-
+ * life voltage-gated sodium channels.
+ *
+ * @author John Blanco
+ * @author Sharfudeen Ashraf (for Ghent University)
+ */
+
+define( function( require ) {
+  'use strict';
+
+  // imports
+  var inherit = require( 'PHET_CORE/inherit' );
+  var GatedChannel = require( 'NEURON/neuron/model/GatedChannel' );
+  var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
+  var PieSliceShapedCaptureZone = require( 'NEURON/neuron/model/PieSliceShapedCaptureZone' );
+  var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
+
+
+  var CHANNEL_HEIGHT = NeuronConstants.MEMBRANE_THICKNESS * 1.2; // In nanometers.
+  var CHANNEL_WIDTH = NeuronConstants.MEMBRANE_THICKNESS * 0.50; // In nanometers.
+
+
+  /**
+   * @param  channelWidth
+   * @param {ParticleCapture} modelContainingParticles
+   * @param {IHodgkinHuxleyModel}hodgkinHuxleyModel
+   * @constructor
+   */
+  function SodiumDualGatedChannel( modelContainingParticles, hodgkinHuxleyModel ) {
+    var thisChannel = this;
+    GatedChannel.call( thisChannel, CHANNEL_WIDTH, CHANNEL_HEIGHT, modelContainingParticles );
+    this.hodgkinHuxleyModel = hodgkinHuxleyModel;
+    thisChannel.setExteriorCaptureZone( new PieSliceShapedCaptureZone( thisChannel.getCenterLocation(), CHANNEL_WIDTH * 5, 0, Math.PI * 0.7 ) );
+    thisChannel.reset();
+  }
+
+  return inherit( GatedChannel, SodiumDualGatedChannel, {
+    step: function( dt ) {
+      //TODO
+    },
+    getChannelColor: function() {
+      return NeuronConstants.SODIUM_COLOR.colorUtilsDarker( 0.2 );
+    },
+    getEdgeColor: function() {
+      return NeuronConstants.SODIUM_COLOR;
+    },
+    getParticleTypeToCapture: function() {
+      return ParticleType.SODIUM_ION;
+    },
+    chooseCrossingDirection: function() {
+      //TODO
+    },
+    restartCaptureCountdownTimer: function( captureNow ) {
+      //TODO
+    },
+    //@Override This membrane channel has an inactivation gate.
+    getHasInactivationGate: function() {
+      return true;
+    }
+  } );
+
+} );
 //
 //package edu.colorado.phet.neuron.model;
 //
@@ -27,27 +91,14 @@
 //import edu.umd.cs.piccolo.PNode;
 //import edu.umd.cs.piccolox.pswing.PSwing;
 //
-///**
-// * A gated channel through which sodium passes when the channel is open.  This
-// * implementation has two different gates, which is apparently closer to real-
-// * life voltage-gated sodium channels.
-// *
-// * @author John Blanco
-// */
+
 //public class SodiumDualGatedChannel extends GatedChannel {
 //
 //  //----------------------------------------------------------------------------
 //  // Class Data
 //  //----------------------------------------------------------------------------
 //
-//  private static final double CHANNEL_HEIGHT = AxonMembrane.MEMBRANE_THICKNESS * 1.2; // In nanometers.
-//  private static final double CHANNEL_WIDTH = AxonMembrane.MEMBRANE_THICKNESS * 0.50; // In nanometers.
-//
-//  // Constants that control the rate at which this channel will capture ions
-//  // when it is open.  Smaller numbers here will increase the capture rate
-//  // and thus make the flow appear to be faster.
-//  private static final double MIN_INTER_CAPTURE_TIME = 0.00002; // In seconds of sim time.
-//  private static final double MAX_INTER_CAPTURE_TIME = 0.00010; // In seconds of sim time.
+
 //
 //  // Constant used when calculating how open this gate should be based on
 //  // a value that exists within the Hodgkin-Huxley model.  This was
@@ -66,6 +117,12 @@
 //  private static final double INACTIVE_TO_RESETTING_TIME = 0.001; // In seconds of sim time.
 //  private static final double RESETTING_TO_IDLE_TIME = 0.001; // In seconds of sim time.
 //
+// Constants that control the rate at which this channel will capture ions
+// when it is open.  Smaller numbers here will increase the capture rate
+// and thus make the flow appear to be faster.
+//private static final double MIN_INTER_CAPTURE_TIME = 0.00002; // In seconds of sim time.
+//private static final double MAX_INTER_CAPTURE_TIME = 0.00010; // In seconds of sim time.
+
 //  // Delay range - used to make the timing of the instances of this gate
 //  // vary a little bit in terms of when they open and close.
 //  private static final double MAX_STAGGER_DELAY = NeuronDefaults.MIN_ACTION_POTENTIAL_CLOCK_DT * 5; // In seconds of sim time.
@@ -86,10 +143,7 @@
 //
 //  public SodiumDualGatedChannel(IParticleCapture modelContainingParticles, IHodgkinHuxleyModel hodgkinHuxleyModel) {
 //
-//    super(CHANNEL_WIDTH, CHANNEL_HEIGHT, modelContainingParticles);
-//    this.hodgkinHuxleyModel = hodgkinHuxleyModel;
-//    setExteriorCaptureZone(new PieSliceShapedCaptureZone(getCenterLocation(), CHANNEL_WIDTH * 5, 0, Math.PI * 0.7));
-//    reset();
+
 //  }
 //
 //  public SodiumDualGatedChannel(){
@@ -217,13 +271,7 @@
 //    return 1 - Math.pow(normalizedConductance - 1, 20);
 //  }
 //
-//  /**
-//   * This membrane channel has an inactivation gate.
-//   */
-//  @Override
-//  public boolean getHasInactivationGate() {
-//    return true;
-//  }
+
 //
 //  private double calculateNormalizedConductance(){
 //    return Math.min(Math.abs(hodgkinHuxleyModel.get_delayed_m3h(staggerDelay))/M3H_WHEN_FULLY_OPEN, 1);

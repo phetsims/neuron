@@ -10,7 +10,10 @@ define( function( require ) {
   'use strict';
   //imports
   var MembraneChannelTypes = require( 'NEURON/neuron/model/MembraneChannelTypes' );
+  var PotassiumGatedChannel = require( 'NEURON/neuron/model/PotassiumGatedChannel' );
   var SodiumLeakageChannel = require( 'NEURON/neuron/model/SodiumLeakageChannel' );
+  var PotassiumLeakageChannel = require( 'NEURON/neuron/model/PotassiumLeakageChannel' );
+  var SodiumDualGatedChannel = require( 'NEURON/neuron/model/SodiumDualGatedChannel' );
 
 
   return{
@@ -23,14 +26,21 @@ define( function( require ) {
      */
     createMembraneChannel: function( channelType, particleModel, hodgkinHuxleyModel ) {
       var membraneChannel = null;
-
       switch( channelType ) {
         case MembraneChannelTypes.SODIUM_LEAKAGE_CHANNEL:
           membraneChannel = new SodiumLeakageChannel( particleModel, hodgkinHuxleyModel );
           break;
-        //Other Channel Types TODO
-        //default:
-        //  assert && assert( false, "Error: Unrecognized channelType type." );
+        case MembraneChannelTypes.SODIUM_GATED_CHANNEL:
+          membraneChannel = new SodiumDualGatedChannel( particleModel, hodgkinHuxleyModel );
+          break;
+        case MembraneChannelTypes.POTASSIUM_LEAKAGE_CHANNEL:
+          membraneChannel = new PotassiumLeakageChannel( particleModel, hodgkinHuxleyModel );
+          break;
+        case MembraneChannelTypes.POTASSIUM_GATED_CHANNEL:
+          membraneChannel = new PotassiumGatedChannel( particleModel, hodgkinHuxleyModel );
+          break;
+        default:
+          assert && assert( false, "Error: Unrecognized channelType type." );
       }
       return membraneChannel;
     }

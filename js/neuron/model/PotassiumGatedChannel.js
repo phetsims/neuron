@@ -1,4 +1,61 @@
-//// Copyright 2002-2011, University of Colorado
+// Copyright 2002-2011, University of Colorado
+
+/**
+ * A gated channel through which potassium passes when the channel is open.
+ *
+ * @author John Blanco
+ * @author Sharfudeen Ashraf (for Ghent University)
+ */
+
+define( function( require ) {
+  'use strict';
+
+  // imports
+  var inherit = require( 'PHET_CORE/inherit' );
+  var GatedChannel = require( 'NEURON/neuron/model/GatedChannel' );
+  var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
+  var PieSliceShapedCaptureZone = require( 'NEURON/neuron/model/PieSliceShapedCaptureZone' );
+  var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
+
+
+  var CHANNEL_HEIGHT = NeuronConstants.MEMBRANE_THICKNESS * 1.2; // In nanometers.
+  var CHANNEL_WIDTH = NeuronConstants.MEMBRANE_THICKNESS * 0.50; // In nanometers.
+
+  /**
+   * @param {ParticleCapture} modelContainingParticles
+   * @param {IHodgkinHuxleyModel}hodgkinHuxleyModel
+   * @constructor
+   */
+  function PotassiumGatedChannel( modelContainingParticles, hodgkinHuxleyModel ) {
+    var thisChannel = this;
+    GatedChannel.call( thisChannel, CHANNEL_WIDTH, CHANNEL_HEIGHT, modelContainingParticles );
+    thisChannel.hodgkinHuxleyModel = hodgkinHuxleyModel;
+    thisChannel.setInteriorCaptureZone( new PieSliceShapedCaptureZone( this.getCenterLocation(), CHANNEL_WIDTH * 5, Math.PI, Math.PI * 0.5 ) );
+    thisChannel.reset();
+  }
+
+  return inherit( GatedChannel, PotassiumGatedChannel, {
+    step: function( dt ) {
+      //TODO
+    },
+    getChannelColor: function() {
+      return NeuronConstants.POTASSIUM_COLOR.colorUtilsDarker( 0.2 );
+    },
+    getEdgeColor: function() {
+      return NeuronConstants.POTASSIUM_COLOR;
+    },
+    getParticleTypeToCapture: function() {
+      return ParticleType.POTASSIUM_ION;
+    },
+    chooseCrossingDirection: function() {
+      //TODO
+    },
+    restartCaptureCountdownTimer: function( captureNow ) {
+      //TODO
+    }
+  } );
+} );
+
 //
 //package edu.colorado.phet.neuron.model;
 //
@@ -8,21 +65,13 @@
 //import edu.colorado.phet.neuron.NeuronConstants;
 //import edu.colorado.phet.neuron.module.NeuronDefaults;
 //import edu.colorado.phet.neuron.utils.MathUtils;
-//
-///**
-// * A gated channel through which potassium passes when the channel is open.
-// *
-// * @author John Blanco
-// */
+
 //public class PotassiumGatedChannel extends GatedChannel {
 //
 //  //----------------------------------------------------------------------------
 //  // Class Data
 //  //----------------------------------------------------------------------------
-//
-//  private static final double CHANNEL_HEIGHT = AxonMembrane.MEMBRANE_THICKNESS * 1.2; // In nanometers.
-//  private static final double CHANNEL_WIDTH = AxonMembrane.MEMBRANE_THICKNESS * 0.50; // In nanometers.
-//
+
 //  // Constants that control the rate at which this channel will capture ions
 //  // when it is open.  Smaller numbers here will increase the capture rate
 //  // and thus make the flow appear to be faster.
@@ -50,10 +99,7 @@
 //  //----------------------------------------------------------------------------
 //
 //  public PotassiumGatedChannel(IParticleCapture modelContainingParticles, IHodgkinHuxleyModel hodgkinHuxleyModel) {
-//    super(CHANNEL_WIDTH, CHANNEL_HEIGHT, modelContainingParticles);
-//    this.hodgkinHuxleyModel = hodgkinHuxleyModel;
-//    setInteriorCaptureZone(new PieSliceShapedCaptureZone(getCenterLocation(), CHANNEL_WIDTH * 5, Math.PI, Math.PI * 0.5));
-//    reset();
+
 //  }
 //
 //  public PotassiumGatedChannel(){

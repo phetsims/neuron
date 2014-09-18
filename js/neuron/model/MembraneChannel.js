@@ -128,6 +128,12 @@ define( function( require ) {
     getChannelSize: function() {
       return new Dimension2( this.channelSize.width, this.channelSize.height );
     },
+    getOverallSize: function() {
+      return this.overallSize;
+    },
+    getInactivationAmt: function() {
+      return this.inactivationAmt;
+    },
     getCenterLocation: function() {
       return new Vector2( this.centerLocation.x, this.centerLocation.y );
     },
@@ -177,10 +183,21 @@ define( function( require ) {
     setInteriorCaptureZone: function( captureZone ) {
       this.interiorCaptureZone = captureZone;
     },
-
     //@protected
     setExteriorCaptureZone: function( captureZone ) {
       this.exteriorCaptureZone = captureZone;
+    },
+    //@protected
+    setMinInterCaptureTime: function( minInterCaptureTime ) {
+      this.minInterCaptureTime = minInterCaptureTime;
+    },
+    //@protected
+    setMaxInterCaptureTime: function( maxInterCaptureTime ) {
+      this.maxInterCaptureTime = maxInterCaptureTime;
+    },
+    //@protected
+    getCaptureCountdownTimer: function() {
+      return this.captureCountdownTimer;
     },
     /**
      * Gets a values that indicates whether this channel has an inactivation
@@ -192,6 +209,10 @@ define( function( require ) {
      */
     getHasInactivationGate: function() {
       return false;
+    },
+    //convenience method
+    setInactivationAmt: function( inactivationAmt ) {
+      this.inactivationAmt = inactivationAmt;
     },
     //convenience method
     getOpenness: function() {

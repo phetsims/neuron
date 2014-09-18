@@ -20,6 +20,7 @@ define( function( require ) {
 
 
   // Fixed membrane characteristics.
+//public constants
 
   var BODY_LENGTH = NeuronConstants.DEFAULT_DIAMETER * 1.5;
   var BODY_TILT_ANGLE = Math.PI / 4;
@@ -104,6 +105,7 @@ define( function( require ) {
     // Shape of the cross section of the membrane.	For now, and unless there
     // is some reason to do otherwise, the center of the cross section is
     // positioned at the origin.
+
     thisModel.crossSectionEllipseShape = new Shape().ellipse( 0, 0, NeuronConstants.DEFAULT_DIAMETER / 2, NeuronConstants.DEFAULT_DIAMETER / 2 );
 
 
@@ -123,7 +125,6 @@ define( function( require ) {
       return new Shape().ellipse( this.crossSectionEllipseShape.x, this.crossSectionEllipseShape.y,
         this.crossSectionEllipseShape.bounds.getWidth(), this.crossSectionEllipseShape.bounds.getHeight() );
     }
-
   } );
 
 } );

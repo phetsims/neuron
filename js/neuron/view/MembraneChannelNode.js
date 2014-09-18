@@ -136,7 +136,8 @@ define( function( require ) {
         var ballConnectionPoint = inactivationGateBallNode.translation;
 
         var connectorLength = channelCenterBottomPoint.distance( ballConnectionPoint );
-        var stringShape = new Shape().cubicCurveTo( channelEdgeConnectionPoint.x, channelEdgeConnectionPoint.y, channelEdgeConnectionPoint.x + connectorLength * 0.25,
+        var stringShape = new Shape().moveTo( channelEdgeConnectionPoint.x, channelEdgeConnectionPoint.y )
+          .cubicCurveTo( channelEdgeConnectionPoint.x + connectorLength * 0.25,
             channelEdgeConnectionPoint.y + connectorLength * 0.5, ballConnectionPoint.x - connectorLength * 0.75,
             ballConnectionPoint.y - connectorLength * 0.5, ballConnectionPoint.x, ballConnectionPoint.y );
         inactivationGateString.setShape( stringShape );

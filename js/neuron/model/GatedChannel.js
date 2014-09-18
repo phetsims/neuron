@@ -1,39 +1,35 @@
-//// Copyright 2002-2011, University of Colorado
-//package edu.colorado.phet.neuron.model;
-//
-//
-///**
-// * Base class for gated membrane channels, i.e. channels that can open and
-// * close.
-// *
-// * @author John Blanco
-// */
-//public abstract class GatedChannel extends MembraneChannel {
-//
-//  //----------------------------------------------------------------------------
-//  // Class Data
-//  //----------------------------------------------------------------------------
-//
-//  //----------------------------------------------------------------------------
-//  // Instance Data
-//  //----------------------------------------------------------------------------
-//
-//  //----------------------------------------------------------------------------
-//  // Constructor
-//  //----------------------------------------------------------------------------
-//
-//  public GatedChannel(double channelWidth, double channelHeight, IParticleCapture modelContainingParticles) {
-//    super(channelWidth, channelHeight, modelContainingParticles);
-//    setOpenness(0);  // Gated channels are assumed to be initially closed.
-//  }
-//
-//  //----------------------------------------------------------------------------
-//  // Methods
-//  //----------------------------------------------------------------------------
-//
-//  @Override
-//  public void reset() {
-//    setOpenness(0);         // Gated channels are assumed to be initially closed...
-//    setInactivationAmt(0);  // ...but not inactivated.
-//  }
-//}
+// Copyright 2002-2011, University of Colorado
+/**
+ * Base class for gated membrane channels, i.e. channels that can open and
+ * close.
+ * @author John Blanco
+ * @author Sharfudeen Ashraf (for Ghent University)
+ */
+
+define( function( require ) {
+  'use strict';
+
+  // imports
+  var inherit = require( 'PHET_CORE/inherit' );
+  var MembraneChannel = require( 'NEURON/neuron/model/MembraneChannel' );
+
+  /**
+   * @param  channelWidth
+   * @param  channelHeight
+   * @param {ParticleCapture} modelContainingParticles
+   * @constructor
+   */
+  function GatedChannel( channelWidth, channelHeight, modelContainingParticles ) {
+    MembraneChannel.call( this, channelWidth, channelHeight, modelContainingParticles );
+    this.setOpenness( 0 );  // Gated channels are assumed to be initially closed.
+  }
+
+  return inherit( MembraneChannel, GatedChannel, {
+    reset: function() {
+      this.setOpenness( 0 );         // Gated channels are assumed to be initially closed...
+      this.setInactivationAmt( 0 );  // ...but not inactivated.
+    }
+  } );
+} );
+
+
