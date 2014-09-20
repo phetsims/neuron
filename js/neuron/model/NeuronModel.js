@@ -16,13 +16,19 @@ define( function( require ) {
   // imports
   var inherit = require( 'PHET_CORE/inherit' );
   var PropertySet = require( 'AXON/PropertySet' );
+  var Vector2 = require( 'DOT/Vector2' );
+  var ObservableArray = require( 'AXON/ObservableArray' );
   var AxonMembrane = require( 'NEURON/neuron/model/AxonMembrane' );
   var ModifiedHodgkinHuxleyModel = require( 'NEURON/neuron/model/ModifiedHodgkinHuxleyModel' );
   var MembraneChannelTypes = require( 'NEURON/neuron/model/MembraneChannelTypes' );
   var ParticleCapture = require( 'NEURON/neuron/model/ParticleCapture' );
-  var ObservableArray = require( 'AXON/ObservableArray' );
-  var Vector2 = require( 'DOT/Vector2' );
+  var ParticlePosition = require( 'NEURON/neuron/model/ParticlePosition' );
+  var ParticleFactory = require( 'NEURON/neuron/model/ParticleFactory' );
+  var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
   var MembraneChannelFactory = require( 'NEURON/neuron/model/MembraneChannelFactory' );
+  var SodiumDualGatedChannel = require( 'NEURON/neuron/model/SodiumDualGatedChannel' );
+  var CaptureZoneScanResult = require( 'NEURON/neuron/model/CaptureZoneScanResult' );
+  var SlowBrownianMotionStrategy = require( 'NEURON/neuron/model/SlowBrownianMotionStrategy' );
 
   // Default configuration values.
   var DEFAULT_FOR_SHOW_ALL_IONS = true;
@@ -39,6 +45,27 @@ define( function( require ) {
   var NUM_POTASSIUM_LEAK_CHANNELS = 7;
 
 
+  // Nominal concentration values.
+  var NOMINAL_SODIUM_EXTERIOR_CONCENTRATION = 145;     // In millimolar (mM)
+  var NOMINAL_SODIUM_INTERIOR_CONCENTRATION = 10;      // In millimolar (mM)
+  var NOMINAL_POTASSIUM_EXTERIOR_CONCENTRATION = 4;    // In millimolar (mM)
+  var NOMINAL_POTASSIUM_INTERIOR_CONCENTRATION = 140;  // In millimolar (mM)
+
+  // Numbers of "bulk" ions in and out of the cell when visible.
+  var NUM_SODIUM_IONS_OUTSIDE_CELL = 600;
+  var NUM_SODIUM_IONS_INSIDE_CELL = 8;
+  var NUM_POTASSIUM_IONS_OUTSIDE_CELL = 60;
+  var NUM_POTASSIUM_IONS_INSIDE_CELL = 200;
+
+  // Default values of opaqueness for newly created particles.
+  var FOREGROUND_PARTICLE_DEFAULT_OPAQUENESS = 0.20;
+  var BACKGROUND_PARTICLE_DEFAULT_OPAQUENESS = 0.05;
+
+  var RAND = {nextDouble: function() {
+    return Math.random();
+  }};
+
+
   /**
    * Main constructor for NeuronModel, which contains all of the model logic for the entire sim screen.
    * @constructor
@@ -46,22 +73,46 @@ define( function( require ) {
   function NeuronModel() {
     var thisModel = this;
     ParticleCapture.call( thisModel );
-    PropertySet.call( thisModel, {potentialChartVisible: DEFAULT_FOR_MEMBRANE_CHART_VISIBILITY,
+
+    PropertySet.call( thisModel, {
+      potentialChartVisible: DEFAULT_FOR_MEMBRANE_CHART_VISIBILITY,
       // Controls whether all ions, or just those near membrane, are simulated.
       allIonsSimulated: DEFAULT_FOR_SHOW_ALL_IONS,
       // Controls whether charges are depicted.
       chargesShown: DEFAULT_FOR_CHARGES_SHOWN,
       // Controls whether concentration readings are depicted.
       concentrationReadoutVisible: DEFAULT_FOR_CONCENTRATION_READOUT_SHOWN,
-      stimulasLockout: false
+      stimulasLockout: false,
+      playbackParticlesVisible: false
     } );
 
     thisModel.axonMembrane = new AxonMembrane();
 
     // List of the particles that come and go when the simulation is working in real time.
     thisModel.transientParticles = new ObservableArray();
+    // Backup of the transient particles, used to restore them when returning
+    // to live mode after doing playback.
+    thisModel.transientParticlesBackup = new ObservableArray();
+
+    // Particles that are "in the background", meaning that they are always
+    // present and they don't cross the membrane.
+    thisModel.backgroundParticles = new ObservableArray();
+
+    // List of particles that are shown during playback.
+    thisModel.playbackParticles = new ObservableArray();
+
     thisModel.membraneChannels = new ObservableArray();
     thisModel.hodgkinHuxleyModel = new ModifiedHodgkinHuxleyModel();
+
+    thisModel.crossSectionInnerRadius = (thisModel.axonMembrane.getCrossSectionDiameter() - thisModel.axonMembrane.getMembraneThickness()) / 2;
+    thisModel.crossSectionOuterRadius = (thisModel.axonMembrane.getCrossSectionDiameter() + thisModel.axonMembrane.getMembraneThickness()) / 2;
+
+    thisModel.previousMembranePotential = 0;
+    thisModel.sodiumInteriorConcentration = NOMINAL_SODIUM_INTERIOR_CONCENTRATION;
+    thisModel.sodiumExteriorConcentration = NOMINAL_SODIUM_EXTERIOR_CONCENTRATION;
+    thisModel.potassiumInteriorConcentration = NOMINAL_POTASSIUM_INTERIOR_CONCENTRATION;
+    thisModel.potassiumExteriorConcentration = NOMINAL_POTASSIUM_EXTERIOR_CONCENTRATION;
+
 
     //TODO prop listeners to be linked
 
@@ -154,6 +205,179 @@ define( function( require ) {
       console.log( simulationTimeChange );
     },
     /**
+     * Set the boolean value that indicates whether all ions are shown in the
+     * simulation, or just those that are moving across the membrane.
+     *
+     * @param allIonsSimulated
+     */
+    setAllIonsSimulated: function( allIonsSimulated ) {
+
+      // This can only be changed when the stimlus initiation is not locked
+      // out.  Otherwise, particles would come and go during an action
+      // potential, which would be hard to handle and potentially confusing.
+      if ( !this.isStimulusInitiationLockedOut() ) {
+        if ( this.allIonsSimulated !== allIonsSimulated ) {
+          this.allIonsSimulated = allIonsSimulated;
+
+          if ( this.allIonsSimulated ) {
+            // Add the bulk particles.
+            this.addInitialBulkParticles();
+          }
+          else {
+            // Remove all particles.
+            this.removeAllParticles();
+          }
+        }
+      }
+    },
+    /**
+     * Add the "bulk particles", which are particles that are inside and
+     * outside of the membrane and, except in cases where they happen to end
+     * up positioned close to the membrane, they generally stay where
+     * initially positioned.
+     */
+    addInitialBulkParticles: function() {
+      // Make a list of pre-existing particles.
+      var preExistingParticles = _.clone( this.transientParticles.getArray() );
+
+      // Add the initial particles.
+      this.addBackgroundParticles( ParticleType.SODIUM_ION, ParticlePosition.INSIDE_MEMBRANE, NUM_SODIUM_IONS_INSIDE_CELL );
+      this.addBackgroundParticles( ParticleType.SODIUM_ION, ParticlePosition.OUTSIDE_MEMBRANE, NUM_SODIUM_IONS_OUTSIDE_CELL );
+      this.addBackgroundParticles( ParticleType.POTASSIUM_ION, ParticlePosition.INSIDE_MEMBRANE, NUM_POTASSIUM_IONS_INSIDE_CELL );
+      this.addBackgroundParticles( ParticleType.POTASSIUM_ION, ParticlePosition.OUTSIDE_MEMBRANE, NUM_POTASSIUM_IONS_OUTSIDE_CELL );
+
+      // Look at each sodium gate and, if there are no ions in its capture
+      // zone, add some.
+      this.membraneChannels.forEach( function( membraneChannel ) {
+        if ( membraneChannel instanceof SodiumDualGatedChannel ) {
+          var captureZone = membraneChannel.getExteriorCaptureZone();
+          //CaptureZoneScanResult
+          var czsr = this.scanCaptureZoneForFreeParticles( captureZone, ParticleType.SODIUM_ION );
+          if ( czsr.numParticlesInZone === 0 ) {
+            this.addBackgroundParticles( ParticleType.SODIUM_ION, captureZone, Math.floor( Math.random() * 2 ) + 1 );
+          }
+        }
+      } );
+
+      // Set all new particles to exhibit simple Brownian motion.
+      this.backgroundParticles.forEach( function( backgroundParticle ) {
+        if ( preExistingParticles.indexOf( backgroundParticle ) !== -1 ) {
+          backgroundParticle.setMotionStrategy( new SlowBrownianMotionStrategy( backgroundParticle.getPositionReference() ) );
+        }
+      } );
+    },
+    /**
+     * Add the specified particles to the model.
+     *
+     * @param {ParticleType}particleType
+     * @param {ParticlePosition}position
+     * @param numberToAdd
+     */
+    addBackgroundParticles: function( particleType, position, numberToAdd ) {
+      var newParticle = null;
+      _.times( numberToAdd, function( value ) {
+        newParticle = this.createBackgroundParticle( particleType );
+        if ( position === ParticlePosition.INSIDE_MEMBRANE ) {
+          this.positionParticleInsideMembrane( newParticle );
+        }
+        else {
+          this.positionParticleOutsideMembrane( newParticle );
+        }
+        // Set the opaqueness.
+        if ( Math.random() >= 0.5 ) { // replaced for nextBoolean
+          newParticle.setOpaqueness( FOREGROUND_PARTICLE_DEFAULT_OPAQUENESS );
+        }
+        else {
+          newParticle.setOpaqueness( BACKGROUND_PARTICLE_DEFAULT_OPAQUENESS );
+        }
+      } );
+    },
+
+    /**
+     * Place a particle at a random location inside the axon membrane.
+     */
+    positionParticleInsideMembrane: function( particle ) {
+      // Choose any angle.
+      var angle = RAND.nextDouble() * Math.PI * 2;
+
+      // Choose a distance from the cell center that is within the membrane.
+      // The multiplier value is created with the intention of weighting the
+      // positions toward the outside in order to get an even distribution
+      // per unit area.
+      var multiplier = Math.max( RAND.nextDouble(), RAND.nextDouble() );
+      var distance = (this.crossSectionInnerRadius - particle.getRadius() * 2) * multiplier;
+
+      particle.setPosition( distance * Math.cos( angle ), distance * Math.sin( angle ) );
+    },
+
+    /**
+     * Place a particle at a random location outside the axon membrane.
+     */
+    positionParticleOutsideMembrane: function( particle ) {
+      // Choose any angle.
+      var angle = RAND.nextDouble() * Math.PI * 2;
+
+      // Choose a distance from the cell center that is outside of the
+      // membrane. The multiplier value is created with the intention of
+      // weighting the positions toward the outside in order to get an even
+      // distribution per unit area.
+      var multiplier = RAND.nextDouble();
+      var distance = this.crossSectionOuterRadius + particle.getRadius() * 4 +
+                     multiplier * this.crossSectionOuterRadius * 2.2;
+
+      particle.setPosition( distance * Math.cos( angle ), distance * Math.sin( angle ) );
+    },
+
+    /**
+     * Scan the supplied capture zone for particles of the specified type.
+     *
+     * @param {CaptureZone} zone
+     * @param {ParticleType} particleType
+     * @return
+     */
+    scanCaptureZoneForFreeParticles: function( zone, particleType ) {
+      var closestFreeParticle = null;
+      var distanceOfClosestParticle = Number.POSITIVE_INFINITY;
+      var totalNumberOfParticles = 0;
+      var captureZoneOrigin = zone.getOriginPoint();
+
+      this.transientParticles.forEach( function( particle ) {
+
+        if ( (particle.getType() === particleType) && (particle.isAvailableForCapture()) && (zone.isPointInZone( particle.getPositionReference() )) ) {
+          totalNumberOfParticles++;
+          if ( closestFreeParticle === null ) {
+            closestFreeParticle = particle;
+            distanceOfClosestParticle = captureZoneOrigin.distance( closestFreeParticle.getPositionReference() );
+          }
+          else if ( captureZoneOrigin.distance( closestFreeParticle.getPosition() ) < distanceOfClosestParticle ) {
+            closestFreeParticle = particle;
+            distanceOfClosestParticle = captureZoneOrigin.distance( closestFreeParticle.getPositionReference() );
+          }
+        }
+      } );
+
+
+      return new CaptureZoneScanResult( closestFreeParticle, totalNumberOfParticles );
+    },
+
+    /**
+     * Create a particle of the specified type and add it to the model.
+     *
+     * @param particleType
+     * @return
+     */
+    createBackgroundParticle: function( particleType ) {
+
+      var newParticle = ParticleFactory.createParticle( particleType );
+      this.backgroundParticles.push( newParticle );
+      return newParticle;
+    },
+
+    removeAllParticles: function() {
+
+    },
+
+    /**
      * Add the provided channel at the specified rotational location.
      * Locations are specified in terms of where on the circle of the membrane
      * they are, with a value of 0 being on the far right, PI/2 on the top,
@@ -162,11 +386,8 @@ define( function( require ) {
      * @param angle
      */
     addChannel: function( membraneChannelType, angle ) {
-      var membraneChannel = MembraneChannelFactory.createMembraneChannel( membraneChannelType, this,
-        this.hodgkinHuxleyModel );
-
-      if ( !membraneChannel )//TODO not all membrane channels are implemented
-      {
+      var membraneChannel = MembraneChannelFactory.createMembraneChannel( membraneChannelType, this, this.hodgkinHuxleyModel );
+      if ( !membraneChannel ) {//TODO not all membrane channels are implemented
         return;
       }
 
@@ -180,6 +401,17 @@ define( function( require ) {
       // Add the channel and let everyone know it exists.
       this.membraneChannels.push( membraneChannel );
 
+    },
+    /**
+     * Get a boolean value that indicates whether the initiation of a new
+     * stimulus (i.e. action potential) is currently locked out.  This is done
+     * to prevent the situation where multiple action potentials are moving
+     * down the membrane at the same time.
+     *
+     * @return
+     */
+    isStimulusInitiationLockedOut: function() {
+      return this.stimulasLockout;
     }
 
   } );

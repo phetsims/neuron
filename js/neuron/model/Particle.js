@@ -1,4 +1,4 @@
-//// Copyright 2002-2011, University of Colorado
+// Copyright 2002-2011, University of Colorado
 
 /**
  * Abstract base class for a simulated particle.  It is intended that this be subclassed
@@ -13,8 +13,9 @@ define( function( require ) {
 
   //imports
   var inherit = require( 'PHET_CORE/inherit' );
-  var PropertySet = require( 'AXON/PropertySet' );
   var Vector2 = require( 'DOT/Vector2' );
+  var ViewableParticle = require( 'NEURON/neuron/model/ViewableParticle' );
+  var PropertySet = require( 'AXON/PropertySet' );
 
   var DEFAULT_PARTICLE_RADIUS = 0.75;  // In nanometers.
 
@@ -28,6 +29,7 @@ define( function( require ) {
     xPos = xPos || 0;
     yPos = yPos || 0;
 
+    ViewableParticle.call(this,{});
     PropertySet.call( this, {
       // Location in space of this particle, units are nano-meters.
       position: new Vector2( xPos, yPos ),
@@ -39,16 +41,12 @@ define( function( require ) {
 
   }
 
-  return inherit( PropertySet, Particle, {
+  return inherit( ViewableParticle, Particle, {
     getPosition: function() {
       return new Vector2( this.position.x, this.position.y );
     },
     getPositionReference: function() {
       return this.position;
-    },
-    //subclasses must implement
-    getType: function() {
-      throw new Error( 'getType should be implemented in descendant classes.' );
     },
     getRadius: function() {
       return DEFAULT_PARTICLE_RADIUS;   // Default value, override if needed to support other particles.

@@ -112,7 +112,9 @@ define( function( require ) {
   }
 
   return inherit( PropertySet, AxonMembrane, {
-
+    step:function(dt){
+      //TODO
+    },
     getMembraneThickness: function() {
       return NeuronConstants.MEMBRANE_THICKNESS;
     },
@@ -124,6 +126,9 @@ define( function( require ) {
     getCrossSectionEllipseShape: function() {
       return new Shape().ellipse( this.crossSectionEllipseShape.x, this.crossSectionEllipseShape.y,
         this.crossSectionEllipseShape.bounds.getWidth(), this.crossSectionEllipseShape.bounds.getHeight() );
+    },
+    reset:function(){
+     //TODO
     }
   } );
 

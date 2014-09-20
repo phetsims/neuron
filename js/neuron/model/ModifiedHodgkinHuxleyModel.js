@@ -14,16 +14,27 @@
 define( function( require ) {
   'use strict';
 
+  // imports
+  var inherit = require( 'PHET_CORE/inherit' );
+  var BaseHodgkinHuxleyModel = require( 'NEURON/neuron/model/BaseHodgkinHuxleyModel' );
 
+  // Amount of time used for each iteration of the model.  This is fixed,
+  // and when the model is stepped it breaks whether time step is presented
+  // into units of this duration.  This is needed because below a certain
+  // time value the model doesn't work - it becomes unstable.
+  // var INTERNAL_TIME_STEP = 0.005; // In milliseconds, not seconds.
 
-  function ModifiedHodgkinHuxleyModel()
-  {
+  function ModifiedHodgkinHuxleyModel() {
     //TODO
   }
 
-  return ModifiedHodgkinHuxleyModel;
+  return inherit( BaseHodgkinHuxleyModel, ModifiedHodgkinHuxleyModel, {
 
-});
+//TODO
+
+  } );
+
+} );
 
 //// Copyright 2002-2011, University of Colorado
 //package edu.colorado.phet.neuron.model;

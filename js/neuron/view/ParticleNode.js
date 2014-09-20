@@ -1,26 +1,90 @@
-//// Copyright 2002-2011, University of Colorado
-//
-//package edu.colorado.phet.neuron.view;
-//
-//import java.awt.BasicStroke;
-//import java.awt.Color;
-//import java.awt.Image;
-//import java.awt.Shape;
-//import java.awt.Stroke;
-//import java.awt.geom.AffineTransform;
-//import java.awt.geom.Ellipse2D;
-//import java.awt.geom.Rectangle2D;
-//
-//import edu.colorado.phet.common.phetcommon.view.graphics.transforms.ModelViewTransform2D;
-//import edu.colorado.phet.common.piccolophet.nodes.PhetPPath;
-//import edu.colorado.phet.neuron.model.IViewableParticle;
-//import edu.colorado.phet.neuron.model.ParticleListenerAdapter;
-//import edu.umd.cs.piccolo.PNode;
-//import edu.umd.cs.piccolo.nodes.PPath;
-//
-///**
-// * Class that represents particles (generally ions) in the view.
-// */
+// Copyright 2002-2011, University of Colorado
+/**
+ * Class that represents particles (generally ions) in the view.
+ * @author John Blanco
+ * @author Sharfudeen Ashraf (for Ghent University)
+ */
+define( function( require ) {
+  'use strict';
+
+  //imports
+  var inherit = require( 'PHET_CORE/inherit' );
+  var Node = require( 'SCENERY/nodes/Node' );
+  var Path = require( 'SCENERY/nodes/Path' );
+  var Color = require( 'SCENERY/util/Color' );
+  var Shape = require( 'KITE/Shape' );
+  var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
+  var Matrix3 = require( 'DOT/Matrix3' );
+
+
+  var PARTICLE_EDGE_STROKE = 1;
+
+  /**
+   * @param {ViewableParticle} particle
+   * @param {ModelViewTransform2D} modelViewTransform
+   * @constructor
+   */
+  function ParticleNode( particle, modelViewTransform ) {
+    var thisNode = this;
+    Node.call( this, {} );
+    thisNode.particle = particle;
+    thisNode.modelViewTransform = modelViewTransform;
+
+    // Create the initial representation with the aspects that don't change.
+    var representation = new Path( new Shape(), {lineWidth: PARTICLE_EDGE_STROKE, stroke: Color.BLACK} );
+    thisNode.addChild( representation );
+
+    function updateOffset( newPosition ) {
+      thisNode.translate( modelViewTransform.modelToViewPosition( newPosition ) );
+    }
+
+    function updateRepresentation( newOpaqueness ) {
+
+      var size;
+      var representationShape;
+
+      switch( particle.getType() ) {
+        case ParticleType.SODIUM_ION:
+          var transformedRadius = modelViewTransform.modelToViewDeltaX( particle.getRadius() );
+          representationShape = new Shape().ellipse( 0, 0, transformedRadius, transformedRadius );
+          break;
+
+        case ParticleType.POTASSIUM_ION:
+          size = modelViewTransform.modelToViewDifferentialXDouble( particle.getRadius() * 2 ) * 0.85;
+          representationShape = new Shape().rect( -size / 2, -size / 2, size, size );
+          var rotationTransform = Matrix3.rotationAround( Math.PI / 4, 0, 0 );
+          representationShape = representationShape.transformed( rotationTransform );
+          break;
+
+        default:
+          console.log( particle.getType() + " - Warning: No specific shape for this particle type, defaulting to sphere." );
+          var defaultSphereRadius = modelViewTransform.modelToViewDeltaX( particle.getRadius() );
+          representationShape = new Shape().ellipse( 0, 0, defaultSphereRadius, defaultSphereRadius );
+          break;
+      }
+
+      representation.setShape( representationShape );
+      representation.fill = particle.getRepresentationColor();
+      thisNode.setOpacity( particle.getOpaqueness() );
+    }
+
+    particle.positionProperty.link( function( newPosition ) {
+      updateOffset( newPosition );
+    } );
+
+    particle.opaquenessProperty.link( function( newOpaqueness ) {
+      updateRepresentation( newOpaqueness );
+    } );
+
+    updateOffset();
+    updateRepresentation();
+  }
+
+  return inherit( Node, ParticleNode, {
+
+  } );
+} );
+
 //public class ParticleNode extends PNode {
 //
 //  private static final float STROKE_WIDTH = 1;

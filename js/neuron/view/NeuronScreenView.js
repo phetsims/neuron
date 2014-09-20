@@ -19,6 +19,7 @@ define( function( require ) {
   var Node = require( 'SCENERY/nodes/Node' );
   var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   var AxonBodyNode = require( 'NEURON/neuron/view/AxonBodyNode' );
+  var ParticleNode = require( 'NEURON/neuron/view/ParticleNode' );
   var AxonCrossSectionNode = require( 'NEURON/neuron/view/AxonCrossSectionNode' );
   var MembraneChannelNode = require( 'NEURON/neuron/view/MembraneChannelNode' );
 
@@ -108,6 +109,38 @@ define( function( require ) {
     thisView.model.membraneChannels.forEach( handleChannelAdded );
     // Add a node on every new Channel Model
     thisView.model.membraneChannels.addItemAddedListener( handleChannelAdded );
+
+    // Multiple ObservableArray (transient,background) for the same ParticleModel needs to be listened. so create a
+    // a function that remembers the particle collection via closure
+    function handleParticleAdditionFor( particleCollection ) {
+
+      return function handleParticleAdded( addedParticle ) {
+        // Create the view representation for this Particle.
+        var particleNode = new ParticleNode( addedParticle, thisView.mvt );
+        particleLayer.addChild( particleNode );
+
+        particleCollection.addItemRemovedListener( function removalListener( removedParticle ) {
+          if ( addedParticle === removedParticle ) {
+            particleLayer.removeChild( particleNode );
+            particleCollection.removeItemRemovedListener( removalListener );
+          }
+        } );
+      };
+    }
+
+    var handleTransientParticleAdded = handleParticleAdditionFor( thisView.model.transientParticles );
+    //Initial Node creation for transient particles
+    thisView.model.transientParticles.forEach( handleTransientParticleAdded );
+    //observe removal
+    thisView.model.transientParticles.addItemAddedListener( handleTransientParticleAdded );
+
+    var handleBackgroundParticleAdded = handleParticleAdditionFor( thisView.model.backgroundParticles );
+    thisView.model.backgroundParticles.forEach( handleBackgroundParticleAdded );
+    thisView.model.backgroundParticles.addItemAddedListener( handleBackgroundParticleAdded );
+
+    var handlePlaybackParticleAdded = handleParticleAdditionFor( thisView.model.playbackParticles );
+    thisView.model.playbackParticles.forEach( handlePlaybackParticleAdded );
+    thisView.model.playbackParticles.addItemAddedListener( handlePlaybackParticleAdded );
 
 
   }
