@@ -16,6 +16,8 @@ define( function( require ) {
   var Vector2 = require( 'DOT/Vector2' );
   var ViewableParticle = require( 'NEURON/neuron/model/ViewableParticle' );
   var PropertySet = require( 'AXON/PropertySet' );
+  var StillnessMotionStrategy = require( 'NEURON/neuron/model/StillnessMotionStrategy' );
+  var NullFadeStrategy = require( 'NEURON/neuron/model/NullFadeStrategy' );
 
   var DEFAULT_PARTICLE_RADIUS = 0.75;  // In nanometers.
 
@@ -29,7 +31,7 @@ define( function( require ) {
     xPos = xPos || 0;
     yPos = yPos || 0;
 
-    ViewableParticle.call(this,{});
+    ViewableParticle.call( this, {} );
     PropertySet.call( this, {
       // Location in space of this particle, units are nano-meters.
       position: new Vector2( xPos, yPos ),
@@ -39,9 +41,30 @@ define( function( require ) {
       opaqueness: 1
     } );
 
+    // Motion strategy for moving this particle around.
+    this.motionStrategy = new StillnessMotionStrategy();
+
+    // Fade strategy for fading in and out.
+    this.fadeStrategy = new NullFadeStrategy();
+
   }
 
   return inherit( ViewableParticle, Particle, {
+
+    stepInTime: function( dt ) {
+
+      this.motionStrategy.move(this, this, dt);
+      this.fadeStrategy.updateOpaqueness(this, dt);
+      if (!this.fadeStrategy.shouldContinueExisting(this)){
+        // This particle has faded out of existence, so send out a
+        // notification that indicates that it is being removed from the
+        // model.  The thinking here is that everyone with a reference to
+        // this particle should listen for this notification and do any
+        // cleanup and removal of references needed.  If they don't, there
+        // will be memory leaks.
+       //TODO this.notifyRemoved();
+      }
+    },
     getPosition: function() {
       return new Vector2( this.position.x, this.position.y );
     },
@@ -50,6 +73,27 @@ define( function( require ) {
     },
     getRadius: function() {
       return DEFAULT_PARTICLE_RADIUS;   // Default value, override if needed to support other particles.
+    },
+    /**
+     * Set the fade strategy for the element.
+     */
+    setFadeStrategy: function( fadeStrategy ) {
+      this.fadeStrategy = fadeStrategy;
+    },
+    setPosition: function( x, y ) {
+      if ( !y ) {
+        this.position.set( x );// x is vector
+        return;
+      }
+      this.position.setXY( x, y );
+    },
+
+    setOpaqueness: function( opaqueness ) {
+      this.opaqueness = opaqueness;
+    },
+
+    getOpaqueness: function() {
+      return this.opaqueness;
     }
 
   } );
@@ -116,28 +160,10 @@ define( function( require ) {
 
 
 //
-//  public void setPosition(Point2D newPosition) {
-//    setPosition(newPosition.getX(), newPosition.getY());
-//  }
-//
-//  public void setPosition(double xPos, double yPos) {
-//    position.setLocation( xPos, yPos );
-//    notifyPositionChanged();
-//  }
-//
-//  public void setOpaqueness(double opaqueness){
-//    if (this.opaqueness != opaqueness){
-//      this.opaqueness = opaqueness;
-//      notifyAppearanceChanged();
-//    }
-//  }
-//
 //  /* (non-Javadoc)
 //   * @see edu.colorado.phet.neuron.model.IViewableParticle#getOpaqueness()
 //   */
-//  public double getOpaqueness(){
-//    return opaqueness;
-//  }
+
 //
 //  /**
 //   * Set the fade strategy for the element.

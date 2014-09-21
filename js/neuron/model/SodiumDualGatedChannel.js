@@ -38,7 +38,7 @@ define( function( require ) {
   }
 
   return inherit( GatedChannel, SodiumDualGatedChannel, {
-    step: function( dt ) {
+    stepInTime: function( dt ) {
       //TODO
     },
     getChannelColor: function() {

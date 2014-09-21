@@ -55,7 +55,7 @@ define( function( require ) {
   }
 
   return inherit( AbstractLeakChannel, PotassiumLeakageChannel, {
-    step: function( dt ) {
+    stepInTime: function( dt ) {
       //TODO
     },
     getChannelColor: function() {

@@ -11,13 +11,16 @@ define( function( require ) {
   'use strict';
   //imports
   var inherit = require( 'PHET_CORE/inherit' );
-  var PropertySet = require( 'AXON/PropertySet' );
+  var RecordAndPlaybackModel = require( 'NEURON/neuron/model/RecordAndPlaybackModel' );
 
-  function ParticleCapture() {
-    PropertySet.call( this, {} );
+  function ParticleCapture( props ) {
+    RecordAndPlaybackModel.call( this, props );
   }
 
-  return inherit( PropertySet, ParticleCapture, {
+  return inherit( RecordAndPlaybackModel, ParticleCapture, {
+    reset: function() {
+      RecordAndPlaybackModel.prototype.reset.call( this );
+    },
     /**
      * @param {ParticleType}particleType
      * @param {MembraneChannel}membraneChannel

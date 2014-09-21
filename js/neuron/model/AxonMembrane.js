@@ -112,7 +112,7 @@ define( function( require ) {
   }
 
   return inherit( PropertySet, AxonMembrane, {
-    step:function(dt){
+    stepInTime:function(dt){
       //TODO
     },
     getMembraneThickness: function() {

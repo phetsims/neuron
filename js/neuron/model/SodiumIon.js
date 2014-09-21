@@ -15,7 +15,7 @@ define( function( require ) {
     Particle.call( this, {} );
   }
 
-  return inherit( SodiumIon, Particle, {
+  return inherit(Particle,SodiumIon, {
 
     getType: function() {
       return ParticleType.SODIUM_ION;

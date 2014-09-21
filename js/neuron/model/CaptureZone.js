@@ -39,6 +39,9 @@ define( function( require ) {
     //Derived Property 'zoneShape' derivation function  (dependents - originPoint and RotationAngle)
     deriveZoneShape: function() {
       throw new Error( 'deriveZoneShape should be implemented in descendant classes.' );
+    },
+    getOriginPoint:function(){
+      return this.originPoint;
     }
   } );
 } );

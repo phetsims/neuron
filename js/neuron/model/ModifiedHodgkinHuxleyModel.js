@@ -17,20 +17,355 @@ define( function( require ) {
   // imports
   var inherit = require( 'PHET_CORE/inherit' );
   var BaseHodgkinHuxleyModel = require( 'NEURON/neuron/model/BaseHodgkinHuxleyModel' );
+  var DelayBuffer = require( 'NEURON/neuron/model/DelayBuffer' );
+  var NeuronSharedConstants = require( 'NEURON/neuron/common/NeuronSharedConstants' );
 
-  // Amount of time used for each iteration of the model.  This is fixed,
-  // and when the model is stepped it breaks whether time step is presented
-  // into units of this duration.  This is needed because below a certain
-  // time value the model doesn't work - it becomes unstable.
-  // var INTERNAL_TIME_STEP = 0.005; // In milliseconds, not seconds.
+
+  /*
+   Amount of time used for each iteration of the model.  This is fixed,
+   and when the model is stepped it breaks whether time step is presented
+   into units of this duration.  This is needed because below a certain
+   time value the model doesn't work - it becomes unstable.*/
+
+  var INTERNAL_TIME_STEP = 0.005; // In milliseconds, not seconds.
+
+  var MAX_DELAY = 0.001; // In seconds of simulation time.
 
   function ModifiedHodgkinHuxleyModel() {
-    //TODO
+
+    var thisModel = this;
+    thisModel.perNaChannels = 100;
+    thisModel.perKChannels = 100;
+    thisModel.elapsedTime = 0;
+    thisModel.timeSinceActionPotential = Number.POSITIVE_INFINITY;
+    thisModel.m3hDelayBuffer = new DelayBuffer( MAX_DELAY, NeuronSharedConstants.MIN_ACTION_POTENTIAL_CLOCK_DT );
+    thisModel.n4DelayBuffer = new DelayBuffer( MAX_DELAY, NeuronSharedConstants.MIN_ACTION_POTENTIAL_CLOCK_DT );
+
+    thisModel.resting_v = 65;// final doesn't change
+
+    // deltas of voltage-dependent gating paramaters
+    thisModel.dn = 0;
+    thisModel.dm = 0;
+    thisModel.dh = 0;
+
+    thisModel.timeRemainder = 0;
+
+    // Ek-Er, Ena - Er, Eleak - Er
+    thisModel.vk = 0;
+    thisModel.vna = 0;
+    thisModel.vl = 0;
+
+    thisModel.n4 = 0;
+    thisModel.m3h = 0;
+    thisModel.na_current = 0;
+    thisModel.k_current = 0;
+    thisModel.l_current = 0;
+
+    thisModel.vClampOn = false;
+
+    thisModel.vClampValue = this.convertV( 0 );
+
+    thisModel.reset();// reset and initialize
+
   }
 
   return inherit( BaseHodgkinHuxleyModel, ModifiedHodgkinHuxleyModel, {
 
-//TODO
+    reset: function() {
+      this.n4DelayBuffer.clear();
+      this.m3hDelayBuffer.clear();
+
+      this.cm = 1;// membrane Capacitance
+      this.v = 0;// membrane voltage
+      this.vna = -115;
+      this.vk = 12;
+      this.vl = 0; // NOTE: Modified from -10.613 by jblanco on 3/12/2010 in order to make potential stay steady
+      // at the desired resting potential.
+
+      //constant leak permeabilties
+      this.gna = this.perNaChannels * 120 / 100;
+      this.gk = this.perKChannels * 36 / 100;
+      this.gl = 0.3;
+
+      // rate constants
+      this.bh = 1 / (Math.exp( (this.v + 30) / 10 ) + 1);
+      this.ah = 0.07 * Math.exp( this.v / 20 );
+      this.bm = 4 * Math.exp( this.v / 18 );
+      this.am = 0.1 * (this.v + 25) / (Math.exp( (this.v + 25) / 10 ) - 1);
+      this.bn = 0.125 * Math.exp( this.v / 80 );
+      this.an = 0.01 * (this.v + 10) / (Math.exp( (this.v + 10) / 10 ) - 1);
+
+      // voltage-dependent gating paramaters
+      // start these parameters in steady state
+      this.n = this.an / (this.an + this.bn);
+      this.m = this.am / (this.am + this.bm);
+      this.h = this.ah / (this.ah + this.bh);
+
+      // Time values.
+      this.timeSinceActionPotential = Number.POSITIVE_INFINITY;
+    },
+
+    stepInTime: function( dt ) {
+      var modelIterationsToRun = Math.floor( (dt * 1000) / INTERNAL_TIME_STEP );
+      this.timeRemainder += (dt * 1000) % INTERNAL_TIME_STEP;
+      if ( this.timeRemainder >= INTERNAL_TIME_STEP ) {
+        // Add an additional iteration and reset the time remainder
+        // accumulation.  This is kind of like a leap year.
+        modelIterationsToRun += 1;
+        this.timeRemainder -= INTERNAL_TIME_STEP;
+      }
+
+      // Step the model the appropriate number of times.
+      _.times( modelIterationsToRun, function( i ) {
+
+        this.dh = (this.ah * (1 - this.h) - this.bh * this.h) * INTERNAL_TIME_STEP;
+        this.dm = (this.am * (1 - this.m) - this.bm * this.m) * INTERNAL_TIME_STEP;
+        this.dn = (this.an * (1 - this.n) - this.bn * this.n) * INTERNAL_TIME_STEP;
+
+        this.bh = 1 / (Math.exp( (this.v + 30) / 10 ) + 1);
+        this.ah = 0.07 * Math.exp( this.v / 20 );
+        this.dh = (this.ah * (1 - this.h) - this.bh * this.h) * INTERNAL_TIME_STEP;
+        this.bm = 4 * Math.exp( this.v / 18 );
+        this.am = 0.1 * (this.v + 25) / (Math.exp( (this.v + 25) / 10 ) - 1);
+        this.bn = 0.125 * Math.exp( this.v / 80 );
+        this.an = 0.01 * (this.v + 10) / (Math.exp( (this.v + 10) / 10 ) - 1);
+        this.dm = (this.am * (1 - this.m) - this.bm * this.m) * INTERNAL_TIME_STEP;
+        this.dn = (this.an * (1 - this.n) - this.bn * this.n) * INTERNAL_TIME_STEP;
+
+        // Here is where the main change is that makes this a "modified"
+        // version of Hodgkin-Huxley.  Note that the multiplier values
+        // were determined empirically from running the more standard HH
+        // model.
+
+        // Below, commented out, is the code that a real HH model would use.
+        // n4 = n*n*n*n;
+        // m3h = m*m*m*h;
+
+        // New values tried by Noah P on 3/10/10
+        this.n4 = 0.55 * Math.exp( -1 / 0.55 * Math.pow( this.timeSinceActionPotential - 1.75, 2 ) );
+        this.m3h = 0.3 * Math.exp( -1 / 0.2 * Math.pow( this.timeSinceActionPotential - 1.0, 2 ) );
+
+        // If the n4 and m3h values are below a certain level, go ahead
+        // and set them to zero.  This helps other parts of the simulation
+        // determine when an action potential has ended.  The values used
+        // are empirically determined.
+        if ( this.n4 < 1E-5 ) {
+          this.n4 = 0;
+        }
+        if ( this.m3h < 1E-5 ) {
+          this.m3h = 0;
+        }
+
+        // Calculate the currents based on the conductance values.
+        this.na_current = this.gna * this.m3h * (this.v - this.vna);
+        this.k_current = this.gk * this.n4 * (this.v - this.vk);
+        this.l_current = this.gl * (this.v - this.vl);
+
+        this.dv = -1 * INTERNAL_TIME_STEP * ( this.k_current + this.na_current + this.l_current ) / this.cm;
+
+        this.v += this.dv;
+        this.h += this.dh;
+        this.m += this.dm;
+        this.n += this.dn;
+
+        this.elapsedTime += INTERNAL_TIME_STEP;
+        if ( this.timeSinceActionPotential < Number.POSITIVE_INFINITY ) {
+          this.timeSinceActionPotential += INTERNAL_TIME_STEP;
+        }
+
+      }, this );
+
+      this.m3hDelayBuffer.addValue( this.m3h, dt );
+      this.n4DelayBuffer.addValue( this.n4, dt );
+
+      if ( this.vClampOn ) {
+        this.v = this.vClampValue;
+      }
+    },
+
+
+    get_n4: function() { return this.n4; },
+
+    get_delayed_n4: function( delayAmount ) {
+      if ( delayAmount <= 0 ) {
+        return this.n4;
+      }
+      else {
+        return this.n4DelayBuffer.getDelayedValue( delayAmount );
+      }
+    },
+
+    get_m3h: function() {
+      return this.m3h;
+    },
+
+    get_delayed_m3h: function( delayAmount ) {
+      var delayedM3h = 0;
+
+      if ( delayAmount <= 0 ) {
+        delayedM3h = this.m3h;
+      }
+      else {
+        delayedM3h = this.m3hDelayBuffer.getDelayedValue( delayAmount );
+      }
+
+      return delayedM3h;
+    },
+
+    getEna: function() {
+      return (-1 * (this.vna + this.resting_v));
+    },
+
+    getEk: function() {
+      return  (-1 * (this.vk + this.resting_v));
+    },
+
+    setEna: function( Ena ) {
+      this.vna = -1 * Ena - this.resting_v;
+    },
+
+    setEk: function( Ek ) {
+      this.vk = -1 * Ek - this.resting_v;
+    },
+
+    get_na_current: function() {
+      return -1 * this.na_current;
+    },
+
+    get_k_current: function() {
+      return -1 * this.k_current;
+    },
+
+    get_l_current: function() {
+      return -1 * this.l_current;
+    },
+
+    // negative values set to zero
+    setPerNaChannels: function( perNaChannels ) {
+      if ( perNaChannels < 0 ) {
+        this.perNaChannels = 0;
+      }
+      this.perNaChannels = perNaChannels;
+      this.gna = 120 * perNaChannels / 100;
+    },
+
+    getPerNaChannels: function() {
+      return this.perNaChannels;
+    },
+
+    setPerKChannels: function( perKChannels ) {
+      if ( perKChannels < 0 ) {
+        perKChannels = 0;
+      }
+      this.perKChannels = perKChannels;
+      this.gk = 36 * perKChannels / 100;
+    },
+
+    getPerKChannels: function() {
+      return this.perKChannels;
+    },
+
+    get_gk: function() {
+      return this.gk;
+    },
+
+    set_gk: function( gk ) {
+      this.gk = gk;
+    },
+
+    get_gna: function() {
+      return this.gna;
+    },
+
+    set_gna: function( gna ) {
+      this.gna = gna;
+    },
+
+    get_gl: function() {
+      return this.gl;
+    },
+
+    set_gl: function( gl ) {
+      this.gl = gl;
+    },
+
+    // remember that H&H voltages are -1 * present convention
+    // should eventually calculate this instead of setting it
+    // convert between internal use of V and the user's expectations
+    // the V will be membrane voltage using present day conventions
+    // see p. 505 of Hodgkin & Huxley, J Physiol. 1952, 117:500-544
+    setV: function( inV ) {
+      this.v = -1 * inV - this.resting_v;
+    },
+
+    getV: function() {
+      return -1 * (this.v + this.resting_v);
+    },
+
+    getRestingV: function() {
+      return -1 * this.resting_v;
+    },
+
+    setCm: function( inCm ) {
+      this.cm = inCm;
+    },
+
+    getCm: function() {
+      return this.cm;
+    },
+
+    getElapsedTime: function() {
+      return this.elapsedTime;
+    },
+
+    resetElapsedTime: function() {
+      this.elapsedTime = 0.0;
+    },
+
+    getN: function() {
+      return this.n;
+    },
+
+    getM: function() {
+      return this.m;
+    },
+
+    getH: function() {
+      return this.h;
+    },
+    /**
+     * Converts a voltage from the modern convention to the convention used by the program
+     */
+    convertV: function( voltage ) {
+      return  (-1 * voltage - this.resting_v);
+    },
+
+    getVClampOn: function() {
+      return this.vClampOn;
+    },
+
+    setVClampOn: function( vClampOn ) {
+      this.vClampOn = vClampOn;
+    },
+
+    get_vClampValue: function() {
+      return (-1 * (this.vClampValue + this.resting_v));
+    },
+
+    set_vClampValue: function( vClampValue ) {
+      this.vClampValue = this.convertV( vClampValue );
+    },
+
+    getMembraneVoltage: function() {
+      // getV() converts the model's v to present day convention
+      return this.getV() / 1000;
+    },
+
+    stimulate: function() {
+      // Add a fixed amount to the voltage across the membrane.
+      this.setV( this.getV() + 15 );
+      this.timeSinceActionPotential = 0;
+    }
 
   } );
 
@@ -49,38 +384,14 @@ define( function( require ) {
 //  // Class Data
 //  //----------------------------------------------------------------------------
 //
-//  // Amount of time used for each iteration of the model.  This is fixed,
-//  // and when the model is stepped it breaks whether time step is presented
-//  // into units of this duration.  This is needed because below a certain
-//  // time value the model doesn't work - it becomes unstable.
-//  private static final double INTERNAL_TIME_STEP = 0.005; // In milliseconds, not seconds.
+
 //
 //  //----------------------------------------------------------------------------
 //  // Instance Data
 //  //----------------------------------------------------------------------------
 //
-//  private double elapsedTime  = 0;
-//  private double v;  // membrane voltage
-//  private double dv;
-//  private double cm;  // membrane Capacitance
-//  private double gk, gna, gl;  //constant leak permeabilties
-//  private double n, m, h;  // voltage-dependent gating paramaters
-//  private double dn, dm, dh;  //corresponding deltas
-//  private double an, bn, am, bm, ah, bh; // rate constants
-//  private double vk, vna, vl;  // Ek-Er, Ena - Er, Eleak - Er
-//
-//  private double n4, m3h, na_current, k_current, l_current;
-//
-//  private double timeRemainder;
-//
-//  public float perNaChannels = 100f;
-//  public float perKChannels = 100f;
-//
-//  private double timeSinceActionPotential = Double.POSITIVE_INFINITY;
-//
-//  private static final double MAX_DELAY = 0.001; // In seconds of simulation time.
-//  private DelayBuffer m3hDelayBuffer = new DelayBuffer(MAX_DELAY, NeuronDefaults.MIN_ACTION_POTENTIAL_CLOCK_DT);
-//  private DelayBuffer n4DelayBuffer  = new DelayBuffer(MAX_DELAY, NeuronDefaults.MIN_ACTION_POTENTIAL_CLOCK_DT);
+
+
 //
 //  //----------------------------------------------------------------------------
 //  // Constructor(s)
@@ -95,307 +406,14 @@ define( function( require ) {
 //  // Methods
 //  //----------------------------------------------------------------------------
 //
-//  /* (non-Javadoc)
-//   * @see edu.colorado.phet.neuron.model.IHodgkinHuxleyModel#reset()
-//   */
-//  public void reset()
-//  {
-//    n4DelayBuffer.clear();
-//    m3hDelayBuffer.clear();
+
+
 //
-//    cm = 1;
-//    v = 0;
-//    vna = -115;
-//    vk = 12;
-//    vl = 0; // NOTE: Modified from -10.613 by jblanco on 3/12/2010 in order to make potential stay steady
-//    // at the desired resting potential.
-//    gna = perNaChannels * 120 / 100;
-//    gk = perKChannels * 36 / 100;
-//    gl = 0.3;
-//
-//    bh = 1 / (Math.exp((v + 30)/10) + 1) ;
-//    ah = 0.07 * Math.exp( v / 20);
-//    bm = 4 * Math.exp( v / 18);
-//    am = 0.1 * (v + 25) / (Math.exp( (v+25)/10  ) -1);
-//    bn = 0.125 * Math.exp(v/80);
-//    an = 0.01 * (v + 10) / (Math.exp( (v+10)/10 ) -1);
-//
-//    // start these parameters in steady state
-//    n = an / (an + bn);
-//    m = am / (am + bm);
-//    h = ah / (ah + bh);
-//
-//    // Time values.
-//    timeSinceActionPotential = Double.POSITIVE_INFINITY;
-//  }
-//
-//  /* (non-Javadoc)
-//   * @see edu.colorado.phet.neuron.model.IHodgkinHuxleyModel#get_n4()
-//   */
-//  public double get_n4() { return n4; }
-//
-//  /* (non-Javadoc)
-//   * @see edu.colorado.phet.neuron.model.IHodgkinHuxleyModel#get_delayed_n4()
-//   */
-//  public double get_delayed_n4(double delayAmount){
-//  if (delayAmount <= 0){
-//    return n4;
-//  }
-//  else{
-//    return n4DelayBuffer.getDelayedValue(delayAmount);
-//  }
-//}
-//
-//  /* (non-Javadoc)
-//   * @see edu.colorado.phet.neuron.model.IHodgkinHuxleyModel#get_m3h()
-//   */
-//  public double get_m3h() { return m3h; }
-//
-//  public double get_delayed_m3h(double delayAmount){
-//  double delayedM3h = 0;
-//
-//  if (delayAmount <= 0){
-//    delayedM3h = m3h;
-//  }
-//  else{
-//    delayedM3h = m3hDelayBuffer.getDelayedValue(delayAmount);
-//  }
-//
-//  return delayedM3h;
-//}
-//
-//  public float getEna()
-//  {
-//    return (float) (-1 * (vna + resting_v));
-//  }
-//
-//  public float getEk()
-//  {
-//    return (float) (-1 * (vk + resting_v));
-//  }
-//
-//  public void setEna( float Ena)
-//  {
-//    vna = -1*Ena - resting_v;
-//  }
-//
-//  public void setEk( float Ek )
-//  {
-//    vk = -1*Ek - resting_v;
-//  }
-//
-//  //The -1 is to correct for the fact that in the H & H paper, the currents are reversed.
-//  /* (non-Javadoc)
-//   * @see edu.colorado.phet.neuron.model.IHodgkinHuxleyModel#get_na_current()
-//   */
-//  public double get_na_current() { return -1 * na_current; }
-//  /* (non-Javadoc)
-//   * @see edu.colorado.phet.neuron.model.IHodgkinHuxleyModel#get_k_current()
-//   */
-//  public double get_k_current() { return -1 * k_current; }
-//  /* (non-Javadoc)
-//   * @see edu.colorado.phet.neuron.model.IHodgkinHuxleyModel#get_l_current()
-//   */
-//  public double get_l_current() { return -1 * l_current; }
-//
-//  // negative values set to zero
-//  public void setPerNaChannels( float perNaChannels )
-//  {
-//    if (perNaChannels < 0 )
-//    {
-//      perNaChannels = 0;
-//    }
-//    this.perNaChannels = perNaChannels;
-//    gna = 120 * perNaChannels / 100;
-//  }
-//
-//  public float getPerNaChannels()
-//  {
-//    return perNaChannels;
-//  }
-//
-//  public void setPerKChannels( float perKChannels )
-//  {
-//    if (perKChannels < 0 )
-//    {
-//      perKChannels = 0;
-//    }
-//    this.perKChannels = perKChannels;
-//    gk = 36 * perKChannels / 100;
-//  }
-//
-//  public float getPerKChannels()
-//  {
-//    return perKChannels;
-//  }
-//
-//  /* (non-Javadoc)
-//   * @see edu.colorado.phet.neuron.model.IHodgkinHuxleyModel#get_gk()
-//   */
-//  public double get_gk() {
-//  return gk;
-//}
-//
-//  public void set_gk(double gk) {
-//  this.gk = gk;
-//}
-//
-//  /* (non-Javadoc)
-//   * @see edu.colorado.phet.neuron.model.IHodgkinHuxleyModel#get_gna()
-//   */
-//  public double get_gna() {
-//  return gna;
-//}
-//
-//  public void set_gna(double gna) {
-//  this.gna = gna;
-//}
-//
-//  /* (non-Javadoc)
-//   * @see edu.colorado.phet.neuron.model.IHodgkinHuxleyModel#get_gl()
-//   */
-//  public double get_gl() {
-//  return gl;
-//}
-//
-//  public void set_gl(double gl) {
-//  this.gl = gl;
-//}
-//
-//  final private double resting_v = 65;
-//  // remember that H&H voltages are -1 * present convention
-//  // should eventually calculate this instead of setting it
-//
-//  // convert between internal use of V and the user's expectations
-//  // the V will be membrane voltage using present day conventions
-//  // see p. 505 of Hodgkin & Huxley, J Physiol. 1952, 117:500-544
-//  public void setV(double inV) { v = -1*inV - resting_v; }
-//  public double getV() { return -1*(v + resting_v); }
-//  public double getRestingV() { return -1 * resting_v; }
-//
-//  public void setCm(double inCm) { cm = inCm; }
-//  public double getCm() {return cm; }
-//
-//  /* (non-Javadoc)
-//   * @see edu.colorado.phet.neuron.model.IHodgkinHuxleyModel#getElapsedTime()
-//   */
-//  public double getElapsedTime() { return elapsedTime; }
-//  public void resetElapsedTime() { elapsedTime = 0.0; }
-//
-//  public double getN() {return n; }
-//  public double getM() {return m; }
-//  public double getH() {return h; }
-//
-//  /**
-//   * Converts a voltage from the modern convention to the convention used by the program
-//   */
-//  public float convertV(float voltage)
-//  {
-//    return (float) (-1 * voltage - resting_v);
-//  }
-//
-//  private boolean vClampOn = false;
-//  public boolean getVClampOn() { return vClampOn; }
-//  public void setVClampOn(boolean vClampOn) { this.vClampOn = vClampOn; }
-//
-//  float vClampValue = convertV( 0F );
-//
-//  float get_vClampValue() { return(float) (-1 * (vClampValue + resting_v)); }
-//  void set_vClampValue( float vClampValue ) { this.vClampValue = convertV( vClampValue ); }
+
 //
 //  /* (non-Javadoc)
 //   * @see edu.colorado.phet.neuron.model.IHodgkinHuxleyModel#stepInTime(double)
 //   */
-//  public void stepInTime(double dt)
-//  {
-//    int modelIterationsToRun = (int)Math.floor((dt * 1000)/ INTERNAL_TIME_STEP);
-//    timeRemainder += (dt * 1000) % INTERNAL_TIME_STEP;
-//    if (timeRemainder >= INTERNAL_TIME_STEP){
-//      // Add an additional iteration and reset the time remainder
-//      // accumulation.  This is kind of like a leap year.
-//      modelIterationsToRun += 1;
-//      timeRemainder -= INTERNAL_TIME_STEP;
-//    }
-//
-//    // Step the model the appropriate number of times.
-//    for (int i = 0; i < modelIterationsToRun; i++){
-//
-//    dh = (ah * (1-h) - bh * h) * INTERNAL_TIME_STEP;
-//    dm = (am * (1-m) - bm* m) * INTERNAL_TIME_STEP;
-//    dn = (an * (1-n) - bn * n) * INTERNAL_TIME_STEP;
-//
-//    bh = 1 / (Math.exp((v + 30)/10) + 1) ;
-//    ah = 0.07 * Math.exp( v / 20);
-//    dh = (ah * (1-h) - bh * h) * INTERNAL_TIME_STEP;
-//    bm = 4 * Math.exp( v / 18);
-//    am = 0.1 * (v + 25) / (Math.exp( (v+25)/10  ) -1);
-//    bn = 0.125 * Math.exp(v/80);
-//    an = 0.01 * (v + 10) / (Math.exp( (v+10)/10 ) -1);
-//    dm = (am * (1-m) - bm* m) * INTERNAL_TIME_STEP;
-//    dn = (an * (1-n) - bn * n) * INTERNAL_TIME_STEP;
-//
-//    // Here is where the main change is that makes this a "modified"
-//    // version of Hodgkin-Huxley.  Note that the multiplier values
-//    // were determined empirically from running the more standard HH
-//    // model.
-//
-//    // Below, commented out, is the code that a real HH model would use.
-//    // n4 = n*n*n*n;
-//    // m3h = m*m*m*h;
-//
-//    // New values tried by Noah P on 3/10/10
-//    n4 = 0.55 * Math.exp( -1 / 0.55 * Math.pow(timeSinceActionPotential - 1.75, 2));
-//    m3h = 0.3 * Math.exp( -1 / 0.2 * Math.pow(timeSinceActionPotential - 1.0, 2));
-//
-//    // If the n4 and m3h values are below a certain level, go ahead
-//    // and set them to zero.  This helps other parts of the simulation
-//    // determine when an action potential has ended.  The values used
-//    // are empirically determined.
-//    if (n4 < 1E-5){
-//      n4 = 0;
-//    }
-//    if (m3h < 1E-5){
-//      m3h = 0;
-//    }
-//
-//    // Calculate the currents based on the conductance values.
-//    na_current = gna * m3h * (v-vna);
-//    k_current = gk * n4 * (v-vk);
-//    l_current = gl * (v-vl);
-//
-//    dv = -1 * INTERNAL_TIME_STEP * ( k_current + na_current + l_current ) / cm;
-//
-//    v += dv;
-//    h += dh;
-//    m += dm;
-//    n += dn;
-//
-//    elapsedTime += INTERNAL_TIME_STEP;
-//    if (timeSinceActionPotential < Double.POSITIVE_INFINITY){
-//      timeSinceActionPotential += INTERNAL_TIME_STEP;
-//    }
-//  }
-//
-//    m3hDelayBuffer.addValue(m3h, dt);
-//    n4DelayBuffer.addValue(n4, dt);
-//
-//    if ( vClampOn ) v = vClampValue;
-//  }
-//
-//  /* (non-Javadoc)
-//   * @see edu.colorado.phet.neuron.model.IHodgkinHuxleyModel#getMembraneVoltage()
-//   */
-//  public double getMembraneVoltage(){
-//  // getV() converts the model's v to present day convention
-//  return getV() / 1000;
-//}
-//
-//  /* (non-Javadoc)
-//   * @see edu.colorado.phet.neuron.model.IHodgkinHuxleyModel#stimulate()
-//   */
-//  public void stimulate(){
-//  // Add a fixed amount to the voltage across the membrane.
-//  setV(getV() + 15);
-//  timeSinceActionPotential = 0;
-//}
+
+
 //}

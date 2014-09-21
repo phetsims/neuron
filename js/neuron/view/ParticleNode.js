@@ -50,7 +50,7 @@ define( function( require ) {
           break;
 
         case ParticleType.POTASSIUM_ION:
-          size = modelViewTransform.modelToViewDifferentialXDouble( particle.getRadius() * 2 ) * 0.85;
+          size = modelViewTransform.modelToViewDeltaX( particle.getRadius() * 2 ) * 0.85;
           representationShape = new Shape().rect( -size / 2, -size / 2, size, size );
           var rotationTransform = Matrix3.rotationAround( Math.PI / 4, 0, 0 );
           representationShape = representationShape.transformed( rotationTransform );
@@ -65,7 +65,7 @@ define( function( require ) {
 
       representation.setShape( representationShape );
       representation.fill = particle.getRepresentationColor();
-      thisNode.setOpacity( particle.getOpaqueness() );
+      thisNode.setOpacity( newOpaqueness );
     }
 
     particle.positionProperty.link( function( newPosition ) {
@@ -76,8 +76,8 @@ define( function( require ) {
       updateRepresentation( newOpaqueness );
     } );
 
-    updateOffset();
-    updateRepresentation();
+    updateOffset( particle.getPosition() );
+    updateRepresentation( particle.getOpaqueness() );
   }
 
   return inherit( Node, ParticleNode, {

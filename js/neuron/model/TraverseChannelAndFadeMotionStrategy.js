@@ -1,3 +1,28 @@
+//  Copyright 2002-2014, University of Colorado Boulder
+
+/**
+ * A motion strategy for traversing a basic membrane channel, i.e. one that
+ * has only one gate, and then fading away.
+ *
+ *
+ * @author John Blanco
+ * @author Sam Reid (PhET Interactive Simulations)
+ * @author Sharfudeen Ashraf (for Ghent University)
+ */
+define( function( require ) {
+  'use strict';
+  //imports
+  var inherit = require( 'PHET_CORE/inherit' );
+  var MembraneTraversalMotionStrategy = require( 'NEURON/neuron/model/MembraneTraversalMotionStrategy' );
+
+  function TraverseChannelAndFadeMotionStrategy(){
+
+  }
+
+  return inherit(MembraneTraversalMotionStrategy,TraverseChannelAndFadeMotionStrategy,{
+
+  });
+});
 //// Copyright 2002-2012, University of Colorado
 //package edu.colorado.phet.neuron.model;
 //
@@ -7,10 +32,7 @@
 //
 //import edu.colorado.phet.common.phetcommon.math.vector.MutableVector2D;
 //
-///**
-// * A motion strategy for traversing a basic membrane channel, i.e. one that
-// * has only one gate, and then fading away.
-// *
+
 // * @author John Blanco
 // */
 //public class TraverseChannelAndFadeMotionStrategy extends MembraneTraversalMotionStrategy {

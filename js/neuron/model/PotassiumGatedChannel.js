@@ -35,7 +35,7 @@ define( function( require ) {
   }
 
   return inherit( GatedChannel, PotassiumGatedChannel, {
-    step: function( dt ) {
+    stepInTime: function( dt ) {
       //TODO
     },
     getChannelColor: function() {

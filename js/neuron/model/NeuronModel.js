@@ -15,7 +15,6 @@ define( function( require ) {
 
   // imports
   var inherit = require( 'PHET_CORE/inherit' );
-  var PropertySet = require( 'AXON/PropertySet' );
   var Vector2 = require( 'DOT/Vector2' );
   var ObservableArray = require( 'AXON/ObservableArray' );
   var AxonMembrane = require( 'NEURON/neuron/model/AxonMembrane' );
@@ -27,8 +26,11 @@ define( function( require ) {
   var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
   var MembraneChannelFactory = require( 'NEURON/neuron/model/MembraneChannelFactory' );
   var SodiumDualGatedChannel = require( 'NEURON/neuron/model/SodiumDualGatedChannel' );
-  var CaptureZoneScanResult = require( 'NEURON/neuron/model/CaptureZoneScanResult' );
   var SlowBrownianMotionStrategy = require( 'NEURON/neuron/model/SlowBrownianMotionStrategy' );
+  var MembraneCrossingDirection = require( 'NEURON/neuron/model/MembraneCrossingDirection' );
+  var CaptureZoneScanResult = require( 'NEURON/neuron/model/CaptureZoneScanResult' );
+  var TimedFadeInStrategy = require( 'NEURON/neuron/model/TimedFadeInStrategy' );
+
 
   // Default configuration values.
   var DEFAULT_FOR_SHOW_ALL_IONS = true;
@@ -57,6 +59,44 @@ define( function( require ) {
   var NUM_POTASSIUM_IONS_OUTSIDE_CELL = 60;
   var NUM_POTASSIUM_IONS_INSIDE_CELL = 200;
 
+  // Delay between the values in the HH model to the concentration readouts.
+  // This is needed to make sure that the concentration readouts don't
+  // change before visible potassium or sodium ions have crossed the
+  //membrane.
+  var CONCENTRATION_READOUT_DELAY = 0.001;  // In seconds of sim time.
+
+
+  // Thresholds for determining whether an action potential should be
+  // considered to be in progress.  These values relate to the rate of flow
+  // through the gated sodium, gated potassium, and combination of the
+  // sodium and potassium leakage.  If the values from the HH model exceed
+  // any of these, and action potential is considered to be in progress.
+  // The values were determined empirically, and different HH models may
+  // require different values here.
+  var POTASSIUM_CURRENT_THRESH_FOR_ACTION_POTENTIAL = 0.001;
+  var SODIUM_CURRENT_THRESH_FOR_ACTION_POTENTIAL = 0.001;
+  var LEAKAGE_CURRENT_THRESH_FOR_ACTION_POTENTIAL = 0.444;
+
+
+  // Rates at which concentration changes during action potential.  These
+  // values combined with the conductance at each time step are used to
+  // calculate the concentration changes.
+  var INTERIOR_CONCENTRATION_CHANGE_RATE_SODIUM = 0.4;
+  var EXTERIOR_CONCENTRATION_CHANGE_RATE_SODIUM = 7;
+  var INTERIOR_CONCENTRATION_CHANGE_RATE_POTASSIUM = 2.0;
+  var EXTERIOR_CONCENTRATION_CHANGE_RATE_POTASSIUM = 0.05;
+
+  // Threshold of significant difference for concentration values.
+  var CONCENTRATION_DIFF_THRESHOLD = 0.000001;
+
+  // Rate at which concentration is restored to nominal value.  Higher value
+  // means quicker restoration.
+  var CONCENTRATION_RESTORATION_FACTOR = 1000;
+
+  // Value that controls how much of a change of the membrane potential must
+  // occur before a notification is sent out.
+  var MEMBRANE_POTENTIAL_CHANGE_THRESHOLD = 0.005;
+
   // Default values of opaqueness for newly created particles.
   var FOREGROUND_PARTICLE_DEFAULT_OPAQUENESS = 0.20;
   var BACKGROUND_PARTICLE_DEFAULT_OPAQUENESS = 0.05;
@@ -72,9 +112,8 @@ define( function( require ) {
    */
   function NeuronModel() {
     var thisModel = this;
-    ParticleCapture.call( thisModel );
-
-    PropertySet.call( thisModel, {
+    //Particle Capture is a PropertySet
+    ParticleCapture.call( thisModel, {
       potentialChartVisible: DEFAULT_FOR_MEMBRANE_CHART_VISIBILITY,
       // Controls whether all ions, or just those near membrane, are simulated.
       allIonsSimulated: DEFAULT_FOR_SHOW_ALL_IONS,
@@ -82,9 +121,15 @@ define( function( require ) {
       chargesShown: DEFAULT_FOR_CHARGES_SHOWN,
       // Controls whether concentration readings are depicted.
       concentrationReadoutVisible: DEFAULT_FOR_CONCENTRATION_READOUT_SHOWN,
+      previousMembranePotential: 0,
       stimulasLockout: false,
-      playbackParticlesVisible: false
+      playbackParticlesVisible: false,
+      concentrationChanged: false,
+      // record playback related
+      paused: false,
+      particlesStateChanged: false // to trigger canvas invalidation
     } );
+
 
     thisModel.axonMembrane = new AxonMembrane();
 
@@ -196,13 +241,267 @@ define( function( require ) {
     // Note: It is expected that the model will be reset once it has been
     // created, and this will set the initial state, including adding the
     // particles to the model.
+
+    this.reset(); // This does initialization
   }
 
   return inherit( ParticleCapture, NeuronModel, {
 
-    // Called by the animation loop
-    step: function( simulationTimeChange ) {
-      console.log( simulationTimeChange );
+    stepInTime: function( simulationTimeChange ) {
+      //TODO
+    },
+    step: function( dt ) {
+      //TODO
+    },
+
+    // Called by the animation loop //TODO Ashraf Not fully implemented that why named it as inCompleteStep
+    inCompletestep: function( dt ) {
+      // Step the membrane in time.  This is done prior to stepping the
+      // HH model because the traveling action potential is part of the
+      // membrane, so if it reaches the cross section in this time step the
+      // membrane potential will be modified.
+      this.axonMembrane.stepInTime( dt );
+
+      // This is a step forward in time.  Update the value of the
+      // membrane potential by stepping the Hodgkins-Huxley model.
+      this.hodgkinHuxleyModel.stepInTime( dt );
+
+      // There is a bit of a threshold on sending out notifications of
+      // membrane voltage changes, since otherwise the natural "noise" in
+      // the model causes notifications to be sent out continuously.
+      if ( Math.abs( this.previousMembranePotential - this.hodgkinHuxleyModel.getMembraneVoltage() ) > MEMBRANE_POTENTIAL_CHANGE_THRESHOLD ) {
+        this.previousMembranePotentialProperty.set( this.hodgkinHuxleyModel.getMembraneVoltage() );
+
+      }
+
+      // Update the stimulus lockout state.
+      this.updateStimulasLockoutState();
+
+      // Step the channels.
+      this.membraneChannels.forEach( function( channel ) {
+        channel.stepInTime( dt );
+      } );
+
+
+      // Step the transient particles.  Since these particles may remove
+      // themselves as a result of being stepped, we need to copy the list
+      // in order to avoid concurrent modification exceptions.
+      var particlesCopy = this.transientParticles.toArray().slice();
+      particlesCopy.forEach( function( particle ) {
+        particle.stepInTime( dt );
+      } );
+
+      // Step the background particles, which causes them to exhibit a
+      // little Brownian motion
+      this.backgroundParticles.forEach( function( particle ) {
+        particle.stepInTime( dt );
+      } );
+
+
+      // Adjust the overall potassium and sodium concentration levels based
+      // parameters of the HH model.  This is done solely to provide values
+      // that can be displayed to the user, and are not used for anything
+      // else in the model.
+      var concentrationChanged = false;
+      var difference;
+      var potassiumConductance = this.hodgkinHuxleyModel.get_delayed_n4( CONCENTRATION_READOUT_DELAY );
+      if ( potassiumConductance !== 0 ) {
+        // Potassium is moving out of the cell as part of the process of
+        // an action potential, so adjust the interior and exterior
+        // concentration values.
+        this.potassiumExteriorConcentration += potassiumConductance * dt * EXTERIOR_CONCENTRATION_CHANGE_RATE_POTASSIUM;
+        this.potassiumInteriorConcentration -= potassiumConductance * dt * INTERIOR_CONCENTRATION_CHANGE_RATE_POTASSIUM;
+        concentrationChanged = true;
+      }
+      else {
+        if ( this.potassiumExteriorConcentration !== NOMINAL_POTASSIUM_EXTERIOR_CONCENTRATION ) {
+          difference = Math.abs( this.potassiumExteriorConcentration - NOMINAL_POTASSIUM_EXTERIOR_CONCENTRATION );
+          if ( difference < CONCENTRATION_DIFF_THRESHOLD ) {
+            // Close enough to consider it fully restored.
+            this.potassiumExteriorConcentration = NOMINAL_POTASSIUM_EXTERIOR_CONCENTRATION;
+          }
+          else {
+            // Move closer to the nominal value.
+            this.potassiumExteriorConcentration -= difference * CONCENTRATION_RESTORATION_FACTOR * dt;
+          }
+          concentrationChanged = true;
+        }
+        if ( this.potassiumInteriorConcentration !== NOMINAL_POTASSIUM_INTERIOR_CONCENTRATION ) {
+          difference = Math.abs( this.potassiumInteriorConcentration - NOMINAL_POTASSIUM_INTERIOR_CONCENTRATION );
+          if ( difference < CONCENTRATION_DIFF_THRESHOLD ) {
+            // Close enough to consider it fully restored.
+            this.potassiumInteriorConcentration = NOMINAL_POTASSIUM_INTERIOR_CONCENTRATION;
+          }
+          else {
+            // Move closer to the nominal value.
+            this.potassiumInteriorConcentration += difference * CONCENTRATION_RESTORATION_FACTOR * dt;
+          }
+          concentrationChanged = true;
+        }
+      }
+      var sodiumConductance = this.hodgkinHuxleyModel.get_delayed_m3h( CONCENTRATION_READOUT_DELAY );
+      if ( this.hodgkinHuxleyModel.get_m3h() !== 0 ) {
+        // Sodium is moving in to the cell as part of the process of an
+        // action potential, so adjust the interior and exterior
+        // concentration values.
+        this.sodiumExteriorConcentration -= sodiumConductance * dt * EXTERIOR_CONCENTRATION_CHANGE_RATE_SODIUM;
+        this.sodiumInteriorConcentration += sodiumConductance * dt * INTERIOR_CONCENTRATION_CHANGE_RATE_SODIUM;
+        concentrationChanged = true;
+      }
+      else {
+        if ( this.sodiumExteriorConcentration !== NOMINAL_SODIUM_EXTERIOR_CONCENTRATION ) {
+          difference = Math.abs( this.sodiumExteriorConcentration - NOMINAL_SODIUM_EXTERIOR_CONCENTRATION );
+          if ( difference < CONCENTRATION_DIFF_THRESHOLD ) {
+            // Close enough to consider it fully restored.
+            this.sodiumExteriorConcentration = NOMINAL_SODIUM_EXTERIOR_CONCENTRATION;
+          }
+          else {
+            // Move closer to the nominal value.
+            this.sodiumExteriorConcentration += difference * CONCENTRATION_RESTORATION_FACTOR * dt;
+          }
+          concentrationChanged = true;
+        }
+        if ( this.sodiumInteriorConcentration !== NOMINAL_SODIUM_INTERIOR_CONCENTRATION ) {
+          difference = Math.abs( this.sodiumInteriorConcentration - NOMINAL_SODIUM_INTERIOR_CONCENTRATION );
+          if ( difference < CONCENTRATION_DIFF_THRESHOLD ) {
+            // Close enough to consider it fully restored.
+            this.sodiumInteriorConcentration = NOMINAL_SODIUM_INTERIOR_CONCENTRATION;
+          }
+          else {
+            // Move closer to the nominal value.
+            this.sodiumInteriorConcentration -= difference * CONCENTRATION_RESTORATION_FACTOR * dt;
+          }
+          concentrationChanged = true;
+        }
+      }
+      if ( concentrationChanged ) {
+        this.concentrationChangedProperty.set( !this.concentrationChanged ); // trigger property change
+      }
+
+      //invert the value and trigger the event
+      this.particlesStateChangedProperty.set( !this.particlesStateChangedProperty.get() );
+      // Return model state after each time step.
+      return this.getState();
+
+    },
+
+    reset: function() {
+
+      // Reset the superclass, which contains the recording state & data.
+      // ParticleCapture is PropertySet
+      ParticleCapture.prototype.reset.call( this );
+
+      // Reset the axon membrane.
+      this.axonMembrane.reset();
+
+      // Remove all existing particles.
+      this.removeAllParticles();
+      this.allIonsSimulated = false;
+
+      // Reset all membrane channels.
+      this.membraneChannels.forEach( function( membraneChannel ) {
+        membraneChannel.reset();
+      } );
+
+      // Reset the HH model.
+      this.hodgkinHuxleyModel.reset();
+
+      // Reset the concentration readout values.
+      var concentrationChanged = false;
+      if ( this.sodiumExteriorConcentration !== NOMINAL_SODIUM_EXTERIOR_CONCENTRATION ) {
+        this.sodiumExteriorConcentration = NOMINAL_SODIUM_EXTERIOR_CONCENTRATION;
+        concentrationChanged = true;
+      }
+      if ( this.sodiumInteriorConcentration !== NOMINAL_SODIUM_INTERIOR_CONCENTRATION ) {
+        this.sodiumInteriorConcentration = NOMINAL_SODIUM_INTERIOR_CONCENTRATION;
+        concentrationChanged = true;
+      }
+      if ( this.potassiumExteriorConcentration !== NOMINAL_POTASSIUM_EXTERIOR_CONCENTRATION ) {
+        this.potassiumExteriorConcentration = NOMINAL_POTASSIUM_EXTERIOR_CONCENTRATION;
+        concentrationChanged = true;
+      }
+      if ( this.potassiumInteriorConcentration !== NOMINAL_POTASSIUM_INTERIOR_CONCENTRATION ) {
+        this.potassiumInteriorConcentration = NOMINAL_POTASSIUM_INTERIOR_CONCENTRATION;
+        concentrationChanged = true;
+      }
+      if ( concentrationChanged ) {
+
+        this.concentrationChangedProperty.set( !this.concentrationChanged ); // Trigger property change
+      }
+
+      // Reset the stimulation lockout.
+      this.setStimulasLockout( false );
+
+      // Set the membrane chart to its initial state.
+      this.setPotentialChartVisible( DEFAULT_FOR_MEMBRANE_CHART_VISIBILITY );
+
+      // Set the concentration readout visibility to its initial state.
+      this.setConcentrationReadoutVisible( DEFAULT_FOR_CONCENTRATION_READOUT_SHOWN );
+
+      // Set the visibility of the charge symbols to its initial state.
+      this.setChargesShown( DEFAULT_FOR_CHARGES_SHOWN );
+
+      // Set the boolean that controls whether all ions are simulated to its
+      // original state.
+      this.setAllIonsSimulated( DEFAULT_FOR_SHOW_ALL_IONS );
+
+      // Set the state of the record-and-playback model to be "live"
+      // (neither recording nor playing) and unpaused.
+      this.clearHistory();
+      this.setModeLive();
+      this.setPaused( false );
+    },
+
+    /**
+     * Starts a particle of the specified type moving through the
+     * specified channel.  If one or more particles of the needed type exist
+     * within the capture zone for this channel, one will be chosen and set to
+     * move through, and another will be created to essentially take its place
+     * (though the newly created one will probably be in a slightly different
+     * place for better visual effect).  If none of the needed particles
+     * exist, two will be created, and one will move through the channel and
+     * the other will just hang out in the zone.
+     *
+     * Note that it is not guaranteed that the particle will make it through
+     * the channel, since it is possible that the channel could close before
+     * the particle goes through it.
+     *
+     * @param particleType
+     * @param {MembraneChannel}channel
+     * @param maxVelocity
+     * @param direction
+     * @return
+     */
+    requestParticleThroughChannel: function( particleType, channel, maxVelocity, direction ) {
+
+      var captureZone;
+
+      if ( direction === MembraneCrossingDirection.IN_TO_OUT ) {
+        captureZone = channel.getInteriorCaptureZone();
+      }
+      else {
+        captureZone = channel.getExteriorCaptureZone();
+      }
+
+      var particleToCapture = this.createTransientParticle( particleType, captureZone );
+
+      // Make the particle fade in.
+      particleToCapture.setFadeStrategy( new TimedFadeInStrategy( 0.0005 ) );
+
+      // Set a motion strategy that will cause this particle to move across
+      // the membrane.
+      channel.moveParticleThroughNeuronMembrane( particleToCapture, maxVelocity );
+    },
+
+
+    /**
+     * Return a value indicating whether simulation of all ions is currently
+     * turned on in the simulation.  And yes, it would be more grammatically
+     * correct to set "areAllIonsSimulated", but we are sticking with the
+     * convention for boolean variables.  So get over it.
+     */
+    isAllIonsSimulated: function() {
+      return this.allIonsSimulated;
     },
     /**
      * Set the boolean value that indicates whether all ions are shown in the
@@ -217,7 +516,7 @@ define( function( require ) {
       // potential, which would be hard to handle and potentially confusing.
       if ( !this.isStimulusInitiationLockedOut() ) {
         if ( this.allIonsSimulated !== allIonsSimulated ) {
-          this.allIonsSimulated = allIonsSimulated;
+          this.allIonsSimulatedProperty.set( allIonsSimulated );
 
           if ( this.allIonsSimulated ) {
             // Add the bulk particles.
@@ -237,35 +536,57 @@ define( function( require ) {
      * initially positioned.
      */
     addInitialBulkParticles: function() {
+      var thisModel = this;
       // Make a list of pre-existing particles.
-      var preExistingParticles = _.clone( this.transientParticles.getArray() );
+      var preExistingParticles = _.clone( thisModel.transientParticles.getArray() );
 
       // Add the initial particles.
-      this.addBackgroundParticles( ParticleType.SODIUM_ION, ParticlePosition.INSIDE_MEMBRANE, NUM_SODIUM_IONS_INSIDE_CELL );
-      this.addBackgroundParticles( ParticleType.SODIUM_ION, ParticlePosition.OUTSIDE_MEMBRANE, NUM_SODIUM_IONS_OUTSIDE_CELL );
-      this.addBackgroundParticles( ParticleType.POTASSIUM_ION, ParticlePosition.INSIDE_MEMBRANE, NUM_POTASSIUM_IONS_INSIDE_CELL );
-      this.addBackgroundParticles( ParticleType.POTASSIUM_ION, ParticlePosition.OUTSIDE_MEMBRANE, NUM_POTASSIUM_IONS_OUTSIDE_CELL );
+      thisModel.addBackgroundParticles( ParticleType.SODIUM_ION, ParticlePosition.INSIDE_MEMBRANE, NUM_SODIUM_IONS_INSIDE_CELL );
+      thisModel.addBackgroundParticles( ParticleType.SODIUM_ION, ParticlePosition.OUTSIDE_MEMBRANE, NUM_SODIUM_IONS_OUTSIDE_CELL );
+      thisModel.addBackgroundParticles( ParticleType.POTASSIUM_ION, ParticlePosition.INSIDE_MEMBRANE, NUM_POTASSIUM_IONS_INSIDE_CELL );
+      thisModel.addBackgroundParticles( ParticleType.POTASSIUM_ION, ParticlePosition.OUTSIDE_MEMBRANE, NUM_POTASSIUM_IONS_OUTSIDE_CELL );
 
       // Look at each sodium gate and, if there are no ions in its capture
       // zone, add some.
-      this.membraneChannels.forEach( function( membraneChannel ) {
+      thisModel.membraneChannels.forEach( function( membraneChannel ) {
         if ( membraneChannel instanceof SodiumDualGatedChannel ) {
           var captureZone = membraneChannel.getExteriorCaptureZone();
           //CaptureZoneScanResult
-          var czsr = this.scanCaptureZoneForFreeParticles( captureZone, ParticleType.SODIUM_ION );
+          var czsr = thisModel.scanCaptureZoneForFreeParticles( captureZone, ParticleType.SODIUM_ION );
           if ( czsr.numParticlesInZone === 0 ) {
-            this.addBackgroundParticles( ParticleType.SODIUM_ION, captureZone, Math.floor( Math.random() * 2 ) + 1 );
+            thisModel.addBackgroundParticles( ParticleType.SODIUM_ION, captureZone, Math.floor( Math.random() * 2 ) + 1 );
           }
         }
       } );
 
       // Set all new particles to exhibit simple Brownian motion.
-      this.backgroundParticles.forEach( function( backgroundParticle ) {
+      thisModel.backgroundParticles.forEach( function( backgroundParticle ) {
         if ( preExistingParticles.indexOf( backgroundParticle ) !== -1 ) {
           backgroundParticle.setMotionStrategy( new SlowBrownianMotionStrategy( backgroundParticle.getPositionReference() ) );
         }
       } );
     },
+
+    /**
+     * Create a particle of the specified type in the specified capture zone.
+     * In general, this method will be used when a particle is or may soon be
+     * needed to travel through a membrane channel.
+     *
+     * @param particleType
+     * @param captureZone
+     * @return
+     */
+    createTransientParticle: function( particleType, captureZone ) {
+      var newParticle = ParticleFactory.createParticle( particleType );
+      this.transientParticles.add( newParticle );
+      if ( captureZone !== null ) {
+        var location = captureZone.getSuggestedNewParticleLocation();
+        newParticle.setPosition( location );
+      }
+
+      return newParticle;
+    },
+
     /**
      * Add the specified particles to the model.
      *
@@ -275,13 +596,14 @@ define( function( require ) {
      */
     addBackgroundParticles: function( particleType, position, numberToAdd ) {
       var newParticle = null;
+      var thisModel = this;
       _.times( numberToAdd, function( value ) {
-        newParticle = this.createBackgroundParticle( particleType );
+        newParticle = thisModel.createBackgroundParticle( particleType );
         if ( position === ParticlePosition.INSIDE_MEMBRANE ) {
-          this.positionParticleInsideMembrane( newParticle );
+          thisModel.positionParticleInsideMembrane( newParticle );
         }
         else {
-          this.positionParticleOutsideMembrane( newParticle );
+          thisModel.positionParticleOutsideMembrane( newParticle );
         }
         // Set the opaqueness.
         if ( Math.random() >= 0.5 ) { // replaced for nextBoolean
@@ -311,6 +633,21 @@ define( function( require ) {
     },
 
     /**
+     * Returns a boolean values indicating whether or not an action potential
+     * is in progress.  For the purposes of this sim, this means whether there
+     * is an AP traveling down the membrane or if the flow of ions through the
+     * channels at the transverse cross section is enough to be considered
+     * part of an AP.
+     */
+    isActionPotentialInProgress: function() {
+
+      return this.axonMembrane.getTravelingActionPotential() !== null ||
+             Math.abs( this.hodgkinHuxleyModel.get_k_current() ) > POTASSIUM_CURRENT_THRESH_FOR_ACTION_POTENTIAL ||
+             Math.abs( this.hodgkinHuxleyModel.get_na_current() ) > SODIUM_CURRENT_THRESH_FOR_ACTION_POTENTIAL ||
+             Math.abs( this.hodgkinHuxleyModel.get_l_current() ) > LEAKAGE_CURRENT_THRESH_FOR_ACTION_POTENTIAL;
+    },
+
+    /**
      * Place a particle at a random location outside the axon membrane.
      */
     positionParticleOutsideMembrane: function( particle ) {
@@ -336,12 +673,13 @@ define( function( require ) {
      * @return
      */
     scanCaptureZoneForFreeParticles: function( zone, particleType ) {
+      var thisModel = this;
       var closestFreeParticle = null;
       var distanceOfClosestParticle = Number.POSITIVE_INFINITY;
       var totalNumberOfParticles = 0;
       var captureZoneOrigin = zone.getOriginPoint();
 
-      this.transientParticles.forEach( function( particle ) {
+      thisModel.transientParticles.forEach( function( particle ) {
 
         if ( (particle.getType() === particleType) && (particle.isAvailableForCapture()) && (zone.isPointInZone( particle.getPositionReference() )) ) {
           totalNumberOfParticles++;
@@ -358,6 +696,30 @@ define( function( require ) {
 
 
       return new CaptureZoneScanResult( closestFreeParticle, totalNumberOfParticles );
+    },
+
+    updateStimulasLockoutState: function() {
+      if ( this.stimulasLockout ) {
+        // Currently locked out, see if that should change.
+        if ( !this.isPlayback() && !this.isActionPotentialInProgress() ) {
+          this.setStimulasLockout( false );
+        }
+      }
+      else {
+        // Currently NOT locked out, see if that should change.
+        if ( this.isActionPotentialInProgress() || (this.isPlayback() && this.getTime() < this.getMaxRecordedTime()) ) {
+          this.setStimulasLockout( true );
+        }
+      }
+    },
+    /**
+     * Get the state of this model.  This is generally used in support of the
+     * record-and-playback feature, and the return value contains just enough
+     * state information to support this feature.
+     */
+    getState: function() {
+      // return new NeuronModelState(this);
+      return -1;//TODO
     },
 
     /**
@@ -412,10 +774,30 @@ define( function( require ) {
      */
     isStimulusInitiationLockedOut: function() {
       return this.stimulasLockout;
+    },
+    setPotentialChartVisible: function( isVisible ) {
+      this.potentialChartVisibleProperty.set( isVisible );
+    },
+    isConcentrationReadoutVisible: function() {
+      return this.concentrationReadoutVisible;
+    },
+
+    setConcentrationReadoutVisible: function( isVisible ) {
+      this.concentrationReadoutVisibleProperty.set( isVisible );
+    },
+    isChargesShown: function() {
+      return this.chargesShown;
+    },
+    setChargesShown: function( chargesShown ) {
+      this.chargesShownProperty.set( chargesShown );
+    },
+    setStimulasLockout: function( lockout ) {
+      this.stimulasLockoutProperty.set( lockout );
     }
 
   } );
-} );
+} )
+;
 
 // Copyright 2002-2011, University of Colorado
 
@@ -620,149 +1002,8 @@ define( function( require ) {
 //    }
 //  }
 //
-//  public boolean isPotentialChartVisible(){
-//    return potentialChartVisible;
-//  }
-//
-//  public void setPotentialChartVisible(boolean isVisible){
-//    if (potentialChartVisible != isVisible){
-//      potentialChartVisible = isVisible;
-//      notifyPotentialChartVisibilityChanged();
-//    }
-//  }
-//
-//  public boolean isConcentrationReadoutVisible(){
-//    return concentrationReadoutVisible;
-//  }
-//
-//  public void setConcentrationReadoutVisible(boolean isVisible){
-//    if (concentrationReadoutVisible != isVisible){
-//      concentrationReadoutVisible = isVisible;
-//      notifyConcentrationReadoutVisibilityChanged();
-//    }
-//  }
-//
-//  /**
-//   * For consistency with convention, "is" is used instead of "are".  I know
-//   * the grammar is bad.  Get over it.
-//   *
-//   * @return
-//   */
-//  public boolean isChargesShown(){
-//    return chargesShown;
-//  }
-//
-//  public void setChargesShown(boolean chargesShown){
-//    if (this.chargesShown != chargesShown){
-//      this.chargesShown = chargesShown;
-//      notifyChargesShownChanged();
-//    }
-//  }
-//
-//  /**
-//   * Return a value indicating whether simulation of all ions is currently
-//   * turned on in the simulation.  And yes, it would be more grammatically
-//   * correct to set "areAllIonsSimulated", but we are sticking with the
-//   * convention for boolean variables.  So get over it.
-//   */
-//  public boolean isAllIonsSimulated(){
-//    return allIonsSimulated;
-//  }
-//
-//  /**
-//   * Set the boolean value that indicates whether all ions are shown in the
-//   * simulation, or just those that are moving across the membrane.
-//   *
-//   * @param allIonsSimulated
-//   */
-//  public void setAllIonsSimulated(boolean allIonsSimulated){
-//    // This can only be changed when the stimlus initiation is not locked
-//    // out.  Otherwise, particles would come and go during an action
-//    // potential, which would be hard to handle and potentially confusing.
-//    if (!isStimulusInitiationLockedOut()){
-//      if (this.allIonsSimulated != allIonsSimulated){
-//        this.allIonsSimulated = allIonsSimulated;
-//        notifyAllIonsSimulatedChanged();
-//        if (this.allIonsSimulated){
-//          // Add the bulk particles.
-//          addInitialBulkParticles();
-//        }
-//        else{
-//          // Remove all particles.
-//          removeAllParticles();
-//        }
-//      }
-//    }
-//  }
-//
-//  //----------------------------------------------------------------------------
-//  // Other Methods
-//  //----------------------------------------------------------------------------
-//
-//  public void reset(){
-//
-//    // Reset the superclass, which contains the recording state & data.
-//    super.resetAll();
-//
-//    // Reset the axon membrane.
-//    axonMembrane.reset();
-//
-//    // Remove all existing particles.
-//    removeAllParticles();
-//    allIonsSimulated = false;
-//
-//    // Reset all membrane channels.
-//    for (MembraneChannel membraneChannel : membraneChannels){
-//      membraneChannel.reset();
-//    }
-//
-//    // Reset the HH model.
-//    hodgkinHuxleyModel.reset();
-//
-//    // Reset the concentration readout values.
-//    boolean concentrationChanged = false;
-//    if (sodiumExteriorConcentration != NOMINAL_SODIUM_EXTERIOR_CONCENTRATION){
-//      sodiumExteriorConcentration = NOMINAL_SODIUM_EXTERIOR_CONCENTRATION;
-//      concentrationChanged = true;
-//    }
-//    if (sodiumInteriorConcentration != NOMINAL_SODIUM_INTERIOR_CONCENTRATION){
-//      sodiumInteriorConcentration = NOMINAL_SODIUM_INTERIOR_CONCENTRATION;
-//      concentrationChanged = true;
-//    }
-//    if (potassiumExteriorConcentration != NOMINAL_POTASSIUM_EXTERIOR_CONCENTRATION){
-//      potassiumExteriorConcentration = NOMINAL_POTASSIUM_EXTERIOR_CONCENTRATION;
-//      concentrationChanged = true;
-//    }
-//    if (potassiumInteriorConcentration != NOMINAL_POTASSIUM_INTERIOR_CONCENTRATION){
-//      potassiumInteriorConcentration = NOMINAL_POTASSIUM_INTERIOR_CONCENTRATION;
-//      concentrationChanged = true;
-//    }
-//    if (concentrationChanged){
-//      notifyConcentrationChanged();
-//    }
-//
-//    // Reset the stimulation lockout.
-//    setStimulasLockout(false);
-//
-//    // Set the membrane chart to its initial state.
-//    setPotentialChartVisible(DEFAULT_FOR_MEMBRANE_CHART_VISIBILITY);
-//
-//    // Set the concentration readout visibility to its initial state.
-//    setConcentrationReadoutVisible(DEFAULT_FOR_CONCENTRATION_READOUT_SHOWN);
-//
-//    // Set the visibility of the charge symbols to its initial state.
-//    setChargesShown(DEFAULT_FOR_CHARGES_SHOWN);
-//
-//    // Set the boolean that controls whether all ions are simulated to its
-//    // original state.
-//    setAllIonsSimulated(DEFAULT_FOR_SHOW_ALL_IONS);
-//
-//    // Set the state of the record-and-playback model to be "live"
-//    // (neither recording nor playing) and unpaused.
-//    clearHistory();
-//    setModeLive();
-//    setPaused(false);
-//  }
+
+
 //
 //  /**
 //   * Add the specified particles to the model.
@@ -926,36 +1167,7 @@ define( function( require ) {
 //           Math.abs( hodgkinHuxleyModel.get_l_current()) > LEAKAGE_CURRENT_THRESH_FOR_ACTION_POTENTIAL;
 //  }
 //
-//  /**
-//   * Create a particle of the specified type in the specified capture zone.
-//   * In general, this method will be used when a particle is or may soon be
-//   * needed to travel through a membrane channel.
-//   *
-//   * @param particleType
-//   * @param captureZone
-//   * @return
-//   */
-//  private Particle createTransientParticle(ParticleType particleType, CaptureZone captureZone){
-//
-//    final Particle newParticle = Particle.createParticle(particleType);
-//    transientParticles.add(newParticle);
-//    if (captureZone != null){
-//      Point2D location = captureZone.getSuggestedNewParticleLocation();
-//      newParticle.setPosition(location);
-//    }
-//
-//    // Listen to the particle for notification of its removal.
-//    newParticle.addListener(new ParticleListenerAdapter(){
-//      public void removedFromModel() {
-//        transientParticles.remove(newParticle);
-//      }
-//    });
-//
-//    // Send notification that this particle has come into existence.
-//    notifyParticleAdded(newParticle);
-//
-//    return newParticle;
-//  }
+
 //
 //  /**
 //   * Create a particle of the specified type and add it to the model.
@@ -981,45 +1193,7 @@ define( function( require ) {
 //    return newParticle;
 //  }
 //
-//  /**
-//   * Starts a particle of the specified type moving through the
-//   * specified channel.  If one or more particles of the needed type exist
-//   * within the capture zone for this channel, one will be chosen and set to
-//   * move through, and another will be created to essentially take its place
-//   * (though the newly created one will probably be in a slightly different
-//   * place for better visual effect).  If none of the needed particles
-//   * exist, two will be created, and one will move through the channel and
-//   * the other will just hang out in the zone.
-//   *
-//   * Note that it is not guaranteed that the particle will make it through
-//   * the channel, since it is possible that the channel could close before
-//   * the particle goes through it.
-//   *
-//   * @param particleType
-//   * @param channel
-//   * @return
-//   */
-//  public void requestParticleThroughChannel(ParticleType particleType, MembraneChannel channel, double maxVelocity,
-//    MembraneCrossingDirection direction){
-//
-//    CaptureZone captureZone;
-//
-//    if (direction == MembraneCrossingDirection.IN_TO_OUT){
-//      captureZone = channel.getInteriorCaptureZone();
-//    }
-//    else{
-//      captureZone = channel.getExteriorCaptureZone();
-//    }
-//
-//    Particle particleToCapture = createTransientParticle(particleType, captureZone);
-//
-//    // Make the particle fade in.
-//    particleToCapture.setFadeStrategy(new TimedFadeInStrategy(0.0005));
-//
-//    // Set a motion strategy that will cause this particle to move across
-//    // the membrane.
-//    channel.moveParticleThroughNeuronMembrane(particleToCapture, maxVelocity);
-//  }
+
 //
 //  /**
 //   * Get the state of this model.  This is generally used in support of the

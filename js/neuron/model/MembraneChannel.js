@@ -16,6 +16,7 @@ define( function( require ) {
   var Vector2 = require( 'DOT/Vector2' );
   var Dimension2 = require( 'DOT/Dimension2' );
   var NullCaptureZone = require( 'NEURON/neuron/model/NullCaptureZone' );
+  var TraverseChannelAndFadeMotionStrategy = require( 'NEURON/neuron/model/TraverseChannelAndFadeMotionStrategy' );
   var Matrix3 = require( 'DOT/Matrix3' );
   var Rectangle = require( 'DOT/Rectangle' );
   var Color = require( 'SCENERY/util/Color' );
@@ -82,7 +83,7 @@ define( function( require ) {
   }
 
   return inherit( PropertySet, MembraneChannel, {
-    step: function( dt ) {
+    stepInTime: function( dt ) {
       if ( this.captureCountdownTimer !== Number.POSITIVE_INFINITY ) {
         if ( this.isOpen() ) {
           this.captureCountdownTimer -= dt;
@@ -183,9 +184,15 @@ define( function( require ) {
     setInteriorCaptureZone: function( captureZone ) {
       this.interiorCaptureZone = captureZone;
     },
+    getInteriorCaptureZone: function() {
+      return this.interiorCaptureZone;
+    },
     //@protected
     setExteriorCaptureZone: function( captureZone ) {
       this.exteriorCaptureZone = captureZone;
+    },
+    getExteriorCaptureZone: function() {
+      return this.exteriorCaptureZone;
     },
     //@protected
     setMinInterCaptureTime: function( minInterCaptureTime ) {
@@ -199,6 +206,10 @@ define( function( require ) {
     getCaptureCountdownTimer: function() {
       return this.captureCountdownTimer;
     },
+    getMaxInterCaptureTime: function() {
+      return this.maxInterCaptureTime;
+    },
+
     /**
      * Gets a values that indicates whether this channel has an inactivation
      * gate.  Most of the channels in this sim do not have these, so the
@@ -233,6 +244,17 @@ define( function( require ) {
         this.interiorCaptureZone.originPoint = newCenterLocation;
         this.exteriorCaptureZone.originPoint = newCenterLocation;
       }
+    },
+    /**
+     * Set the motion strategy for a particle that will cause the particle to
+     * traverse the channel.  This version is the one that implements the
+     * behavior for crossing through the neuron membrane.
+     *
+     * @param particle
+     * @param maxVelocity
+     */
+    moveParticleThroughNeuronMembrane: function( particle, maxVelocity ) {
+      particle.setMotionStrategy( new TraverseChannelAndFadeMotionStrategy( this, particle.getPositionReference(), maxVelocity ) );
     }
   } );
 } );
@@ -285,36 +307,7 @@ define( function( require ) {
 //  // Methods
 //  //----------------------------------------------------------------------------
 //
-//  /**
-//   * Static factory method for creating a membrane channel of the specified
-//   * type.
-//   */
-//  public static MembraneChannel createMembraneChannel(MembraneChannelTypes channelType, IParticleCapture particleModel,
-//    IHodgkinHuxleyModel hodgkinHuxleyModel){
-//
-//    MembraneChannel membraneChannel = null;
-//
-//    switch (channelType){
-//      case SODIUM_LEAKAGE_CHANNEL:
-//        membraneChannel = new SodiumLeakageChannel(particleModel, hodgkinHuxleyModel);
-//        break;
-//
-//      case SODIUM_GATED_CHANNEL:
-//        membraneChannel = new SodiumDualGatedChannel(particleModel, hodgkinHuxleyModel);
-//        break;
-//
-//      case POTASSIUM_LEAKAGE_CHANNEL:
-//        membraneChannel = new PotassiumLeakageChannel(particleModel, hodgkinHuxleyModel);
-//        break;
-//
-//      case POTASSIUM_GATED_CHANNEL:
-//        membraneChannel = new PotassiumGatedChannel(particleModel, hodgkinHuxleyModel);
-//        break;
-//    }
-//
-//    assert membraneChannel != null; // Should be able to create all types of channels.
-//    return membraneChannel;
-//  }
+
 //
 //  abstract protected ParticleType getParticleTypeToCapture();
 //
@@ -501,21 +494,7 @@ define( function( require ) {
 //    public void positionChanged() {}
 //  }
 //
-//  protected double getMaxInterCaptureTime() {
-//    return maxInterCaptureTime;
-//  }
-//
-//  protected void setMaxInterCaptureTime(double maxInterCaptureTime) {
-//    this.maxInterCaptureTime = maxInterCaptureTime;
-//  }
-//
-//  protected void setMinInterCaptureTime(double minInterCaptureTime) {
-//    this.minInterCaptureTime = minInterCaptureTime;
-//  }
-//
-//  protected double getCaptureCountdownTimer() {
-//    return captureCountdownTimer;
-//  }
+
 //
 //  /**
 //   * Get the state of this membrane channel as needed for support of record-
