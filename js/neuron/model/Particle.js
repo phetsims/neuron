@@ -38,7 +38,8 @@ define( function( require ) {
 
       // Opaqueness value, ranges from 0 (completely transparent) to 1
       // (completely opaque).
-      opaqueness: 1
+      opaqueness: 1,
+      continueExisting: true // particles while removing themselves will set this property to false
     } );
 
     // Motion strategy for moving this particle around.
@@ -53,16 +54,16 @@ define( function( require ) {
 
     stepInTime: function( dt ) {
 
-      this.motionStrategy.move(this, this, dt);
-      this.fadeStrategy.updateOpaqueness(this, dt);
-      if (!this.fadeStrategy.shouldContinueExisting(this)){
+      this.motionStrategy.move( this, this, dt );
+      this.fadeStrategy.updateOpaqueness( this, dt );
+      if ( !this.fadeStrategy.shouldContinueExisting( this ) ) {
         // This particle has faded out of existence, so send out a
         // notification that indicates that it is being removed from the
         // model.  The thinking here is that everyone with a reference to
         // this particle should listen for this notification and do any
         // cleanup and removal of references needed.  If they don't, there
         // will be memory leaks.
-       //TODO this.notifyRemoved();
+        this.continueExisting = false;
       }
     },
     getPosition: function() {
@@ -79,6 +80,9 @@ define( function( require ) {
      */
     setFadeStrategy: function( fadeStrategy ) {
       this.fadeStrategy = fadeStrategy;
+    },
+    setMotionStrategy: function( motionStrategy ) {
+      this.motionStrategy = motionStrategy;
     },
     setPosition: function( x, y ) {
       if ( !y ) {
@@ -224,9 +228,7 @@ define( function( require ) {
 //    }
 //  }
 //
-//  public void setMotionStrategy(MotionStrategy motionStrategy){
-//    this.motionStrategy = motionStrategy;
-//  }
+
 //
 
 //

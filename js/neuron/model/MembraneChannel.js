@@ -237,6 +237,9 @@ define( function( require ) {
       this.interiorCaptureZone.rotationalAngle = rotationalAngle;
       this.exteriorCaptureZone.rotationalAngle = rotationalAngle;
     },
+    getRotationalAngle: function() {
+      return this.rotationalAngle;
+    },
 
     setCenterLocation: function( newCenterLocation ) {
       if ( !newCenterLocation.equals( this.centerLocation ) ) {

@@ -251,7 +251,7 @@ define( function( require ) {
       //TODO
     },
     step: function( dt ) {
-      //TODO
+
     },
 
     // Called by the animation loop //TODO Ashraf Not fully implemented that why named it as inCompleteStep
@@ -583,6 +583,11 @@ define( function( require ) {
         var location = captureZone.getSuggestedNewParticleLocation();
         newParticle.setPosition( location );
       }
+      newParticle.continueExistingProperty.link( function( newValue ) {
+        if ( newValue === false ) {
+          this.transientParticles.remove( newParticle );
+        }
+      } );
 
       return newParticle;
     },
@@ -732,6 +737,13 @@ define( function( require ) {
 
       var newParticle = ParticleFactory.createParticle( particleType );
       this.backgroundParticles.push( newParticle );
+
+      newParticle.continueExistingProperty.link( function( newValue ) {
+        if ( newValue === false ) {
+          this.backgroundParticles.remove( newParticle );
+        }
+      } );
+
       return newParticle;
     },
 

@@ -41,7 +41,7 @@ define( function( require ) {
     paintCanvas: function( wrapper ) {
       var context = wrapper.context;
       var allParticles = this.neuronModel.backgroundParticles.getArray();
-    //  allParticles = allParticles.concat( this.neuronModel.transientParticles.getArray() );
+      allParticles = allParticles.concat( this.neuronModel.transientParticles.getArray() );
 
       var thisNode = this;
 

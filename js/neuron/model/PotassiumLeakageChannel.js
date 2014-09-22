@@ -15,6 +15,7 @@ define( function( require ) {
   var AbstractLeakChannel = require( 'NEURON/neuron/model/AbstractLeakChannel' );
   var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
   var PieSliceShapedCaptureZone = require( 'NEURON/neuron/model/PieSliceShapedCaptureZone' );
+  var MembraneCrossingDirection = require( 'NEURON/neuron/model/MembraneCrossingDirection' );
   var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
   var Color = require( 'SCENERY/util/Color' );
 
@@ -27,6 +28,10 @@ define( function( require ) {
   // Constants that define the rate and variability of particle capture.
   var MIN_INTER_PARTICLE_CAPTURE_TIME = 0.002; // In seconds of sim time.
   var MAX_INTER_PARTICLE_CAPTURE_TIME = 0.004; // In seconds of sim time.
+
+  var RAND = {nextDouble: function() {
+    return Math.random();
+  }};
 
   /**
    * @param {ParticleCapture} modelContainingParticles
@@ -55,9 +60,7 @@ define( function( require ) {
   }
 
   return inherit( AbstractLeakChannel, PotassiumLeakageChannel, {
-    stepInTime: function( dt ) {
-      //TODO
-    },
+
     getChannelColor: function() {
       return BASE_COLOR.colorUtilsDarker( 0.2 );
     },
@@ -67,12 +70,20 @@ define( function( require ) {
     getParticleTypeToCapture: function() {
       return ParticleType.POTASSIUM_ION;
     },
+    //  @Override
     chooseCrossingDirection: function() {
-      //TODO
-    },
-    restartCaptureCountdownTimer: function( captureNow ) {
-      //TODO
+      // Generally, this channel leaks from in to out, since the
+      // concentration of potassium is greater on the inside of the cell.
+      // However, the IPHY people requested that there should occasionally
+      // be some leakage in the other direction for greater realism, hence
+      // the random choice below.
+      var direction = MembraneCrossingDirection.IN_TO_OUT;
+      if ( RAND.nextDouble() < 0.2 ) {
+        direction = MembraneCrossingDirection.OUT_TO_IN;
+      }
+      return direction;
     }
+
   } );
 
 } );
@@ -90,16 +101,7 @@ define( function( require ) {
 //  // Class Data
 //  //----------------------------------------------------------------------------
 //
-//  private static final double CHANNEL_HEIGHT = AxonMembrane.MEMBRANE_THICKNESS * 1.2; // In nanometers.
-//  private static final double CHANNEL_WIDTH = AxonMembrane.MEMBRANE_THICKNESS * 0.50; // In nanometers.
-//
-//  private static final Color BASE_COLOR = ColorUtils.interpolateRBGA(NeuronConstants.POTASSIUM_COLOR, new Color(00, 200, 255), 0.6);
-//
-//  private static final double DEFAULT_PARTICLE_VELOCITY = 5000; // In nanometers per sec of sim time.
-//
-//  // Constants that define the rate and variability of particle capture.
-//  private static final double MIN_INTER_PARTICLE_CAPTURE_TIME = 0.002; // In seconds of sim time.
-//  private static final double MAX_INTER_PARTICLE_CAPTURE_TIME = 0.004; // In seconds of sim time.
+
 //
 //  //----------------------------------------------------------------------------
 //  // Instance Data
@@ -121,32 +123,7 @@ define( function( require ) {
 //  // Methods
 //  //----------------------------------------------------------------------------
 //
-//  @Override
-//  public Color getChannelColor() {
-//    return ColorUtils.darkerColor(BASE_COLOR, 0.2);
-//  }
+
 //
-//  @Override
-//  public Color getEdgeColor() {
-//    return BASE_COLOR;
-//  }
-//
-//  @Override
-//  protected ParticleType getParticleTypeToCapture() {
-//    return ParticleType.POTASSIUM_ION;
-//  }
-//
-//  @Override
-//  protected MembraneCrossingDirection chooseCrossingDirection() {
-//    // Generally, this channel leaks from in to out, since the
-//    // concentration of potassium is greater on the inside of the cell.
-//    // However, the IPHY people requested that there should occasionally
-//    // be some leakage in the other direction for greater realism, hence
-//    // the random choice below.
-//    MembraneCrossingDirection direction = MembraneCrossingDirection.IN_TO_OUT;
-//    if (RAND.nextDouble() < 0.2){
-//      direction = MembraneCrossingDirection.OUT_TO_IN;
-//    }
-//    return direction;
-//  }
+
 //}
