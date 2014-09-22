@@ -83,6 +83,11 @@ define( function( require ) {
   }
 
   return inherit( PropertySet, MembraneChannel, {
+
+    /**
+     * Implements the time-dependent behavior of the gate.
+     * @param dt - Amount of time step, in milliseconds.
+     */
     stepInTime: function( dt ) {
       if ( this.captureCountdownTimer !== Number.POSITIVE_INFINITY ) {
         if ( this.isOpen() ) {
@@ -129,6 +134,12 @@ define( function( require ) {
     getChannelSize: function() {
       return new Dimension2( this.channelSize.width, this.channelSize.height );
     },
+    /**
+     * Get the overall 2D size of the channel, which includes both the part
+     * that the particles travel through as well as the edges.
+     *
+     * @return
+     */
     getOverallSize: function() {
       return this.overallSize;
     },
@@ -180,6 +191,10 @@ define( function( require ) {
     setParticleVelocity: function( particleVelocity ) {
       this.particleVelocity = particleVelocity;
     },
+
+    getParticleVelocity: function() {
+      return this.particleVelocity;
+    },
     //@protected
     setInteriorCaptureZone: function( captureZone ) {
       this.interiorCaptureZone = captureZone;
@@ -223,7 +238,7 @@ define( function( require ) {
     },
     //convenience method
     setInactivationAmt: function( inactivationAmt ) {
-      this.inactivationAmt = inactivationAmt;
+      this.inactivationAmt = inactivationAmt;//will fire prop change
     },
     //convenience method
     getOpenness: function() {
@@ -233,13 +248,14 @@ define( function( require ) {
       this.openness = 1;
     },
     setRotationalAngle: function( rotationalAngle ) {
-      this.rotationalAngle = rotationalAngle;
+      this.rotationalAngle = rotationalAngle;// will fire prop change listener
       this.interiorCaptureZone.rotationalAngle = rotationalAngle;
       this.exteriorCaptureZone.rotationalAngle = rotationalAngle;
     },
     getRotationalAngle: function() {
       return this.rotationalAngle;
     },
+
 
     setCenterLocation: function( newCenterLocation ) {
       if ( !newCenterLocation.equals( this.centerLocation ) ) {
@@ -261,21 +277,7 @@ define( function( require ) {
     }
   } );
 } );
-//
-//package edu.colorado.phet.neuron.model;
-//
-//import java.awt.Color;
-//import java.awt.Shape;
-//import java.awt.geom.AffineTransform;
-//import java.awt.geom.Dimension2D;
-//import java.awt.geom.Point2D;
-//import java.awt.geom.Rectangle2D;
-//import java.util.ArrayList;
-//import java.util.Random;
-//
-//import edu.umd.cs.piccolo.util.PDimension;
-//
-//
+
 
 //public abstract class MembraneChannel {
 //
@@ -336,117 +338,11 @@ define( function( require ) {
 //    return rotatedChannelShape;
 //  }
 //
-//  /**
-//   * Implements the time-dependent behavior of the gate.
-//   *
-//   * @param dt - Amount of time step, in milliseconds.
-//   */
-//  public void stepInTime(double dt){
-//    if (captureCountdownTimer != Double.POSITIVE_INFINITY){
-//
-//      if (isOpen()){
-//        captureCountdownTimer -= dt;
-//        if (captureCountdownTimer <= 0){
-//          modelContainingParticles.requestParticleThroughChannel(getParticleTypeToCapture(), this, particleVelocity, chooseCrossingDirection());
-//          restartCaptureCountdownTimer(false);
-//        }
-//      }
-//      else{
-//        // If the channel is closed, the countdown timer shouldn't be
-//        // running, so this code is generally hit when the membrane
-//        // just became closed.  Turn off the countdown timer by
-//        // setting it to infinity.
-//        captureCountdownTimer = Double.POSITIVE_INFINITY;
-//      }
-//    }
-//  }
-//
-//  /**
-//   * Set the motion strategy for a particle that will cause the particle to
-//   * traverse the channel.  This version is the one that implements the
-//   * behavior for crossing through the neuron membrane.
-//   *
-//   * @param particle
-//   * @param maxVelocity
-//   */
-//  public void moveParticleThroughNeuronMembrane(Particle particle, double maxVelocity){
-//    particle.setMotionStrategy(new TraverseChannelAndFadeMotionStrategy(this, particle.getPositionReference(), maxVelocity));
-//  }
-//
-//  protected double getParticleVelocity() {
-//    return particleVelocity;
-//  }
-//
-//  protected void setParticleVelocity(double particleVelocity) {
-//    this.particleVelocity = particleVelocity;
-//  }
-//
 
 
-//
-//  public void setCenterLocation(Point2D newCenterLocation) {
-//    if (!newCenterLocation.equals(centerLocation)){
-//      centerLocation.setLocation(newCenterLocation);
-//      interiorCaptureZone.setOriginPoint(newCenterLocation);
-//      exteriorCaptureZone.setOriginPoint(newCenterLocation);
-//      notifyPositionChanged();
-//    }
-//  }
-//
-//  public void setRotationalAngle(double rotationalAngle){
-//    this.rotationalAngle = rotationalAngle;
-//    interiorCaptureZone.setRotationalAngle(rotationalAngle);
-//    exteriorCaptureZone.setRotationalAngle(rotationalAngle);
-//  }
-//
-//  public double getRotationalAngle(){
-//    return rotationalAngle;
-//  }
-//
-//  /**
-//   * Get the overall 2D size of the channel, which includes both the part
-//   * that the particles travel through as well as the edges.
-//   *
-//   * @return
-//   */
-//  public Dimension2D getOverallSize(){
-//    return overallSize;
-//  }
 
-//
-//  protected void setOpenness(double openness) {
-//    if (this.openness != openness){
-//      this.openness = openness;
-//      notifyOpennessChanged();
-//    }
-//  }
-//
-//  public double getInactivationAmt(){
-//    return inactivationAmt;
-//  }
-//
-//  protected void setInactivationAmt(double inactivationAmt) {
-//    if (this.inactivationAmt != inactivationAmt){
-//      this.inactivationAmt = inactivationAmt;
-//      notifyInactivationAmtChanged();
-//    }
-//  }
-//
-//  public Color getChannelColor(){
-//    return Color.MAGENTA;
-//  }
-//
-//  public Color getEdgeColor(){
-//    return Color.RED;
-//  }
-//
-//  public void addListener(Listener listener){
-//    listeners.add(listener);
-//  }
-//
-//  public void removeListener(Listener listener){
-//    listeners.remove(listener);
-//  }
+
+
 //
 
 //
@@ -459,29 +355,7 @@ define( function( require ) {
 //    notifyRemoved();
 //  }
 //
-//  private void notifyRemoved(){
-//    for (Listener listener : listeners){
-//      listener.removed();
-//    }
-//  }
-//
-//  private void notifyOpennessChanged(){
-//    for (Listener listener : listeners){
-//      listener.opennessChanged();
-//    }
-//  }
-//
-//  private void notifyInactivationAmtChanged(){
-//    for (Listener listener : listeners){
-//      listener.inactivationAmtChanged();
-//    }
-//  }
-//
-//  private void notifyPositionChanged(){
-//    for (Listener listener : listeners){
-//      listener.positionChanged();
-//    }
-//  }
+
 //
 //  public static interface Listener{
 //    void removed();

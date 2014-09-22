@@ -378,7 +378,7 @@ define( function( require ) {
         this.concentrationChangedProperty.set( !this.concentrationChanged ); // trigger property change
       }
 
-      //invert the value and trigger the event
+      //invert the value and trigger change event
       this.particlesStateChangedProperty.set( !this.particlesStateChangedProperty.get() );
       // Return model state after each time step.
       return this.getState();
@@ -805,7 +805,16 @@ define( function( require ) {
     },
     setStimulasLockout: function( lockout ) {
       this.stimulasLockoutProperty.set( lockout );
+    },
+  getMembranePotential:function(){
+    if (this.isPlayback()){ // TODO
+      //return this.neuronModelPlaybackState.getMembranePotential();
+      throw new Error("Neuron PlayBack Not Implemented");// Ashraf
     }
+    else{
+      return this.hodgkinHuxleyModel.getMembraneVoltage();
+    }
+  }
 
   } );
 } )
@@ -852,12 +861,8 @@ define( function( require ) {
 
 //private EventListenerList listeners = new EventListenerList();
 //private IHodgkinHuxleyModel hodgkinHuxleyModel = new ModifiedHodgkinHuxleyModel();
-//private double previousMembranePotential = 0;
-//private double sodiumInteriorConcentration = NOMINAL_SODIUM_INTERIOR_CONCENTRATION;
-//private double sodiumExteriorConcentration = NOMINAL_SODIUM_EXTERIOR_CONCENTRATION;
-//private double potassiumInteriorConcentration = NOMINAL_POTASSIUM_INTERIOR_CONCENTRATION;
-//private double potassiumExteriorConcentration = NOMINAL_POTASSIUM_EXTERIOR_CONCENTRATION;
-//private boolean playbackParticlesVisible = false;
+
+
 //private NeuronModelState neuronModelPlaybackState = null;
 //
 //  //----------------------------------------------------------------------------
@@ -958,17 +963,7 @@ define( function( require ) {
 //    return new ArrayList<MembraneChannel>(membraneChannels);
 //  }
 //
-//  /* (non-Javadoc)
-//   * @see edu.colorado.phet.neuron.model.IMembranePotential#getMembranePotential()
-//   */
-//  public double getMembranePotential(){
-//    if (isPlayback()){
-//      return neuronModelPlaybackState.getMembranePotential();
-//    }
-//    else{
-//      return hodgkinHuxleyModel.getMembraneVoltage();
-//    }
-//  }
+
 //
 //  /**
 //   * Get a reference to the first Hodgkins-Huxley model.  This is used
@@ -1216,35 +1211,7 @@ define( function( require ) {
 //    return new NeuronModelState(this);
 //  }
 //
-//  /**
-//   * Scan the supplied capture zone for particles of the specified type.
-//   *
-//   * @param zone
-//   * @param particleType
-//   * @return
-//   */
-//  private CaptureZoneScanResult scanCaptureZoneForFreeParticles(CaptureZone zone, ParticleType particleType){
-//    Particle closestFreeParticle = null;
-//    double distanceOfClosestParticle = Double.POSITIVE_INFINITY;
-//    int totalNumberOfParticles = 0;
-//    Point2D captureZoneOrigin = zone.getOriginPoint();
-//
-//    for (Particle particle : transientParticles){
-//      if ((particle.getType() == particleType) && (particle.isAvailableForCapture()) && (zone.isPointInZone(particle.getPositionReference()))) {
-//        totalNumberOfParticles++;
-//        if (closestFreeParticle == null){
-//          closestFreeParticle = particle;
-//          distanceOfClosestParticle = captureZoneOrigin.distance(closestFreeParticle.getPositionReference());
-//        }
-//        else if (captureZoneOrigin.distance(closestFreeParticle.getPosition()) < distanceOfClosestParticle){
-//          closestFreeParticle = particle;
-//          distanceOfClosestParticle = captureZoneOrigin.distance(closestFreeParticle.getPositionReference());
-//        }
-//      }
-//    }
-//
-//    return new CaptureZoneScanResult(closestFreeParticle, totalNumberOfParticles);
-//  }
+
 //
 //  /**
 //   * The record-and-playback model has a notion of playback speed, which is
@@ -1325,160 +1292,11 @@ define( function( require ) {
 //    }
 //  }
 //
-//  private void addInitialChannels(){
-//
-//    // Add the initial channels.  The pattern is intended to be such that
-//    // the potassium and sodium gated channels are right next to each
-//    // other, with occasional leak channels interspersed.  There should
-//    // be one or more of each type of channel on the top of the membrane
-//    // so when the user zooms in, they can see all types.
-//    double angle  = Math.PI * 0.45;
-//    double totalNumChannels = NUM_GATED_SODIUM_CHANNELS + NUM_GATED_POTASSIUM_CHANNELS + NUM_SODIUM_LEAK_CHANNELS +
-//                              NUM_POTASSIUM_LEAK_CHANNELS;
-//    double angleIncrement = Math.PI * 2 / totalNumChannels;
-//    int gatedSodiumChansAdded = 0;
-//    int gatedPotassiumChansAdded = 0;
-//    int sodiumLeakChansAdded = 0;
-//    int potassiumLeakChansAdded = 0;
-//
-//    // Add some of each type so that they are visible at the top portion
-//    // of the membrane.
-//    if (NUM_SODIUM_LEAK_CHANNELS > 0){
-//      addChannel(MembraneChannelTypes.SODIUM_LEAKAGE_CHANNEL, angle);
-//      sodiumLeakChansAdded++;
-//      angle += angleIncrement;
-//    }
-//    if (NUM_GATED_POTASSIUM_CHANNELS > 0){
-//      addChannel(MembraneChannelTypes.POTASSIUM_GATED_CHANNEL, angle);
-//      gatedPotassiumChansAdded++;
-//      angle += angleIncrement;
-//    }
-//    if (NUM_GATED_SODIUM_CHANNELS > 0){
-//      addChannel(MembraneChannelTypes.SODIUM_GATED_CHANNEL, angle);
-//      gatedSodiumChansAdded++;
-//      angle += angleIncrement;
-//    }
-//    if (NUM_POTASSIUM_LEAK_CHANNELS > 0){
-//      addChannel(MembraneChannelTypes.POTASSIUM_LEAKAGE_CHANNEL, angle);
-//      potassiumLeakChansAdded++;
-//      angle += angleIncrement;
-//    }
-//
-//    // Now loop through the rest of the membrane's circumference adding
-//    // the various types of gates.
-//    for (int i = 0; i < totalNumChannels - 4; i++){
-//      // Calculate the "urgency" for each type of gate.
-//      double gatedSodiumUrgency = (double)NUM_GATED_SODIUM_CHANNELS / gatedSodiumChansAdded;
-//      double gatedPotassiumUrgency = (double)NUM_GATED_POTASSIUM_CHANNELS / gatedPotassiumChansAdded ;
-//      double potassiumLeakUrgency = (double)NUM_POTASSIUM_LEAK_CHANNELS / potassiumLeakChansAdded;
-//      double sodiumLeakUrgency = (double)NUM_SODIUM_LEAK_CHANNELS / sodiumLeakChansAdded;
-//      MembraneChannelTypes channelTypeToAdd = null;
-//      if (gatedSodiumUrgency >= gatedPotassiumUrgency
-//            && gatedSodiumUrgency >= potassiumLeakUrgency
-//        && gatedSodiumUrgency >= sodiumLeakUrgency) {
-//        // Add a gated sodium channel.
-//        channelTypeToAdd = MembraneChannelTypes.SODIUM_GATED_CHANNEL;
-//        gatedSodiumChansAdded++;
-//      } else if (gatedPotassiumUrgency > gatedSodiumUrgency
-//                   && gatedPotassiumUrgency >= potassiumLeakUrgency
-//        && gatedPotassiumUrgency >= sodiumLeakUrgency) {
-//        // Add a gated potassium channel.
-//        channelTypeToAdd = MembraneChannelTypes.POTASSIUM_GATED_CHANNEL;
-//        gatedPotassiumChansAdded++;
-//      } else if (potassiumLeakUrgency > gatedSodiumUrgency
-//                   && potassiumLeakUrgency > gatedPotassiumUrgency
-//        && potassiumLeakUrgency >= sodiumLeakUrgency) {
-//        // Add a potassium leak channel.
-//        channelTypeToAdd = MembraneChannelTypes.POTASSIUM_LEAKAGE_CHANNEL;
-//        potassiumLeakChansAdded++;
-//      } else if (sodiumLeakUrgency > gatedSodiumUrgency
-//                   && sodiumLeakUrgency > gatedPotassiumUrgency
-//        && sodiumLeakUrgency > potassiumLeakUrgency) {
-//        // Add a sodium leak channel.
-//        channelTypeToAdd = MembraneChannelTypes.SODIUM_LEAKAGE_CHANNEL;
-//        sodiumLeakChansAdded++;
-//      }
-//      else{
-//        assert false; // Should never get here, so debug if it does.
-//      }
-//
-//      addChannel(channelTypeToAdd, angle);
-//      angle += angleIncrement;
-//    }
-//  }
-//
 
 //
-//  /**
-//   * Place a particle at a random location inside the axon membrane.
-//   */
-//  private void positionParticleInsideMembrane(Particle particle){
-//    // Choose any angle.
-//    double angle = RAND.nextDouble() * Math.PI * 2;
-//
-//    // Choose a distance from the cell center that is within the membrane.
-//    // The multiplier value is created with the intention of weighting the
-//    // positions toward the outside in order to get an even distribution
-//    // per unit area.
-//    double multiplier = Math.max(RAND.nextDouble(), RAND.nextDouble());
-//    double distance = (crossSectionInnerRadius - particle.getRadius() * 2) * multiplier;
-//
-//    particle.setPosition(distance * Math.cos(angle), distance * Math.sin(angle));
-//  }
-//
-//  /**
-//   * Place a particle at a random location outside the axon membrane.
-//   */
-//  private void positionParticleOutsideMembrane(Particle particle){
-//    // Choose any angle.
-//    double angle = RAND.nextDouble() * Math.PI * 2;
-//
-//    // Choose a distance from the cell center that is outside of the
-//    // membrane. The multiplier value is created with the intention of
-//    // weighting the positions toward the outside in order to get an even
-//    // distribution per unit area.
-//    double multiplier = RAND.nextDouble();
-//    double distance = crossSectionOuterRadius + particle.getRadius() * 4 +
-//                      multiplier * crossSectionOuterRadius * 2.2;
-//
-//    particle.setPosition(distance * Math.cos(angle), distance * Math.sin(angle));
-//  }
-//
-//  /**
-//   * Add the "bulk particles", which are particles that are inside and
-//   * outside of the membrane and, except in cases where they happen to end
-//   * up positioned close to the membrane, they generally stay where
-//   * initially positioned.
-//   */
-//  private void addInitialBulkParticles(){
-//    // Make a list of pre-existing particles.
-//    ArrayList<Particle> preExistingParticles = new ArrayList<Particle>(transientParticles);
-//
-//    // Add the initial particles.
-//    addBackgroundParticles(ParticleType.SODIUM_ION, ParticlePosition.INSIDE_MEMBRANE, NUM_SODIUM_IONS_INSIDE_CELL);
-//    addBackgroundParticles(ParticleType.SODIUM_ION, ParticlePosition.OUTSIDE_MEMBRANE, NUM_SODIUM_IONS_OUTSIDE_CELL);
-//    addBackgroundParticles(ParticleType.POTASSIUM_ION, ParticlePosition.INSIDE_MEMBRANE, NUM_POTASSIUM_IONS_INSIDE_CELL);
-//    addBackgroundParticles(ParticleType.POTASSIUM_ION, ParticlePosition.OUTSIDE_MEMBRANE, NUM_POTASSIUM_IONS_OUTSIDE_CELL);
-//
-//    // Look at each sodium gate and, if there are no ions in its capture
-//    // zone, add some.
-//    for (MembraneChannel membraneChannel : membraneChannels){
-//      if (membraneChannel instanceof SodiumDualGatedChannel){
-//        CaptureZone captureZone = membraneChannel.getExteriorCaptureZone();
-//        CaptureZoneScanResult czsr = scanCaptureZoneForFreeParticles(captureZone, ParticleType.SODIUM_ION);
-//        if (czsr.numParticlesInZone == 0){
-//          addBackgroundParticles(ParticleType.SODIUM_ION, captureZone, RAND.nextInt(2) + 1);
-//        }
-//      }
-//    }
-//
-//    // Set all new particles to exhibit simple Brownian motion.
-//    for (Particle backgroundParticle : backgroundParticles){
-//      if (!preExistingParticles.contains(backgroundParticle)){
-//        backgroundParticle.setMotionStrategy(new SlowBrownianMotionStrategy(backgroundParticle.getPositionReference()));
-//      }
-//    }
-//  }
+
+
+
 //
 //  /**
 //   * Remove all particles (i.e. ions) from the simulation.
@@ -1501,27 +1319,8 @@ define( function( require ) {
 //  //----------------------------------------------------------------------------
 //  // Inner Classes and Interfaces
 //  //----------------------------------------------------------------------------
-//
-//  /**
-//   * A class for reporting the closest particle to the origin in a capture
-//   * zone and the total number of particles in the zone.
-//   */
-//  public static class CaptureZoneScanResult {
-//    final Particle closestFreeParticle;
-//    final int numParticlesInZone;
-//    public CaptureZoneScanResult(Particle closestParticle,
-//      int numParticlesInZone) {
-//      super();
-//      this.closestFreeParticle = closestParticle;
-//      this.numParticlesInZone = numParticlesInZone;
-//    }
-//    protected Particle getClosestFreeParticle() {
-//      return closestFreeParticle;
-//    }
-//    protected int getNumParticlesInZone() {
-//      return numParticlesInZone;
-//    }
-//  }
+
+
 //
 //  public interface Listener extends EventListener {
 //    /**
