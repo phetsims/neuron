@@ -17,10 +17,11 @@ define( function( require ) {
   var Vector2 = require( 'DOT/Vector2' );
   var Shape = require( 'KITE/Shape' );
   var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
+  var TravelingActionPotential = require( 'NEURON/neuron/model/TravelingActionPotential' );
+  var Cubic = require( 'KITE/segments/Cubic' );
 
 
   // Fixed membrane characteristics.
-//public constants
 
   var BODY_LENGTH = NeuronConstants.DEFAULT_DIAMETER * 1.5;
   var BODY_TILT_ANGLE = Math.PI / 4;
@@ -31,6 +32,14 @@ define( function( require ) {
   function AxonMembrane() {
 
     var thisModel = this;
+
+    PropertySet.call( thisModel, {
+      travelingActionPotentialStarted: false,
+      travelingActionPotentialReachedCrossSection: false,
+      travelingActionPotentialEnded: false
+    } );
+
+    thisModel.travelingActionPotential = null;
 
     var createAxonBodyShape = function() {
       // Shape of the body of the axon.
@@ -75,15 +84,8 @@ define( function( require ) {
           thisModel.vanishingPoint.y + ctrlPtRadius * Math.sin( angleToIntersectionPt - 0.25 ) );
 
       // Create the curves that define the boundaries of the body.
-      thisModel.curveA = new Shape()
-        .moveTo( thisModel.vanishingPoint.x, thisModel.vanishingPoint.y )
-        .cubicCurveTo( thisModel.cntrlPtA2.x, thisModel.cntrlPtA2.y, thisModel.cntrlPtA1.x, thisModel.cntrlPtA1.y, thisModel.intersectionPointA.x,
-        thisModel.intersectionPointA.y );
-      thisModel.curveB = new Shape()
-        .moveTo( thisModel.vanishingPoint.x, thisModel.vanishingPoint.y )
-        .cubicCurveTo( thisModel.cntrlPtB1.x,
-        thisModel.cntrlPtB1.y, thisModel.cntrlPtB2.x, thisModel.cntrlPtB2.y, thisModel.intersectionPointB.x,
-        thisModel.intersectionPointB.y );
+      thisModel.curveA = new Cubic( thisModel.vanishingPoint, thisModel.cntrlPtA2, thisModel.cntrlPtA1, thisModel.intersectionPointA );
+      thisModel.curveB = new Cubic( thisModel.vanishingPoint, thisModel.cntrlPtB1, thisModel.cntrlPtB2, thisModel.intersectionPointB );
 
 
       // Reverse Path Iteration for drawing
@@ -91,9 +93,10 @@ define( function( require ) {
         thisModel.intersectionPointA.y );
       thisModel.axonBodyShape.cubicCurveTo( thisModel.cntrlPtA1.x, thisModel.cntrlPtA1.y, thisModel.cntrlPtA2.x, thisModel.cntrlPtA2.y, thisModel.vanishingPoint.x, thisModel.vanishingPoint.y );
 
-      _.each( thisModel.curveB.subpaths, function( subpath ) {
-        thisModel.axonBodyShape.addSubpath( subpath );
-      } );
+      thisModel.axonBodyShape.moveTo( thisModel.vanishingPoint.x, thisModel.vanishingPoint.y );
+      thisModel.axonBodyShape.cubicCurveTo( thisModel.cntrlPtB1.x,
+        thisModel.cntrlPtB1.y, thisModel.cntrlPtB2.x, thisModel.cntrlPtB2.y, thisModel.intersectionPointB.x,
+        thisModel.intersectionPointB.y );
 
       thisModel.axonBodyShape.lineTo( thisModel.intersectionPointA.x, thisModel.intersectionPointA.y );
 
@@ -112,25 +115,120 @@ define( function( require ) {
   }
 
   return inherit( PropertySet, AxonMembrane, {
-    stepInTime:function(dt){
-      //TODO
-    },
-    getMembraneThickness: function() {
-      return NeuronConstants.MEMBRANE_THICKNESS;
-    },
+      /**
+       * Step this model element forward in time by the specified delta.
+       *
+       * @param dt - delta time, in seconds.
+       */
+      stepInTime: function( dt ) {
+        if ( this.travelingActionPotential ) {
+          this.travelingActionPotential.stepInTime( dt );
+        }
+      },
+      /**
+       * Start an action potential that will travel down the length of the
+       * membrane toward the transverse cross section.
+       */
+      initiateTravelingActionPotential: function() {
+        var thisAxonMembrane = this;
+        this.travelingActionPotential = new TravelingActionPotential( this );
+        this.travelingActionPotential.crossSectionReachedProperty.lazyLink( function( reached ) {
+          if ( reached ) {
+            thisAxonMembrane.travelingActionPotentialReachedCrossSection = true;
+          }
+        } );
 
-    getCrossSectionDiameter: function() {
-      return NeuronConstants.DEFAULT_DIAMETER;
-    },
+        this.travelingActionPotential.lingeringCompletedProperty.lazyLink( function( lingeringCompleted ) {
+          if ( lingeringCompleted ) {
+            thisAxonMembrane.removeTravelingActionPotential();
+          }
+        } );
 
-    getCrossSectionEllipseShape: function() {
-      return new Shape().ellipse( this.crossSectionEllipseShape.x, this.crossSectionEllipseShape.y,
-        this.crossSectionEllipseShape.bounds.getWidth(), this.crossSectionEllipseShape.bounds.getHeight() );
-    },
-    reset:function(){
-     //TODO
+        thisAxonMembrane.travelingActionPotentialStarted = true;
+
+      },
+
+      /**
+       * Remove the traveling action potential, either because it has reached
+       * the cross section and is done existing, or for some other reason (such
+       * as a reset or jump in the playback state).
+       */
+      removeTravelingActionPotential: function() {
+        this.travelingActionPotential = null;
+        this.travelingActionPotentialStarted = false;
+        this.travelingActionPotentialReachedCrossSection = false;
+        this.travelingActionPotentialEnded = true;
+        this.stimulusPulseInitiated = false;
+
+      },
+
+      /**
+       * Get the object that defines the current traveling action potential.
+       * Returns null if no action potential is happening.
+       */
+      getTravelingActionPotential: function() {
+        return this.travelingActionPotential;
+      },
+
+      getMembraneThickness: function() {
+        return NeuronConstants.MEMBRANE_THICKNESS;
+      },
+
+      getCrossSectionDiameter: function() {
+        return NeuronConstants.DEFAULT_DIAMETER;
+      },
+
+      getCrossSectionEllipseShape: function() {
+        return new Shape().ellipse( this.crossSectionEllipseShape.x, this.crossSectionEllipseShape.y,
+          this.crossSectionEllipseShape.bounds.getWidth(), this.crossSectionEllipseShape.bounds.getHeight() );
+
+      },
+      reset: function() {
+        if ( this.travelingActionPotential ) {
+          // Force premature termination of the action potential.
+          this.removeTravelingActionPotential();
+        }
+      },
+      getCurveA: function() {
+        return this.curveA;
+      },
+      getCurveB: function() {
+        return this.curveB;
+      },
+
+      /**
+       * Evaluate the curve in order to locate a point given a distance along
+       * the curve.  This uses the DeCasteljau algorithm.
+       *
+       * @param curve - The Curve Shape that is being evaluated.
+       * @param t - proportional distance along the curve from the first control point, must be from 0 to 1.
+       * @return point corresponding to the location of the curve at the specified distance.
+       *
+       * This method was converted from static to instance to prevent  circularly dependency between Traveling Potential and AxonMembrane  (Ashraf)
+       */
+      evaluateCurve: function( curve, t ) {
+        if ( t < 0 || t > 1 ) {
+          throw new Error( "t is out of range: " + t );
+        }
+        var ab = this.linearInterpolation( curve.start, curve.control1, t );
+        var bc = this.linearInterpolation( curve.control1, curve.control2, t );
+        var cd = this.linearInterpolation( curve.control2, curve.end, t );
+        var abbc = this.linearInterpolation( ab, bc, t );
+        var bccd = this.linearInterpolation( bc, cd, t );
+
+        return this.linearInterpolation( abbc, bccd, t );
+      },
+
+      /**
+       * Simple linear interpolation between two points.
+       * @param {Vector2} a
+       * @param {Vector2} b
+       */
+      linearInterpolation: function( a, b, t ) {
+        return ( new Vector2( a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t ));
+      }
     }
-  } );
+  );
 
 } );
 
@@ -241,33 +339,7 @@ define( function( require ) {
 
 //  }
 //
-//  /**
-//   * Evaluate the curve in order to locate a point given a distance along
-//   * the curve.  This uses the DeCasteljau algorithm.
-//   *
-//   * @param curve - The CubicCurve2D that is being evaluated.
-//   * @param t - proportional distance along the curve from the first control point, must be from 0 to 1.
-//   * @return point corresponding to the location of the curve at the specified distance.
-//   */
-//  private static Point2D evaluateCurve(CubicCurve2D curve, double t){
-//    if ( t < 0 || t > 1 ) {
-//      throw new IllegalArgumentException( "t is out of range: " + t );
-//    }
-//    Point2D ab = linearInterpolation(curve.getP1(), curve.getCtrlP1(), t);
-//    Point2D bc = linearInterpolation(curve.getCtrlP1(), curve.getCtrlP2(), t);
-//    Point2D cd = linearInterpolation(curve.getCtrlP2(), curve.getP2(), t);
-//    Point2D abbc = linearInterpolation(ab, bc, t);
-//    Point2D bccd = linearInterpolation(bc, cd, t);
-//
-//    return linearInterpolation(abbc, bccd, t);
-//  }
-//
-//  /**
-//   * Simple linear interpolation between two points.
-//   */
-//  private static Point2D linearInterpolation(Point2D a, Point2D b, double t){
-//    return ( new Point2D.Double( a.getX() + (b.getX() - a.getX()) * t,  a.getY() + (b.getY() - a.getY()) * t));
-//  }
+
 //
 //  /**
 //   * Start an action potential that will travel down the length of the
@@ -286,42 +358,11 @@ define( function( require ) {
 //    notifyTravelingActionPotentialStarted();
 //  }
 //
-//  /**
-//   * Remove the traveling action potential, either because it has reached
-//   * the cross section and is done existing, or for some other reason (such
-//   * as a reset or jump in the playback state).
-//   */
-//  private void removeTravelingActionPotential(){
-//    travelingActionPotential.removeAllListeners();
-//    travelingActionPotential = null;
-//    notifyTravelingActionPotentialEnded();
-//  }
+
+
 //
-//  /**
-//   * Get the object that defines the current traveling action potential.
-//   * Returns null if no action potential is happening.
-//   */
-//  public TravelingActionPotential getTravelingActionPotential(){
-//    return travelingActionPotential;
-//  }
-//
-//  public void reset(){
-//    if (travelingActionPotential != null){
-//      // Force premature termination of the action potential.
-//      removeTravelingActionPotential();
-//    }
-//  }
-//
-//  /**
-//   * Step this model element forward in time by the specified delta.
-//   *
-//   * @param dt - delta time, in seconds.
-//   */
-//  public void stepInTime(double dt){
-//    if (travelingActionPotential != null){
-//      travelingActionPotential.stepInTime(dt);
-//    }
-//  }
+
+
 //
 //  public void addListener(Listener listener){
 //    listeners.add(listener);
@@ -383,18 +424,10 @@ define( function( require ) {
 //    public void travelingActionPotentialStarted() {}
 //  }
 //
-//  /**
-//   * Class that defines the behavior of the action potential that travels
-//   * along the membrane before reaching the location of the transverse cross
-//   * section.  This is essentially just a shape that is intended to look
-//   * like something moving along the outer membrane.  The shape moves for a
-//   * while, then reaches the cross section, and then lingers there for a
-//   * bit.
-//   */
+
 //  public static class TravelingActionPotential {
 //
-//    private static double TRAVELING_TIME = 0.0020; // In seconds of sim time (not wall time).
-//    private static double LINGER_AT_CROSS_SECTION_TIME = 0.0005; // In seconds of sim time (not wall time).
+
 //
 //    private ArrayList<Listener> listeners = new ArrayList<Listener>();
 //    private double travelTimeCountdownTimer = TRAVELING_TIME;
@@ -407,35 +440,7 @@ define( function( require ) {
 //      updateShape();
 //    }
 //
-//    /**
-//     * Step this model component forward by the specified time.  This will
-//     * update the shape such that it will appear to move down the axon
-//     * membrane.
-//     *
-//     * @param dt
-//     */
-//    public void stepInTime(double dt){
-//      if (travelTimeCountdownTimer > 0){
-//        travelTimeCountdownTimer -= dt;
-//        updateShape();
-//        if (travelTimeCountdownTimer <= 0){
-//          // We've reached the cross section and will now linger
-//          // there for a bit.
-//          notifyCrossSectionReached();
-//          lingerCountdownTimer = LINGER_AT_CROSS_SECTION_TIME;
-//        }
-//      }
-//      else if (lingerCountdownTimer > 0){
-//        lingerCountdownTimer -= dt;
-//        if (lingerCountdownTimer <= 0){
-//          shape = null;
-//          notifyLingeringCompleted();
-//        }
-//        else{
-//          updateShape();
-//        }
-//      }
-//    }
+
 //
 //    /**
 //     * Set the state from a (probably previously captured) version of

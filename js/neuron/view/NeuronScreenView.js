@@ -26,6 +26,8 @@ define( function( require ) {
 
   // images
   var mockupImage = require( 'image!NEURON/neuron-mockup.png' );
+  // constants
+
 
   /**
    * Constructor for the NeuronView
@@ -55,6 +57,13 @@ define( function( require ) {
       bottom: this.layoutBounds.maxY - 10
     } );
     this.addChild( resetAllButton );
+
+    //Show the mock-up and a slider to change its transparency
+    var mockupOpacityProperty = new Property( 0.8 );
+    var image = new Image( mockupImage, {pickable: false} );
+    mockupOpacityProperty.linkAttribute( image, 'opacity' );
+    this.addChild( image );
+    this.addChild( new HSlider( mockupOpacityProperty, {min: 0, max: 1}, {top: 10, left: 10} ) );
 
 
     var rootNode = new Node();
@@ -103,13 +112,6 @@ define( function( require ) {
     var particlesNode = new ParticlesNode( thisView.model, thisView.mvt );
     particleLayer.addChild( particlesNode );
 
-
-    //Show the mock-up and a slider to change its transparency
-    var mockupOpacityProperty = new Property( 0.8 );
-    var image = new Image( mockupImage, {pickable: false} );
-    mockupOpacityProperty.linkAttribute( image, 'opacity' );
-    this.addChild( image );
-    this.addChild( new HSlider( mockupOpacityProperty, {min: 0, max: 1}, {top: 10, left: 10} ) );
   }
 
   return inherit( ScreenView, NeuronView, {

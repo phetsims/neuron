@@ -18,6 +18,7 @@ define( function( require ) {
   var Vector2 = require( 'DOT/Vector2' );
   var ObservableArray = require( 'AXON/ObservableArray' );
   var AxonMembrane = require( 'NEURON/neuron/model/AxonMembrane' );
+  var Shape = require( 'KITE/Shape' );
   var ModifiedHodgkinHuxleyModel = require( 'NEURON/neuron/model/ModifiedHodgkinHuxleyModel' );
   var MembraneChannelTypes = require( 'NEURON/neuron/model/MembraneChannelTypes' );
   var ParticleCapture = require( 'NEURON/neuron/model/ParticleCapture' );
@@ -38,6 +39,14 @@ define( function( require ) {
   var DEFAULT_FOR_CHARGES_SHOWN = false;
   var DEFAULT_FOR_CONCENTRATION_READOUT_SHOWN = false;
 
+  // The following constants define the boundaries for the motion of the
+  // particles.  These boundaries are intended to be outside the view port,
+  // so that it is not apparent to the user that they exist.  We may at some
+  // point want to make these bounds dynamic and set by the view so that the
+  // user never encounters a situation where these can be seen.
+  var MODEL_HEIGHT = 130; // In nanometers.
+  var MODEL_WIDTH = 180; // In nanometers.
+  var PARTICLE_BOUNDS = new Shape.rect( -MODEL_WIDTH / 2, -MODEL_HEIGHT / 2, MODEL_WIDTH, MODEL_HEIGHT );
 
   // Numbers of the various types of channels that are present on the
   // membrane.
@@ -125,6 +134,8 @@ define( function( require ) {
       stimulasLockout: false,
       playbackParticlesVisible: false,
       concentrationChanged: false,
+      stimulusPulseInitiated: false,// observed by Membrane potential chart
+      membranePotentialChanged: false,
       // record playback related
       paused: false,
       particlesStateChanged: false // to trigger canvas invalidation
@@ -158,8 +169,18 @@ define( function( require ) {
     thisModel.potassiumInteriorConcentration = NOMINAL_POTASSIUM_INTERIOR_CONCENTRATION;
     thisModel.potassiumExteriorConcentration = NOMINAL_POTASSIUM_EXTERIOR_CONCENTRATION;
 
+    // Listen to the membrane for events that indicate that a traveling
+    // action potential has arrived at the location of the transverse
+    // cross section.
+    thisModel.axonMembrane.travelingActionPotentialReachedCrossSectionProperty.lazyLink( function( reached ) {
+      // The action potential has arrived, so stimulate the model
+      // the simulates the action potential voltages and current
+      // flows.
+      if ( reached ) {
+        thisModel.hodgkinHuxleyModel.stimulate();
+      }
 
-    //TODO prop listeners to be linked
+    } );
 
     function addInitialChannels() {
       // Add the initial channels.  The pattern is intended to be such that
@@ -247,11 +268,8 @@ define( function( require ) {
 
   return inherit( ParticleCapture, NeuronModel, {
 
-    stepInTime: function( simulationTimeChange ) {
-      //TODO
-    },
     step: function( dt ) {
-
+      this.axonMembrane.stepInTime( dt );// TODO Temp Code
     },
 
     // Called by the animation loop //TODO Ashraf Not fully implemented that why named it as inCompleteStep
@@ -620,6 +638,19 @@ define( function( require ) {
       } );
     },
 
+
+    getParticleMotionBounds: function() {
+      return PARTICLE_BOUNDS;
+    },
+
+    initiateStimulusPulse: function() {
+      if ( !this.isStimulusInitiationLockedOut() ) {
+        this.axonMembrane.initiateTravelingActionPotential();
+        this.stimulusPulseInitiated = true;
+        this.updateStimulasLockoutState();
+      }
+    },
+
     /**
      * Place a particle at a random location inside the axon membrane.
      */
@@ -806,15 +837,15 @@ define( function( require ) {
     setStimulasLockout: function( lockout ) {
       this.stimulasLockoutProperty.set( lockout );
     },
-  getMembranePotential:function(){
-    if (this.isPlayback()){ // TODO
-      //return this.neuronModelPlaybackState.getMembranePotential();
-      throw new Error("Neuron PlayBack Not Implemented");// Ashraf
+    getMembranePotential: function() {
+      if ( this.isPlayback() ) { // TODO
+        //return this.neuronModelPlaybackState.getMembranePotential();
+        throw new Error( "Neuron PlayBack Not Implemented" );// Ashraf
+      }
+      else {
+        return this.hodgkinHuxleyModel.getMembraneVoltage();
+      }
     }
-    else{
-      return this.hodgkinHuxleyModel.getMembraneVoltage();
-    }
-  }
 
   } );
 } )
@@ -951,27 +982,8 @@ define( function( require ) {
 //    return clock;
 //  }
 //
-//  public ArrayList<Particle> getParticles(){
-//    return transientParticles;
-//  }
-//
-//  public AxonMembrane getAxonMembrane(){
-//    return axonMembrane;
-//  }
-//
-//  public ArrayList<MembraneChannel> getMembraneChannels(){
-//    return new ArrayList<MembraneChannel>(membraneChannels);
-//  }
-//
 
-//
-//  /**
-//   * Get a reference to the first Hodgkins-Huxley model.  This is used
-//   * primarily for debugging purposes.
-//   */
-//  public IHodgkinHuxleyModel getHodgkinHuxleyModel(){
-//    return hodgkinHuxleyModel;
-//  }
+
 //
 //  public double getSodiumInteriorConcentration() {
 //    if (isPlayback()){
@@ -1011,68 +1023,7 @@ define( function( require ) {
 //
 
 
-//
-//  /**
-//   * Add the specified particles to the model.
-//   *
-//   * @param particleType
-//   * @param position
-//   */
-//  public void addBackgroundParticles(ParticleType particleType, ParticlePosition position, int numberToAdd){
-//    Particle newParticle = null;
-//    for (int i = 0; i < numberToAdd; i++){
-//      newParticle = createBackgroundParticle(particleType);
-//
-//      if (position == ParticlePosition.INSIDE_MEMBRANE){
-//        positionParticleInsideMembrane(newParticle);
-//      }
-//      else{
-//        positionParticleOutsideMembrane(newParticle);
-//      }
-//
-//      // Set the opaqueness.
-//      if (RAND.nextBoolean()){
-//        newParticle.setOpaqueness(FOREGROUND_PARTICLE_DEFAULT_OPAQUENESS);
-//      }
-//      else {
-//        newParticle.setOpaqueness(BACKGROUND_PARTICLE_DEFAULT_OPAQUENESS);
-//      }
-//    }
-//  }
-//
-//  /**
-//   * Add the specified particles to the given capture zone.
-//   *
-//   * @param particleType
-//   * @param captureZone
-//   * @param numberToAdd
-//   */
-//  public void addBackgroundParticles(ParticleType particleType, CaptureZone captureZone, int numberToAdd){
-//    Particle newParticle = null;
-//    for (int i = 0; i < numberToAdd; i++){
-//      newParticle = createBackgroundParticle(particleType);
-//
-//      newParticle.setOpaqueness(FOREGROUND_PARTICLE_DEFAULT_OPAQUENESS);
-//      Point2D position = captureZone.getSuggestedNewParticleLocation();
-//      newParticle.setPosition(position);
-//    }
-//  }
-//
-//  /**
-//   *
-//   * @return
-//   */
-//  public Rectangle2D getParticleMotionBounds(){
-//    return PARTICLE_BOUNDS;
-//  }
-//
-//  public void initiateStimulusPulse(){
-//    if (!isStimulusInitiationLockedOut()){
-//      axonMembrane.initiateTravelingActionPotential();
-//      notifyStimulusPulseInitiated();
-//      updateStimulasLockoutState();
-//    }
-//  }
+
 //
 //  private void updateStimulasLockoutState(){
 //    if (stimulasLockout){
@@ -1160,19 +1111,7 @@ define( function( require ) {
 //    return stimulasLockout;
 //  }
 //
-//  /**
-//   * Returns a boolean values indicating whether or not an action potential
-//   * is in progress.  For the purposes of this sim, this means whether there
-//   * is an AP traveling down the membrane or if the flow of ions through the
-//   * channels at the transverse cross section is enough to be considered
-//   * part of an AP.
-//   */
-//  public boolean isActionPotentialInProgress(){
-//    return axonMembrane.getTravelingActionPotential() != null ||
-//           Math.abs(hodgkinHuxleyModel.get_k_current()) > POTASSIUM_CURRENT_THRESH_FOR_ACTION_POTENTIAL ||
-//           Math.abs(hodgkinHuxleyModel.get_na_current()) > SODIUM_CURRENT_THRESH_FOR_ACTION_POTENTIAL ||
-//           Math.abs( hodgkinHuxleyModel.get_l_current()) > LEAKAGE_CURRENT_THRESH_FOR_ACTION_POTENTIAL;
-//  }
+
 //
 
 //
@@ -1294,7 +1233,6 @@ define( function( require ) {
 //
 
 //
-
 
 
 //

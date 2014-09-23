@@ -17,6 +17,7 @@ define( function( require ) {
   var Color = require( 'SCENERY/util/Color' );
   var Vector2 = require( 'DOT/Vector2' );
   var LinearGradient = require( 'SCENERY/util/LinearGradient' );
+  var TravelingActionPotentialNode = require( 'NEURON/neuron/view/TravelingActionPotentialNode' );
 
 
   var AXON_BODY_COLOR = new Color( 221, 216, 44 );
@@ -36,8 +37,7 @@ define( function( require ) {
     thisNode.mvt = transform;
 
 
-    // Listen to the axon membrane for events that matter to the visual
-    // representation. TODO
+    // Listen to the axon membrane for events that matter to the visual  representation. TODO
 
 
     // Add the axon body.
@@ -61,38 +61,30 @@ define( function( require ) {
       // The following line is useful when trying to debug the gradient.
       thisNode.addChild( new Line( gradientOrigin, gradientExtent ) );
     }
+
+    var travelingActionPotentialNode;
+
+    thisNode.axonMembraneModel.travelingActionPotentialStartedProperty.link( function( started ) {
+      if ( started ) {
+        travelingActionPotentialNode = new TravelingActionPotentialNode( thisNode.axonMembraneModel.travelingActionPotential, thisNode.mvt );
+        thisNode.addChild( travelingActionPotentialNode );
+      }
+    } );
+
+    thisNode.axonMembraneModel.travelingActionPotentialEndedProperty.link( function( ended ) {
+      if ( ended && travelingActionPotentialNode ) {
+        thisNode.removeChild( travelingActionPotentialNode );
+        travelingActionPotentialNode = null;
+      }
+    } );
+
   }
 
 
   return inherit( Node, AxonBodyNode );
 } )
 ;
-//
-//package edu.colorado.phet.neuron.view;
-//
-//import java.awt.BasicStroke;
-//import java.awt.Color;
-//import java.awt.GradientPaint;
-//import java.awt.Shape;
-//import java.awt.Stroke;
-//import java.awt.geom.Line2D;
-//import java.awt.geom.Point2D;
-//import java.awt.geom.Rectangle2D;
-//
-//import edu.colorado.phet.common.phetcommon.view.graphics.transforms.ModelViewTransform2D;
-//import edu.colorado.phet.common.phetcommon.view.util.ColorUtils;
-//import edu.colorado.phet.common.piccolophet.nodes.PhetPPath;
-//import edu.colorado.phet.neuron.model.AxonMembrane;
-//import edu.colorado.phet.neuron.model.AxonMembrane.TravelingActionPotential;
-//import edu.umd.cs.piccolo.PNode;
-//
-///**
-// * Representation of the axon membrane body in the view.  This is the part
-// * that the action potential travels along, and is supposed to look sort of
-// * 3D.
-// *
-// * @author John Blanco
-// */
+
 //public class AxonBodyNode extends PNode {
 //
 //  //----------------------------------------------------------------------------
@@ -131,29 +123,7 @@ define( function( require ) {
 //    });
 //
 
-//
-//  //----------------------------------------------------------------------------
-//  // Methods
-//  //----------------------------------------------------------------------------
-//
-//  /**
-//   * Add the node that will represent the traveling action potential.
-//   *
-//   * @param travelingActionPotential
-//   */
-//  private void addTravelingActionPotentialNode(TravelingActionPotential travelingActionPotential){
-//    this.travelingActionPotentialNode = new TravelingActionPotentialNode(travelingActionPotential, mvt);
-//    addChild(travelingActionPotentialNode);
-//  }
-//
-//  /**
-//   * Remove the node that was representing the traveling action potential.
-//   */
-//  private void removeTravelingActionPotentialNode(){
-//    removeChild(travelingActionPotentialNode);
-//    travelingActionPotentialNode = null;
-//  }
-//
+
 //  //----------------------------------------------------------------------------
 //  // Inner Classes, Interfaces, etc.
 //  //----------------------------------------------------------------------------
@@ -164,10 +134,7 @@ define( function( require ) {
 //   */
 //  private static class TravelingActionPotentialNode extends PNode {
 //
-//    private static Color BACKGROUND_COLOR = new Color(204, 102, 255);
-//    private static Stroke backgroundStroke = new BasicStroke(20, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
-//    private static Color FOREGROUND_COLOR = Color.YELLOW;
-//    private static Stroke foregroundStroke = new BasicStroke(10, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+
 //
 //    private AxonMembrane.TravelingActionPotential travelingActionPotential;
 //    private ModelViewTransform2D mvt;
@@ -176,8 +143,7 @@ define( function( require ) {
 //
 //    public TravelingActionPotentialNode(AxonMembrane.TravelingActionPotential travelingActionPotential, ModelViewTransform2D mvt) {
 //
-//      addChild(background);
-//      addChild(foreground);
+
 //
 //      this.travelingActionPotential = travelingActionPotential;
 //      this.mvt = mvt;
