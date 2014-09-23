@@ -45,7 +45,7 @@ define( function( require ) {
       openness: 0,
       // Variable that defines how inactivated the channel is, which is distinct from openness.
       // Valid range is 0 to 1, 0 means completely active, 1 is completely inactive.
-      inactivationAmt: 0
+      inactivationAmt:0
     } );
 
     // Reference to the model that contains that particles that will be moving
@@ -127,7 +127,7 @@ define( function( require ) {
       var channelRect = new Rectangle( this.centerLocation.x - this.channelSize.height / 2,
           this.centerLocation.y - this.channelSize.width / 2, this.channelSize.height, this.channelSize.width );
       var rotationTransform = Matrix3.rotationAround( this.rotationalAngle, this.centerLocation.x, this.centerLocation.y );
-      var rotatedChannelRect = rotationTransform.transformed( channelRect );
+      var rotatedChannelRect = channelRect.transformed( rotationTransform );
       return rotatedChannelRect.containsPoint( pt );
     },
     // returns a new Instance of Dimension
@@ -244,8 +244,8 @@ define( function( require ) {
     getOpenness: function() {
       return this.openness;
     },
-    setOpenness: function() {
-      this.openness = 1;
+    setOpenness: function(openness) {
+      this.openness = openness;
     },
     setRotationalAngle: function( rotationalAngle ) {
       this.rotationalAngle = rotationalAngle;// will fire prop change listener
@@ -338,9 +338,6 @@ define( function( require ) {
 //    return rotatedChannelShape;
 //  }
 //
-
-
-
 
 
 //

@@ -12,23 +12,18 @@ define( function( require ) {
 //imports
   var inherit = require( 'PHET_CORE/inherit' );
   var Vector2 = require( 'DOT/Vector2' );
-  var PropertySet = require( 'AXON/PropertySet' );
+
 
   /**
    *
    * @constructor
    */
-  function CaptureZone( captureZoneOptions ) {
-    captureZoneOptions = _.extend( {rotationalAngle: 0, originPoint: Vector2.ZERO}, captureZoneOptions || {} );
-    var thisZone = this;
-    PropertySet.call( thisZone, captureZoneOptions );
+  function CaptureZone() {
 
-    thisZone.addDerivedProperty( "zoneShape", ['rotationalAngle', 'originPoint'], function( rotationalAngle, originPoint ) {
-      return thisZone.deriveZoneShape();
-    } );
+
   }
 
-  return inherit( PropertySet, CaptureZone, {
+  return inherit( Object, CaptureZone, {
     isPointInZone: function( pt ) {
       throw new Error( 'isPointInZone should be implemented in descendant classes.' );
     },
@@ -36,12 +31,15 @@ define( function( require ) {
     getSuggestedNewParticleLocation: function() {
       return Vector2.ZERO;
     },
-    //Derived Property 'zoneShape' derivation function  (dependents - originPoint and RotationAngle)
-    deriveZoneShape: function() {
-      throw new Error( 'deriveZoneShape should be implemented in descendant classes.' );
+
+    getOriginPoint: function() {
+      throw new Error( 'getOriginPoint should be implemented in descendant classes.' );
     },
-    getOriginPoint:function(){
-      return this.originPoint;
+    setRotationalAngle: function( angle ) {
+      throw new Error( 'setRotationalAngle should be implemented in descendant classes.' );
+    },
+    setOriginPoint: function( centerPoint ) {
+      throw new Error( 'setOriginPoint should be implemented in descendant classes.' );
     }
   } );
 } );

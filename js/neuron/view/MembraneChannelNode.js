@@ -87,6 +87,7 @@ define( function( require ) {
 
     //private
     function updateRepresentation() {
+
       // Set the channel width as a function of the openness of the membrane channel.
       var channelWidth = membraneChannelModel.getChannelSize().width * membraneChannelModel.getOpenness();
       var channelSize = new Dimension2( channelWidth, membraneChannelModel.getChannelSize().height );
@@ -109,9 +110,12 @@ define( function( require ) {
 
       channel.setShape( path );
       channel.fill = membraneChannelModel.getChannelColor();
-      channel.translate( -channel.getBounds().width / 2, -channel.getBounds().height / 2 );
-      leftEdgeNode.translate( -transformedChannelSize.width / 2 - leftEdgeNode.width / 2, 0 );
-      rightEdgeNode.translate( transformedChannelSize.width / 2 + rightEdgeNode.width / 2, 0 );
+      channel.x = -channel.getBounds().width / 2;
+      channel.y = -channel.getBounds().height / 2;
+      leftEdgeNode.x = -transformedChannelSize.width / 2 - leftEdgeNode.width / 2;
+      leftEdgeNode.y = 0;
+      rightEdgeNode.x = transformedChannelSize.width / 2 + rightEdgeNode.width / 2;
+      rightEdgeNode.y = 0;
 
       // If this membrane channel has an inactivation gate, update it.
       if ( membraneChannelModel.getHasInactivationGate() ) {
@@ -129,11 +133,12 @@ define( function( require ) {
 
         var ballPosition = new Vector2( channelEdgeConnectionPoint.x + Math.cos( angle ) * radius,
             channelEdgeConnectionPoint.y - Math.sin( angle ) * radius );
-        inactivationGateBallNode.translate( ballPosition );
+        inactivationGateBallNode.x = ballPosition.x;
+        inactivationGateBallNode.y = ballPosition.y;
 
         // Redraw the "string" (actually a strand of protein in real life)
         // that connects the ball to the gate.
-        var ballConnectionPoint = inactivationGateBallNode.translation;
+        var ballConnectionPoint = new Vector2( inactivationGateBallNode.x, inactivationGateBallNode.y );
 
         var connectorLength = channelCenterBottomPoint.distance( ballConnectionPoint );
         var stringShape = new Shape().moveTo( channelEdgeConnectionPoint.x, channelEdgeConnectionPoint.y )
@@ -142,13 +147,16 @@ define( function( require ) {
             ballConnectionPoint.y - connectorLength * 0.5, ballConnectionPoint.x, ballConnectionPoint.y );
         inactivationGateString.setShape( stringShape );
       }
+
     }
 
     //private
     function updateLocation() {
       thisNode.channelLayer.translate( mvt.modelToViewPosition( membraneChannelModel.getCenterLocation() ) );
       thisNode.edgeLayer.translate( mvt.modelToViewPosition( membraneChannelModel.getCenterLocation() ) );
+    }
 
+    function updateRotation() {
       // Rotate based on the model element's orientation. (The Java Version rotates and then translates, here the transformation order is reversed Ashraf)
       thisNode.channelLayer.setRotation( -membraneChannelModel.rotationalAngle + Math.PI / 2 );
       thisNode.edgeLayer.setRotation( -membraneChannelModel.rotationalAngle + Math.PI / 2 );
@@ -157,6 +165,16 @@ define( function( require ) {
     // Update the representation and location.
     updateRepresentation();
     updateLocation();
+    updateRotation();
+
+    function updateChannelNode() {
+      updateRepresentation();
+      updateRotation();
+    }
+
+    membraneChannelModel.centerLocationProperty.lazyLink( updateChannelNode );
+    membraneChannelModel.opennessProperty.lazyLink( updateChannelNode );
+    membraneChannelModel.inactivationAmtProperty.lazyLink( updateChannelNode );
 
   }
 

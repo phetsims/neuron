@@ -23,9 +23,9 @@ define( function( require ) {
     CaptureZone.call( this, {} );
   }
 
-  return inherit(CaptureZone,NullCaptureZone, {
+  return inherit( CaptureZone, NullCaptureZone, {
     //see CaptureZone
-    deriveZoneShape: function() {
+    getShape: function() {
       return new Shape().ellipse( 0, 0, 0, 0 );
     },
     isPointInZone: function( pt ) {
@@ -34,6 +34,13 @@ define( function( require ) {
     // Suggest a location for placing a new or relocated particle into this capture zone.
     getSuggestedNewParticleLocation: function() {
       return Vector2.ZERO;
+    },
+    getOriginPoint: function() {
+      return null;
+    },
+    setRotationalAngle: function( angle ) {
+    },
+    setOriginPoint: function( centerPoint ) {
     }
   } );
 

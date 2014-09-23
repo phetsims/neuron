@@ -16,6 +16,9 @@ define( function( require ) {
   var HSlider = require( 'SUN/HSlider' );
   var Property = require( 'AXON/Property' );
   var Vector2 = require( 'DOT/Vector2' );
+  var Text = require( 'SCENERY/nodes/Text' );
+  var RectangularPushButton = require( 'SUN/buttons/RectangularPushButton' );
+  var PhetFont = require( 'SCENERY_PHET/PhetFont' );
   var Node = require( 'SCENERY/nodes/Node' );
   var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   var AxonBodyNode = require( 'NEURON/neuron/view/AxonBodyNode' );
@@ -28,6 +31,7 @@ define( function( require ) {
   var mockupImage = require( 'image!NEURON/neuron-mockup.png' );
   // constants
 
+  var BUTTON_FONT = new PhetFont( 18 );
 
   /**
    * Constructor for the NeuronView
@@ -111,6 +115,17 @@ define( function( require ) {
 
     var particlesNode = new ParticlesNode( thisView.model, thisView.mvt );
     particleLayer.addChild( particlesNode );
+
+
+    this.addChild( new RectangularPushButton( {
+      content: new Text( 'Stimulate Neuron', { font: BUTTON_FONT } ),
+      listener: function() { neuronModel.initiateStimulusPulse(); },
+      baseColor: '#c28a43',
+      right: this.layoutBounds.maxX - 115,
+      bottom: this.layoutBounds.maxY - 60,
+      minWidth: 50,
+      minHeight: 35
+    } ) );
 
   }
 

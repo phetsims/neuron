@@ -180,7 +180,7 @@ define( function( require ) {
 
       getCrossSectionEllipseShape: function() {
         return new Shape().ellipse( this.crossSectionEllipseShape.x, this.crossSectionEllipseShape.y,
-          this.crossSectionEllipseShape.bounds.getWidth(), this.crossSectionEllipseShape.bounds.getHeight() );
+          this.crossSectionEllipseShape.bounds.getWidth()/2, this.crossSectionEllipseShape.bounds.getHeight()/2 );
 
       },
       reset: function() {

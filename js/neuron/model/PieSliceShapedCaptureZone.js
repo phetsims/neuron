@@ -40,18 +40,36 @@ define( function( require ) {
    */
   function PieSliceShapedCaptureZone( center, radius, fixedRotationalOffset, angleOfExtent ) {
     var thisZone = this;
-    CaptureZone.call( thisZone, {originPoint: center} );
-    //@private
-    thisZone.radius = radius;
-    //@private
-    thisZone.fixedRotationalOffset = fixedRotationalOffset;
-    //@private
-    thisZone.angleOfExtent = angleOfExtent;
+    CaptureZone.call( thisZone, {} );
+    this.originPoint = center;
+    this.radius = radius;
+    this.fixedRotationalOffset = fixedRotationalOffset;
+    this.angleOfExtent = angleOfExtent;
+    this.rotationAngle = 0;
+    thisZone.zoneShape = new Shape();
+    this.updateShape();
   }
 
-  return inherit(CaptureZone,PieSliceShapedCaptureZone, {
+  return inherit( CaptureZone, PieSliceShapedCaptureZone, {
+
+    //@Override
+    getShape: function() {
+      return this.zoneShape;
+    },
+
     isPointInZone: function( pt ) {
       return this.zoneShape.containsPoint( pt );
+    },
+    setRotationalAngle: function( angle ) {
+      this.rotationAngle = angle;
+      this.updateShape();
+    },
+    setOriginPoint: function( center ) {
+      this.originPoint = center;
+      this.updateShape();
+    },
+    getOriginPoint: function() {
+      return this.originPoint;
     },
     // Suggest a random point that is somewhere within the shape.
     getSuggestedNewParticleLocation: function() {
@@ -63,7 +81,7 @@ define( function( require ) {
     },
     //Derivation function for originPoint and rotation properties
     // see CaptureZone
-    deriveZoneShape: function() {
+    updateShape: function() {
       return new Shape().arc( this.originPoint.x, this.originPoint.y, this.radius, (
         this.fixedRotationalOffset + this.rotationAngle + this.angleOfExtent / 2), this.angleOfExtent );// ARC2D.PIE startPoint and endPoint is internally added to arc's path
     }

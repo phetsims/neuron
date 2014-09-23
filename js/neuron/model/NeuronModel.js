@@ -268,12 +268,14 @@ define( function( require ) {
 
   return inherit( ParticleCapture, NeuronModel, {
 
-    step: function( dt ) {
-      this.axonMembrane.stepInTime( dt );// TODO Temp Code
+    ignoredstep: function( dt ) {
+      this.axonMembrane.stepInTime( dt / 1000 );// TODO Temp Code
     },
 
     // Called by the animation loop //TODO Ashraf Not fully implemented that why named it as inCompleteStep
-    inCompletestep: function( dt ) {
+    step: function( dt ) {
+
+      dt = dt / 1000; // TODO Test Code, need to implement NeuronClock Model
       // Step the membrane in time.  This is done prior to stepping the
       // HH model because the traveling action potential is part of the
       // membrane, so if it reaches the cross section in this time step the
@@ -304,7 +306,7 @@ define( function( require ) {
       // Step the transient particles.  Since these particles may remove
       // themselves as a result of being stepped, we need to copy the list
       // in order to avoid concurrent modification exceptions.
-      var particlesCopy = this.transientParticles.toArray().slice();
+      var particlesCopy = this.transientParticles.getArray().slice();
       particlesCopy.forEach( function( particle ) {
         particle.stepInTime( dt );
       } );
@@ -601,9 +603,10 @@ define( function( require ) {
         var location = captureZone.getSuggestedNewParticleLocation();
         newParticle.setPosition( location );
       }
+      var thisModel = this;
       newParticle.continueExistingProperty.link( function( newValue ) {
         if ( newValue === false ) {
-          this.transientParticles.remove( newParticle );
+          thisModel.transientParticles.remove( newParticle );
         }
       } );
 
@@ -780,6 +783,20 @@ define( function( require ) {
 
     removeAllParticles: function() {
 
+      // Remove all particles.  This is done by telling each particle to
+      // send out notifications of its removal from the model.  All
+      // listeners, including this class, should remove their references in
+      // response.
+      var thisModel = this;
+      var transientParticlesCopy = this.transientParticles.getArray().slice();
+      transientParticlesCopy.forEach( function( transientParticle ) {
+        thisModel.transientParticles.remove( transientParticle );
+      } );
+
+      var backgroundParticlesCopy = this.backgroundParticles.getArray().slice();
+      backgroundParticlesCopy.forEach( function( transientParticle ) {
+        thisModel.backgroundParticles.remove( transientParticle );
+      } );
     },
 
     /**
@@ -1023,7 +1040,6 @@ define( function( require ) {
 //
 
 
-
 //
 //  private void updateStimulasLockoutState(){
 //    if (stimulasLockout){
@@ -1240,18 +1256,7 @@ define( function( require ) {
 //   * Remove all particles (i.e. ions) from the simulation.
 //   */
 //  private void removeAllParticles(){
-//    // Remove all particles.  This is done by telling each particle to
-//    // send out notifications of its removal from the model.  All
-//    // listeners, including this class, should remove their references in
-//    // response.
-//    ArrayList<Particle> transientParticlesCopy = new ArrayList<Particle>(transientParticles);
-//    for (IViewableParticle transientParticle : transientParticlesCopy){
-//      transientParticle.removeFromModel();
-//    }
-//    ArrayList<Particle> backgroundParticlesCopy = new ArrayList<Particle>(backgroundParticles);
-//    for (IViewableParticle backgroundParticle : backgroundParticlesCopy){
-//      backgroundParticle.removeFromModel();
-//    }
+
 //  }
 //
 //  //----------------------------------------------------------------------------

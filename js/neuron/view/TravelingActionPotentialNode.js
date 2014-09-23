@@ -16,9 +16,9 @@ define( function( require ) {
   var Shape = require( 'KITE/Shape' );
 
   var BACKGROUND_COLOR = new Color( 204, 102, 255 );
-  var backgroundStroke = {fill: BACKGROUND_COLOR, lineWidth: 20, lineCap: 'round', lineJoin: 'round'};
+  var backgroundStroke = {stroke: BACKGROUND_COLOR, lineWidth: 10, lineCap: 'round', lineJoin: 'round'};
   var FOREGROUND_COLOR = Color.YELLOW;
-  var foregroundStroke = {fill: FOREGROUND_COLOR, lineWidth: 10, lineCap: 'round', lineJoin: 'round'};
+  var foregroundStroke = {stroke: FOREGROUND_COLOR, lineWidth: 5, lineCap: 'round', lineJoin: 'round'};
 
   /**
    * The node that will represent the traveling action potential.

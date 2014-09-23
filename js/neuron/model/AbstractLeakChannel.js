@@ -26,7 +26,6 @@ define( function( require ) {
   return inherit( MembraneChannel, AbstractLeakChannel, {
     stepInTime: function( dt ) {
       MembraneChannel.prototype.stepInTime.call( this, dt );
-      //TODO
     },
     reset: function() {
       this.setOpenness( 1 );  // Leak channels are always fully open.

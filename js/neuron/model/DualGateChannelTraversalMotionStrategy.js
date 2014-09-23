@@ -45,7 +45,7 @@ define( function( require ) {
 
     //@Override
     move: function( movableModelElement, fadableModelElement, dt ) {
-      assert( this.currentDestinationIndex < this.traversalPoints.length );  // Error checking.
+      assert && assert( this.currentDestinationIndex < this.traversalPoints.length );  // Error checking.
       var angularRange = 0;
       var currentPositionRef = movableModelElement.getPositionReference();
 

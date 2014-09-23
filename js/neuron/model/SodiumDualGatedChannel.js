@@ -77,6 +77,7 @@ define( function( require ) {
     this.previousNormalizedConductance = 0;
     thisChannel.setExteriorCaptureZone( new PieSliceShapedCaptureZone( thisChannel.getCenterLocation(), CHANNEL_WIDTH * 5, 0, Math.PI * 0.7 ) );
     thisChannel.reset();
+
   }
 
   return inherit( GatedChannel, SodiumDualGatedChannel, {
@@ -305,7 +306,6 @@ define( function( require ) {
 
 //  }
 //
-
 
 
 //

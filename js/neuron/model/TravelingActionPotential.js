@@ -125,7 +125,7 @@ define( function( require ) {
         var growthFactor = (1 - Math.abs( this.lingerCountdownTimer / LINGER_AT_CROSS_SECTION_TIME - 0.5 ) * 2) * 0.04 + 1;
         var newWidth = crossSectionEllipse.bounds.getWidth() * growthFactor;
         var newHeight = crossSectionEllipse.bounds.getHeight() * growthFactor;
-        this.shape = new Shape().ellipse( 0, 0, newWidth, newHeight );
+        this.shape = new Shape().ellipse( 0, 0, newWidth/2, newHeight/2 );
       }
 
       this.shapeChangedProperty.set( !this.shapeChangedProperty.get() );

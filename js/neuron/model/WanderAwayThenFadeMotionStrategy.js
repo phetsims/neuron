@@ -11,6 +11,7 @@ define( function( require ) {
   'use strict';
   //imports
   var inherit = require( 'PHET_CORE/inherit' );
+  var Vector2 = require( 'DOT/Vector2' );
   var MotionStrategy = require( 'NEURON/neuron/model/MotionStrategy' );
   var NeuronSharedConstants = require( 'NEURON/neuron/common/NeuronSharedConstants' );
   var TimedFadeAwayStrategy = require( 'NEURON/neuron/model/TimedFadeAwayStrategy' );
@@ -48,6 +49,7 @@ define( function( require ) {
     this.motionUpdateCountdownTimer = RAND.nextInt( CLOCK_TICKS_BEFORE_MOTION_UPDATE ) * NeuronSharedConstants.DEFAULT_ACTION_POTENTIAL_CLOCK_DT;
     this.velocityUpdateCountdownTimer = RAND.nextInt( CLOCK_TICKS_BEFORE_VELOCITY_UPDATE ) * NeuronSharedConstants.DEFAULT_ACTION_POTENTIAL_CLOCK_DT;
 
+    this.velocity = new Vector2();
     // Set an initial velocity and direction.
     this.updateVelocity( currentLocation );
   }
