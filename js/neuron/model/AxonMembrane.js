@@ -145,6 +145,9 @@ define( function( require ) {
         } );
 
         thisAxonMembrane.travelingActionPotentialStarted = true;
+        thisAxonMembrane.travelingActionPotentialEnded = false;
+        thisAxonMembrane.travelingActionPotentialReachedCrossSection=false;
+        
 
       },
 

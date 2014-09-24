@@ -72,7 +72,7 @@ define( function( require ) {
     } );
 
     thisNode.axonMembraneModel.travelingActionPotentialEndedProperty.link( function( ended ) {
-      if ( ended && travelingActionPotentialNode ) {
+      if ( ended ) {
         thisNode.removeChild( travelingActionPotentialNode );
         travelingActionPotentialNode = null;
       }
