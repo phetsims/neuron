@@ -116,8 +116,7 @@ define( function( require ) {
     var particlesNode = new ParticlesNode( thisView.model, thisView.mvt );
     particleLayer.addChild( particlesNode );
 
-
-    this.addChild( new RectangularPushButton( {
+    var stimulateNeuronButton = new RectangularPushButton( {
       content: new Text( 'Stimulate Neuron', { font: BUTTON_FONT } ),
       listener: function() { neuronModel.initiateStimulusPulse(); },
       baseColor: '#c28a43',
@@ -125,7 +124,13 @@ define( function( require ) {
       bottom: this.layoutBounds.maxY - 60,
       minWidth: 50,
       minHeight: 35
-    } ) );
+    } );
+
+    this.addChild( stimulateNeuronButton );
+
+    thisView.model.stimulasLockoutProperty.link( function( stimulasLockout ) {
+      stimulateNeuronButton.enabled = !stimulasLockout;
+    } );
 
   }
 
