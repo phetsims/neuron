@@ -154,11 +154,11 @@ define( function( require ) {
        * as a reset or jump in the playback state).
        */
       removeTravelingActionPotential: function() {
-        this.travelingActionPotential = null;
         this.travelingActionPotentialStarted = false;
         this.travelingActionPotentialReachedCrossSection = false;
         this.travelingActionPotentialEnded = true;
         this.stimulusPulseInitiated = false;
+        this.travelingActionPotential = null;
 
       },
 
@@ -180,7 +180,7 @@ define( function( require ) {
 
       getCrossSectionEllipseShape: function() {
         return new Shape().ellipse( this.crossSectionEllipseShape.x, this.crossSectionEllipseShape.y,
-          this.crossSectionEllipseShape.bounds.getWidth()/2, this.crossSectionEllipseShape.bounds.getHeight()/2 );
+            this.crossSectionEllipseShape.bounds.getWidth() / 2, this.crossSectionEllipseShape.bounds.getHeight() / 2 );
 
       },
       reset: function() {

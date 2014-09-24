@@ -60,7 +60,6 @@ define( function( require ) {
   }
 
   return inherit( AbstractLeakChannel, PotassiumLeakageChannel, {
-
     getChannelColor: function() {
       return BASE_COLOR.colorUtilsDarker( 0.2 );
     },

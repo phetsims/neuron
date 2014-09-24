@@ -90,6 +90,7 @@ define( function( require ) {
         return;
       }
       this.position.setXY( x, y );
+
     },
 
     setOpaqueness: function( opaqueness ) {

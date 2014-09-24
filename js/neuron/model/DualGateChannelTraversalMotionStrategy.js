@@ -55,8 +55,7 @@ define( function( require ) {
         if ( !this.channel.isOpen() ) {
           // The channel has closed, so there is no sense in continuing
           // towards it.  The particle should wander and then fade out.
-          movableModelElement.setMotionStrategy( new WanderAwayThenFadeMotionStrategy( this.channel.getCenterLocation(),
-            movableModelElement.getPosition(), 0, 0.002 ) );
+          movableModelElement.setMotionStrategy( new WanderAwayThenFadeMotionStrategy( this.channel.getCenterLocation(), movableModelElement.getPosition(), 0, 0.002 ) );
           // For error checking, set the destination index really high.
           // That way it will be detected if this strategy instance is
           // used again.
@@ -208,17 +207,18 @@ define( function( require ) {
     },
 
     setCourseForPoint: function( startLocation, destination, velocityScaler ) {
-      this.velocityVector.set( destination.x - startLocation.x,
+      this.velocityVector.setXY( destination.x - startLocation.x,
           destination.y - startLocation.y );
       var scaleFactor = this.maxVelocity / this.velocityVector.magnitude();
       this.velocityVector.multiplyScalar( scaleFactor );
+
     },
 
     setCourseForCurrentTraversalPoint: function( currentLocation ) {
       var angularRange = 0;
       if ( this.currentDestinationIndex < this.traversalPoints.length ) {
         var dest = this.traversalPoints[this.currentDestinationIndex ];
-        this.velocityVector.set( dest.x - currentLocation.x, dest.y - currentLocation.y );
+        this.velocityVector.setXY( dest.x - currentLocation.x, dest.y - currentLocation.y );
         var scaleFactor = this.maxVelocity / this.velocityVector.magnitude();
         this.velocityVector.multiplyScalar( scaleFactor );
       }
@@ -260,26 +260,10 @@ define( function( require ) {
           this.velocityVector.rotate( ( RAND.nextDouble() - 0.5 ) * ( Math.PI * 0.9 ) * this.maxVelocity / MembraneTraversalMotionStrategy.DEFAULT_MAX_VELOCITY );
         }
       }
+
     }
 
   } );
 
-} );//// Copyright 2002-2012, University of Colorado
-//package edu.colorado.phet.neuron.model;
-//
-//import java.awt.geom.Point2D;
-//import java.util.ArrayList;
-//import java.util.Random;
-//
-//import edu.colorado.phet.common.phetcommon.math.vector.MutableVector2D;
-//
+} );
 
-//public class DualGateChannelTraversalMotionStrategy extends MembraneTraversalMotionStrategy {
-//
-
-//
-
-
-//
-
-//}

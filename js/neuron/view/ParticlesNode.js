@@ -48,8 +48,7 @@ define( function( require ) {
       allParticles.forEach( function( particle ) {
         var color = particle.getRepresentationColor().copy();
         color.alpha = particle.getOpaqueness();
-
-        var particleViewPosition = thisNode.modelViewTransform.modelToViewPosition( particle.position );
+        var particleViewPosition = thisNode.modelViewTransform.modelToViewPosition( particle.getPosition() );
         context.save();
         context.beginPath();
         context.fillStyle = color.toCSS();
