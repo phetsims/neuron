@@ -18,13 +18,11 @@ define( function( require ) {
 
   var simOptions = {
     credits: {
-
-      // all credits fields are optional
-      leadDesign: 'Groucho',
-      softwareDevelopment: 'Sam Reid (PhET Interactive Simulations)',
-      designTeam: 'Curly, Larry, Moe',
-      interviews: 'Wile E. Coyote',
-      thanks: 'Thanks to the ACME Dynamite Company for funding this sim!'
+      //TODO fill in credits
+      leadDesign: '',
+      softwareDevelopment: 'Sam Reid',
+      team: '',
+      thanks: ''
     }
   };
 
