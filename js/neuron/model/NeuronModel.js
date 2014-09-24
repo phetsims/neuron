@@ -493,9 +493,7 @@ define( function( require ) {
      * @return
      */
     requestParticleThroughChannel: function( particleType, channel, maxVelocity, direction ) {
-
       var captureZone;
-
       if ( direction === MembraneCrossingDirection.IN_TO_OUT ) {
         captureZone = channel.getInteriorCaptureZone();
       }
@@ -581,7 +579,7 @@ define( function( require ) {
 
       // Set all new particles to exhibit simple Brownian motion.
       thisModel.backgroundParticles.forEach( function( backgroundParticle ) {
-        if ( preExistingParticles.indexOf( backgroundParticle ) !== -1 ) {
+        if ( preExistingParticles.indexOf( backgroundParticle ) == -1 ) {
           backgroundParticle.setMotionStrategy( new SlowBrownianMotionStrategy( backgroundParticle.getPositionReference() ) );
         }
       } );
