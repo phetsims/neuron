@@ -13,19 +13,19 @@ define( function( require ) {
   var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
 
 
+
   /**
    * @param {Particles} particles
    * @param {ModelViewTransform2} modelViewTransform
    * @constructor
    */
-  function ParticlesNode( neuronModel, modelViewTransform ) {
+  function ParticlesNode( neuronModel, modelViewTransform,bounds ) {
     var thisNode = this;
 
     thisNode.neuronModel = neuronModel;
     thisNode.modelViewTransform = modelViewTransform;
 
-    // Initialize with a self-bounds of activeBounds
-    CanvasNode.call( thisNode, { pickable: false } );
+    CanvasNode.call( thisNode, {canvasBounds: bounds } );
 
     // if during a step we change, then trigger a repaint
     //Use Particles Canvas Node to render all the particles directly

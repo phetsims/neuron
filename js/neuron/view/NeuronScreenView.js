@@ -39,10 +39,9 @@ define( function( require ) {
    * @constructor
    */
   function NeuronView( neuronModel ) {
-
     var thisView = this;
     thisView.model = neuronModel;
-    ScreenView.call( thisView, {layoutBounds: ScreenView.UPDATED_LAYOUT_BOUNDS} );
+    ScreenView.call( thisView, {renderer: 'svg', layoutBounds: ScreenView.UPDATED_LAYOUT_BOUNDS} );
 
     // Set up the model-canvas transform.
     thisView.mvt = ModelViewTransform2.createSinglePointScaleInvertedYMapping(
@@ -113,7 +112,7 @@ define( function( require ) {
     // Add a node on every new Channel Model
     thisView.model.membraneChannels.addItemAddedListener( handleChannelAdded );
 
-    var particlesNode = new ParticlesNode( thisView.model, thisView.mvt );
+    var particlesNode = new ParticlesNode( thisView.model, thisView.mvt, thisView.layoutBounds );
     particleLayer.addChild( particlesNode );
 
     var stimulateNeuronButton = new RectangularPushButton( {
@@ -132,6 +131,7 @@ define( function( require ) {
       stimulateNeuronButton.enabled = !stimulasLockout;
     } );
 
+
   }
 
   return inherit( ScreenView, NeuronView, {
@@ -139,6 +139,7 @@ define( function( require ) {
     // Called by the animation loop. Optional, so if your view has no animation, you can omit this.
     step: function( dt ) {
       // Handle view animation here.
+
     }
   } );
 } );
