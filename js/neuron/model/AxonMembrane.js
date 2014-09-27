@@ -18,6 +18,7 @@ define( function( require ) {
   var Shape = require( 'KITE/Shape' );
   var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
   var TravelingActionPotential = require( 'NEURON/neuron/model/TravelingActionPotential' );
+  var AxonMembraneState = require( 'NEURON/neuron/model/AxonMembraneState' );
   var Cubic = require( 'KITE/segments/Cubic' );
 
 
@@ -164,6 +165,31 @@ define( function( require ) {
         this.travelingActionPotential = null;
 
       },
+      getState: function() {
+        if ( this.travelingActionPotential === null ) {
+          return new AxonMembraneState( null );
+        }
+        else {
+          return new AxonMembraneState( this.travelingActionPotential.getState() );
+        }
+      },
+
+      setState: function( axonMembraneState ) {
+        if ( axonMembraneState.getTravelingActionPotentialState() === null && this.travelingActionPotential !== null ) {
+          // Get rid of the existing TAP.
+          this.removeTravelingActionPotential();
+        }
+        else if ( axonMembraneState.getTravelingActionPotentialState() !== null && this.travelingActionPotential === null ) {
+          // A traveling action potential needs to be added.
+          this.initiateTravelingActionPotential();
+        }
+
+        if ( this.travelingActionPotential !== null ) {
+          // Set the state to match the new given state.
+          this.travelingActionPotential.setState( axonMembraneState.getTravelingActionPotentialState() );
+        }
+      },
+
 
       /**
        * Get the object that defines the current traveling action potential.

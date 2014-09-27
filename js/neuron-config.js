@@ -37,8 +37,10 @@ require.config(
       SCENERY_PHET: '../../scenery-phet/js',
       SUN: '../../sun/js',
 
+
       // this sim
       NEURON: '.'
+
     },
 
     urlArgs: new Date().getTime()  // cache buster to make browser reload all included scripts

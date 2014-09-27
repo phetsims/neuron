@@ -16,6 +16,7 @@ define( function( require ) {
   var Vector2 = require( 'DOT/Vector2' );
   var Dimension2 = require( 'DOT/Dimension2' );
   var NullCaptureZone = require( 'NEURON/neuron/model/NullCaptureZone' );
+  var MembraneChannelState = require( 'NEURON/neuron/model/MembraneChannelState' );
   var TraverseChannelAndFadeMotionStrategy = require( 'NEURON/neuron/model/TraverseChannelAndFadeMotionStrategy' );
   var Matrix3 = require( 'DOT/Matrix3' );
   var Rectangle = require( 'DOT/Rectangle' );
@@ -45,7 +46,7 @@ define( function( require ) {
       openness: 0,
       // Variable that defines how inactivated the channel is, which is distinct from openness.
       // Valid range is 0 to 1, 0 means completely active, 1 is completely inactive.
-      inactivationAmt:0
+      inactivationAmt: 0
     } );
 
     // Reference to the model that contains that particles that will be moving
@@ -244,7 +245,7 @@ define( function( require ) {
     getOpenness: function() {
       return this.openness;
     },
-    setOpenness: function(openness) {
+    setOpenness: function( openness ) {
       this.openness = openness;
     },
     setRotationalAngle: function( rotationalAngle ) {
@@ -274,7 +275,25 @@ define( function( require ) {
      */
     moveParticleThroughNeuronMembrane: function( particle, maxVelocity ) {
       particle.setMotionStrategy( new TraverseChannelAndFadeMotionStrategy( this, particle.getPositionReference(), maxVelocity ) );
+    },
+    /**
+     * Get the state of this membrane channel as needed for support of record-
+     * and-playback functionality.  Note that this is not the complete state
+     * of a membrane channel, just enough to support playback.
+     */
+    getState: function() {
+      return new MembraneChannelState( this );
+    },
+
+    /**
+     * Set the state of a membrane channel.  This is generally used in support
+     * of the record-and-playback functionality.
+     */
+    setState: function( state ) {
+      this.setOpenness( state.getOpenness() );
+      this.setInactivationAmt( state.getInactivationAmt() );
     }
+//
   } );
 } );
 
@@ -370,50 +389,6 @@ define( function( require ) {
 //
 
 //
-//  /**
-//   * Get the state of this membrane channel as needed for support of record-
-//   * and-playback functionality.  Note that this is not the complete state
-//   * of a membrane channel, just enough to support playback.
-//   */
-//  public MembraneChannelState getState(){
-//    return new MembraneChannelState( this );
-//  }
-//
-//  /**
-//   * Set the state of a membrane channel.  This is generally used in support
-//   * of the record-and-playback functionality.
-//   */
-//  public void setState(MembraneChannelState state){
-//    setOpenness( state.getOpenness() );
-//    setInactivationAmt( state.getInactivationAmt() );
-//  }
-//
-//  /**
-//   * Class that stores the state of a membrane channel and can be used to
-//   * restore it when needed.  This is generally used in support of the
-//   * record-and-playback functionality.
-//   */
-//  public static class MembraneChannelState {
-//
-//    private final double openness;
-//    private final double inactivationAmt;
-//    // Note: There are a number of other state variables that exist for a
-//    // membrane channel, but at the time of this writing (late June 2010),
-//    // they never change after construction.  It may be necessary to add
-//    // some or all of them later if this changes, or if membrane channels
-//    // need to come and go dynamically.
-//
-//    public MembraneChannelState(MembraneChannel membraneChannel){
-//      openness = membraneChannel.getOpenness();
-//      inactivationAmt = membraneChannel.getInactivationAmt();
-//    }
-//
-//    public double getOpenness() {
-//      return openness;
-//    }
-//
-//    public double getInactivationAmt() {
-//      return inactivationAmt;
-//    }
-//  }
+
+
 //}

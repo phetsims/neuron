@@ -22,15 +22,19 @@ define( function( require ) {
   var ModifiedHodgkinHuxleyModel = require( 'NEURON/neuron/model/ModifiedHodgkinHuxleyModel' );
   var MembraneChannelTypes = require( 'NEURON/neuron/model/MembraneChannelTypes' );
   var ParticleCapture = require( 'NEURON/neuron/model/ParticleCapture' );
+  var NeuronModelState = require( 'NEURON/neuron/model/NeuronModelState' );
   var ParticlePosition = require( 'NEURON/neuron/model/ParticlePosition' );
   var ParticleFactory = require( 'NEURON/neuron/model/ParticleFactory' );
   var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
+  var PlaybackParticle = require( 'NEURON/neuron/model/PlaybackParticle' );
   var MembraneChannelFactory = require( 'NEURON/neuron/model/MembraneChannelFactory' );
   var SodiumDualGatedChannel = require( 'NEURON/neuron/model/SodiumDualGatedChannel' );
   var SlowBrownianMotionStrategy = require( 'NEURON/neuron/model/SlowBrownianMotionStrategy' );
   var MembraneCrossingDirection = require( 'NEURON/neuron/model/MembraneCrossingDirection' );
   var CaptureZoneScanResult = require( 'NEURON/neuron/model/CaptureZoneScanResult' );
   var TimedFadeInStrategy = require( 'NEURON/neuron/model/TimedFadeInStrategy' );
+  var NeuronSharedConstants = require( 'NEURON/neuron/common/NeuronSharedConstants' );
+
 
 
   // Default configuration values.
@@ -121,8 +125,9 @@ define( function( require ) {
    */
   function NeuronModel() {
     var thisModel = this;
+    var maxRecordPoints = Math.ceil( NeuronSharedConstants.TIME_SPAN * 1000 / NeuronSharedConstants.MIN_ACTION_POTENTIAL_CLOCK_DT );
     //Particle Capture is a PropertySet
-    ParticleCapture.call( thisModel, {
+    ParticleCapture.call( thisModel, maxRecordPoints,{
       potentialChartVisible: DEFAULT_FOR_MEMBRANE_CHART_VISIBILITY,
       // Controls whether all ions, or just those near membrane, are simulated.
       allIonsSimulated: DEFAULT_FOR_SHOW_ALL_IONS,
@@ -136,6 +141,7 @@ define( function( require ) {
       concentrationChanged: false,
       stimulusPulseInitiated: false,// observed by Membrane potential chart
       membranePotentialChanged: false,
+      neuronModelPlaybackState: null,
       // record playback related
       paused: false,
       particlesStateChanged: false // to trigger canvas invalidation
@@ -268,14 +274,41 @@ define( function( require ) {
 
   return inherit( ParticleCapture, NeuronModel, {
 
-    ignoredstep: function( dt ) {
-      this.axonMembrane.stepInTime( dt / 1000 );// TODO Temp Code
+    //Animation Loop Entry
+    step: function( simulationTimeChange ) {
+
+      simulationTimeChange = simulationTimeChange / 1000;
+
+      if (simulationTimeChange < 0 && this.getPlaybackSpeed() > 0){
+        // This is a step backwards in time but the record-and-playback
+        // model is not set up for backstepping, so set it up for
+        // backwards stepping.
+        this.setPlayback(-1);  // The -1 indicates playing in reverse.
+        if (this.getTime() > this.getMaxRecordedTime()){
+          this.setTime(this.getMaxRecordedTime());
+        }
+      }
+      else if (this.getPlaybackSpeed() < 0 && simulationTimeChange > 0 && this.isPlayback()){
+        // This is a step forward in time but the record-and-playback
+        // model is set up for backwards stepping, so straighten it out.
+        this.setPlayback(1);
+      }
+
+      ParticleCapture.prototype.step.call( this, simulationTimeChange );// TODO Test Code, need to implement NeuronClock Model
+
+      // If we are currently in playback mode and we have reached the end of
+      // the recorded data, we should automatically switch to record mode.
+      if (this.isPlayback() && this.getTime() >= this.getMaxRecordedTime()){
+        this.setModeRecord();
+        this.setPaused(false);
+      }
+
     },
 
-    // Called by the animation loop //TODO Ashraf Not fully implemented that why named it as inCompleteStep
-    step: function( dt ) {
+    // Called by the active RecordAndPlayback Model mode
+    // see the RecordAndPlayBackModel step function
+    stepInTime: function( dt ) {
 
-      dt = dt / 1000; // TODO Test Code, need to implement NeuronClock Model
       // Step the membrane in time.  This is done prior to stepping the
       // HH model because the traveling action potential is part of the
       // membrane, so if it reaches the cross section in this time step the
@@ -755,9 +788,49 @@ define( function( require ) {
      * state information to support this feature.
      */
     getState: function() {
-      // return new NeuronModelState(this);
-      return -1;//TODO
+      return new NeuronModelState( this );
     },
+
+    getAxonMembrane: function() {
+      return this.axonMembrane;
+    },
+
+    getSodiumInteriorConcentration: function() {
+      if ( this.isPlayback() ) {
+        return this.neuronModelPlaybackState.getSodiumInteriorConcentration();
+      }
+      else {
+        return this.sodiumInteriorConcentration;
+      }
+    },
+
+    getSodiumExteriorConcentration: function() {
+      if ( this.isPlayback() ) {
+        return this.neuronModelPlaybackState.getSodiumExteriorConcentration();
+      }
+      else {
+        return this.sodiumExteriorConcentration;
+      }
+    },
+
+    getPotassiumInteriorConcentration: function() {
+      if ( this.isPlayback() ) {
+        return this.neuronModelPlaybackState.getPotassiumInteriorConcentration();
+      }
+      else {
+        return this.potassiumInteriorConcentration;
+      }
+    },
+
+    getPotassiumExteriorConcentration: function() {
+      if ( this.isPlayback() ) {
+        return this.neuronModelPlaybackState.getPotassiumExteriorConcentration();
+      }
+      else {
+        return this.potassiumExteriorConcentration;
+      }
+    },
+
 
     /**
      * Create a particle of the specified type and add it to the model.
@@ -853,13 +926,75 @@ define( function( require ) {
       this.stimulasLockoutProperty.set( lockout );
     },
     getMembranePotential: function() {
-      if ( this.isPlayback() ) { // TODO
-        //return this.neuronModelPlaybackState.getMembranePotential();
-        throw new Error( "Neuron PlayBack Not Implemented" );// Ashraf
+      if ( this.isPlayback() ) {
+        return this.neuronModelPlaybackState.getMembranePotential();
       }
       else {
         return this.hodgkinHuxleyModel.getMembraneVoltage();
       }
+    },
+
+    /**
+     * Set the playback state, which is the state that is presented to the
+     * user during playback.  The provided state variable defines the state
+     * of the simulation that is being set.
+     * @param {NeuronModelState}state
+     */
+    setPlaybackState: function( state ) {
+
+      // Set the membrane channel state.
+      this.axonMembrane.setState( state.getAxonMembraneState() );
+
+      // Set the states of the membrane channels.
+      this.membraneChannels.forEach( function( membraneChannel ) {
+        var mcs = state.getMembraneChannelStateMap().get( membraneChannel );
+        // Error handling.
+        if ( mcs === null ) {
+          assert && assert( " NeuronModel  Error: No state found for membrane channel." );
+          return;
+        }
+        // Restore the state.
+        membraneChannel.setState( mcs );
+
+      } );
+
+
+      // Set the state of the playback particles.  This maps the particle
+      // mementos in to the playback particles so that we don't have to
+      // delete and add back a bunch of particles at each step.
+      var additionalPlaybackParticlesNeeded = state.getPlaybackParticleMementos().length - this.playbackParticles.length;
+      var thisModel = this;
+      if ( additionalPlaybackParticlesNeeded > 0 ) {
+        _.times( additionalPlaybackParticlesNeeded, function( idx ) {
+          var newPlaybackParticle = new PlaybackParticle();
+          thisModel.playbackParticles.push( newPlaybackParticle );
+        } );
+
+      }
+      else if ( additionalPlaybackParticlesNeeded < 0 ) {
+        _.times( Math.abs( additionalPlaybackParticlesNeeded ), function( idx ) {
+          thisModel.playbackParticles.pop();// remove the last item
+        } );
+      }
+
+      // Set playback particle states from the mementos.
+      var playbackParticleIndex = 0;
+      var mementos = state.getPlaybackParticleMementos();
+      mementos.forEach( function( memento ) {
+        thisModel.playbackParticles[playbackParticleIndex].restoreFromMemento( memento );
+        playbackParticleIndex++;
+      } );
+
+      // Save the new playback state and send out notifications for any changes.
+      var oldState = this.neuronModelPlaybackState;
+      this.neuronModelPlaybackState = state;
+      if ( oldState === null || oldState.getMembranePotential() !== state.getMembranePotential() ) {
+        this.membranePotentialChanged = !this.membranePotentialChanged; // toggle the value to trigger change event
+      }
+      // For the sake of simplicity, always send out notifications for the
+      // concentration changes.
+      this.concentrationChanged = !this.concentrationChanged;
+
     }
 
   } );
@@ -1365,21 +1500,7 @@ define( function( require ) {
 //     */
 //    public NeuronModelState(NeuronModel neuronModel){
 //
-//      axonMembraneState = neuronModel.getAxonMembrane().getState();
-//
-//      membranePotential = neuronModel.getMembranePotential();
-//      sodiumExteriorConcentration = neuronModel.getSodiumExteriorConcentration();
-//      sodiumInteriorConcentration = neuronModel.getSodiumInteriorConcentration();
-//      potassiumExteriorConcentration = neuronModel.getPotassiumExteriorConcentration();
-//      potassiumInteriorConcentration = neuronModel.getPotassiumInteriorConcentration();
-//
-//      for (MembraneChannel membraneChannel : neuronModel.getMembraneChannels()){
-//        membraneChannelStateMap.put( membraneChannel, membraneChannel.getState() );
-//      }
-//
-//      for (Particle particle : neuronModel.getParticles()){
-//        particlePlaybackMementos.add( particle.getPlaybackMemento() );
-//      }
+
 //    }
 //
 //    protected AxonMembraneState getAxonMembraneState() {
@@ -1415,72 +1536,7 @@ define( function( require ) {
 //    }
 //  }
 //
-//  /**
-//   * Set the playback state, which is the state that is presented to the
-//   * user during playback.  The provided state variable defines the state
-//   * of the simulation that is being set.
-//   */
-//  @Override
-//  public void setPlaybackState(NeuronModelState state) {
-//
-//    // Set the membrane channel state.
-//    axonMembrane.setState(state.getAxonMembraneState());
-//
-//    // Set the states of the membrane channels.
-//    for (MembraneChannel membraneChannel : getMembraneChannels()){
-//      MembraneChannelState mcs = state.getMembraneChannelStateMap().get( membraneChannel );
-//      // Error handling.
-//      if (mcs == null){
-//        System.out.println(getClass().getName() + " Error: No state found for membrane channel.");
-//        assert false;
-//        continue;
-//      }
-//      // Restore the state.
-//      membraneChannel.setState( mcs );
-//    }
-//
-//    // Set the state of the playback particles.  This maps the particle
-//    // mementos in to the playback particles so that we don't have to
-//    // delete and add back a bunch of particles at each step.
-//    int additionalPlaybackParticlesNeeded = state.getPlaybackParticleMementos().size() - playbackParticles.size();
-//    if (additionalPlaybackParticlesNeeded > 0){
-//      for (int i = 0; i < additionalPlaybackParticlesNeeded; i++){
-//        final PlaybackParticle newPlaybackParticle = new PlaybackParticle();
-//        playbackParticles.add( newPlaybackParticle );
-//        newPlaybackParticle.addListener( new ParticleListenerAdapter(){
-//          @Override
-//          public void removedFromModel() {
-//            // Handle notification of this particle's removal.
-//            playbackParticles.remove( newPlaybackParticle );
-//          }
-//        });
-//        notifyParticleAdded( newPlaybackParticle );
-//      }
-//    }
-//    else if (additionalPlaybackParticlesNeeded < 0){
-//      for (int i = additionalPlaybackParticlesNeeded; i < 0; i++){
-//        playbackParticles.get(playbackParticles.size() - 1).removeFromModel();
-//      }
-//    }
-//    // Set playback particle states from the mementos.
-//    int playbackParticleIndex = 0;
-//    for (ParticlePlaybackMemento memento : state.getPlaybackParticleMementos()){
-//      playbackParticles.get( playbackParticleIndex ).restoreFromMemento( memento );
-//      playbackParticleIndex++;
-//    }
-//
-//    // Save the new playback state and send out notifications for any
-//    // changes.
-//    NeuronModelState oldState = neuronModelPlaybackState;
-//    neuronModelPlaybackState = state;
-//    if (oldState == null || oldState.getMembranePotential() != state.getMembranePotential()){
-//      notifyMembranePotentialChanged();
-//    }
-//    // For the sake of simplicity, always send out notifications for the
-//    // concentration changes.
-//    notifyConcentrationChanged();
-//
-//  }
+
 //
 //  @Override
 //  public void stepInTime(double simulationTimeChange) {

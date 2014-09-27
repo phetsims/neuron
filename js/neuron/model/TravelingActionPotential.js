@@ -19,6 +19,7 @@ define( function( require ) {
   var PropertySet = require( 'AXON/PropertySet' );
   var Vector2 = require( 'DOT/Vector2' );
   var Shape = require( 'KITE/Shape' );
+  var TravelingActionPotentialState = require( 'NEURON/neuron/model/TravelingActionPotentialState' );
 
 
   var TRAVELING_TIME = 0.0020; // In seconds of sim time (not wall time).
@@ -132,7 +133,25 @@ define( function( require ) {
     },
     getShape: function() {
       return this.shape;
+    },
+    /**
+     * Set the state from a (probably previously captured) version of
+     * the interal state.
+     */
+    setState:function( state){
+      this.travelTimeCountdownTimer = state.getTravelTimeCountdownTimer();
+      this.lingerCountdownTimer = state.getLingerCountdownTimer();
+      this.updateShape();
+    },
+
+    /**
+     * Get the state, generally for use in setting the state later for
+     * some sort of playback.
+     */
+    getState:function(){
+      return new TravelingActionPotentialState(this.travelTimeCountdownTimer, this.lingerCountdownTimer);
     }
+
 
   } );
 } );

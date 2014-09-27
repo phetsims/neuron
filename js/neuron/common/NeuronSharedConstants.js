@@ -10,6 +10,8 @@ define( function( require ) {
   // Clock
   NeuronSharedConstants.CLOCK_FRAME_RATE = 15; // fps, frames per second (wall time)
 
+  // TODO var TIME_SPAN = 25; // In seconds.
+
   // Set up the clock ranges for the various modules.  Note that for this
   // sim the clock rates are often several orders of magnitude slower than
   // real time.

@@ -11,10 +11,10 @@ define( function( require ) {
   'use strict';
   //imports
   var inherit = require( 'PHET_CORE/inherit' );
-  var RecordAndPlaybackModel = require( 'NEURON/neuron/model/RecordAndPlaybackModel' );
+  var RecordAndPlaybackModel = require( 'NEURON/neuron/recordandplayback/RecordAndPlaybackModel' );
 
-  function ParticleCapture( props ) {
-    RecordAndPlaybackModel.call( this, props );
+  function ParticleCapture( maxRecordPoints,props ) {
+    RecordAndPlaybackModel.call( this, maxRecordPoints,props );
   }
 
   return inherit( RecordAndPlaybackModel, ParticleCapture, {
