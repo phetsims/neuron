@@ -27,6 +27,7 @@ define( function( require ) {
    * @constructor
    */
   function PlaybackParticle( particle ) {
+    particle = particle || new PotassiumIon();// Construct as potassium by default.  This choice is arbitrary.
 
     //ViewableParticle is a PropertySet
     ViewableParticle.call( this, {
@@ -34,7 +35,7 @@ define( function( require ) {
       position: particle.getPosition().copy()
     } );
 
-    particle = particle || new PotassiumIon();// Construct as potassium by default.  This choice is arbitrary.
+
     this.opaqueness = particle.getOpaqueness();
     this.representationColor = particle.getRepresentationColor();
     this.radius = particle.getRadius();

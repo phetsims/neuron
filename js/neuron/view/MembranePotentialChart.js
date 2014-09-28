@@ -1,3 +1,182 @@
+// Copyright 2002-2011, University of Colorado
+/**
+ * Chart for depicting the membrane potential.  This is a Node, and as such
+ * is intended for use primarily in the play area.
+ * <p/>
+ * Originally, this chart was designed to scroll once there was enough data
+ * the fill the chart half way, but this turned out to be too CPU intensive,
+ * so it was changed to draw one line of data across the screen and then stop.
+ * The user can clear the chart and trigger another action potential to start
+ * recording data again.
+ * <p/>
+ * This chart also controls the record-and-playback state of the model.  This
+ * is done so that the window of recorded data in the model matches that shown
+ * in the chart, allowing the user to set the model state at any time shown in
+ * the chart.
+ * <p/>
+ *
+ * @author John Blanco
+ * @author Sharfudeen Ashraf (for Ghent University)
+ */
+define( function( require ) {
+  'use strict';
+
+  //imports
+  var inherit = require( 'PHET_CORE/inherit' );
+  var Node = require( 'SCENERY/nodes/Node' );
+  var ObservableArray = require( 'AXON/ObservableArray' );
+  var NeuronSharedConstants = require( 'NEURON/neuron/common/NeuronSharedConstants' );
+
+  var TIME_SPAN = 25; // In seconds.
+
+  // This value sets the frequency of chart updates, which helps to reduce
+  // the processor consumption.
+  var UPDATE_PERIOD = 1 * NeuronSharedConstants.DEFAULT_ACTION_POTENTIAL_CLOCK_DT; // In seconds
+
+  /**
+   *
+   * @param {Bounds2}size
+   * @param title
+   * @param {NeuronModel }neuronModel
+   * @constructor
+   */
+  function MembranePotentialChart( size, title, neuronModel ) {
+
+    var thisChart = this;
+    thisChart.neuronModel = neuronModel;
+
+    thisChart.updateCountdownTimer = 0; // Init to zero to an update occurs right away.
+    thisChart.timeIndexOfFirstDataPt = 0;
+    thisChart.pausedWhenDragStarted = false;
+    thisChart.dataSeries = new ObservableArray();
+
+
+    thisChart.neuronModel.stimulusPulseInitiatedProperty.link( function( stimulusPulseInitiated ) {
+      if ( stimulusPulseInitiated ) {
+        if ( !thisChart.neuronModel.isPotentialChartVisible() ) {
+          // If the chart is not visible, we clear any previous
+          // recording.
+          thisChart.clearChart();
+        }
+        // Start recording, if it isn't already happening.
+        thisChart.neuronModel.startRecording();
+      }
+
+    } );
+
+  }
+
+  return inherit( Node, MembranePotentialChart, {
+
+    /**
+     * Add a data point to the graph.
+     *
+     * @param time    - Time in milliseconds.
+     * @param voltage - Voltage in volts.
+     * @param update  - Controls if graph should be refreshed on the screen.
+     */
+    addDataPoint: function( time, voltage, update ) {
+
+      if ( this.dataSeries.length === 0 ) {
+        // This is the first data point added since the last time the
+        // chart was cleared or since it was created.  Record the time
+        // index for future reference.
+        this.timeIndexOfFirstDataPt = time;
+      }
+
+      // If the chart isn't full, add the data point to the data series.
+      // Note that internally we work in millivolts, not volts.
+      assert && assert( time - this.timeIndexOfFirstDataPt >= 0 );
+      if ( time - this.timeIndexOfFirstDataPt <= TIME_SPAN ) {
+        //TODO create a DataSeries Object and insert
+        this.dataSeries.add( [time - this.timeIndexOfFirstDataPt, voltage * 1000, update] );
+        this.chartIsFull = false;
+      }
+      else if ( !this.chartIsFull ) {
+        // This is the first data point to be received that is outside of
+        // the chart's range.  Add it anyway so that there is no gap
+        // in the data shown at the end of the chart.
+        //TODO create a DataSeries Object and insert
+        this.dataSeries.add( [time - this.timeIndexOfFirstDataPt, voltage * 1000, true] );
+        this.chartIsFull = true;
+      }
+      else {
+        console.log( "MembrancePotential Chart Warning: Attempt to add data to full chart, ignoring." );
+      }
+    },
+
+    /**
+     * Get the last time value in the data series.  This is assumed to be the
+     * highest time value, since data points are expected to be added in order
+     * of increasing time.  If no data is present, 0 is returned.
+     */
+    getLastTimeValue: function() {
+      var timeOfLastDataPoint = 0;
+      if ( this.dataSeries.length > 0 ) {
+        // TODO timeOfLastDataPoint = dataSeries.getX( dataSeries.getItemCount() - 1 ).doubleValue();
+      }
+      return timeOfLastDataPoint;
+    },
+    /**
+     * Update the chart based on the current time and the model that is being
+     * monitored.
+     *
+     * @param dt
+     */
+    step: function( simulationTimeChange ) {
+      if ( this.neuronModel.isRecord() ) {
+        if ( !this.chartIsFull && simulationTimeChange > 0 ) {
+          this.updateCountdownTimer -= simulationTimeChange;
+
+          var timeInMilliseconds = this.neuronModel.getTime() * 1000;
+
+          if ( this.updateCountdownTimer <= 0 ) {
+            this.addDataPoint( timeInMilliseconds, this.neuronModel.getMembranePotential(), true );
+            this.updateCountdownTimer = UPDATE_PERIOD;
+          }
+          else {
+            this.addDataPoint( timeInMilliseconds, this.neuronModel.getMembranePotential(), false );
+          }
+        }
+
+        if ( this.chartIsFull && this.neuronModel.isRecord() ) {
+          // The chart is full, so it is time to stop recording.
+          this.neuronModel.setModeLive();
+        }
+      }
+    },
+    clearChart: function() {
+      this.dataSeries.clear();
+      this.chartIsFull = false;
+      this.neuronModel.clearHistory();
+      this.updateChartCursorVisibility();
+    },
+    updateChartCursorVisibility: function() {
+
+    },
+    updateChartCursorPos: function() {
+      var recordingStartTime = this.neuronModel.getMinRecordedTime();
+      var recordingCurrentTime = this.neuronModel.getTime();
+      this.moveChartCursorToTime( ( recordingCurrentTime - recordingStartTime ) * 1000 );
+    },
+    moveChartCursorToTime: function( time ) {
+      //TODO
+    },
+
+    updateOnSimulationReset: function() {
+      this.neuronModel.setModeLive();
+      this.clearChart();
+      this.updateChartCursorVisibility();
+    },
+    updateOnClockPaused: function() {
+      this.updateChartCursorPos();
+      this.updateChartCursorVisibility();
+    }
+
+  } );
+
+} );
+
 //// Copyright 2002-2011, University of Colorado
 //
 //package edu.colorado.phet.neuron.view;
@@ -41,36 +220,14 @@
 //import edu.umd.cs.piccolo.event.PInputEvent;
 //import edu.umd.cs.piccolo.nodes.PPath;
 //import edu.umd.cs.piccolox.pswing.PSwing;
-//
-///**
-// * Chart for depicting the membrane potential.  This is a PNode, and as such
-// * is intended for use primarily in the play area.
-// * <p/>
-// * Originally, this chart was designed to scroll once there was enough data
-// * the fill the chart half way, but this turned out to be too CPU intensive,
-// * so it was changed to draw one line of data across the screen and then stop.
-// * The user can clear the chart and trigger another action potential to start
-// * recording data again.
-// * <p/>
-// * This chart also controls the record-and-playback state of the model.  This
-// * is done so that the window of recorded data in the model matches that shown
-// * in the chart, allowing the user to set the model state at any time shown in
-// * the chart.
-// * <p/>
-// * Author: John Blanco
-// */
-//
+
 //public class MembranePotentialChart extends PNode implements SimpleObserver {
 //
 //  //----------------------------------------------------------------------------
 //  // Class Data
 //  //----------------------------------------------------------------------------
 //
-//  public static final double TIME_SPAN = 25; // In seconds.
-//
-//  // This value sets the frequency of chart updates, which helps to reduce
-//  // the processor consumption.
-//  private static final double UPDATE_PERIOD = 1 * NeuronDefaults.DEFAULT_ACTION_POTENTIAL_CLOCK_DT; // In seconds
+
 //
 //  //----------------------------------------------------------------------------
 //  // Instance Data
@@ -91,49 +248,7 @@
 //  //----------------------------------------------------------------------------
 //
 //  public MembranePotentialChart( Dimension2D size, String title, final NeuronModel neuronModel ) {
-//
-//    assert neuronModel != null;
-//    this.neuronModel = neuronModel;
-//
-//    // Register for clock ticks so that we can update.
-//    neuronModel.getClock().addClockListener( new ClockAdapter() {
-//      @Override
-//      public void clockTicked( ClockEvent clockEvent ) {
-//        updateChart( clockEvent );
-//      }
-//
-//      @Override
-//      public void simulationTimeReset( ClockEvent clockEvent ) {
-//        neuronModel.setModeLive();
-//        clearChart();
-//        updateChartCursorVisibility();
-//      }
-//
-//      @Override
-//      public void clockPaused( ClockEvent clockEvent ) {
-//        updateChartCursorPos();
-//        updateChartCursorVisibility();
-//      }
-//    } );
-//
-//    // Register for model events that are important to us.
-//    neuronModel.addListener( new NeuronModel.Adapter() {
-//
-//      @Override
-//      public void stimulusPulseInitiated() {
-//        if ( !MembranePotentialChart.this.neuronModel.isPotentialChartVisible() ) {
-//          // If the chart is not visible, we clear any previous
-//          // recording.
-//          clearChart();
-//        }
-//        // Start recording, if it isn't already happening.
-//        neuronModel.startRecording();
-//      }
-//    } );
-//
-//    // Register as an observer of model events related to record and
-//    // playback.
-//    neuronModel.addObserver( this );
+
 //
 //    // Create the chart itself, i.e. the place where date will be shown.
 //    XYDataset dataset = new XYSeriesCollection( dataSeries );

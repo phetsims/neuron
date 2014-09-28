@@ -4,7 +4,7 @@
  * The Neuron Model delegates all the animations through RecordAndPlaybackModel.
  * This class as of now acts only as a stub and  simply dispatches the step animation back to the Neuron Model
  * This stub is created in order keep NeuronModel's code intact as it makes multiple references to this class
- *
+ * @author Sam Reid
  * @author Sharfudeen Ashraf
  */
 define( function( require ) {
@@ -30,16 +30,21 @@ define( function( require ) {
       mode: null // Mode mode; the current mode, one of playback, record or live
 
     } );
-    PropertySet.call( this, props );
+    var thisModel = this;
+    PropertySet.call( thisModel, props );
 
-    this.maxRecordPoints = maxRecordPoints;
+    thisModel.maxRecordPoints = maxRecordPoints;
 
     //The history of data points that have been recorded from the model.
-    this.recordHistory = new ObservableArray();
+    thisModel.recordHistory = new ObservableArray();
 
-    this.recordMode = new Record( this ); //samples data from the mode and stores it
-    this.playbackMode = new Playback( this ); //plays back recorded data
-    this.liveMode = new Live( this ); //runs the model without recording it
+    thisModel.recordMode = new Record( this ); //samples data from the mode and stores it
+    thisModel.playbackMode = new Playback( this ); //plays back recorded data
+    thisModel.liveMode = new Live( this ); //runs the model without recording it
+
+    thisModel.timeProperty.link( function() {
+      thisModel.updateRecordPlayBack();
+    } );
 
     this.resetAll();
 
@@ -79,6 +84,10 @@ define( function( require ) {
       return this.mode === this.playbackMode;
     },
 
+    updateRecordPlayBack: function() {
+      throw new Error( 'updateRecordPlayBack should be implemented in descendant classes.' );
+    },
+
     isRecord: function() {
       return this.mode === this.recordMode;
     },
@@ -103,7 +112,7 @@ define( function( require ) {
       if ( this.recordHistory.length === 0 ) {
         return 0;
       }
-      return this.recordHistory[this.recordHistory.length - 1 ].getTime() - this.recordHistory[0].getTime();
+      return this.recordHistory.get( this.recordHistory.length - 1 ).getTime() - this.recordHistory.get( 0 ).getTime();
 
     },
 
@@ -113,12 +122,12 @@ define( function( require ) {
 
     getMaxRecordedTime: function() {
       if ( this.recordHistory.length === 0 ) { return 0.0; }
-      return this.recordHistory[this.recordHistory.length - 1].getTime();
+      return this.recordHistory.get( this.recordHistory.length - 1 ).getTime();
     },
 
     getMinRecordedTime: function() {
       if ( this.recordHistory.length === 0 ) { return 0.0; }
-      return this.recordHistory[0].getTime();
+      return this.recordHistory.get( 0 ).getTime();
     },
 
     getPlaybackSpeed: function() {
@@ -146,7 +155,6 @@ define( function( require ) {
       if ( this.isPlayback() && this.getNumRecordedPoints() > 0 ) {//Only restore state if during playback and state has been recorded
         this.setPlaybackState( this.getPlaybackState().getState() ); //Sets the model state to reflect the current playback index.
       }
-
     },
     /**
      * This method should popuplate the model + view of the application with the data from the specified state.
@@ -173,7 +181,7 @@ define( function( require ) {
     },
 
     /**
-     * Empty function handle, which can be overriden to provide custom functionality when record was pressed
+     * Empty function handle, which can be overridden to provide custom functionality when record was pressed
      * during playback.  This is useful since many sims have other data (or charts) that must be cleared when
      * record is pressed during playback.
      */
@@ -184,12 +192,22 @@ define( function( require ) {
      * Look up a recorded state based on the specified time
      */
     getPlaybackState: function() {
-
       var thisModel = this;
-      var sortedHistory = this.recordHistory.splice();
-      _.sortBy( sortedHistory, function( dataPoint ) { //todo: binary search?  Or use better heuristics, such as assuming that points are equally spaced?
-        return  Math.abs( dataPoint.getTime() - thisModel.time );               //todo: this is horribly inefficient, but hasn't caused noticeable slowdown during testing
+      var sortedHistory = this.recordHistory.getArray().slice();
+
+      sortedHistory.sort( function( o1, o2 ) { //todo: binary search?  Or use better heuristics, such as assuming that points are equally spaced?
+        return compare( Math.abs( o1.getTime() - thisModel.time ), Math.abs( o2.getTime() - thisModel.time ) );//todo: this is horribly inefficient, but hasn't caused noticeable slowdown during testing
       } );
+
+      function compare( d1, d2 ) {
+        if ( d1 < d2 ) {
+          return -1;
+        }
+        if ( d1 > d2 ) {
+          return 1;
+        }
+        return 0;
+      }
 
       return sortedHistory[0];
 
@@ -199,8 +217,8 @@ define( function( require ) {
 
     getPlaybackDT: function() {
       if ( this.getNumRecordedPoints() === 0 ) { return 0; }
-      else if ( this.getNumRecordedPoints() === 1 ) { return this.recordHistory[0].getTime(); }
-      else { return ( this.recordHistory[this.recordHistory.length - 1 ].getTime() - this.recordHistory[0].getTime() ) / this.recordHistory.length; }
+      else if ( this.getNumRecordedPoints() === 1 ) { return this.recordHistory.get( 0 ).getTime(); }
+      else { return ( this.recordHistory.get( this.recordHistory.length - 1 ).getTime() - this.recordHistory.get( 0 ).getTime() ) / this.recordHistory.length; }
     },
 
     /**
@@ -263,7 +281,7 @@ define( function( require ) {
       } );
 
       this.recordHistory.clear();
-      this.recordHistory.addAll( keep );
+      this.recordHistory.addAll( keep.slice() );
       this.historyRemainderCleared = !this.historyRemainderCleared;// trigger event listeners
     },
 

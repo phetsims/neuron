@@ -112,7 +112,6 @@ define( function( require ) {
 
     thisModel.crossSectionEllipseShape = new Shape().ellipse( 0, 0, NeuronConstants.DEFAULT_DIAMETER / 2, NeuronConstants.DEFAULT_DIAMETER / 2 );
 
-
   }
 
   return inherit( PropertySet, AxonMembrane, {

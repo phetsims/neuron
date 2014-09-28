@@ -13,13 +13,12 @@ define( function( require ) {
   var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
 
 
-
   /**
    * @param {Particles} particles
    * @param {ModelViewTransform2} modelViewTransform
    * @constructor
    */
-  function ParticlesNode( neuronModel, modelViewTransform,bounds ) {
+  function ParticlesNode( neuronModel, modelViewTransform, bounds ) {
     var thisNode = this;
 
     thisNode.neuronModel = neuronModel;
@@ -42,8 +41,14 @@ define( function( require ) {
       var context = wrapper.context;
       var allParticles = this.neuronModel.backgroundParticles.getArray();
       allParticles = allParticles.concat( this.neuronModel.transientParticles.getArray() );
+      allParticles = allParticles.concat( this.neuronModel.playbackParticles.getArray() );
 
       var thisNode = this;
+
+      if(allParticles.indexOf(undefined)>=0)
+      {
+        console.log("Undefined Particle at "+allParticles.indexOf(undefined));
+      }
 
       allParticles.forEach( function( particle ) {
         var color = particle.getRepresentationColor().copy();

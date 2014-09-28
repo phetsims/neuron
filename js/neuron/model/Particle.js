@@ -18,6 +18,9 @@ define( function( require ) {
   var PropertySet = require( 'AXON/PropertySet' );
   var StillnessMotionStrategy = require( 'NEURON/neuron/model/StillnessMotionStrategy' );
   var NullFadeStrategy = require( 'NEURON/neuron/model/NullFadeStrategy' );
+  var MembraneTraversalMotionStrategy = require( 'NEURON/neuron/model/MembraneTraversalMotionStrategy' );
+  var ParticlePlaybackMemento = require( 'NEURON/neuron/model/ParticlePlaybackMemento' );
+
 
   var DEFAULT_PARTICLE_RADIUS = 0.75;  // In nanometers.
 
@@ -93,6 +96,22 @@ define( function( require ) {
 
     },
 
+    isAvailableForCapture: function() {
+      // If the particle is not in the process of trying to traverse a
+      // membrane channel, then it should be considered to be available for
+      // capture.
+      return !(this.motionStrategy instanceof MembraneTraversalMotionStrategy);
+    },
+
+    /**
+     * Get a playback memento, which can be used when doing playback of
+     * previous model states.  Note that the memento does not capture all of
+     * the particle's state, just enough to support playback.
+     */
+    getPlaybackMemento: function() {
+      return new ParticlePlaybackMemento( this );
+    },
+
     setOpaqueness: function( opaqueness ) {
       this.opaqueness = opaqueness;
     },
@@ -100,9 +119,7 @@ define( function( require ) {
     getOpaqueness: function() {
       return this.opaqueness;
     }
-
   } );
-
 } );
 
 //

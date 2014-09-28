@@ -36,7 +36,6 @@ define( function( require ) {
   var NeuronSharedConstants = require( 'NEURON/neuron/common/NeuronSharedConstants' );
 
 
-
   // Default configuration values.
   var DEFAULT_FOR_SHOW_ALL_IONS = true;
   var DEFAULT_FOR_MEMBRANE_CHART_VISIBILITY = false;
@@ -121,37 +120,19 @@ define( function( require ) {
 
   /**
    * Main constructor for NeuronModel, which contains all of the model logic for the entire sim screen.
+   * @param {NeuronClock} neuronClock
    * @constructor
    */
-  function NeuronModel() {
+  function NeuronModel( neuronClock ) {
     var thisModel = this;
     var maxRecordPoints = Math.ceil( NeuronSharedConstants.TIME_SPAN * 1000 / NeuronSharedConstants.MIN_ACTION_POTENTIAL_CLOCK_DT );
-    //Particle Capture is a PropertySet
-    ParticleCapture.call( thisModel, maxRecordPoints,{
-      potentialChartVisible: DEFAULT_FOR_MEMBRANE_CHART_VISIBILITY,
-      // Controls whether all ions, or just those near membrane, are simulated.
-      allIonsSimulated: DEFAULT_FOR_SHOW_ALL_IONS,
-      // Controls whether charges are depicted.
-      chargesShown: DEFAULT_FOR_CHARGES_SHOWN,
-      // Controls whether concentration readings are depicted.
-      concentrationReadoutVisible: DEFAULT_FOR_CONCENTRATION_READOUT_SHOWN,
-      previousMembranePotential: 0,
-      stimulasLockout: false,
-      playbackParticlesVisible: false,
-      concentrationChanged: false,
-      stimulusPulseInitiated: false,// observed by Membrane potential chart
-      membranePotentialChanged: false,
-      neuronModelPlaybackState: null,
-      // record playback related
-      paused: false,
-      particlesStateChanged: false // to trigger canvas invalidation
-    } );
-
-
+    //constantDtClock
+    thisModel.clock = neuronClock;
     thisModel.axonMembrane = new AxonMembrane();
 
     // List of the particles that come and go when the simulation is working in real time.
     thisModel.transientParticles = new ObservableArray();
+
     // Backup of the transient particles, used to restore them when returning
     // to live mode after doing playback.
     thisModel.transientParticlesBackup = new ObservableArray();
@@ -174,6 +155,26 @@ define( function( require ) {
     thisModel.sodiumExteriorConcentration = NOMINAL_SODIUM_EXTERIOR_CONCENTRATION;
     thisModel.potassiumInteriorConcentration = NOMINAL_POTASSIUM_INTERIOR_CONCENTRATION;
     thisModel.potassiumExteriorConcentration = NOMINAL_POTASSIUM_EXTERIOR_CONCENTRATION;
+
+    //Particle Capture is a PropertySet
+    ParticleCapture.call( thisModel, maxRecordPoints, {
+      potentialChartVisible: DEFAULT_FOR_MEMBRANE_CHART_VISIBILITY,
+      // Controls whether all ions, or just those near membrane, are simulated.
+      allIonsSimulated: DEFAULT_FOR_SHOW_ALL_IONS,
+      // Controls whether charges are depicted.
+      chargesShown: DEFAULT_FOR_CHARGES_SHOWN,
+      // Controls whether concentration readings are depicted.
+      concentrationReadoutVisible: DEFAULT_FOR_CONCENTRATION_READOUT_SHOWN,
+      previousMembranePotential: 0,
+      stimulasLockout: false,
+      playbackParticlesVisible: false,
+      concentrationChanged: false,
+      stimulusPulseInitiated: false,// observed by Membrane potential chart
+      membranePotentialChanged: false,
+      neuronModelPlaybackState: null,
+      particlesStateChanged: false // to trigger canvas invalidation
+    } );
+
 
     // Listen to the membrane for events that indicate that a traveling
     // action potential has arrived at the location of the transverse
@@ -269,38 +270,45 @@ define( function( require ) {
     // created, and this will set the initial state, including adding the
     // particles to the model.
 
+    thisModel.timeProperty.link( thisModel.updateRecordPlayBack.bind( this ) );
+    thisModel.modeProperty.link( thisModel.updateRecordPlayBack.bind( this ) );
+
+
+    thisModel.stimulusPulseInitiatedProperty.link( function( stimulusPulseInitiated ) {
+      if ( stimulusPulseInitiated ) {
+        thisModel.startRecording();
+      }
+    } );
+
     this.reset(); // This does initialization
   }
 
   return inherit( ParticleCapture, NeuronModel, {
 
-    //Animation Loop Entry
+    //dispatched from NeuronClockModelAdapter's step function
     step: function( simulationTimeChange ) {
-
-      simulationTimeChange = simulationTimeChange / 1000;
-
-      if (simulationTimeChange < 0 && this.getPlaybackSpeed() > 0){
+      if ( simulationTimeChange < 0 && this.getPlaybackSpeed() > 0 ) {
         // This is a step backwards in time but the record-and-playback
         // model is not set up for backstepping, so set it up for
         // backwards stepping.
-        this.setPlayback(-1);  // The -1 indicates playing in reverse.
-        if (this.getTime() > this.getMaxRecordedTime()){
-          this.setTime(this.getMaxRecordedTime());
+        this.setPlayback( -1 );  // The -1 indicates playing in reverse.
+        if ( this.getTime() > this.getMaxRecordedTime() ) {
+          this.setTime( this.getMaxRecordedTime() );
         }
       }
-      else if (this.getPlaybackSpeed() < 0 && simulationTimeChange > 0 && this.isPlayback()){
+      else if ( this.getPlaybackSpeed() < 0 && simulationTimeChange > 0 && this.isPlayback() ) {
         // This is a step forward in time but the record-and-playback
         // model is set up for backwards stepping, so straighten it out.
-        this.setPlayback(1);
+        this.setPlayback( 1 );
       }
 
-      ParticleCapture.prototype.step.call( this, simulationTimeChange );// TODO Test Code, need to implement NeuronClock Model
+      ParticleCapture.prototype.step.call( this, simulationTimeChange );
 
       // If we are currently in playback mode and we have reached the end of
       // the recorded data, we should automatically switch to record mode.
-      if (this.isPlayback() && this.getTime() >= this.getMaxRecordedTime()){
+      if ( this.isPlayback() && this.getTime() >= this.getMaxRecordedTime() ) {
         this.setModeRecord();
-        this.setPaused(false);
+        this.setPaused( false );
       }
 
     },
@@ -436,6 +444,12 @@ define( function( require ) {
       // Return model state after each time step.
       return this.getState();
 
+    },
+    // Listen to the record-and-playback model for events that affect the
+    // state of the sim model.
+    updateRecordPlayBack: function() {
+      this.updateStimulasLockoutState();
+      this.updateSimAndPlaybackParticleVisibility();
     },
 
     reset: function() {
@@ -679,8 +693,8 @@ define( function( require ) {
 
     initiateStimulusPulse: function() {
       if ( !this.isStimulusInitiationLockedOut() ) {
-        this.axonMembrane.initiateTravelingActionPotential();
         this.stimulusPulseInitiated = true;
+        this.axonMembrane.initiateTravelingActionPotential();
         this.updateStimulasLockoutState();
       }
     },
@@ -780,6 +794,53 @@ define( function( require ) {
         if ( this.isActionPotentialInProgress() || (this.isPlayback() && this.getTime() < this.getMaxRecordedTime()) ) {
           this.setStimulasLockout( true );
         }
+      }
+    },
+
+    /**
+     * There are two sets of particles in this simulation, one that is used
+     * when actually simulating, and one that is used when playing back.  This
+     * routine updates which set is visible based on state information.
+     */
+    updateSimAndPlaybackParticleVisibility: function() {
+      if ( this.isRecord() || this.isLive() ) {
+        // In either of these modes, the simulation particles (as opposed
+        // to the playback particles) should be visible.  Make sure that
+        // this is the case.
+        if ( this.playbackParticlesVisible ) {
+          // Hide the playback particles.  This is done by removing them  from the model.
+          this.playbackParticles.clear();
+
+          // Show the simulation particles.
+          this.transientParticles.addAll( this.transientParticlesBackup.getArray().slice() );
+          this.transientParticlesBackup.clear();
+          // Update the state variable.
+          this.playbackParticlesVisible = false;
+        }
+      }
+      else if ( this.isPlayback() ) {
+        // The playback particles should be showing and the simulation
+        // particles should be hidden.  Make sure that this is the case.
+        if ( !this.playbackParticlesVisible ) {
+          // Hide the simulation particles.  This is done by making a
+          // backup copy of them (so that they can be added back later)
+          // and then removing them from the model.
+          this.transientParticlesBackup.addAll( this.transientParticles.getArray().slice() );
+          this.transientParticles.clear();
+
+          // Note that we don't explicitly add the playback particles
+          // here.  That is taken care of when the playback state is
+          // set.  Here we only set the flag.
+          this.playbackParticlesVisible = true;
+        }
+
+        //Particles are rendered using Canvas, invert the state change  and trigger the paint event
+        // see ParticlesNode
+        this.particlesStateChangedProperty.set( !this.particlesStateChangedProperty.get() );
+      }
+      else {
+        // Should never happen, debug if it does.
+        assert && assert( "Neuron Model updateSimAndPlaybackParticleVisibility Error: Unrecognized record-and-playback mode." );
       }
     },
     /**
@@ -922,6 +983,9 @@ define( function( require ) {
     setChargesShown: function( chargesShown ) {
       this.chargesShownProperty.set( chargesShown );
     },
+    isPotentialChartVisible: function() {
+      return this.potentialChartVisible;
+    },
     setStimulasLockout: function( lockout ) {
       this.stimulasLockoutProperty.set( lockout );
     },
@@ -981,7 +1045,7 @@ define( function( require ) {
       var playbackParticleIndex = 0;
       var mementos = state.getPlaybackParticleMementos();
       mementos.forEach( function( memento ) {
-        thisModel.playbackParticles[playbackParticleIndex].restoreFromMemento( memento );
+        thisModel.playbackParticles.get( playbackParticleIndex ).restoreFromMemento( memento );
         playbackParticleIndex++;
       } );
 

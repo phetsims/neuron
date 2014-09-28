@@ -4,6 +4,7 @@
  * View for the 'Neuron' screen.
  *
  * @author Sam Reid (PhET Interactive Simulations)
+ * @author Sharfudeen Ashraf (for Ghent University)
  */
 define( function( require ) {
   'use strict';
@@ -15,6 +16,7 @@ define( function( require ) {
   var Image = require( 'SCENERY/nodes/Image' );
   var HSlider = require( 'SUN/HSlider' );
   var Property = require( 'AXON/Property' );
+  var ToggleProperty = require( 'AXON/ToggleProperty' );
   var Vector2 = require( 'DOT/Vector2' );
   var Text = require( 'SCENERY/nodes/Text' );
   var RectangularPushButton = require( 'SUN/buttons/RectangularPushButton' );
@@ -25,6 +27,9 @@ define( function( require ) {
   var ParticlesNode = require( 'NEURON/neuron/view/ParticlesNode' );
   var AxonCrossSectionNode = require( 'NEURON/neuron/view/AxonCrossSectionNode' );
   var MembraneChannelNode = require( 'NEURON/neuron/view/MembraneChannelNode' );
+  var MembranePotentialChart = require( 'NEURON/neuron/view/MembranePotentialChart' );
+  var PlayPauseButton = require( 'SCENERY_PHET/PlayPauseButton' );
+  var StepButton = require( 'SCENERY_PHET/StepButton' );
 
 
   // images
@@ -35,12 +40,15 @@ define( function( require ) {
 
   /**
    * Constructor for the NeuronView
-   * @param {NeuronModel} neuronModel the model for the entire screen
+   * @param {NeuronClockModelAdapter} neuronClockModelAdapter which contains the neuron
+   * NeuronModel uses specialized real time constant clock simulation
+   * The clock adapter calculates the appropriate real time dt and dispatches it to the actual model
+   * model for the entire screen
    * @constructor
    */
-  function NeuronView( neuronModel ) {
+  function NeuronView( neuronClockModelAdapter ) {
     var thisView = this;
-    thisView.model = neuronModel;
+    thisView.model = neuronClockModelAdapter.model; // model is neuronmodel
     ScreenView.call( thisView, {renderer: 'svg', layoutBounds: ScreenView.UPDATED_LAYOUT_BOUNDS} );
 
     // Set up the model-canvas transform.
@@ -54,7 +62,7 @@ define( function( require ) {
     //TODO: Wire up the reset all button to the model's reset function
     var resetAllButton = new ResetAllButton( {
       listener: function() {
-        neuronModel.reset();
+        thisView.model.reset();
       },
       right: this.layoutBounds.maxX - 10,
       bottom: this.layoutBounds.maxY - 10
@@ -115,9 +123,29 @@ define( function( require ) {
     var particlesNode = new ParticlesNode( thisView.model, thisView.mvt, thisView.layoutBounds );
     particleLayer.addChild( particlesNode );
 
+
+    // Add play/pause button
+    var playToggleProperty = new ToggleProperty( true, false, neuronClockModelAdapter.pausedProperty );
+    var playPauseButton = new PlayPauseButton( playToggleProperty,
+      {
+        bottom: thisView.layoutBounds.bottom - 25,
+        centerX: thisView.layoutBounds.centerX - 18,
+        radius: 25
+      } );
+
+    this.addChild( playPauseButton );
+
+    var forwardStepButton = new StepButton( function() { neuronClockModelAdapter.stepClockWhilePaused(); }, playToggleProperty ).mutate( {scale: 1} );
+    thisView.model.pausedProperty.linkAttribute( forwardStepButton, 'enabled' );
+    this.addChild( forwardStepButton.mutate( {left: playPauseButton.right + 10, centerY: playPauseButton.centerY} ) );
+
+    var backwardStepButton = new StepButton( function() { neuronClockModelAdapter.stepClockBackWhilePaused(); }, playToggleProperty ).mutate( {scale: 1} );
+    thisView.model.pausedProperty.linkAttribute( backwardStepButton, 'enabled' );
+    this.addChild( backwardStepButton.mutate( {left: playPauseButton.left - 50, centerY: playPauseButton.centerY} ) );
+
     var stimulateNeuronButton = new RectangularPushButton( {
       content: new Text( 'Stimulate Neuron', { font: BUTTON_FONT } ),
-      listener: function() { neuronModel.initiateStimulusPulse(); },
+      listener: function() { thisView.model.initiateStimulusPulse(); },
       baseColor: '#c28a43',
       right: this.layoutBounds.maxX - 115,
       bottom: this.layoutBounds.maxY - 60,
@@ -131,6 +159,25 @@ define( function( require ) {
       stimulateNeuronButton.enabled = !stimulasLockout;
     } );
 
+    //TODO constructor params
+    var membranePotentialChartNode = new MembranePotentialChart( null, null, thisView.model );
+
+    // NeuronModel uses specialized real time constant clock simulation
+    // The clock adapter calculates the appropriate dt and dispatches it to the interested model
+    neuronClockModelAdapter.registerStepCallback( thisView.model.step.bind( thisView.model ) );
+    neuronClockModelAdapter.registerStepCallback( membranePotentialChartNode.step.bind( membranePotentialChartNode ) );
+
+    neuronClockModelAdapter.simulationTimeResetProperty.link( function( simulationTimeReset ) {
+      if ( simulationTimeReset ) {
+        membranePotentialChartNode.updateOnSimulationReset();
+      }
+    } );
+
+    neuronClockModelAdapter.pausedProperty.link( function( paused ) {
+      if ( paused ) {
+        membranePotentialChartNode.updateOnClockPaused();
+      }
+    } );
 
   }
 
