@@ -250,8 +250,8 @@ define( function( require ) {
     },
     setRotationalAngle: function( rotationalAngle ) {
       this.rotationalAngle = rotationalAngle;// will fire prop change listener
-      this.interiorCaptureZone.rotationalAngle = rotationalAngle;
-      this.exteriorCaptureZone.rotationalAngle = rotationalAngle;
+      this.interiorCaptureZone.setRotationalAngle(rotationalAngle);
+      this.exteriorCaptureZone.setRotationalAngle(rotationalAngle);
     },
     getRotationalAngle: function() {
       return this.rotationalAngle;
@@ -261,8 +261,8 @@ define( function( require ) {
     setCenterLocation: function( newCenterLocation ) {
       if ( !newCenterLocation.equals( this.centerLocation ) ) {
         this.centerLocation = newCenterLocation;// will fire prop change listener
-        this.interiorCaptureZone.originPoint = newCenterLocation;
-        this.exteriorCaptureZone.originPoint = newCenterLocation;
+        this.interiorCaptureZone.setOriginPoint(newCenterLocation);
+        this.exteriorCaptureZone.setOriginPoint(newCenterLocation);
       }
     },
     /**

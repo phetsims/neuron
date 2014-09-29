@@ -941,9 +941,6 @@ define( function( require ) {
      */
     addChannel: function( membraneChannelType, angle ) {
       var membraneChannel = MembraneChannelFactory.createMembraneChannel( membraneChannelType, this, this.hodgkinHuxleyModel );
-      if ( !membraneChannel ) {//TODO not all membrane channels are implemented
-        return;
-      }
 
       var radius = this.axonMembrane.getCrossSectionDiameter() / 2;
       var newLocation = new Vector2( radius * Math.cos( angle ), radius * Math.sin( angle ) );
