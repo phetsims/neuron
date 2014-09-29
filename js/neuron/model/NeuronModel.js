@@ -644,13 +644,13 @@ define( function( require ) {
     createTransientParticle: function( particleType, captureZone ) {
       var newParticle = ParticleFactory.createParticle( particleType );
       this.transientParticles.add( newParticle );
-      if ( captureZone !== null ) {
+      if ( captureZone ) {
         var location = captureZone.getSuggestedNewParticleLocation();
         newParticle.setPosition( location );
       }
       var thisModel = this;
       newParticle.continueExistingProperty.link( function( newValue ) {
-        if ( newValue === false ) {
+        if ( !newValue ) {
           thisModel.transientParticles.remove( newParticle );
         }
       } );
@@ -725,7 +725,7 @@ define( function( require ) {
      */
     isActionPotentialInProgress: function() {
 
-      return this.axonMembrane.getTravelingActionPotential() !== null ||
+      return this.axonMembrane.getTravelingActionPotential() ||
              Math.abs( this.hodgkinHuxleyModel.get_k_current() ) > POTASSIUM_CURRENT_THRESH_FOR_ACTION_POTENTIAL ||
              Math.abs( this.hodgkinHuxleyModel.get_na_current() ) > SODIUM_CURRENT_THRESH_FOR_ACTION_POTENTIAL ||
              Math.abs( this.hodgkinHuxleyModel.get_l_current() ) > LEAKAGE_CURRENT_THRESH_FOR_ACTION_POTENTIAL;

@@ -12,7 +12,7 @@ define( function( require ) {
   var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
 
   function PotassiumIon() {
-    Particle.call( this, {} );
+    Particle.call( this );
   }
 
   return inherit(Particle,PotassiumIon, {

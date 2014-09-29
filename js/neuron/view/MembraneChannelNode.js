@@ -26,9 +26,6 @@ define( function( require ) {
     thisNode.membraneChannelModel = membraneChannelModel;
     thisNode.mvt = mvt;
 
-    //TODO hookup with membraneChannelModel properties
-
-
     /**
      *  private
      *  @param{Dimension2D} size
@@ -45,7 +42,7 @@ define( function( require ) {
       shape.cubicCurveTo( width / 2, -height / 2, -width / 2, -height / 2, -width / 2, -height / 4 );
       shape.close();
 
-      var edgeNode = new Path( shape, {fill: color, stroke: color.colorUtilsDarker( 0.3 ),lineWidth: 0.5} );
+      var edgeNode = new Path( shape, {fill: color, stroke: color.colorUtilsDarker( 0.3 ), lineWidth: 0.5} );
       return edgeNode;
     }
 

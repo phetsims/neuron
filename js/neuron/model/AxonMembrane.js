@@ -165,7 +165,7 @@ define( function( require ) {
 
       },
       getState: function() {
-        if ( this.travelingActionPotential === null ) {
+        if ( !this.travelingActionPotential ) {
           return new AxonMembraneState( null );
         }
         else {
@@ -174,16 +174,16 @@ define( function( require ) {
       },
 
       setState: function( axonMembraneState ) {
-        if ( axonMembraneState.getTravelingActionPotentialState() === null && this.travelingActionPotential !== null ) {
+        if ( !axonMembraneState.getTravelingActionPotentialState() && this.travelingActionPotential  ) {
           // Get rid of the existing TAP.
           this.removeTravelingActionPotential();
         }
-        else if ( axonMembraneState.getTravelingActionPotentialState() !== null && this.travelingActionPotential === null ) {
+        else if ( axonMembraneState.getTravelingActionPotentialState()  && !this.travelingActionPotential ) {
           // A traveling action potential needs to be added.
           this.initiateTravelingActionPotential();
         }
 
-        if ( this.travelingActionPotential !== null ) {
+        if ( this.travelingActionPotential ) {
           // Set the state to match the new given state.
           this.travelingActionPotential.setState( axonMembraneState.getTravelingActionPotentialState() );
         }

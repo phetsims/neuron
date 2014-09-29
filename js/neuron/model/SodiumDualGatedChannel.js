@@ -190,7 +190,7 @@ define( function( require ) {
       // Initialize some internal state.
       this.gateState = GateState.IDLE;
       this.stateTransitionTimer = 0;
-      if ( this.hodgkinHuxleyModel !== null ) {
+      if ( this.hodgkinHuxleyModel ) {
         this.previousNormalizedConductance = this.calculateNormalizedConductance();
       }
 

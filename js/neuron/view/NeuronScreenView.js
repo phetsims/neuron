@@ -16,6 +16,7 @@ define( function( require ) {
   var Image = require( 'SCENERY/nodes/Image' );
   var HSlider = require( 'SUN/HSlider' );
   var Vector2 = require( 'DOT/Vector2' );
+  var Shape = require( 'KITE/Shape' );
   var Transform3 = require( 'DOT/Transform3' );
   var Matrix3 = require( 'DOT/Matrix3' );
   var Dimension2 = require( 'DOT/Dimension2' );
@@ -31,6 +32,8 @@ define( function( require ) {
   var AxonCrossSectionNode = require( 'NEURON/neuron/view/AxonCrossSectionNode' );
   var MembraneChannelNode = require( 'NEURON/neuron/view/MembraneChannelNode' );
   var MembranePotentialChart = require( 'NEURON/neuron/view/MembranePotentialChart' );
+  var IonsAndChannelsLegendPanel = require( 'NEURON/neuron/controlpanel/IonsAndChannelsLegendPanel' );
+
   var PlayPauseButton = require( 'SCENERY_PHET/PlayPauseButton' );
   var StepButton = require( 'SCENERY_PHET/StepButton' );
 
@@ -38,6 +41,7 @@ define( function( require ) {
   // images
   var mockupImage = require( 'image!NEURON/neuron-mockup.png' );
   // constants
+
 
   var BUTTON_FONT = new PhetFont( 18 );
 
@@ -80,8 +84,12 @@ define( function( require ) {
     this.addChild( new HSlider( mockupOpacityProperty, {min: 0, max: 1}, {top: 10, left: 10} ) );
 
 
+    var zoomableWorldNode = new Node( {
+      clipArea: Shape.rect( 0, 0, this.layoutBounds.maxX - 140, this.layoutBounds.maxY - 110 )
+    } );
+    thisView.addChild( zoomableWorldNode );
     var rootNode = new Node();
-    thisView.addChild( rootNode );
+    zoomableWorldNode.addChild( rootNode );
 
     // Create the layers in the desired order.
     var axonBodyLayer = new Node();
@@ -219,6 +227,10 @@ define( function( require ) {
 
     } );
 
+    var iosAndChannelsLegendPanel = new IonsAndChannelsLegendPanel();
+    this.addChild( iosAndChannelsLegendPanel );
+    iosAndChannelsLegendPanel.right = this.layoutBounds.maxX + 40;
+    iosAndChannelsLegendPanel.top = 40;
 
   }
 
