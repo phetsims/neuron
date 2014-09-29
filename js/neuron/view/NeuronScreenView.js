@@ -15,9 +15,12 @@ define( function( require ) {
   var ResetAllButton = require( 'SCENERY_PHET/ResetAllButton' );
   var Image = require( 'SCENERY/nodes/Image' );
   var HSlider = require( 'SUN/HSlider' );
+  var Vector2 = require( 'DOT/Vector2' );
+  var Transform3 = require( 'DOT/Transform3' );
+  var Matrix3 = require( 'DOT/Matrix3' );
+  var Dimension2 = require( 'DOT/Dimension2' );
   var Property = require( 'AXON/Property' );
   var ToggleProperty = require( 'AXON/ToggleProperty' );
-  var Vector2 = require( 'DOT/Vector2' );
   var Text = require( 'SCENERY/nodes/Text' );
   var RectangularPushButton = require( 'SUN/buttons/RectangularPushButton' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
@@ -51,10 +54,10 @@ define( function( require ) {
     thisView.model = neuronClockModelAdapter.model; // model is neuronmodel
     ScreenView.call( thisView, {renderer: 'svg', layoutBounds: ScreenView.UPDATED_LAYOUT_BOUNDS} );
 
+    var viewPortPosition = new Vector2( thisView.layoutBounds.width * 0.40, thisView.layoutBounds.height * 0.35 );
     // Set up the model-canvas transform.
     thisView.mvt = ModelViewTransform2.createSinglePointScaleInvertedYMapping(
-      Vector2.ZERO,
-      new Vector2( thisView.layoutBounds.width * 0.45, thisView.layoutBounds.height * 0.45 ),
+      Vector2.ZERO, viewPortPosition,
       1.8 ); // 3.9 Scale factor - smaller numbers "zoom out", bigger ones "zoom in".
 
 
@@ -147,8 +150,8 @@ define( function( require ) {
       content: new Text( 'Stimulate Neuron', { font: BUTTON_FONT } ),
       listener: function() { thisView.model.initiateStimulusPulse(); },
       baseColor: '#c28a43',
-      right: this.layoutBounds.maxX - 115,
-      bottom: this.layoutBounds.maxY - 60,
+      right: thisView.layoutBounds.maxX - 115,
+      bottom: thisView.layoutBounds.maxY - 60,
       minWidth: 50,
       minHeight: 35
     } );
@@ -178,6 +181,44 @@ define( function( require ) {
         membranePotentialChartNode.updateOnClockPaused();
       }
     } );
+
+    //Test for thermometer node
+    var zoomProperty = new Property( 1.2 );
+    var zoomSliderOptions = {
+      thumbSize: new Dimension2( 15, 22 ),
+      top: 150, left: 45,
+      trackSize: new Dimension2( 90, 1 )
+    };
+    var zoomSlider = new HSlider( zoomProperty, { min: 1.2, max: 4 }, zoomSliderOptions );
+    zoomSlider.rotation = -Math.PI / 2;
+    this.addChild( zoomSlider );
+
+
+    zoomProperty.link( function( zoomFactor ) {
+      // Skew the zoom a little so that when zoomed in the membrane
+      // is in a reasonable place and there is room for the chart below
+      // it.
+      var skewThreshold = 1.5;
+      var scaleMatrix;
+      var scaleAroundX;
+      var scaleAroundY;
+      if ( zoomFactor > skewThreshold ) {
+        scaleAroundX = Math.round( viewPortPosition.x );
+        scaleAroundY = (zoomFactor - skewThreshold) * thisView.model.getAxonMembrane().getCrossSectionDiameter() * 0.11;
+        scaleMatrix = Matrix3.translation( scaleAroundX, scaleAroundY ).timesMatrix( Matrix3.scaling( zoomFactor, zoomFactor ) ).timesMatrix( Matrix3.translation( -scaleAroundX, -scaleAroundY ) );
+      }
+      else {
+        scaleAroundX = (Math.round( viewPortPosition.x ));
+        scaleAroundY = 0;
+        scaleMatrix = Matrix3.translation( scaleAroundX, scaleAroundY ).timesMatrix( Matrix3.scaling( zoomFactor, zoomFactor ) ).timesMatrix( Matrix3.translation( -scaleAroundX, -scaleAroundY ) );
+
+      }
+
+      var scaleTransform = new Transform3( scaleMatrix );
+      rootNode.setTransform( scaleTransform );
+
+    } );
+
 
   }
 
