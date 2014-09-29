@@ -11,6 +11,7 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var CanvasNode = require( 'SCENERY/nodes/CanvasNode' );
   var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
+  var Color = require( 'SCENERY/util/Color' );
 
 
   /**
@@ -45,11 +46,7 @@ define( function( require ) {
 
       var thisNode = this;
 
-      if(allParticles.indexOf(undefined)>=0)
-      {
-        console.log("Undefined Particle at "+allParticles.indexOf(undefined));
-      }
-
+      var strokeColor = Color.BLACK;
       allParticles.forEach( function( particle ) {
         var color = particle.getRepresentationColor().copy();
         color.alpha = particle.getOpaqueness();
@@ -57,6 +54,8 @@ define( function( require ) {
         context.save();
         context.beginPath();
         context.fillStyle = color.toCSS();
+        context.lineWidth = 0.1;
+        context.strokeStyle = strokeColor.copy().setAlpha( particle.getOpaqueness() ).toCSS();
         switch( particle.getType() ) {
           case ParticleType.SODIUM_ION:
             var transformedRadius = thisNode.modelViewTransform.modelToViewDeltaX( particle.getRadius() );
@@ -68,7 +67,7 @@ define( function( require ) {
             var size = thisNode.modelViewTransform.modelToViewDeltaX( particle.getRadius() * 2 ) * 1.1;// TODO size  was  0.85 Ashraf
             context.translate( particleViewPosition.x, particleViewPosition.y );
             context.rotate( Math.PI / 4 );
-            context.fillRect( -size / 2, -size / 2, size, size );
+            context.rect( -size / 2, -size / 2, size, size );
             break;
 
           default:
@@ -79,6 +78,7 @@ define( function( require ) {
             break;
         }
         context.closePath();
+        context.stroke();
         context.fill();
         context.restore();
       } );

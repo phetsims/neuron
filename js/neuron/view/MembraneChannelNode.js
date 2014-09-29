@@ -45,7 +45,7 @@ define( function( require ) {
       shape.cubicCurveTo( width / 2, -height / 2, -width / 2, -height / 2, -width / 2, -height / 4 );
       shape.close();
 
-      var edgeNode = new Path( shape, {fill: color, stroke: color.colorUtilsDarker( 0.3 ),lineWidth: 1} );
+      var edgeNode = new Path( shape, {fill: color, stroke: color.colorUtilsDarker( 0.3 ),lineWidth: 0.5} );
       return edgeNode;
     }
 
@@ -76,12 +76,12 @@ define( function( require ) {
     if ( membraneChannelModel.getHasInactivationGate() ) {
 
       // Add the ball and string that make up the inactivation gate.
-      inactivationGateString = new Path( new Shape(), {lineWidth: 1, stroke: Color.BLACK} );
+      inactivationGateString = new Path( new Shape(), {lineWidth: 0.5, stroke: Color.BLACK} );
       thisNode.channelLayer.addChild( inactivationGateString );
 
       var ballDiameter = mvt.modelToViewDeltaX( membraneChannelModel.getChannelSize().width );
       var inactivationBallShape = new Shape().ellipse( 0, 0, ballDiameter / 2, ballDiameter / 2 );
-      inactivationGateBallNode = new Path( inactivationBallShape, {fill: membraneChannelModel.getEdgeColor().colorUtilsDarker( 0.3 ), lineWidth: 1, stroke: membraneChannelModel.getEdgeColor().colorUtilsDarker( 0.3 )} );
+      inactivationGateBallNode = new Path( inactivationBallShape, {fill: membraneChannelModel.getEdgeColor().colorUtilsDarker( 0.3 ), lineWidth: 0.5, stroke: membraneChannelModel.getEdgeColor().colorUtilsDarker( 0.3 )} );
       thisNode.edgeLayer.addChild( inactivationGateBallNode );
     }
 
