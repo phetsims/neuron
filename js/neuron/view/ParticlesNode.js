@@ -48,14 +48,12 @@ define( function( require ) {
 
       var strokeColor = Color.BLACK;
       allParticles.forEach( function( particle ) {
-        var color = particle.getRepresentationColor().copy();
-        color.alpha = particle.getOpaqueness();
         var particleViewPosition = thisNode.modelViewTransform.modelToViewPosition( particle.getPosition() );
         context.save();
         context.beginPath();
-        context.fillStyle = color.toCSS();
+        context.fillStyle = particle.getRepresentationColor().withAlpha( particle.getOpaqueness() ).toCSS();
         context.lineWidth = 0.1;
-        context.strokeStyle = strokeColor.copy().setAlpha( particle.getOpaqueness() ).toCSS();
+        context.strokeStyle = strokeColor.withAlpha( particle.getOpaqueness() ).toCSS();
         switch( particle.getType() ) {
           case ParticleType.SODIUM_ION:
             var transformedRadius = thisNode.modelViewTransform.modelToViewDeltaX( particle.getRadius() );

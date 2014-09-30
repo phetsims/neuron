@@ -14,6 +14,7 @@ define( function( require ) {
   var ScreenView = require( 'JOIST/ScreenView' );
   var ResetAllButton = require( 'SCENERY_PHET/ResetAllButton' );
   var Image = require( 'SCENERY/nodes/Image' );
+  var HBox = require( 'SCENERY/nodes/HBox' );
   var HSlider = require( 'SUN/HSlider' );
   var Vector2 = require( 'DOT/Vector2' );
   var Shape = require( 'KITE/Shape' );
@@ -58,11 +59,11 @@ define( function( require ) {
     thisView.model = neuronClockModelAdapter.model; // model is neuronmodel
     ScreenView.call( thisView, {renderer: 'svg', layoutBounds: ScreenView.UPDATED_LAYOUT_BOUNDS} );
 
-    var viewPortPosition = new Vector2( thisView.layoutBounds.width * 0.40, thisView.layoutBounds.height * 0.35 );
+    var viewPortPosition = new Vector2( thisView.layoutBounds.width * 0.42, thisView.layoutBounds.height * 0.38 );
     // Set up the model-canvas transform.
     thisView.mvt = ModelViewTransform2.createSinglePointScaleInvertedYMapping(
       Vector2.ZERO, viewPortPosition,
-      1.8 ); // 3.9 Scale factor - smaller numbers "zoom out", bigger ones "zoom in".
+      1.6 ); // 3.9 Scale factor - smaller numbers "zoom out", bigger ones "zoom in".
 
 
     // Create and add the Reset All Button in the bottom right
@@ -77,7 +78,7 @@ define( function( require ) {
     this.addChild( resetAllButton );
 
     //Show the mock-up and a slider to change its transparency
-    var mockupOpacityProperty = new Property( 0.8 );
+    var mockupOpacityProperty = new Property( 0 );
     var image = new Image( mockupImage, {pickable: false} );
     mockupOpacityProperty.linkAttribute( image, 'opacity' );
     this.addChild( image );
@@ -134,25 +135,33 @@ define( function( require ) {
     var particlesNode = new ParticlesNode( thisView.model, thisView.mvt, thisView.layoutBounds );
     particleLayer.addChild( particlesNode );
 
+    var recordPlayButtons = [];
+
 
     // Add play/pause button
     var playToggleProperty = new ToggleProperty( true, false, neuronClockModelAdapter.pausedProperty );
-    var playPauseButton = new PlayPauseButton( playToggleProperty,
-      {
-        bottom: thisView.layoutBounds.bottom - 25,
-        centerX: thisView.layoutBounds.centerX - 18,
-        radius: 25
-      } );
-
-    this.addChild( playPauseButton );
+    var playPauseButton = new PlayPauseButton( playToggleProperty, { radius: 25 } );
 
     var forwardStepButton = new StepButton( function() { neuronClockModelAdapter.stepClockWhilePaused(); }, playToggleProperty ).mutate( {scale: 1} );
     thisView.model.pausedProperty.linkAttribute( forwardStepButton, 'enabled' );
-    this.addChild( forwardStepButton.mutate( {left: playPauseButton.right + 10, centerY: playPauseButton.centerY} ) );
 
     var backwardStepButton = new StepButton( function() { neuronClockModelAdapter.stepClockBackWhilePaused(); }, playToggleProperty ).mutate( {scale: 1} );
     thisView.model.pausedProperty.linkAttribute( backwardStepButton, 'enabled' );
-    this.addChild( backwardStepButton.mutate( {left: playPauseButton.left - 50, centerY: playPauseButton.centerY} ) );
+
+    recordPlayButtons.push( backwardStepButton );
+    recordPlayButtons.push( playPauseButton );
+    recordPlayButtons.push( forwardStepButton );
+
+    var recordPlayButtonBox = new HBox( {
+      children: recordPlayButtons,
+      align: 'left',
+      spacing: 5,
+      right: thisView.layoutBounds.maxX - 350,
+      bottom: thisView.layoutBounds.maxY - 30
+    } );
+
+    this.addChild( recordPlayButtonBox );
+
 
     var stimulateNeuronButton = new RectangularPushButton( {
       content: new Text( 'Stimulate Neuron', { font: BUTTON_FONT } ),
