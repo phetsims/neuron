@@ -58,7 +58,6 @@ define( function( require ) {
 
   return inherit( GatedChannel, PotassiumGatedChannel, {
     stepInTime: function( dt ) {
-     return;
       var prevCenterLocation = this.centerLocation.copy();
       var prevOpenness = this.openness;
       var prevInActivationAmt = this.inactivationAmt;
