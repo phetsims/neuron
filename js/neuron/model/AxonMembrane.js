@@ -357,66 +357,7 @@ define( function( require ) {
 //    }
 //  }
 //
-//  /**
-//   * Create the shape of the axon body based on the size and position of the
-//   * cross section and some other fixed parameters.  This is a 2D shape that
-//   * is intended to look like a receding 3D shape when presented in the
-//   * view, so its creation is a little unusual.
-//   */
-//  private Shape createAxonBodyShape(){
 
-//  }
-//
-
-//
-//  /**
-//   * Start an action potential that will travel down the length of the
-//   * membrane toward the transverse cross section.
-//   */
-//  public void initiateTravelingActionPotential(){
-//    travelingActionPotential = new TravelingActionPotential(this);
-//    travelingActionPotential.addListener(new TravelingActionPotential.Adapter(){
-//      public void crossSectionReached() {
-//        notifyTravelingActionPotentialReachedCrossSection();
-//      }
-//      public void lingeringCompleted() {
-//        removeTravelingActionPotential();
-//      }
-//    });
-//    notifyTravelingActionPotentialStarted();
-//  }
-//
-
-
-//
-
-
-//
-//  public void addListener(Listener listener){
-//    listeners.add(listener);
-//  }
-//
-//  public void removeListener(Listener listener){
-//    listeners.remove(listener);
-//  }
-//
-//  private void notifyTravelingActionPotentialStarted(){
-//    for (Listener listener : listeners){
-//      listener.travelingActionPotentialStarted();
-//    }
-//  }
-//
-//  private void notifyTravelingActionPotentialReachedCrossSection(){
-//    for (Listener listener : listeners){
-//      listener.travelingActionPotentialReachedCrossSection();
-//    }
-//  }
-//
-//  private void notifyTravelingActionPotentialEnded(){
-//    for (Listener listener : listeners){
-//      listener.travelingActionPotentialEnded();
-//    }
-//  }
 //
 //  public class AxonMembraneState {
 //    private final TravelingActionPotentialState travelingActionPotentialState;

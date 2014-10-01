@@ -17,6 +17,7 @@ define( function( require ) {
   var HBox = require( 'SCENERY/nodes/HBox' );
   var HSlider = require( 'SUN/HSlider' );
   var Vector2 = require( 'DOT/Vector2' );
+  var Bounds2 = require( 'DOT/Bounds2' );
   var Shape = require( 'KITE/Shape' );
   var Transform3 = require( 'DOT/Transform3' );
   var Matrix3 = require( 'DOT/Matrix3' );
@@ -132,19 +133,15 @@ define( function( require ) {
     // Add a node on every new Channel Model
     thisView.model.membraneChannels.addItemAddedListener( handleChannelAdded );
 
-    var particlesNode = new ParticlesNode( thisView.model, thisView.mvt, thisView.layoutBounds );
+    var particleBounds = new Bounds2( 0, 0, this.layoutBounds.maxX - 140, this.layoutBounds.maxY - 110 );
+    var particlesNode = new ParticlesNode( thisView.model, thisView.mvt, particleBounds );
     particleLayer.addChild( particlesNode );
 
     var recordPlayButtons = [];
-
-
-    // Add play/pause button
     var playToggleProperty = new ToggleProperty( true, false, neuronClockModelAdapter.pausedProperty );
     var playPauseButton = new PlayPauseButton( playToggleProperty, { radius: 25 } );
-
     var forwardStepButton = new StepButton( function() { neuronClockModelAdapter.stepClockWhilePaused(); }, playToggleProperty ).mutate( {scale: 1} );
     thisView.model.pausedProperty.linkAttribute( forwardStepButton, 'enabled' );
-
     var backwardStepButton = new StepButton( function() { neuronClockModelAdapter.stepClockBackWhilePaused(); }, playToggleProperty ).mutate( {scale: 1} );
     thisView.model.pausedProperty.linkAttribute( backwardStepButton, 'enabled' );
 

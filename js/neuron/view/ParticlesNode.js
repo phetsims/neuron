@@ -40,46 +40,52 @@ define( function( require ) {
     // @param {CanvasContextWrapper} wrapper
     paintCanvas: function( wrapper ) {
       var context = wrapper.context;
-      var allParticles = this.neuronModel.backgroundParticles.getArray();
-      allParticles = allParticles.concat( this.neuronModel.transientParticles.getArray() );
-      allParticles = allParticles.concat( this.neuronModel.playbackParticles.getArray() );
-
       var thisNode = this;
 
-      var strokeColor = Color.BLACK;
-      allParticles.forEach( function( particle ) {
-        var particleViewPosition = thisNode.modelViewTransform.modelToViewPosition( particle.getPosition() );
-        context.save();
-        context.beginPath();
-        context.fillStyle = particle.getRepresentationColor().withAlpha( particle.getOpaqueness() ).toCSS();
-        context.lineWidth = 0.1;
-        context.strokeStyle = strokeColor.withAlpha( particle.getOpaqueness() ).toCSS();
-        switch( particle.getType() ) {
-          case ParticleType.SODIUM_ION:
-            var transformedRadius = thisNode.modelViewTransform.modelToViewDeltaX( particle.getRadius() );
-            context.translate( particleViewPosition.x, particleViewPosition.y );
-            context.arc( 0, 0, transformedRadius, 0, 2 * Math.PI, true );
-            break;
+      function renderParticles( particles ) {
+        var strokeColor = Color.BLACK;
+        particles.forEach( function( particle ) {
+          var particleViewPosition = thisNode.modelViewTransform.modelToViewPosition( particle.getPositionReference() );
+          context.save();
+          context.beginPath();
+          context.fillStyle = particle.getRepresentationColor().withAlpha( particle.getOpaqueness() ).toCSS();
+          context.lineWidth = 0.1;
+          context.strokeStyle = strokeColor.withAlpha( particle.getOpaqueness() ).toCSS();
+          switch( particle.getType() ) {
+            case ParticleType.SODIUM_ION:
+              var transformedRadius = thisNode.modelViewTransform.modelToViewDeltaX( particle.getRadius() ) | 0;
+              context.translate( particleViewPosition.x | 0, particleViewPosition.y | 0 ); // eliminate floating coordinates
+              context.arc( 0, 0, transformedRadius, 0, 2 * Math.PI, true );
+              break;
 
-          case ParticleType.POTASSIUM_ION:
-            var size = thisNode.modelViewTransform.modelToViewDeltaX( particle.getRadius() * 2 ) * 1.1;// TODO size  was  0.85 Ashraf
-            context.translate( particleViewPosition.x, particleViewPosition.y );
-            context.rotate( Math.PI / 4 );
-            context.rect( -size / 2, -size / 2, size, size );
-            break;
+            case ParticleType.POTASSIUM_ION:
+              var size = thisNode.modelViewTransform.modelToViewDeltaX( particle.getRadius() * 2 ) * 1.1;// TODO size  was  0.85 Ashraf
+              size = size | 0;
+              context.translate( particleViewPosition.x | 0, particleViewPosition.y | 0 );
+              context.rotate( Math.PI / 4 );
+              context.rect( -size / 2, -size / 2, size, size );
+              break;
 
-          default:
-            console.log( particle.getType() + " - Warning: No specific shape for this particle type, defaulting to sphere." );
-            var defaultSphereRadius = thisNode.modelViewTransform.modelToViewDeltaX( particle.getRadius() );
-            context.translate( particleViewPosition.x, particleViewPosition.y );
-            context.arc( 0, 0, defaultSphereRadius, 0, 2 * Math.PI, true );
-            break;
-        }
-        context.closePath();
-        context.stroke();
-        context.fill();
-        context.restore();
-      } );
+            default:
+              console.log( particle.getType() + " - Warning: No specific shape for this particle type, defaulting to sphere." );
+              var defaultSphereRadius = thisNode.modelViewTransform.modelToViewDeltaX( particle.getRadius() );
+              context.translate( particleViewPosition.x, particleViewPosition.y );
+              context.arc( 0, 0, defaultSphereRadius, 0, 2 * Math.PI, true );
+              break;
+          }
+          context.closePath();
+          context.stroke();
+          context.fill();
+          context.restore();
+        } );
+
+      }
+
+      renderParticles( this.neuronModel.backgroundParticles );
+      renderParticles( this.neuronModel.transientParticles );
+      renderParticles( this.neuronModel.playbackParticles );
+
+
     }
 
   } );

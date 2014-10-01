@@ -58,6 +58,10 @@ define( function( require ) {
 
   return inherit( GatedChannel, PotassiumGatedChannel, {
     stepInTime: function( dt ) {
+     return;
+      var prevCenterLocation = this.centerLocation.copy();
+      var prevOpenness = this.openness;
+      var prevInActivationAmt = this.inactivationAmt;
       GatedChannel.prototype.stepInTime.call( this, dt );
       // Update the openness factor based on the state of the HH model.
       // This is very specific to the model and the type of channel.  Note
@@ -82,6 +86,8 @@ define( function( require ) {
           this.restartCaptureCountdownTimer( true );
         }
       }
+
+      this.notifyIfMembraneStateChanged( prevCenterLocation, prevOpenness, prevInActivationAmt );
     },
     //@Override
     reset: function() {

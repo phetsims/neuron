@@ -36,14 +36,15 @@ define( function( require ) {
 
     ViewableParticle.call( this, {} );
     PropertySet.call( this, {
-      // Location in space of this particle, units are nano-meters.
-      position: new Vector2( xPos, yPos ),
-
-      // Opaqueness value, ranges from 0 (completely transparent) to 1
-      // (completely opaque).
-      opaqueness: 1,
-      continueExisting: true // particles while removing themselves will set this property to false
+      // particles while removing themselves will set this property to false
+      continueExisting: true
     } );
+
+    // Location in space of this particle, units are nano-meters.
+    this.position = new Vector2( xPos, yPos );
+    // Opaqueness value, ranges from 0 (completely transparent) to 1
+    // (completely opaque).
+    this.opaqueness = 1;
 
     // Motion strategy for moving this particle around.
     this.motionStrategy = new StillnessMotionStrategy();

@@ -68,14 +68,6 @@ define( function( require ) {
       thisNode.setOpacity( newOpaqueness );
     }
 
-    particle.positionProperty.link( function( newPosition ) {
-      updateOffset( newPosition );
-    } );
-
-    particle.opaquenessProperty.link( function( newOpaqueness ) {
-      updateRepresentation( newOpaqueness );
-    } );
-
     updateOffset( particle.getPosition() );
     updateRepresentation( particle.getOpaqueness() );
   }

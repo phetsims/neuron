@@ -31,11 +31,10 @@ define( function( require ) {
 
     //ViewableParticle is a PropertySet
     ViewableParticle.call( this, {
-      appearanceChanged: false,
-      position: particle.getPosition().copy()
+      appearanceChanged: false
     } );
 
-
+    this.position=particle.getPosition().copy();
     this.opaqueness = particle.getOpaqueness();
     this.representationColor = particle.getRepresentationColor();
     this.radius = particle.getRadius();

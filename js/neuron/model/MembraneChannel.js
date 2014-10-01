@@ -40,14 +40,16 @@ define( function( require ) {
     var thisChannel = this;
 
     PropertySet.call( thisChannel, {
-      //position of the channel
-      centerLocation: new Vector2(),
-      // Variable that defines how open the channel is.Valid range is 0 to 1, 0 means fully closed, 1 is fully open.
-      openness: 0,
-      // Variable that defines how inactivated the channel is, which is distinct from openness.
-      // Valid range is 0 to 1, 0 means completely active, 1 is completely inactive.
-      inactivationAmt: 0
+      channelStateChanged: false
     } );
+
+    //position of the channel
+    this.centerLocation = new Vector2();
+    // Variable that defines how open the channel is.Valid range is 0 to 1, 0 means fully closed, 1 is fully open.
+    this.openness = 0;
+    // Variable that defines how inactivated the channel is, which is distinct from openness.
+    // Valid range is 0 to 1, 0 means completely active, 1 is completely inactive.
+    this.inactivationAmt = 0;
 
     // Reference to the model that contains that particles that will be moving
     // through this channel.
@@ -90,6 +92,8 @@ define( function( require ) {
      * @param dt - Amount of time step, in milliseconds.
      */
     stepInTime: function( dt ) {
+
+
       if ( this.captureCountdownTimer !== Number.POSITIVE_INFINITY ) {
         if ( this.isOpen() ) {
           this.captureCountdownTimer -= dt;
@@ -249,20 +253,19 @@ define( function( require ) {
       this.openness = openness;
     },
     setRotationalAngle: function( rotationalAngle ) {
-      this.rotationalAngle = rotationalAngle;// will fire prop change listener
-      this.interiorCaptureZone.setRotationalAngle(rotationalAngle);
-      this.exteriorCaptureZone.setRotationalAngle(rotationalAngle);
+      this.rotationalAngle = rotationalAngle;
+      this.interiorCaptureZone.setRotationalAngle( rotationalAngle );
+      this.exteriorCaptureZone.setRotationalAngle( rotationalAngle );
     },
     getRotationalAngle: function() {
       return this.rotationalAngle;
     },
 
-
     setCenterLocation: function( newCenterLocation ) {
       if ( !newCenterLocation.equals( this.centerLocation ) ) {
-        this.centerLocation = newCenterLocation;// will fire prop change listener
-        this.interiorCaptureZone.setOriginPoint(newCenterLocation);
-        this.exteriorCaptureZone.setOriginPoint(newCenterLocation);
+        this.centerLocation = newCenterLocation;
+        this.interiorCaptureZone.setOriginPoint( newCenterLocation );
+        this.exteriorCaptureZone.setOriginPoint( newCenterLocation );
       }
     },
     /**
@@ -285,6 +288,17 @@ define( function( require ) {
       return new MembraneChannelState( this );
     },
 
+    /*
+     The Mebrane Channel Node observed centerLocation,openness and inactivation
+     properties seperatly.This resulted in performance problem.This method checks
+     notifies a change in state if one of these properties change.
+     */
+    notifyIfMembraneStateChanged: function( prevCenterLocation, prevOpenness, prevInActivationAmt ) {
+      if ( !prevCenterLocation.equals( this.centerLocation ) || prevOpenness !== this.openness || prevInActivationAmt !== this.inactivationAmt ) {
+        this.channelStateChanged = !this.channelStateChanged;
+      }
+    },
+
     /**
      * Set the state of a membrane channel.  This is generally used in support
      * of the record-and-playback functionality.
@@ -293,7 +307,7 @@ define( function( require ) {
       this.setOpenness( state.getOpenness() );
       this.setInactivationAmt( state.getInactivationAmt() );
     }
-//
+
   } );
 } );
 

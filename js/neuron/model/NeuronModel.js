@@ -346,9 +346,9 @@ define( function( require ) {
 
       // Step the transient particles.  Since these particles may remove
       // themselves as a result of being stepped, we need to copy the list
-      // in order to avoid concurrent modification exceptions.
-      var particlesCopy = this.transientParticles.getArray().slice();
-      particlesCopy.forEach( function( particle ) {
+      // in order to avoid concurrent modification exceptions. (Not true in JavaScript, kept the comment for ref - Ashraf)
+
+      this.transientParticles.forEach( function( particle ) {
         particle.stepInTime( dt );
       } );
 
@@ -438,6 +438,7 @@ define( function( require ) {
       if ( concentrationChanged ) {
         this.concentrationChangedProperty.set( !this.concentrationChanged ); // trigger property change
       }
+
 
       //invert the value and trigger change event
       this.particlesStateChangedProperty.set( !this.particlesStateChangedProperty.get() );
@@ -540,6 +541,7 @@ define( function( require ) {
      * @return
      */
     requestParticleThroughChannel: function( particleType, channel, maxVelocity, direction ) {
+
       var captureZone;
       if ( direction === MembraneCrossingDirection.IN_TO_OUT ) {
         captureZone = channel.getInteriorCaptureZone();
@@ -556,6 +558,8 @@ define( function( require ) {
       // Set a motion strategy that will cause this particle to move across
       // the membrane.
       channel.moveParticleThroughNeuronMembrane( particleToCapture, maxVelocity );
+
+
     },
 
 
@@ -649,7 +653,7 @@ define( function( require ) {
         newParticle.setPosition( location );
       }
       var thisModel = this;
-      newParticle.continueExistingProperty.link( function( newValue ) {
+      newParticle.continueExistingProperty.lazyLink( function( newValue ) {
         if ( !newValue ) {
           thisModel.transientParticles.remove( newParticle );
         }
@@ -902,9 +906,9 @@ define( function( require ) {
     createBackgroundParticle: function( particleType ) {
 
       var newParticle = ParticleFactory.createParticle( particleType );
-      this.backgroundParticles.push( newParticle );
+      this.backgroundParticles.add( newParticle );
 
-      newParticle.continueExistingProperty.link( function( newValue ) {
+      newParticle.continueExistingProperty.lazyLink( function( newValue ) {
         if ( newValue === false ) {
           this.backgroundParticles.remove( newParticle );
         }
@@ -1062,38 +1066,6 @@ define( function( require ) {
 } )
 ;
 
-// Copyright 2002-2011, University of Colorado
-
-//package edu.colorado.phet.neuron.model;
-//
-//import java.awt.geom.Point2D;
-//import java.awt.geom.Rectangle2D;
-//import java.util.ArrayList;
-//import java.util.EventListener;
-//import java.util.HashMap;
-//import java.util.Random;
-//
-//import javax.swing.event.EventListenerList;
-//
-//import edu.colorado.phet.common.phetcommon.model.clock.ClockAdapter;
-//import edu.colorado.phet.common.phetcommon.model.clock.ClockEvent;
-//import edu.colorado.phet.common.phetcommon.model.clock.ConstantDtClock;
-//import edu.colorado.phet.common.phetcommon.model.clock.ConstantDtClock.ConstantDtClockEvent;
-//import edu.colorado.phet.common.phetcommon.model.clock.ConstantDtClock.ConstantDtClockListener;
-//import edu.colorado.phet.common.phetcommon.util.SimpleObserver;
-//import edu.colorado.phet.neuron.model.AxonMembrane.AxonMembraneState;
-//import edu.colorado.phet.neuron.model.MembraneChannel.MembraneChannelState;
-//import edu.colorado.phet.neuron.module.NeuronDefaults;
-//import edu.colorado.phet.neuron.view.MembranePotentialChart;
-//import edu.colorado.phet.recordandplayback.model.RecordAndPlaybackModel;
-//
-///**
-// * This class represents the main class for modeling the axon.  It acts as the
-// * central location where the interaction between the membrane, the particles
-// * (i.e. ions), and the gates is all governed.
-// *
-// * @author John Blanco
-// */
 //public class NeuronModel extends RecordAndPlaybackModel<NeuronModel.NeuronModelState> implements IParticleCapture {
 
 
@@ -1205,32 +1177,7 @@ define( function( require ) {
 //    }
 //  }
 //
-//  public double getSodiumExteriorConcentration() {
-//    if (isPlayback()){
-//      return neuronModelPlaybackState.getSodiumExteriorConcentration();
-//    }
-//    else{
-//      return sodiumExteriorConcentration;
-//    }
-//  }
-//
-//  public double getPotassiumInteriorConcentration() {
-//    if (isPlayback()){
-//      return neuronModelPlaybackState.getPotassiumInteriorConcentration();
-//    }
-//    else{
-//      return potassiumInteriorConcentration;
-//    }
-//  }
-//
-//  public double getPotassiumExteriorConcentration() {
-//    if (isPlayback()){
-//      return neuronModelPlaybackState.getPotassiumExteriorConcentration();
-//    }
-//    else{
-//      return potassiumExteriorConcentration;
-//    }
-//  }
+
 //
 
 
@@ -1309,57 +1256,13 @@ define( function( require ) {
 //    }
 //  }
 //
-//  /**
-//   * Get a boolean value that indicates whether the initiation of a new
-//   * stimulus (i.e. action potential) is currently locked out.  This is done
-//   * to prevent the situation where multiple action potentials are moving
-//   * down the membrane at the same time.
-//   *
-//   * @return
-//   */
-//  public boolean isStimulusInitiationLockedOut(){
-//    return stimulasLockout;
-//  }
-//
 
 //
 
 //
-//  /**
-//   * Create a particle of the specified type and add it to the model.
-//   *
-//   * @param particleType
-//   * @return
-//   */
-//  private Particle createBackgroundParticle(ParticleType particleType){
-//
-//    final Particle newParticle = Particle.createParticle(particleType);
-//    backgroundParticles.add(newParticle);
-//
-//    // Listen to the particle for notification of its removal.
-//    newParticle.addListener(new ParticleListenerAdapter(){
-//      public void removedFromModel() {
-//        backgroundParticles.remove(newParticle);
-//      }
-//    });
-//
-//    // Send notification that this particle has come into existence.
-//    notifyParticleAdded(newParticle);
-//
-//    return newParticle;
-//  }
-//
 
-//
-//  /**
-//   * Get the state of this model.  This is generally used in support of the
-//   * record-and-playback feature, and the return value contains just enough
-//   * state information to support this feature.
-//   */
-//  private NeuronModelState getState(){
-//    return new NeuronModelState(this);
-//  }
-//
+
+
 
 //
 //  /**
@@ -1373,55 +1276,9 @@ define( function( require ) {
 //    return playbackSpeed;
 //  }
 //
-//  public void addListener(Listener listener){
-//    listeners.add(Listener.class, listener);
-//  }
-//
-//  public void removeListener(Listener listener){
-//    listeners.remove(Listener.class, listener);
-//  }
-//
-//  private void notifyChannelAdded(MembraneChannel channel){
-//    for (Listener listener : listeners.getListeners(Listener.class)){
-//      listener.channelAdded(channel);
-//    }
-//  }
-//
-//  private void notifyParticleAdded(IViewableParticle particle){
-//    for (Listener listener : listeners.getListeners(Listener.class)){
-//      listener.particleAdded(particle);
-//    }
-//  }
-//
-//  private void notifyStimulusPulseInitiated(){
-//    for (Listener listener : listeners.getListeners(Listener.class)){
-//      listener.stimulusPulseInitiated();
-//    }
-//  }
-//
-//  private void notifyMembranePotentialChanged(){
-//    for (Listener listener : listeners.getListeners(Listener.class)){
-//      listener.membranePotentialChanged();
-//    }
-//  }
-//
-//  private void notifyConcentrationReadoutVisibilityChanged(){
-//    for (Listener listener : listeners.getListeners(Listener.class)){
-//      listener.concentrationReadoutVisibilityChanged();
-//    }
-//  }
-//
-//  private void notifyPotentialChartVisibilityChanged(){
-//    for (Listener listener : listeners.getListeners(Listener.class)){
-//      listener.potentialChartVisibilityChanged();
-//    }
-//  }
-//
-//  private void notifyChargesShownChanged(){
-//    for (Listener listener : listeners.getListeners(Listener.class)){
-//      listener.chargesShownChanged();
-//    }
-//  }
+
+
+
 //
 //  private void notifyAllIonsSimulatedChanged(){
 //    for (Listener listener : listeners.getListeners(Listener.class)){
@@ -1521,233 +1378,5 @@ define( function( require ) {
 //    public void concentrationChanged();
 //  }
 //
-//  public static class Adapter implements Listener{
-//    public void channelAdded(MembraneChannel channel) {}
-//    public void particleAdded(IViewableParticle particle) {}
-//    public void stimulusPulseInitiated() {}
-//    public void potentialChartVisibilityChanged() {}
-//    public void stimulationLockoutStateChanged() {}
-//    public void allIonsSimulatedChanged() {}
-//    public void chargesShownChanged() {}
-//    public void membranePotentialChanged() {}
-//    public void concentrationChanged() {}
-//    public void concentrationReadoutVisibilityChanged() {}
-//  }
-//
-//  /**
-//   * This class contains state information about the model for a given point
-//   * in time.  It contains enough information for the playback feature, but
-//   * not necessarily enough to fully restore the simulation to an arbitrary
-//   * point in time.
-//   */
-//  public static class NeuronModelState {
-//
-//    private final AxonMembraneState axonMembraneState;
-//    private final HashMap< MembraneChannel, MembraneChannel.MembraneChannelState > membraneChannelStateMap =
-//                                            new HashMap<MembraneChannel, MembraneChannelState>();
-//    private final ArrayList<ParticlePlaybackMemento> particlePlaybackMementos =
-//                  new ArrayList<ParticlePlaybackMemento>();
-//    private final double membranePotential;
-//    private final double sodiumInteriorConcentration;
-//    private final double sodiumExteriorConcentration;
-//    private final double potassiumInteriorConcentration;
-//    private final double potassiumExteriorConcentration;
-//
-//    /**
-//     * Constructor, which extracts the needed state information from the
-//     * model.
-//     *
-//     * @param neuronModel
-//     */
-//    public NeuronModelState(NeuronModel neuronModel){
-//
 
-//    }
-//
-//    protected AxonMembraneState getAxonMembraneState() {
-//      return axonMembraneState;
-//    }
-//
-//    protected HashMap<MembraneChannel, MembraneChannel.MembraneChannelState> getMembraneChannelStateMap() {
-//      return membraneChannelStateMap;
-//    }
-//
-//    protected ArrayList<ParticlePlaybackMemento> getPlaybackParticleMementos() {
-//      return particlePlaybackMementos;
-//    }
-//
-//    protected double getMembranePotential() {
-//      return membranePotential;
-//    }
-//
-//    protected double getSodiumInteriorConcentration() {
-//      return sodiumInteriorConcentration;
-//    }
-//
-//    protected double getSodiumExteriorConcentration() {
-//      return sodiumExteriorConcentration;
-//    }
-//
-//    protected double getPotassiumInteriorConcentration() {
-//      return potassiumInteriorConcentration;
-//    }
-//
-//    protected double getPotassiumExteriorConcentration() {
-//      return potassiumExteriorConcentration;
-//    }
-//  }
-//
-
-//
-//  @Override
-//  public void stepInTime(double simulationTimeChange) {
-//    if (simulationTimeChange < 0 && getPlaybackSpeed() > 0){
-//      // This is a step backwards in time but the record-and-playback
-//      // model is not set up for backstepping, so set it up for
-//      // backwards stepping.
-//      setPlayback(-1);  // The -1 indicates playing in reverse.
-//      if (getTime() > getMaxRecordedTime()){
-//        setTime(getMaxRecordedTime());
-//      }
-//    }
-//    else if (getPlaybackSpeed() < 0 && simulationTimeChange > 0 && isPlayback()){
-//      // This is a step forward in time but the record-and-playback
-//      // model is set up for backwards stepping, so straighten it out.
-//      setPlayback(1);
-//    }
-//
-//    super.stepInTime(simulationTimeChange);
-//
-//    // If we are currently in playback mode and we have reached the end of
-//    // the recorded data, we should automatically switch to record mode.
-//    if (isPlayback() && getTime() >= getMaxRecordedTime()){
-//      setModeRecord();
-//      setPaused(false);
-//    }
-//  }
-//
-//  @Override
-//  public NeuronModelState step(double dt) {
-//    // Step the membrane in time.  This is done prior to stepping the
-//    // HH model because the traveling action potential is part of the
-//    // membrane, so if it reaches the cross section in this time step the
-//    // membrane potential will be modified.
-//    axonMembrane.stepInTime( dt );
-//
-//    // This is a step forward in time.  Update the value of the
-//    // membrane potential by stepping the Hodgkins-Huxley model.
-//    hodgkinHuxleyModel.stepInTime( dt );
-//
-//    // There is a bit of a threshold on sending out notifications of
-//    // membrane voltage changes, since otherwise the natural "noise" in
-//    // the model causes notifications to be sent out continuously.
-//    if (Math.abs(previousMembranePotential - hodgkinHuxleyModel.getMembraneVoltage()) > MEMBRANE_POTENTIAL_CHANGE_THRESHOLD){
-//      previousMembranePotential = hodgkinHuxleyModel.getMembraneVoltage();
-//      notifyMembranePotentialChanged();
-//    }
-//
-//    // Update the stimulus lockout state.
-//    updateStimulasLockoutState();
-//
-//    // Step the channels.
-//    for (MembraneChannel channel : membraneChannels){
-//      channel.stepInTime( dt );
-//    }
-//
-//    // Step the transient particles.  Since these particles may remove
-//    // themselves as a result of being stepped, we need to copy the list
-//    // in order to avoid concurrent modification exceptions.
-//    ArrayList<Particle> particlesCopy = new ArrayList<Particle>(transientParticles);
-//    for (Particle particle : particlesCopy){
-//      particle.stepInTime( dt );
-//    }
-//
-//    // Step the background particles, which causes them to exhibit a
-//    // little Brownian motion.
-//    for (Particle backgroundParticle : backgroundParticles){
-//      backgroundParticle.stepInTime( dt );
-//    }
-//
-//    // Adjust the overall potassium and sodium concentration levels based
-//    // parameters of the HH model.  This is done solely to provide values
-//    // that can be displayed to the user, and are not used for anything
-//    // else in the model.
-//    boolean concentrationChanged = false;
-//    double potassiumConductance = hodgkinHuxleyModel.get_delayed_n4(CONCENTRATION_READOUT_DELAY);
-//    if (potassiumConductance != 0){
-//      // Potassium is moving out of the cell as part of the process of
-//      // an action potential, so adjust the interior and exterior
-//      // concentration values.
-//      potassiumExteriorConcentration += potassiumConductance * dt * EXTERIOR_CONCENTRATION_CHANGE_RATE_POTASSIUM;
-//      potassiumInteriorConcentration -= potassiumConductance * dt * INTERIOR_CONCENTRATION_CHANGE_RATE_POTASSIUM;
-//      concentrationChanged = true;
-//    }
-//    else{
-//      if (potassiumExteriorConcentration != NOMINAL_POTASSIUM_EXTERIOR_CONCENTRATION){
-//        double difference = Math.abs(potassiumExteriorConcentration - NOMINAL_POTASSIUM_EXTERIOR_CONCENTRATION);
-//        if (difference < CONCENTRATION_DIFF_THRESHOLD){
-//          // Close enough to consider it fully restored.
-//          potassiumExteriorConcentration = NOMINAL_POTASSIUM_EXTERIOR_CONCENTRATION;
-//        }
-//        else{
-//          // Move closer to the nominal value.
-//          potassiumExteriorConcentration -= difference * CONCENTRATION_RESTORATION_FACTOR * dt;
-//        }
-//        concentrationChanged = true;
-//      }
-//      if (potassiumInteriorConcentration != NOMINAL_POTASSIUM_INTERIOR_CONCENTRATION){
-//        double difference = Math.abs(potassiumInteriorConcentration - NOMINAL_POTASSIUM_INTERIOR_CONCENTRATION);
-//        if (difference < CONCENTRATION_DIFF_THRESHOLD){
-//          // Close enough to consider it fully restored.
-//          potassiumInteriorConcentration = NOMINAL_POTASSIUM_INTERIOR_CONCENTRATION;
-//        }
-//        else{
-//          // Move closer to the nominal value.
-//          potassiumInteriorConcentration += difference * CONCENTRATION_RESTORATION_FACTOR * dt;
-//        }
-//        concentrationChanged = true;
-//      }
-//    }
-//    double sodiumConductance = hodgkinHuxleyModel.get_delayed_m3h(CONCENTRATION_READOUT_DELAY);
-//    if (hodgkinHuxleyModel.get_m3h() != 0){
-//      // Sodium is moving in to the cell as part of the process of an
-//      // action potential, so adjust the interior and exterior
-//      // concentration values.
-//      sodiumExteriorConcentration -= sodiumConductance * dt * EXTERIOR_CONCENTRATION_CHANGE_RATE_SODIUM;
-//      sodiumInteriorConcentration += sodiumConductance * dt * INTERIOR_CONCENTRATION_CHANGE_RATE_SODIUM;
-//      concentrationChanged = true;
-//    }
-//    else{
-//      if (sodiumExteriorConcentration != NOMINAL_SODIUM_EXTERIOR_CONCENTRATION){
-//        double difference = Math.abs(sodiumExteriorConcentration - NOMINAL_SODIUM_EXTERIOR_CONCENTRATION);
-//        if (difference < CONCENTRATION_DIFF_THRESHOLD){
-//          // Close enough to consider it fully restored.
-//          sodiumExteriorConcentration = NOMINAL_SODIUM_EXTERIOR_CONCENTRATION;
-//        }
-//        else{
-//          // Move closer to the nominal value.
-//          sodiumExteriorConcentration += difference * CONCENTRATION_RESTORATION_FACTOR * dt;
-//        }
-//        concentrationChanged = true;
-//      }
-//      if (sodiumInteriorConcentration != NOMINAL_SODIUM_INTERIOR_CONCENTRATION){
-//        double difference = Math.abs(sodiumInteriorConcentration - NOMINAL_SODIUM_INTERIOR_CONCENTRATION);
-//        if (difference < CONCENTRATION_DIFF_THRESHOLD){
-//          // Close enough to consider it fully restored.
-//          sodiumInteriorConcentration = NOMINAL_SODIUM_INTERIOR_CONCENTRATION;
-//        }
-//        else{
-//          // Move closer to the nominal value.
-//          sodiumInteriorConcentration -= difference * CONCENTRATION_RESTORATION_FACTOR * dt;
-//        }
-//        concentrationChanged = true;
-//      }
-//    }
-//    if (concentrationChanged){
-//      notifyConcentrationChanged();
-//    }
-//
-//    // Return model state after each time step.
-//    return getState();
-//  }
 //}

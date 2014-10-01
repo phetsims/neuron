@@ -169,9 +169,7 @@ define( function( require ) {
       updateRotation();
     }
 
-    membraneChannelModel.centerLocationProperty.lazyLink( updateChannelNode );
-    membraneChannelModel.opennessProperty.lazyLink( updateChannelNode );
-    membraneChannelModel.inactivationAmtProperty.lazyLink( updateChannelNode );
+    membraneChannelModel.channelStateChangedProperty.lazyLink( updateChannelNode );
 
   }
 

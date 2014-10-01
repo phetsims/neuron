@@ -68,6 +68,10 @@ define( function( require ) {
 
   return inherit( AbstractLeakChannel, SodiumLeakageChannel, {
     stepInTime: function( dt ) {
+      var prevCenterLocation = this.centerLocation.copy();
+      var prevOpenness = this.openness;
+      var prevInActivationAmt = this.inactivationAmt;
+
       AbstractLeakChannel.prototype.stepInTime.call( this, dt );
       // Since this is a leak channel, it is always open, so the openness
       // is not updated as it is for the gated channels.  However, we DO
@@ -85,6 +89,8 @@ define( function( require ) {
           this.updateParticleCaptureRate( Math.max( Math.abs( normalizedLeakCurrent ), NOMINAL_LEAK_LEVEL ) );
         }
       }
+
+      this.notifyIfMembraneStateChanged( prevCenterLocation, prevOpenness, prevInActivationAmt );
     },
     getChannelColor: function() {
       return BASE_COLOR.colorUtilsDarker( 0.15 );

@@ -56,10 +56,16 @@ define( function( require ) {
     // Start the capture timer now, since leak channels are always
     // capturing particles.
     thisChannel.restartCaptureCountdownTimer( false );
-
   }
 
   return inherit( AbstractLeakChannel, PotassiumLeakageChannel, {
+    stepInTime: function( dt ) {
+      var prevCenterLocation = this.centerLocation.copy();
+      var prevOpenness = this.openness;
+      var prevInActivationAmt = this.inactivationAmt;
+      AbstractLeakChannel.prototype.stepInTime.call( this, dt );
+      this.notifyIfMembraneStateChanged( prevCenterLocation, prevOpenness, prevInActivationAmt );
+    },
     getChannelColor: function() {
       return BASE_COLOR.colorUtilsDarker( 0.2 );
     },

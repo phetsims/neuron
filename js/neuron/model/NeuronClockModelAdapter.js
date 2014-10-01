@@ -74,11 +74,10 @@ define( function( require ) {
      */
     tick: function( simulationTimeChange ) {
       this.setSimulationTimeNoUpdate( this.simulationTime + simulationTimeChange );
-          //fire step event callback
+      //fire step event callback
       for ( var i = 0; i < this.stepCallbacks.length; i++ ) {
         this.stepCallbacks[i]( this.getSimulationTimeChange() );
       }
-
 
 
     },
