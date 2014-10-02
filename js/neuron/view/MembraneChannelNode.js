@@ -69,6 +69,8 @@ define( function( require ) {
     //gets created and updated only if channel has InactivationGate
     var inactivationGateBallNode;
     var inactivationGateString;
+    var edgeColor = membraneChannelModel.getEdgeColor().colorUtilsDarker( 0.3 );
+    var channelColor = membraneChannelModel.getChannelColor();
 
     if ( membraneChannelModel.getHasInactivationGate() ) {
 
@@ -78,7 +80,7 @@ define( function( require ) {
 
       var ballDiameter = mvt.modelToViewDeltaX( membraneChannelModel.getChannelSize().width );
       var inactivationBallShape = new Shape().ellipse( 0, 0, ballDiameter / 2, ballDiameter / 2 );
-      inactivationGateBallNode = new Path( inactivationBallShape, {fill: membraneChannelModel.getEdgeColor().colorUtilsDarker( 0.3 ), lineWidth: 0.5, stroke: membraneChannelModel.getEdgeColor().colorUtilsDarker( 0.3 )} );
+      inactivationGateBallNode = new Path( inactivationBallShape, {fill: edgeColor, lineWidth: 0.5, stroke: edgeColor} );
       thisNode.edgeLayer.addChild( inactivationGateBallNode );
     }
 
@@ -106,7 +108,7 @@ define( function( require ) {
       path.close();
 
       channel.setShape( path );
-      channel.fill = membraneChannelModel.getChannelColor();
+      channel.fill = channelColor;
       channel.x = -channel.getBounds().width / 2;
       channel.y = -channel.getBounds().height / 2;
       leftEdgeNode.x = -transformedChannelSize.width / 2 - leftEdgeNode.width / 2;
@@ -116,7 +118,6 @@ define( function( require ) {
 
       // If this membrane channel has an inactivation gate, update it.
       if ( membraneChannelModel.getHasInactivationGate() ) {
-
         var transformedOverallSize =
           new Dimension2( mvt.modelToViewDeltaX( membraneChannelModel.getOverallSize().width ),
             mvt.modelToViewDeltaY( membraneChannelModel.getOverallSize().height ) );

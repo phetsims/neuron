@@ -346,7 +346,7 @@ define( function( require ) {
 
       // Step the transient particles.  Since these particles may remove
       // themselves as a result of being stepped, we need to copy the list
-      // in order to avoid concurrent modification exceptions. (Not true in JavaScript, kept the comment for ref - Ashraf)
+      // in order to avoid concurrent modification exceptions. (Not true in observableArray as ForEach already copies the array and iterates, kept the comment for ref - Ashraf)
 
       this.transientParticles.forEach( function( particle ) {
         particle.stepInTime( dt );
@@ -457,7 +457,7 @@ define( function( require ) {
 
       // Reset the superclass, which contains the recording state & data.
       // ParticleCapture is PropertySet
-      ParticleCapture.prototype.reset.call( this );
+      ParticleCapture.prototype.resetAll.call( this );
 
       // Reset the axon membrane.
       this.axonMembrane.reset();
@@ -918,21 +918,8 @@ define( function( require ) {
     },
 
     removeAllParticles: function() {
-
-      // Remove all particles.  This is done by telling each particle to
-      // send out notifications of its removal from the model.  All
-      // listeners, including this class, should remove their references in
-      // response.
-      var thisModel = this;
-      var transientParticlesCopy = this.transientParticles.getArray().slice();
-      transientParticlesCopy.forEach( function( transientParticle ) {
-        thisModel.transientParticles.remove( transientParticle );
-      } );
-
-      var backgroundParticlesCopy = this.backgroundParticles.getArray().slice();
-      backgroundParticlesCopy.forEach( function( transientParticle ) {
-        thisModel.backgroundParticles.remove( transientParticle );
-      } );
+      this.transientParticles.clear();
+      this.backgroundParticles.clear();
     },
 
     /**
@@ -1262,8 +1249,6 @@ define( function( require ) {
 //
 
 
-
-
 //
 //  /**
 //   * The record-and-playback model has a notion of playback speed, which is
@@ -1276,7 +1261,6 @@ define( function( require ) {
 //    return playbackSpeed;
 //  }
 //
-
 
 
 //

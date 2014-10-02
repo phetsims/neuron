@@ -90,8 +90,8 @@ define( function( require ) {
       clipArea: Shape.rect( 0, 0, this.layoutBounds.maxX - 140, this.layoutBounds.maxY - 110 )
     } );
     thisView.addChild( zoomableWorldNode );
-    var rootNode = new Node();
-    zoomableWorldNode.addChild( rootNode );
+    var zoomableRootNode = new Node();
+    zoomableWorldNode.addChild( zoomableRootNode );
 
     // Create the layers in the desired order.
     var axonBodyLayer = new Node();
@@ -101,12 +101,12 @@ define( function( require ) {
     var channelEdgeLayer = new Node();
     var chargeSymbolLayer = new Node();
 
-    rootNode.addChild( axonBodyLayer );
-    rootNode.addChild( axonCrossSectionLayer );
-    rootNode.addChild( channelLayer );
-    rootNode.addChild( particleLayer );
-    rootNode.addChild( channelEdgeLayer );
-    rootNode.addChild( chargeSymbolLayer );
+    zoomableRootNode.addChild( axonBodyLayer );
+    zoomableRootNode.addChild( axonCrossSectionLayer );
+    zoomableRootNode.addChild( channelLayer );
+    zoomableRootNode.addChild( particleLayer );
+    zoomableRootNode.addChild( channelEdgeLayer );
+    zoomableRootNode.addChild( chargeSymbolLayer );
 
     var axonBodyNode = new AxonBodyNode( this.model.axonMembrane, thisView.mvt );
     axonBodyLayer.addChild( axonBodyNode );
@@ -133,7 +133,8 @@ define( function( require ) {
     // Add a node on every new Channel Model
     thisView.model.membraneChannels.addItemAddedListener( handleChannelAdded );
 
-    var particleBounds = new Bounds2( 0, 0, this.layoutBounds.maxX - 140, this.layoutBounds.maxY - 110 );
+    //TODO Ashraf need to precisely define particles bounds
+    var particleBounds = new Bounds2( 100, 0, 500,350 );
     var particlesNode = new ParticlesNode( thisView.model, thisView.mvt, particleBounds );
     particleLayer.addChild( particlesNode );
 
@@ -229,7 +230,7 @@ define( function( require ) {
       }
 
       var scaleTransform = new Transform3( scaleMatrix );
-      rootNode.setTransform( scaleTransform );
+      zoomableRootNode.setTransform( scaleTransform );
 
     } );
 

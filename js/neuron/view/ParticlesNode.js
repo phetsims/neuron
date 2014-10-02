@@ -41,53 +41,80 @@ define( function( require ) {
     paintCanvas: function( wrapper ) {
       var context = wrapper.context;
       var thisNode = this;
+      var canvasStrokeStyle = Color.BLACK.getCanvasStyle();
 
-      function renderParticles( particles ) {
-        var strokeColor = Color.BLACK;
-        particles.forEach( function( particle ) {
-          var particleViewPosition = thisNode.modelViewTransform.modelToViewPosition( particle.getPositionReference() );
-          context.save();
-          context.beginPath();
-          context.fillStyle = particle.getRepresentationColor().withAlpha( particle.getOpaqueness() ).toCSS();
-          context.lineWidth = 0.1;
-          context.strokeStyle = strokeColor.withAlpha( particle.getOpaqueness() ).toCSS();
-          switch( particle.getType() ) {
+      function renderParticles( particleTypes ) {
+
+        // group by particle Type
+        var particlesGroupedByType = _.groupBy( particleTypes, function( particle ) {
+          return particle.getType();
+        } );
+
+        //This way no need to set the fillStyle for every particle
+        _.forIn( particlesGroupedByType, function( particlesOfSameType, particleType ) {
+          switch( particleType ) {
             case ParticleType.SODIUM_ION:
-              var transformedRadius = thisNode.modelViewTransform.modelToViewDeltaX( particle.getRadius() ) | 0;
-              context.translate( particleViewPosition.x | 0, particleViewPosition.y | 0 ); // eliminate floating coordinates
-              context.arc( 0, 0, transformedRadius, 0, 2 * Math.PI, true );
+              renderSodiumParticles( particlesOfSameType );
               break;
-
             case ParticleType.POTASSIUM_ION:
-              var size = thisNode.modelViewTransform.modelToViewDeltaX( particle.getRadius() * 2 ) * 1.1;// TODO size  was  0.85 Ashraf
-              size = size | 0;
-              context.translate( particleViewPosition.x | 0, particleViewPosition.y | 0 );
-              context.rotate( Math.PI / 4 );
-              context.rect( -size / 2, -size / 2, size, size );
-              break;
-
-            default:
-              console.log( particle.getType() + " - Warning: No specific shape for this particle type, defaulting to sphere." );
-              var defaultSphereRadius = thisNode.modelViewTransform.modelToViewDeltaX( particle.getRadius() );
-              context.translate( particleViewPosition.x, particleViewPosition.y );
-              context.arc( 0, 0, defaultSphereRadius, 0, 2 * Math.PI, true );
+              renderPotassiumParticles( particlesOfSameType );
               break;
           }
-          context.closePath();
-          context.stroke();
-          context.fill();
-          context.restore();
+
         } );
+
+        function renderSodiumParticles( particles ) {
+          context.fillStyle = particles[0].getRepresentationColor().getCanvasStyle();// All sodium ions are of the same color,
+          var transformedRadius = thisNode.modelViewTransform.modelToViewDeltaX( particles[0].getRadius() );
+          context.lineWidth = 0.1;
+          context.strokeStyle = canvasStrokeStyle;
+          particles.forEach( function( particle ) {
+            context.globalAlpha = particle.getOpaqueness(); // grouped by opacity so the same opacity value for all this subset
+            context.beginPath();
+            var particleViewPosition = thisNode.modelViewTransform.modelToViewPosition( particle.getPositionReference() );
+            context.arc( particleViewPosition.x | 0, particleViewPosition.y | 0, transformedRadius, 0, 2 * Math.PI, true );
+            context.closePath();
+            context.stroke();
+            context.fill();
+          } );
+
+        }
+
+
+        function renderPotassiumParticles( particles ) {
+          context.fillStyle = particles[0].getRepresentationColor().getCanvasStyle();
+          var size = thisNode.modelViewTransform.modelToViewDeltaX( particles[0].getRadius() * 2 ) * 0.75;//was 0.85
+          context.lineWidth = 0.1;
+          context.strokeStyle = canvasStrokeStyle;
+          particles.forEach( function( particle ) {
+            context.globalAlpha = particle.getOpaqueness(); // grouped by opacity so the same opacity value for all this subset
+            context.beginPath();
+            var position = thisNode.modelViewTransform.modelToViewPosition( particle.getPositionReference() );
+            var x = position.x | 0;
+            var y = position.y | 0;
+            context.moveTo( x - size, y );
+            context.lineTo( x, y - size );
+            context.lineTo( x + size, y );
+            context.lineTo( x, y + size );
+            context.closePath();
+            context.stroke();
+            context.fill();
+          } );
+
+
+        }
 
       }
 
-      renderParticles( this.neuronModel.backgroundParticles );
-      renderParticles( this.neuronModel.transientParticles );
-      renderParticles( this.neuronModel.playbackParticles );
+      renderParticles( this.neuronModel.backgroundParticles.getArray() );
+      renderParticles( this.neuronModel.transientParticles.getArray() );
+      renderParticles( this.neuronModel.playbackParticles.getArray() );
 
 
     }
 
+
   } );
 
-} );
+} )
+;

@@ -57,7 +57,6 @@ define( function( require ) {
   return inherit( ViewableParticle, Particle, {
 
     stepInTime: function( dt ) {
-
       this.motionStrategy.move( this, this, dt );
       this.fadeStrategy.updateOpaqueness( this, dt );
       if ( !this.fadeStrategy.shouldContinueExisting( this ) ) {
@@ -71,7 +70,8 @@ define( function( require ) {
       }
     },
     getPosition: function() {
-      return new Vector2( this.position.x, this.position.y );
+      // return new Vector2( this.position.x, this.position.y ); // TODO
+      return this.position;
     },
     getPositionReference: function() {
       return this.position;

@@ -82,6 +82,7 @@ define( function( require ) {
 
     // Velocity for particles that move through this channel.
     this.particleVelocity = DEFAULT_PARTICLE_VELOCITY;
+    this.updateChannelRect();
 
   }
 
@@ -92,6 +93,7 @@ define( function( require ) {
      * @param dt - Amount of time step, in milliseconds.
      */
     stepInTime: function( dt ) {
+
 
 
       if ( this.captureCountdownTimer !== Number.POSITIVE_INFINITY ) {
@@ -110,6 +112,17 @@ define( function( require ) {
           this.captureCountdownTimer = Number.POSITIVE_INFINITY;
         }
       }
+
+    },
+    /**
+     * The rotated channel rect was getting calculated for every particle.This method does it only
+     * once (This is done for performance reasons - Ashraf)
+     */
+    updateChannelRect: function() {
+      var channelRect = new Rectangle( this.centerLocation.x - this.channelSize.height / 2,
+          this.centerLocation.y - this.channelSize.width / 2, this.channelSize.height, this.channelSize.width );
+      var rotationTransform = Matrix3.rotationAround( this.rotationalAngle, this.centerLocation.x, this.centerLocation.y );
+      this.rotatedChannelRect = channelRect.transformed( rotationTransform );
     },
     // Reset the channel.
     reset: function() {
@@ -129,11 +142,7 @@ define( function( require ) {
       // Note: A rotational angle of zero is considered to be lying on the
       // side.  Hence the somewhat odd-looking use of height and width in
       // the determination of the channel Rect.
-      var channelRect = new Rectangle( this.centerLocation.x - this.channelSize.height / 2,
-          this.centerLocation.y - this.channelSize.width / 2, this.channelSize.height, this.channelSize.width );
-      var rotationTransform = Matrix3.rotationAround( this.rotationalAngle, this.centerLocation.x, this.centerLocation.y );
-      var rotatedChannelRect = channelRect.transformed( rotationTransform );
-      return rotatedChannelRect.containsPoint( pt );
+      return this.rotatedChannelRect.containsPoint( pt );
     },
     // returns a new Instance of Dimension
     getChannelSize: function() {
@@ -152,7 +161,7 @@ define( function( require ) {
       return this.inactivationAmt;
     },
     getCenterLocation: function() {
-      return new Vector2( this.centerLocation.x, this.centerLocation.y );
+      return this.centerLocation;
     },
     /**
      * Choose the direction of crossing for the next particle to cross the
