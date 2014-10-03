@@ -35,6 +35,8 @@ define( function( require ) {
   var MembraneChannelNode = require( 'NEURON/neuron/view/MembraneChannelNode' );
   var MembranePotentialChart = require( 'NEURON/neuron/view/MembranePotentialChart' );
   var IonsAndChannelsLegendPanel = require( 'NEURON/neuron/controlpanel/IonsAndChannelsLegendPanel' );
+  var AxonCrossSectionControlPanel = require( 'NEURON/neuron/controlpanel/AxonCrossSectionControlPanel' );
+
 
   var PlayPauseButton = require( 'SCENERY_PHET/PlayPauseButton' );
   var StepButton = require( 'SCENERY_PHET/StepButton' );
@@ -58,7 +60,7 @@ define( function( require ) {
   function NeuronView( neuronClockModelAdapter ) {
     var thisView = this;
     thisView.model = neuronClockModelAdapter.model; // model is neuronmodel
-    ScreenView.call( thisView, {renderer: 'svg', layoutBounds: ScreenView.UPDATED_LAYOUT_BOUNDS} );
+    ScreenView.call( thisView, {renderer: 'svg', layoutBounds: new Bounds2( 0, 0, 834, 504 )} );
 
     var viewPortPosition = new Vector2( thisView.layoutBounds.width * 0.42, thisView.layoutBounds.height * 0.33 );
     // Set up the model-canvas transform.
@@ -87,7 +89,7 @@ define( function( require ) {
 
 
     var zoomableWorldNode = new Node( {
-      clipArea: Shape.rect( 0, 0, this.layoutBounds.maxX - 140, this.layoutBounds.maxY - 110 )
+      clipArea: Shape.rect( 0, 0, this.layoutBounds.maxX - 200, this.layoutBounds.maxY - 110 )
     } );
     thisView.addChild( zoomableWorldNode );
     var zoomableRootNode = new Node();
@@ -154,7 +156,7 @@ define( function( require ) {
       children: recordPlayButtons,
       align: 'left',
       spacing: 5,
-      right: thisView.layoutBounds.maxX - 350,
+      right: thisView.layoutBounds.maxX/2,
       bottom: thisView.layoutBounds.maxY - 30
     } );
 
@@ -204,7 +206,7 @@ define( function( require ) {
       top: 150, left: 45,
       trackSize: new Dimension2( 90, 1 )
     };
-    var zoomSlider = new HSlider( zoomProperty, { min: 1.2, max: 4 }, zoomSliderOptions );
+    var zoomSlider = new HSlider( zoomProperty, { min: 1.2, max: 5 }, zoomSliderOptions );
     zoomSlider.rotation = -Math.PI / 2;
     this.addChild( zoomSlider );
 
@@ -234,10 +236,19 @@ define( function( require ) {
 
     } );
 
+    var panelLeftPos = this.layoutBounds.maxX-30;
+
     var iosAndChannelsLegendPanel = new IonsAndChannelsLegendPanel();
     this.addChild( iosAndChannelsLegendPanel );
-    iosAndChannelsLegendPanel.right = this.layoutBounds.maxX + 35;
+    iosAndChannelsLegendPanel.right = panelLeftPos;
     iosAndChannelsLegendPanel.top = 40;
+
+    var axonCrossSectionControlPanel = new AxonCrossSectionControlPanel(thisView.model);
+    this.addChild( axonCrossSectionControlPanel );
+    axonCrossSectionControlPanel.right = panelLeftPos;
+    axonCrossSectionControlPanel.top = iosAndChannelsLegendPanel.bottom+20;
+
+
 
   }
 

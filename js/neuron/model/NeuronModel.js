@@ -1168,21 +1168,7 @@ define( function( require ) {
 //
 
 
-//
-//  private void updateStimulasLockoutState(){
-//    if (stimulasLockout){
-//      // Currently locked out, see if that should change.
-//      if (!isPlayback() && !isActionPotentialInProgress()) {
-//        setStimulasLockout(false);
-//      }
-//    }
-//    else{
-//      // Currently NOT locked out, see if that should change.
-//      if (isActionPotentialInProgress() || (isPlayback() && getTime() < getMaxRecordedTime())){
-//        setStimulasLockout(true);
-//      }
-//    }
-//  }
+
 //
 //  private void setStimulasLockout(boolean lockout){
 //    if (lockout != stimulasLockout){

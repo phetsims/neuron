@@ -16,7 +16,7 @@ define( function( require ) {
   var Shape = require( 'KITE/Shape' );
 
   var MEMBRANE_COLOR = Color.YELLOW;
-  var LINE_WIDTH = 2;
+  var LINE_WIDTH = 1;
 
   /**
    * Constructor for the AxonCrossSectionNode

@@ -1,3 +1,81 @@
+// Copyright 2002-2014, University of Colorado Boulder
+
+/**
+ * Control panel for the axon cross section module.
+ *
+ * @author John Blanco
+ * @author Sharfudeen Ashraf (for Ghent University)
+ */
+define( function( require ) {
+  'use strict';
+
+  //imports
+  var inherit = require( 'PHET_CORE/inherit' );
+  var Panel = require( 'SUN/Panel' );
+  var CheckBox = require( 'SUN/CheckBox' );
+  var Text = require( 'SCENERY/nodes/Text' );
+  var VBox = require( 'SCENERY/nodes/VBox' );
+  var PhetFont = require( 'SCENERY_PHET/PhetFont' );
+
+
+  // Labels for control panel check boxes.
+  var allIonsString = require( 'string!NEURON/allIons' );
+  var potentialChartString = require( 'string!NEURON/potentialChart' );
+  var chargesString = require( 'string!NEURON/charges' );
+  var concentrationsString = require( 'string!NEURON/concentrations' );
+
+  var CHECK_BOX_OPTIONS = { boxWidth: 20 };
+  var TEXT_OPTIONS = { font: new PhetFont( 14 ) };
+
+  var TOUCH_AREA_EXPAND_X = 10;
+  var TOUCH_AREA_EXPAND_Y = 3;
+
+  // uniformly expands touch area for controls
+  var expandTouchArea = function( node ) {
+    node.touchArea = node.localBounds.dilatedXY( TOUCH_AREA_EXPAND_X, TOUCH_AREA_EXPAND_Y );
+  };
+
+  /**
+   * @param {NeuronModel}  neuronModel
+   * @constructor
+   */
+  function AxonCrossSectionControlPanel( neuronModel ) {
+
+    var allIonsSimulatedCheckBox = new CheckBox( new Text( allIonsString, TEXT_OPTIONS ), neuronModel.allIonsSimulatedProperty, CHECK_BOX_OPTIONS );
+    expandTouchArea( allIonsSimulatedCheckBox );
+    var showChargesCheckBox = new CheckBox( new Text( chargesString, TEXT_OPTIONS ), neuronModel.chargesShownProperty, CHECK_BOX_OPTIONS );
+    expandTouchArea( showChargesCheckBox );
+    var showConcentrationsCheckBox = new CheckBox( new Text( concentrationsString, TEXT_OPTIONS ), neuronModel.concentrationReadoutVisibleProperty, CHECK_BOX_OPTIONS );
+    expandTouchArea( showConcentrationsCheckBox );
+    var showPotentialChartCheckBox = new CheckBox( new Text( potentialChartString, TEXT_OPTIONS ), neuronModel.potentialChartVisibleProperty, CHECK_BOX_OPTIONS );
+    expandTouchArea( showPotentialChartCheckBox );
+
+
+    var crossSectionCheckBoxes = [];
+    crossSectionCheckBoxes.push( allIonsSimulatedCheckBox );
+    crossSectionCheckBoxes.push( showChargesCheckBox );
+    crossSectionCheckBoxes.push( showConcentrationsCheckBox );
+    crossSectionCheckBoxes.push( showPotentialChartCheckBox );
+
+    // vertical panel
+    Panel.call( this, new VBox( {
+      children: crossSectionCheckBoxes,
+      align: 'left',
+      spacing: 5
+      } ), {
+      // panel options
+      fill: 'rgb(238,238,238)',
+      xMargin: 20,
+      yMargin: 6,
+      lineWidth:0
+    } );
+
+
+  }
+
+  return inherit( Panel, AxonCrossSectionControlPanel );
+} );
+
 //// Copyright 2002-2011, University of Colorado
 //
 //package edu.colorado.phet.neuron.controlpanel;
@@ -23,11 +101,7 @@
 //import edu.colorado.phet.neuron.NeuronStrings;
 //import edu.colorado.phet.neuron.model.NeuronModel;
 //
-///**
-// * Control panel for the axon cross section module.
-// *
-// * @author John Blanco
-// */
+
 //public class AxonCrossSectionControlPanel extends ControlPanel {
 //
 //  //----------------------------------------------------------------------------

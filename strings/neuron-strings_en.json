@@ -1,12 +1,16 @@
 {
   "neuron.name": "Neuron",
-  "legend":"Legend",
+  "legend": "Legend",
   "sodiumIon": "Sodium Ion (Na+)",
   "potassiumIon": "Potassium Ion (K+)",
   "sodiumGatedChannel": "Sodium Gated Channel",
   "potassiumGatedChannel": "Potassium Gated Channel",
   "sodiumLeakChannel": "Sodium Leak Channel",
-  "potassiumLeakChannel": "Potassium Leak Channel"
+  "potassiumLeakChannel": "Potassium Leak Channel",
+  "allIons": "All Ions",
+  "potentialChart": "Potential Chart",
+  "charges": "Charges",
+  "concentrations": "Concentrations"
 }
 
 

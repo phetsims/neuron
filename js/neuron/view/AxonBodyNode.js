@@ -21,7 +21,7 @@ define( function( require ) {
 
 
   var AXON_BODY_COLOR = new Color( 221, 216, 44 );
-  var LINE_WIDTH = 2;// STROKE
+  var LINE_WIDTH = 1;// STROKE
   var SHOW_GRADIENT_LINE = false;
 
   /**
