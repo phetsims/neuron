@@ -10,7 +10,11 @@
   "allIons": "All Ions",
   "potentialChart": "Potential Chart",
   "charges": "Charges",
-  "concentrations": "Concentrations"
+  "concentrations": "Concentrations",
+  "chartTitle": "Membrane Potential vs. Time",
+  "chartYAxisLabel": "Membrane Potential (mV)",
+  "chartXAxisLabel": "Time (ms)",
+  "chartClear": "Clear Chart"
 }
 
 

@@ -3,9 +3,12 @@
 /**
  * Abstract base class for a simulated particle.  It is intended that this be subclassed
  * for each specific particle type used in the simulation.
+ * This class  serves as a Fadable  element  that can fade in or out of
+ * existence in based on different  fade strategies.
+ * Also functions as a "Movable" element that can be move differently based on different motion strategies.
  *
  * @author John Blanco
- * @Sharfudeen Ashraf (for Ghnet University)
+ * @Sharfudeen Ashraf (for Ghent University)
  */
 
 define( function( require ) {
@@ -73,9 +76,24 @@ define( function( require ) {
       // return new Vector2( this.position.x, this.position.y ); // TODO
       return this.position;
     },
+    /**
+     * Get a reference to the current position of the model element.  Be
+     * careful with this.  It is provided primarily for optimization purposes,
+     * and the value should not be changed.
+     *
+     */
     getPositionReference: function() {
       return this.position;
     },
+    /**
+     * Get the radius of the object being moved.  This is generally used when
+     * the object needs to "bounce" (i.e. change direction because some limit
+     * has been reached).  Note that this assumes a circular object or one that
+     * is fairly close to circular.  If this assumption of approximate
+     * roundness proves to be too much of a limitation at some point in the
+     * future, this may need to be generalized to be a bounding rectangle or
+     * some such thing.
+     */
     getRadius: function() {
       return DEFAULT_PARTICLE_RADIUS;   // Default value, override if needed to support other particles.
     },
@@ -123,13 +141,6 @@ define( function( require ) {
   } );
 } );
 
-//
-//package edu.colorado.phet.neuron.model;
-//
-//import java.awt.Color;
-//import java.awt.geom.Point2D;
-//import java.util.ArrayList;
-//
 
 //public abstract class Particle implements IMovable, IFadable, IViewableParticle {
 //
@@ -279,29 +290,4 @@ define( function( require ) {
 //    }
 //  }
 //
-//  //------------------------------------------------------------------------
-//  // Listener support
-//  //------------------------------------------------------------------------
-//
-//  /* (non-Javadoc)
-//   * @see edu.colorado.phet.neuron.model.IViewableParticle#addListener(edu.colorado.phet.neuron.model.IParticleListener)
-//   */
-//  public void addListener(IParticleListener listener) {
-//    if (listeners.contains( listener ))
-//    {
-//      // Don't bother re-adding.
-//      System.err.println(getClass().getName() + "- Warning: Attempting to re-add a listener that is already listening.");
-//      assert false;
-//      return;
-//    }
-//
-//    listeners.add( listener );
-//  }
-//
-//  /* (non-Javadoc)
-//   * @see edu.colorado.phet.neuron.model.IViewableParticle#removeListener(edu.colorado.phet.neuron.model.IParticleListener)
-//   */
-//  public void removeListener(IParticleListener listener){
-//    listeners.remove(listener);
-//  }
-//}
+

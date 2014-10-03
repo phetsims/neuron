@@ -25,7 +25,24 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var Node = require( 'SCENERY/nodes/Node' );
   var ObservableArray = require( 'AXON/ObservableArray' );
+  var Vector2 = require( 'DOT/Vector2' );
   var NeuronSharedConstants = require( 'NEURON/neuron/common/NeuronSharedConstants' );
+  var Line = require( 'SCENERY/nodes/Line' );
+  var Panel = require( 'SUN/Panel' );
+  var VBox = require( 'SCENERY/nodes/VBox' );
+  var Text = require( 'SCENERY/nodes/Text' );
+  var PhetFont = require( 'SCENERY_PHET/PhetFont' );
+  var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
+  var dot = require( 'DOT/dot' );
+
+
+  /* TODO var concentrationsString = require( 'string!NEURON/concentrations' );
+   var chartTitleString = require( 'string!NEURON/chartTitle' );
+   var chartYAxisLabelString = require( 'string!NEURON/chartYAxisLabel' );
+   var chartXAxisLabelString = require( 'string!NEURON/chartXAxisLabel' );
+   var chartClearString = require( 'string!NEURON/chartClear' ); */
+
+  var GRID_TICK_TEXT_FONT = new PhetFont( 8 );
 
   var TIME_SPAN = 25; // In seconds.
 
@@ -35,20 +52,78 @@ define( function( require ) {
 
   /**
    *
-   * @param {Bounds2}size
-   * @param title
-   * @param {NeuronModel }neuronModel
+   * @param {Dimension2}chartDimension
+   * @param {NeuronClockModelAdapter }neuronClockModelAdapter
    * @constructor
    */
-  function MembranePotentialChart( size, title, neuronModel ) {
+  function MembranePotentialChart( chartDimension, neuronClockModelAdapter ) {
 
     var thisChart = this;
-    thisChart.neuronModel = neuronModel;
+    Node.call( thisChart, {} );
+    thisChart.neuronModel = neuronClockModelAdapter.model;
 
     thisChart.updateCountdownTimer = 0; // Init to zero to an update occurs right away.
     thisChart.timeIndexOfFirstDataPt = 0;
     thisChart.pausedWhenDragStarted = false;
     thisChart.dataSeries = new ObservableArray();
+
+    var plotNode = new Node();
+    thisChart.addChild( plotNode );
+
+    var domain = [0, TIME_SPAN];
+    var range = [ 100, -100 ];
+
+    ModelViewTransform2.createSinglePointXYScaleMapping( new Vector2( domain[0], domain[1] ), new Vector2( range[0], range[1] ), 1, 1 );
+
+    var numVerticalGridLines = 25;
+    var numHorizontalGridLines = 8;
+
+    //To create Horizontal Labels
+    var domainMap = new dot.LinearFunction( 0, numVerticalGridLines, domain[0], domain[1] );
+
+    //To create Vertical Labels
+    var rangeMap = new dot.LinearFunction( 0, numHorizontalGridLines, range[0], range[1] );
+
+
+    var plotGrid = new Node();
+    var lineWidth = 0.2;
+    var line;
+    //vertical grid lines
+    for ( var i = 0; i < numVerticalGridLines + 1; i++ ) {
+      line = new Line( i * chartDimension.width / numVerticalGridLines, 0, i * chartDimension.width / numVerticalGridLines, chartDimension.height, {stroke: 'gray', lineWidth: lineWidth} );
+      plotGrid.addChild( line );
+      plotGrid.addChild( new Text( domainMap( i ), {font: GRID_TICK_TEXT_FONT, centerX: line.centerX, top: line.bottom + 6} ) );
+    }
+
+    //horizontal grid lines
+    for ( i = 0; i < numHorizontalGridLines + 1; i++ ) {
+      line = new Line( 0, i * chartDimension.height / numHorizontalGridLines, chartDimension.width, i * chartDimension.height / numHorizontalGridLines, {stroke: 'gray', lineWidth: lineWidth} );
+      plotGrid.addChild( line );
+      plotGrid.addChild( new Text( rangeMap( i ), {font: GRID_TICK_TEXT_FONT, centerY: line.centerY, right: line.left - 6} ) );
+
+    }
+
+    plotNode.addChild( plotGrid );
+    var content = new Node();
+    plotNode.addChild( content );
+
+
+    //  var series = new XYDataSeries( {color: 'red'} );
+    //  plot.addSeries( series );
+
+    neuronClockModelAdapter.registerStepCallback( thisChart.step.bind( thisChart ) );
+
+    neuronClockModelAdapter.simulationTimeResetProperty.link( function( simulationTimeReset ) {
+      if ( simulationTimeReset ) {
+        thisChart.updateOnSimulationReset();
+      }
+    } );
+
+    neuronClockModelAdapter.pausedProperty.link( function( paused ) {
+      if ( paused ) {
+        thisChart.updateOnClockPaused();
+      }
+    } );
 
 
     thisChart.neuronModel.stimulusPulseInitiatedProperty.link( function( stimulusPulseInitiated ) {
@@ -62,11 +137,23 @@ define( function( require ) {
         thisChart.neuronModel.startRecording();
       }
 
+
+    } );
+
+    // vertical panel
+    Panel.call( this, new VBox( {
+      children: [plotNode], align: 'left', spacing: 5 } ), {
+       fill: 'white', xMargin: 10, yMargin: 6, lineWidth: 1 }
+    );
+
+
+    thisChart.neuronModel.potentialChartVisibleProperty.link( function( chartVisibile ) {
+      thisChart.visible = chartVisibile;
     } );
 
   }
 
-  return inherit( Node, MembranePotentialChart, {
+  return inherit( Panel, MembranePotentialChart, {
 
     /**
      * Add a data point to the graph.

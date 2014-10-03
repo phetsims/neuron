@@ -87,9 +87,10 @@ define( function( require ) {
     this.addChild( image );
     this.addChild( new HSlider( mockupOpacityProperty, {min: 0, max: 1}, {top: 10, left: 10} ) );
 
+    var worldNodeClipArea = Shape.rect( 70, 0, this.layoutBounds.maxX - 280, this.layoutBounds.maxY - 110 );
 
     var zoomableWorldNode = new Node( {
-      clipArea: Shape.rect( 0, 0, this.layoutBounds.maxX - 200, this.layoutBounds.maxY - 110 )
+      clipArea: worldNodeClipArea
     } );
     thisView.addChild( zoomableWorldNode );
     var zoomableRootNode = new Node();
@@ -179,25 +180,13 @@ define( function( require ) {
       stimulateNeuronButton.enabled = !stimulasLockout;
     } );
 
-    //TODO constructor params
-    var membranePotentialChartNode = new MembranePotentialChart( null, null, thisView.model );
+
+
 
     // NeuronModel uses specialized real time constant clock simulation
     // The clock adapter calculates the appropriate dt and dispatches it to the interested model
     neuronClockModelAdapter.registerStepCallback( thisView.model.step.bind( thisView.model ) );
-    neuronClockModelAdapter.registerStepCallback( membranePotentialChartNode.step.bind( membranePotentialChartNode ) );
 
-    neuronClockModelAdapter.simulationTimeResetProperty.link( function( simulationTimeReset ) {
-      if ( simulationTimeReset ) {
-        membranePotentialChartNode.updateOnSimulationReset();
-      }
-    } );
-
-    neuronClockModelAdapter.pausedProperty.link( function( paused ) {
-      if ( paused ) {
-        membranePotentialChartNode.updateOnClockPaused();
-      }
-    } );
 
     //Test for thermometer node
     var zoomProperty = new Property( 1.2 );
@@ -247,6 +236,13 @@ define( function( require ) {
     this.addChild( axonCrossSectionControlPanel );
     axonCrossSectionControlPanel.right = panelLeftPos;
     axonCrossSectionControlPanel.top = iosAndChannelsLegendPanel.bottom+20;
+
+
+    var chartHeight = 120;
+    var membranePotentialChartNode = new MembranePotentialChart( new Dimension2(worldNodeClipArea.bounds.width-40,chartHeight), neuronClockModelAdapter );
+    thisView.addChild(membranePotentialChartNode);
+    membranePotentialChartNode.left=worldNodeClipArea.bounds.left;
+    membranePotentialChartNode.bottom= thisView.layoutBounds.maxY - chartHeight;
 
 
 
