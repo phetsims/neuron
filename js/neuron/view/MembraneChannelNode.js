@@ -118,6 +118,7 @@ define( function( require ) {
 
       // If this membrane channel has an inactivation gate, update it.
       if ( membraneChannelModel.getHasInactivationGate() ) {
+        
         var transformedOverallSize =
           new Dimension2( mvt.modelToViewDeltaX( membraneChannelModel.getOverallSize().width ),
             mvt.modelToViewDeltaY( membraneChannelModel.getOverallSize().height ) );

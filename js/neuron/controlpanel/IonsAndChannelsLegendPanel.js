@@ -94,7 +94,7 @@ define( function( require ) {
     } ), {
       // panel options
       fill: 'rgb(238,238,238)',
-      xMargin: 6,
+      xMargin: 4,
       yMargin: 6
     } );
   }

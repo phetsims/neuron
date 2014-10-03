@@ -60,11 +60,11 @@ define( function( require ) {
     thisView.model = neuronClockModelAdapter.model; // model is neuronmodel
     ScreenView.call( thisView, {renderer: 'svg', layoutBounds: ScreenView.UPDATED_LAYOUT_BOUNDS} );
 
-    var viewPortPosition = new Vector2( thisView.layoutBounds.width * 0.42, thisView.layoutBounds.height * 0.38 );
+    var viewPortPosition = new Vector2( thisView.layoutBounds.width * 0.42, thisView.layoutBounds.height * 0.33 );
     // Set up the model-canvas transform.
     thisView.mvt = ModelViewTransform2.createSinglePointScaleInvertedYMapping(
       Vector2.ZERO, viewPortPosition,
-      1.6 ); // 3.9 Scale factor - smaller numbers "zoom out", bigger ones "zoom in".
+      1.4 ); // 3.9 Scale factor - smaller numbers "zoom out", bigger ones "zoom in".
 
 
     // Create and add the Reset All Button in the bottom right
@@ -134,7 +134,7 @@ define( function( require ) {
     thisView.model.membraneChannels.addItemAddedListener( handleChannelAdded );
 
     //TODO Ashraf need to precisely define particles bounds
-    var particleBounds = new Bounds2( 100, 0, 500,350 );
+    var particleBounds = new Bounds2( 100, 0, 500,300 );
     var particlesNode = new ParticlesNode( thisView.model, thisView.mvt, particleBounds );
     particleLayer.addChild( particlesNode );
 
@@ -236,7 +236,7 @@ define( function( require ) {
 
     var iosAndChannelsLegendPanel = new IonsAndChannelsLegendPanel();
     this.addChild( iosAndChannelsLegendPanel );
-    iosAndChannelsLegendPanel.right = this.layoutBounds.maxX + 40;
+    iosAndChannelsLegendPanel.right = this.layoutBounds.maxX + 35;
     iosAndChannelsLegendPanel.top = 40;
 
   }
