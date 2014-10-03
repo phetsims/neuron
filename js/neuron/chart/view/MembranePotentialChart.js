@@ -34,6 +34,7 @@ define( function( require ) {
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
   var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   var dot = require( 'DOT/dot' );
+  var XYDataSeries = require( 'NEURON/neuron/chart/model/XYDataSeries' );
 
 
   /* TODO var concentrationsString = require( 'string!NEURON/concentrations' );
@@ -108,8 +109,8 @@ define( function( require ) {
     plotNode.addChild( content );
 
 
-    //  var series = new XYDataSeries( {color: 'red'} );
-    //  plot.addSeries( series );
+     this.dataSeries = new XYDataSeries( {color: 'red'} );
+
 
     neuronClockModelAdapter.registerStepCallback( thisChart.step.bind( thisChart ) );
 
@@ -175,16 +176,14 @@ define( function( require ) {
       // Note that internally we work in millivolts, not volts.
       assert && assert( time - this.timeIndexOfFirstDataPt >= 0 );
       if ( time - this.timeIndexOfFirstDataPt <= TIME_SPAN ) {
-        //TODO create a DataSeries Object and insert
-        this.dataSeries.add( [time - this.timeIndexOfFirstDataPt, voltage * 1000, update] );
+        this.dataSeries.addPoint( time - this.timeIndexOfFirstDataPt, voltage * 1000);
         this.chartIsFull = false;
       }
       else if ( !this.chartIsFull ) {
         // This is the first data point to be received that is outside of
         // the chart's range.  Add it anyway so that there is no gap
         // in the data shown at the end of the chart.
-        //TODO create a DataSeries Object and insert
-        this.dataSeries.add( [time - this.timeIndexOfFirstDataPt, voltage * 1000, true] );
+        this.dataSeries.addPoint(time - this.timeIndexOfFirstDataPt, voltage * 1000);
         this.chartIsFull = true;
       }
       else {

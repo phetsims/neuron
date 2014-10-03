@@ -33,7 +33,7 @@ define( function( require ) {
   var ParticlesNode = require( 'NEURON/neuron/view/ParticlesNode' );
   var AxonCrossSectionNode = require( 'NEURON/neuron/view/AxonCrossSectionNode' );
   var MembraneChannelNode = require( 'NEURON/neuron/view/MembraneChannelNode' );
-  var MembranePotentialChart = require( 'NEURON/neuron/view/MembranePotentialChart' );
+  var MembranePotentialChart = require( 'NEURON/neuron/chart/view/MembranePotentialChart' );
   var IonsAndChannelsLegendPanel = require( 'NEURON/neuron/controlpanel/IonsAndChannelsLegendPanel' );
   var AxonCrossSectionControlPanel = require( 'NEURON/neuron/controlpanel/AxonCrossSectionControlPanel' );
 
@@ -137,7 +137,7 @@ define( function( require ) {
     thisView.model.membraneChannels.addItemAddedListener( handleChannelAdded );
 
     //TODO Ashraf need to precisely define particles bounds
-    var particleBounds = new Bounds2( 100, 0, 500,300 );
+    var particleBounds = new Bounds2( 100, 0, 500, 300 );
     var particlesNode = new ParticlesNode( thisView.model, thisView.mvt, particleBounds );
     particleLayer.addChild( particlesNode );
 
@@ -157,7 +157,7 @@ define( function( require ) {
       children: recordPlayButtons,
       align: 'left',
       spacing: 5,
-      right: thisView.layoutBounds.maxX/2,
+      right: thisView.layoutBounds.maxX / 2,
       bottom: thisView.layoutBounds.maxY - 30
     } );
 
@@ -179,8 +179,6 @@ define( function( require ) {
     thisView.model.stimulasLockoutProperty.link( function( stimulasLockout ) {
       stimulateNeuronButton.enabled = !stimulasLockout;
     } );
-
-
 
 
     // NeuronModel uses specialized real time constant clock simulation
@@ -225,25 +223,24 @@ define( function( require ) {
 
     } );
 
-    var panelLeftPos = this.layoutBounds.maxX-30;
+    var panelLeftPos = this.layoutBounds.maxX - 30;
 
     var iosAndChannelsLegendPanel = new IonsAndChannelsLegendPanel();
     this.addChild( iosAndChannelsLegendPanel );
     iosAndChannelsLegendPanel.right = panelLeftPos;
     iosAndChannelsLegendPanel.top = 40;
 
-    var axonCrossSectionControlPanel = new AxonCrossSectionControlPanel(thisView.model);
+    var axonCrossSectionControlPanel = new AxonCrossSectionControlPanel( thisView.model );
     this.addChild( axonCrossSectionControlPanel );
     axonCrossSectionControlPanel.right = panelLeftPos;
-    axonCrossSectionControlPanel.top = iosAndChannelsLegendPanel.bottom+20;
+    axonCrossSectionControlPanel.top = iosAndChannelsLegendPanel.bottom + 20;
 
 
     var chartHeight = 120;
-    var membranePotentialChartNode = new MembranePotentialChart( new Dimension2(worldNodeClipArea.bounds.width-40,chartHeight), neuronClockModelAdapter );
-    thisView.addChild(membranePotentialChartNode);
-    membranePotentialChartNode.left=worldNodeClipArea.bounds.left;
-    membranePotentialChartNode.bottom= thisView.layoutBounds.maxY - chartHeight;
-
+    var membranePotentialChartNode = new MembranePotentialChart( new Dimension2( worldNodeClipArea.bounds.width - 40, chartHeight ), neuronClockModelAdapter );
+    thisView.addChild( membranePotentialChartNode );
+    membranePotentialChartNode.left = worldNodeClipArea.bounds.left;
+    membranePotentialChartNode.bottom = thisView.layoutBounds.maxY - chartHeight;
 
 
   }
