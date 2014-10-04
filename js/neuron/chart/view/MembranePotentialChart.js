@@ -27,7 +27,9 @@ define( function( require ) {
   var Bounds2 = require( 'DOT/Bounds2' );
   var NeuronSharedConstants = require( 'NEURON/neuron/common/NeuronSharedConstants' );
   var Line = require( 'SCENERY/nodes/Line' );
+  var Path = require( 'SCENERY/nodes/Path' );
   var Panel = require( 'SUN/Panel' );
+  var Color = require( 'SCENERY/util/Color' );
   var VBox = require( 'SCENERY/nodes/VBox' );
   var HBox = require( 'SCENERY/nodes/HBox' );
   var LayoutBox = require( 'SCENERY/nodes/LayoutBox' );
@@ -37,6 +39,8 @@ define( function( require ) {
   var RectangularButtonView = require( 'SUN/buttons/RectangularButtonView' );
   var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   var dot = require( 'DOT/dot' );
+  var Shape = require( 'KITE/Shape' );
+  var Vector2 = require( 'DOT/Vector2' );
   var MembranePotentialXYDataSeries = require( 'NEURON/neuron/chart/model/MembranePotentialXYDataSeries' );
 
 
@@ -52,6 +56,9 @@ define( function( require ) {
   var GRID_TICK_TEXT_FONT = new PhetFont( 8 );
 
   var TIME_SPAN = 25; // In seconds.
+  var WIDTH_PROPORTION = 0.013;
+  var CURSOR_FILL_COLOR = new Color( 50, 50, 200, 0.2 );
+  var CURSOR_STROKE_COLOR = Color.DARK_GRAY;
 
   // This value sets the frequency of chart updates, which helps to reduce
   // the processor consumption.
@@ -67,6 +74,7 @@ define( function( require ) {
 
     var thisChart = this;
     Node.call( thisChart, {} );
+    thisChart.chartDimension = chartDimension;
     thisChart.neuronModel = neuronClockModelAdapter.model;
 
     thisChart.updateCountdownTimer = 0; // Init to zero to an update occurs right away.
@@ -77,22 +85,22 @@ define( function( require ) {
     var plotNode = new Node();
     thisChart.addChild( plotNode );
 
-    var domain = [0, TIME_SPAN];
-    var range = [ -100, 100 ];
+    this.domain = [0, TIME_SPAN];
+    this.range = [ -100, 100 ];
 
 
     var numVerticalGridLines = 25;
     var numHorizontalGridLines = 8;
 
     //To create Horizontal Labels
-    var domainMap = new dot.LinearFunction( 0, numVerticalGridLines, domain[0], domain[1] );
+    var domainMap = new dot.LinearFunction( 0, numVerticalGridLines, this.domain[0], this.domain[1] );
 
     //To create Vertical Labels
-    var rangeMap = new dot.LinearFunction( 0, numHorizontalGridLines, range[1], range[0] );
+    var rangeMap = new dot.LinearFunction( 0, numHorizontalGridLines, this.range[1], this.range[0] );
 
 
     var plotGrid = new Node();
-    var lineWidth = 0.4;
+    var lineWidth = 0.3;
     var line;
     //vertical grid lines
     for ( var i = 0; i < numVerticalGridLines + 1; i++ ) {
@@ -154,13 +162,12 @@ define( function( require ) {
     var panelTopContentBox = new LayoutBox( {orientation: 'horizontal',
       children: [chartTitleNode, clearChartButton],
       spacing: 80
-     } );
+    } );
 
 
     var chartXAxisLabelNode = new Text( chartXAxisLabelString, {font: new PhetFont( {size: 10} )} );
     var chartYAxisLabelNode = new Text( chartYAxisLabelString, {font: new PhetFont( {size: 10} )} );
     chartYAxisLabelNode.rotation = -Math.PI / 2;
-
 
 
     // vertical panel
@@ -174,7 +181,7 @@ define( function( require ) {
 
 
     // domain(0,25) map -> range(-100,100)
-    thisChart.chartMvt = ModelViewTransform2.createRectangleInvertedYMapping( new Bounds2( domain[0], range[0], domain[1], range[1] ), new Bounds2( 0, 0, chartDimension.width, chartDimension.height ), 1, 1 );
+    thisChart.chartMvt = ModelViewTransform2.createRectangleInvertedYMapping( new Bounds2( this.domain[0], this.range[0], this.domain[1], this.range[1] ), new Bounds2( 0, 0, chartDimension.width, chartDimension.height ), 1, 1 );
 
     thisChart.neuronModel.potentialChartVisibleProperty.link( function( chartVisibile ) {
       thisChart.visible = chartVisibile;
@@ -192,6 +199,21 @@ define( function( require ) {
       } );
 
     } );
+
+
+    //Chart Cursor
+    var topOfPlotArea = thisChart.chartMvt.transformPosition2( new Vector2( 0, this.range[1] ) ); // UpperBound
+    var bottomOfPlotArea = thisChart.chartMvt.transformPosition2( new Vector2( 0, this.range[0] ) );//lowerBound
+
+    // Set the shape.  The shape is created so that it is centered
+    // around an offset of 0 in the x direction and the top edge is
+    // at 0 in the y direction.
+    var width = thisChart.chartDimension.width * WIDTH_PROPORTION;
+    var height = bottomOfPlotArea.y - topOfPlotArea.y;
+    var rectShape = new Shape().rect( -width / 2, 0, width, height );
+
+    this.chartCursor = new Path( rectShape, {fill: CURSOR_FILL_COLOR, stroke: CURSOR_STROKE_COLOR, lineWidth: 0.4} );
+    plotNode.addChild( this.chartCursor );
 
 
   }
@@ -272,6 +294,8 @@ define( function( require ) {
           this.neuronModel.setModeLive();
         }
       }
+
+      this.updateChartCursor();
     },
     clearChart: function() {
       this.dataSeries.clear();
@@ -281,14 +305,37 @@ define( function( require ) {
     },
     updateChartCursorVisibility: function() {
 
+      // Deciding whether or not the chart cursor should be visible is a
+      // little tricky, so I've tried to make the logic very explicit for
+      // easier maintenance.  Basically, any time we are in playback mode
+      // and we are somewhere on the chart, or when stepping and recording,
+      // the cursor should be seen.
+      var timeOnChart = ( this.neuronModel.getTime() - this.neuronModel.getMinRecordedTime() ) * 1000;
+      var isCurrentTimeOnChart = ( timeOnChart >= 0 ) && ( timeOnChart <= TIME_SPAN );
+      var dataExists = this.dataSeries.length > 0;
+      var chartCursorVisible = isCurrentTimeOnChart && dataExists;
+      this.chartCursor.setVisible( chartCursorVisible );
     },
+
+    /**
+     * called on every step dt
+     */
+    updateChartCursor: function() {
+      this.updateChartCursorVisibility();
+      if ( this.chartCursor.isVisible() ) {
+        this.updateChartCursorPos();
+      }
+    },
+
     updateChartCursorPos: function() {
       var recordingStartTime = this.neuronModel.getMinRecordedTime();
       var recordingCurrentTime = this.neuronModel.getTime();
       this.moveChartCursorToTime( ( recordingCurrentTime - recordingStartTime ) * 1000 );
     },
     moveChartCursorToTime: function( time ) {
-      //TODO
+      var cursorPos = this.chartMvt.transformPosition2( new Vector2( time, this.range[1] ) );
+      this.chartCursor.x = cursorPos.x;
+      this.chartCursor.y = cursorPos.y;
     },
 
     updateOnSimulationReset: function() {

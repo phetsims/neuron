@@ -2,6 +2,7 @@
 
 /**
  * XY Data Series of Time vs Membrane Potential
+ * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 define( function( require ) {
