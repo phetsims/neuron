@@ -976,6 +976,9 @@ define( function( require ) {
     },
     setStimulasLockout: function( lockout ) {
       this.stimulasLockoutProperty.set( lockout );
+      if(!lockout){
+        this.stimulusPulseInitiated = false;
+      }
     },
     getMembranePotential: function() {
       if ( this.isPlayback() ) {

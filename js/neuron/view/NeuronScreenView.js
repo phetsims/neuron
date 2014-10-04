@@ -178,6 +178,7 @@ define( function( require ) {
 
     thisView.model.stimulasLockoutProperty.link( function( stimulasLockout ) {
       stimulateNeuronButton.enabled = !stimulasLockout;
+      thisView.model.stimulusPulseInitiated=stimulasLockout;
     } );
 
 

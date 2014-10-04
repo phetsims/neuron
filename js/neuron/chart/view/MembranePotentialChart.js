@@ -24,24 +24,30 @@ define( function( require ) {
   //imports
   var inherit = require( 'PHET_CORE/inherit' );
   var Node = require( 'SCENERY/nodes/Node' );
-  var ObservableArray = require( 'AXON/ObservableArray' );
-  var Vector2 = require( 'DOT/Vector2' );
+  var Bounds2 = require( 'DOT/Bounds2' );
   var NeuronSharedConstants = require( 'NEURON/neuron/common/NeuronSharedConstants' );
   var Line = require( 'SCENERY/nodes/Line' );
   var Panel = require( 'SUN/Panel' );
   var VBox = require( 'SCENERY/nodes/VBox' );
+  var HBox = require( 'SCENERY/nodes/HBox' );
+  var LayoutBox = require( 'SCENERY/nodes/LayoutBox' );
   var Text = require( 'SCENERY/nodes/Text' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
+  var TextPushButton = require( 'SUN/buttons/TextPushButton' );
+  var RectangularButtonView = require( 'SUN/buttons/RectangularButtonView' );
   var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   var dot = require( 'DOT/dot' );
-  var XYDataSeries = require( 'NEURON/neuron/chart/model/XYDataSeries' );
+  var MembranePotentialXYDataSeries = require( 'NEURON/neuron/chart/model/MembranePotentialXYDataSeries' );
 
 
+  var chartTitleString = require( 'string!NEURON/chartTitle' );
+  var chartClearString = require( 'string!NEURON/chartClear' );
+  var chartXAxisLabelString = require( 'string!NEURON/chartXAxisLabel' );
+  var chartYAxisLabelString = require( 'string!NEURON/chartYAxisLabel' );
   /* TODO var concentrationsString = require( 'string!NEURON/concentrations' );
-   var chartTitleString = require( 'string!NEURON/chartTitle' );
-   var chartYAxisLabelString = require( 'string!NEURON/chartYAxisLabel' );
-   var chartXAxisLabelString = require( 'string!NEURON/chartXAxisLabel' );
-   var chartClearString = require( 'string!NEURON/chartClear' ); */
+
+
+   */
 
   var GRID_TICK_TEXT_FONT = new PhetFont( 8 );
 
@@ -66,15 +72,14 @@ define( function( require ) {
     thisChart.updateCountdownTimer = 0; // Init to zero to an update occurs right away.
     thisChart.timeIndexOfFirstDataPt = 0;
     thisChart.pausedWhenDragStarted = false;
-    thisChart.dataSeries = new ObservableArray();
+    thisChart.dataSeries = new MembranePotentialXYDataSeries( {color: 'red'} );
 
     var plotNode = new Node();
     thisChart.addChild( plotNode );
 
     var domain = [0, TIME_SPAN];
-    var range = [ 100, -100 ];
+    var range = [ -100, 100 ];
 
-    ModelViewTransform2.createSinglePointXYScaleMapping( new Vector2( domain[0], domain[1] ), new Vector2( range[0], range[1] ), 1, 1 );
 
     var numVerticalGridLines = 25;
     var numHorizontalGridLines = 8;
@@ -83,11 +88,11 @@ define( function( require ) {
     var domainMap = new dot.LinearFunction( 0, numVerticalGridLines, domain[0], domain[1] );
 
     //To create Vertical Labels
-    var rangeMap = new dot.LinearFunction( 0, numHorizontalGridLines, range[0], range[1] );
+    var rangeMap = new dot.LinearFunction( 0, numHorizontalGridLines, range[1], range[0] );
 
 
     var plotGrid = new Node();
-    var lineWidth = 0.2;
+    var lineWidth = 0.4;
     var line;
     //vertical grid lines
     for ( var i = 0; i < numVerticalGridLines + 1; i++ ) {
@@ -105,11 +110,8 @@ define( function( require ) {
     }
 
     plotNode.addChild( plotGrid );
-    var content = new Node();
-    plotNode.addChild( content );
-
-
-     this.dataSeries = new XYDataSeries( {color: 'red'} );
+    var chartContentNode = new Node();
+    plotNode.addChild( chartContentNode );
 
 
     neuronClockModelAdapter.registerStepCallback( thisChart.step.bind( thisChart ) );
@@ -141,16 +143,56 @@ define( function( require ) {
 
     } );
 
+    var chartTitleNode = new Text( chartTitleString, {font: new PhetFont( {size: 16, weight: 'bold'} )} );
+    var clearChartButton = new TextPushButton( chartClearString, {
+      font: new PhetFont( {size: 12} ),
+      baseColor: 'silver',
+      buttonAppearanceStrategy: RectangularButtonView.flatAppearanceStrategy
+    } );
+    clearChartButton.addListener( function() {thisChart.clearChart();} );
+
+    var panelTopContentBox = new LayoutBox( {orientation: 'horizontal',
+      children: [chartTitleNode, clearChartButton],
+      spacing: 80
+     } );
+
+
+    var chartXAxisLabelNode = new Text( chartXAxisLabelString, {font: new PhetFont( {size: 10} )} );
+    var chartYAxisLabelNode = new Text( chartYAxisLabelString, {font: new PhetFont( {size: 10} )} );
+    chartYAxisLabelNode.rotation = -Math.PI / 2;
+
+
+
     // vertical panel
     Panel.call( this, new VBox( {
-      children: [plotNode], align: 'left', spacing: 5 } ), {
-       fill: 'white', xMargin: 10, yMargin: 6, lineWidth: 1 }
+          children: [panelTopContentBox, new HBox( {
+            children: [chartYAxisLabelNode, plotNode],
+            spacing: 5
+          } ), chartXAxisLabelNode], align: 'center', spacing: 3 }
+      ), {fill: 'white', xMargin: 10, yMargin: 6, lineWidth: 1 }
     );
 
+
+    // domain(0,25) map -> range(-100,100)
+    thisChart.chartMvt = ModelViewTransform2.createRectangleInvertedYMapping( new Bounds2( domain[0], range[0], domain[1], range[1] ), new Bounds2( 0, 0, chartDimension.width, chartDimension.height ), 1, 1 );
 
     thisChart.neuronModel.potentialChartVisibleProperty.link( function( chartVisibile ) {
       thisChart.visible = chartVisibile;
     } );
+
+    thisChart.dataSeries.addDataSeriesListener( function( x, y, xPrevious, yPrevious ) {
+      if ( xPrevious && yPrevious && (xPrevious !== 0 || yPrevious !== 0 ) ) {
+        chartContentNode.addChild( new Line( thisChart.chartMvt.modelToViewX( xPrevious ), thisChart.chartMvt.modelToViewY( yPrevious ), thisChart.chartMvt.modelToViewX( x ), thisChart.chartMvt.modelToViewY( y ), {
+            stroke: thisChart.dataSeries.color}
+        ) );
+      }
+
+      thisChart.dataSeries.addDataClearListener( function() {
+        chartContentNode.removeAllChildren();
+      } );
+
+    } );
+
 
   }
 
@@ -176,14 +218,14 @@ define( function( require ) {
       // Note that internally we work in millivolts, not volts.
       assert && assert( time - this.timeIndexOfFirstDataPt >= 0 );
       if ( time - this.timeIndexOfFirstDataPt <= TIME_SPAN ) {
-        this.dataSeries.addPoint( time - this.timeIndexOfFirstDataPt, voltage * 1000);
+        this.dataSeries.addPoint( time - this.timeIndexOfFirstDataPt, voltage * 1000 );
         this.chartIsFull = false;
       }
       else if ( !this.chartIsFull ) {
         // This is the first data point to be received that is outside of
         // the chart's range.  Add it anyway so that there is no gap
         // in the data shown at the end of the chart.
-        this.dataSeries.addPoint(time - this.timeIndexOfFirstDataPt, voltage * 1000);
+        this.dataSeries.addPoint( time - this.timeIndexOfFirstDataPt, voltage * 1000 );
         this.chartIsFull = true;
       }
       else {
@@ -199,7 +241,7 @@ define( function( require ) {
     getLastTimeValue: function() {
       var timeOfLastDataPoint = 0;
       if ( this.dataSeries.length > 0 ) {
-        // TODO timeOfLastDataPoint = dataSeries.getX( dataSeries.getItemCount() - 1 ).doubleValue();
+        timeOfLastDataPoint = this.dataSeries.getX( this.dataSeries.length - 1 );
       }
       return timeOfLastDataPoint;
     },
