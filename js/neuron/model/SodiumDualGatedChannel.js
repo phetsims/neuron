@@ -84,9 +84,14 @@ define( function( require ) {
 
 
     stepInTime: function( dt ) {
-      var prevCenterLocation = this.centerLocation.copy();
+
+      // The Membrane Channel Node observed centerLocation,openness and inactivation
+      // properties separately.This resulted in too many updates to node and degraded the performance.This method checks
+      // notifies a change in state if one of these properties change.
+
       var prevOpenness = this.openness;
       var prevInActivationAmt = this.inactivationAmt;
+
       GatedChannel.prototype.stepInTime.call( this, dt );
       // Get the conductance and normalize it from 0 to 1.
       var normalizedConductance = this.calculateNormalizedConductance();
@@ -179,7 +184,7 @@ define( function( require ) {
       // Save values for the next time through.
       this.previousNormalizedConductance = normalizedConductance;
 
-      this.notifyIfMembraneStateChanged( prevCenterLocation, prevOpenness, prevInActivationAmt );
+      this.notifyIfMembraneStateChanged( prevOpenness, prevInActivationAmt );
     },
 
     //@Override

@@ -95,7 +95,6 @@ define( function( require ) {
     stepInTime: function( dt ) {
 
 
-
       if ( this.captureCountdownTimer !== Number.POSITIVE_INFINITY ) {
         if ( this.isOpen() ) {
           this.captureCountdownTimer -= dt;
@@ -298,12 +297,12 @@ define( function( require ) {
     },
 
     /*
-     The Mebrane Channel Node observed centerLocation,openness and inactivation
-     properties seperatly.This resulted in performance problem.This method checks
+     The Membrane Channel Node observed centerLocation,openness and inactivation
+     properties separately.This resulted in too many updates to node and degraded the performance.This method checks
      notifies a change in state if one of these properties change.
      */
-    notifyIfMembraneStateChanged: function( prevCenterLocation, prevOpenness, prevInActivationAmt ) {
-      if ( !prevCenterLocation.equals( this.centerLocation ) || prevOpenness !== this.openness || prevInActivationAmt !== this.inactivationAmt ) {
+    notifyIfMembraneStateChanged: function( prevOpenness, prevInActivationAmt ) {
+      if ( prevOpenness !== this.openness || prevInActivationAmt !== this.inactivationAmt ) {
         this.channelStateChanged = !this.channelStateChanged;
       }
     },
@@ -313,8 +312,12 @@ define( function( require ) {
      * of the record-and-playback functionality.
      */
     setState: function( state ) {
+
+      var prevOpenness = this.getOpenness();
+      var prevInactivationAmt = this.getInactivationAmt();
       this.setOpenness( state.getOpenness() );
       this.setInactivationAmt( state.getInactivationAmt() );
+      this.notifyIfMembraneStateChanged( prevOpenness, prevInactivationAmt );
     }
 
   } );

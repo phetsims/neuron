@@ -68,7 +68,7 @@ define( function( require ) {
 
   return inherit( AbstractLeakChannel, SodiumLeakageChannel, {
     stepInTime: function( dt ) {
-      var prevCenterLocation = this.centerLocation.copy();
+
       var prevOpenness = this.openness;
       var prevInActivationAmt = this.inactivationAmt;
 
@@ -90,7 +90,7 @@ define( function( require ) {
         }
       }
 
-      this.notifyIfMembraneStateChanged( prevCenterLocation, prevOpenness, prevInActivationAmt );
+      this.notifyIfMembraneStateChanged( prevOpenness, prevInActivationAmt );
     },
     getChannelColor: function() {
       return BASE_COLOR.colorUtilsDarker( 0.15 );

@@ -274,8 +274,9 @@ define( function( require ) {
     },
     clearHistoryRemainder: function() {
       var keep = [];
+      var thisModel = this;
       this.recordHistory.forEach( function( dataPoint ) {
-        if ( dataPoint.getTime() < this.time ) {
+        if ( dataPoint.getTime() < thisModel.time ) {
           keep.push( dataPoint );
         }
       } );

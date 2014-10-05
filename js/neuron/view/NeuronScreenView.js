@@ -62,11 +62,11 @@ define( function( require ) {
     thisView.model = neuronClockModelAdapter.model; // model is neuronmodel
     ScreenView.call( thisView, {renderer: 'svg', layoutBounds: new Bounds2( 0, 0, 834, 504 )} );
 
-    var viewPortPosition = new Vector2( thisView.layoutBounds.width * 0.42, thisView.layoutBounds.height * 0.33 );
+    var viewPortPosition = new Vector2( thisView.layoutBounds.width * 0.42, thisView.layoutBounds.height * 0.30 );
     // Set up the model-canvas transform.
     thisView.mvt = ModelViewTransform2.createSinglePointScaleInvertedYMapping(
       Vector2.ZERO, viewPortPosition,
-      1.4 ); // 3.9 Scale factor - smaller numbers "zoom out", bigger ones "zoom in".
+      1.3 ); // 3.9 Scale factor - smaller numbers "zoom out", bigger ones "zoom in".
 
 
     // Create and add the Reset All Button in the bottom right
@@ -238,10 +238,10 @@ define( function( require ) {
 
 
     var chartHeight = 120;
-    var membranePotentialChartNode = new MembranePotentialChart( new Dimension2( worldNodeClipArea.bounds.width - 50, chartHeight ), neuronClockModelAdapter );
+    var membranePotentialChartNode = new MembranePotentialChart( new Dimension2( worldNodeClipArea.bounds.width - 60, chartHeight ), neuronClockModelAdapter );
     thisView.addChild( membranePotentialChartNode );
     membranePotentialChartNode.left = worldNodeClipArea.bounds.left;
-    membranePotentialChartNode.bottom = thisView.layoutBounds.maxY - chartHeight;
+    membranePotentialChartNode.bottom = thisView.layoutBounds.maxY - 100;
 
 
   }

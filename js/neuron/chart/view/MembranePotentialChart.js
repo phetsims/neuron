@@ -27,9 +27,7 @@ define( function( require ) {
   var Bounds2 = require( 'DOT/Bounds2' );
   var NeuronSharedConstants = require( 'NEURON/neuron/common/NeuronSharedConstants' );
   var Line = require( 'SCENERY/nodes/Line' );
-  var Path = require( 'SCENERY/nodes/Path' );
   var Panel = require( 'SUN/Panel' );
-  var Color = require( 'SCENERY/util/Color' );
   var VBox = require( 'SCENERY/nodes/VBox' );
   var HBox = require( 'SCENERY/nodes/HBox' );
   var LayoutBox = require( 'SCENERY/nodes/LayoutBox' );
@@ -39,9 +37,9 @@ define( function( require ) {
   var RectangularButtonView = require( 'SUN/buttons/RectangularButtonView' );
   var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   var dot = require( 'DOT/dot' );
-  var Shape = require( 'KITE/Shape' );
   var Vector2 = require( 'DOT/Vector2' );
   var MembranePotentialXYDataSeries = require( 'NEURON/neuron/chart/model/MembranePotentialXYDataSeries' );
+  var ChartCursor = require( 'NEURON/neuron/chart/view/ChartCursor' );
 
 
   var chartTitleString = require( 'string!NEURON/chartTitle' );
@@ -56,9 +54,7 @@ define( function( require ) {
   var GRID_TICK_TEXT_FONT = new PhetFont( 8 );
 
   var TIME_SPAN = 25; // In seconds.
-  var WIDTH_PROPORTION = 0.013;
-  var CURSOR_FILL_COLOR = new Color( 50, 50, 200, 0.2 );
-  var CURSOR_STROKE_COLOR = Color.DARK_GRAY;
+
 
   // This value sets the frequency of chart updates, which helps to reduce
   // the processor consumption.
@@ -200,20 +196,10 @@ define( function( require ) {
 
     } );
 
-
-    //Chart Cursor
-    var topOfPlotArea = thisChart.chartMvt.transformPosition2( new Vector2( 0, this.range[1] ) ); // UpperBound
-    var bottomOfPlotArea = thisChart.chartMvt.transformPosition2( new Vector2( 0, this.range[0] ) );//lowerBound
-
-    // Set the shape.  The shape is created so that it is centered
-    // around an offset of 0 in the x direction and the top edge is
-    // at 0 in the y direction.
-    var width = thisChart.chartDimension.width * WIDTH_PROPORTION;
-    var height = bottomOfPlotArea.y - topOfPlotArea.y;
-    var rectShape = new Shape().rect( -width / 2, 0, width, height );
-
-    this.chartCursor = new Path( rectShape, {fill: CURSOR_FILL_COLOR, stroke: CURSOR_STROKE_COLOR, lineWidth: 0.4} );
+    this.chartCursor = new ChartCursor( thisChart );
     plotNode.addChild( this.chartCursor );
+
+    thisChart.neuronModel.timeProperty.link( thisChart.updateChartCursor.bind( this ) );
 
 
   }
@@ -295,7 +281,6 @@ define( function( require ) {
         }
       }
 
-      this.updateChartCursor();
     },
     clearChart: function() {
       this.dataSeries.clear();

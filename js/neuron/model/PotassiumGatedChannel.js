@@ -58,7 +58,6 @@ define( function( require ) {
 
   return inherit( GatedChannel, PotassiumGatedChannel, {
     stepInTime: function( dt ) {
-      var prevCenterLocation = this.centerLocation.copy();
       var prevOpenness = this.openness;
       var prevInActivationAmt = this.inactivationAmt;
       GatedChannel.prototype.stepInTime.call( this, dt );
@@ -86,7 +85,7 @@ define( function( require ) {
         }
       }
 
-      this.notifyIfMembraneStateChanged( prevCenterLocation, prevOpenness, prevInActivationAmt );
+      this.notifyIfMembraneStateChanged( prevOpenness, prevInActivationAmt );
     },
     //@Override
     reset: function() {
