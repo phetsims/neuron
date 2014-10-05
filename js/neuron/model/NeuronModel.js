@@ -150,7 +150,7 @@ define( function( require ) {
     thisModel.crossSectionInnerRadius = (thisModel.axonMembrane.getCrossSectionDiameter() - thisModel.axonMembrane.getMembraneThickness()) / 2;
     thisModel.crossSectionOuterRadius = (thisModel.axonMembrane.getCrossSectionDiameter() + thisModel.axonMembrane.getMembraneThickness()) / 2;
 
-    thisModel.previousMembranePotential = 0;
+
     thisModel.sodiumInteriorConcentration = NOMINAL_SODIUM_INTERIOR_CONCENTRATION;
     thisModel.sodiumExteriorConcentration = NOMINAL_SODIUM_EXTERIOR_CONCENTRATION;
     thisModel.potassiumInteriorConcentration = NOMINAL_POTASSIUM_INTERIOR_CONCENTRATION;
@@ -158,6 +158,9 @@ define( function( require ) {
 
     //Particle Capture is a PropertySet
     ParticleCapture.call( thisModel, maxRecordPoints, {
+
+      // Notification Property that the setting for the visibility of the membrane
+      //potential chart has changed.
       potentialChartVisible: DEFAULT_FOR_MEMBRANE_CHART_VISIBILITY,
       // Controls whether all ions, or just those near membrane, are simulated.
       allIonsSimulated: DEFAULT_FOR_SHOW_ALL_IONS,
@@ -165,12 +168,13 @@ define( function( require ) {
       chargesShown: DEFAULT_FOR_CHARGES_SHOWN,
       // Controls whether concentration readings are depicted.
       concentrationReadoutVisible: DEFAULT_FOR_CONCENTRATION_READOUT_SHOWN,
-      previousMembranePotential: 0,
+      membranePotential: 0,
+      // Notification Property that the state of stimulation lockout, which prevents
+      // stimuli from being initiated too close together, has changed.
       stimulasLockout: false,
       playbackParticlesVisible: false,
       concentrationChanged: false,
       stimulusPulseInitiated: false,// observed by Membrane potential chart
-      membranePotentialChanged: false,
       neuronModelPlaybackState: null,
       particlesStateChanged: false // to trigger canvas invalidation
     } );
@@ -330,8 +334,8 @@ define( function( require ) {
       // There is a bit of a threshold on sending out notifications of
       // membrane voltage changes, since otherwise the natural "noise" in
       // the model causes notifications to be sent out continuously.
-      if ( Math.abs( this.previousMembranePotential - this.hodgkinHuxleyModel.getMembraneVoltage() ) > MEMBRANE_POTENTIAL_CHANGE_THRESHOLD ) {
-        this.previousMembranePotentialProperty.set( this.hodgkinHuxleyModel.getMembraneVoltage() );
+      if ( Math.abs( this.membranePotential - this.hodgkinHuxleyModel.getMembraneVoltage() ) > MEMBRANE_POTENTIAL_CHANGE_THRESHOLD ) {
+        this.membranePotential = this.hodgkinHuxleyModel.getMembraneVoltage();
 
       }
 
@@ -363,7 +367,7 @@ define( function( require ) {
       // parameters of the HH model.  This is done solely to provide values
       // that can be displayed to the user, and are not used for anything
       // else in the model.
-      var concentrationChanged = false;
+      var concentrationChanged = this.concentrationChanged = false;
       var difference;
       var potassiumConductance = this.hodgkinHuxleyModel.get_delayed_n4( CONCENTRATION_READOUT_DELAY );
       if ( potassiumConductance !== 0 ) {
@@ -436,7 +440,7 @@ define( function( require ) {
         }
       }
       if ( concentrationChanged ) {
-        this.concentrationChangedProperty.set( !this.concentrationChanged ); // trigger property change
+        this.concentrationChangedProperty = true;
       }
 
 
@@ -976,7 +980,7 @@ define( function( require ) {
     },
     setStimulasLockout: function( lockout ) {
       this.stimulasLockoutProperty.set( lockout );
-      if(!lockout){
+      if ( !lockout ) {
         this.stimulusPulseInitiated = false;
       }
     },
@@ -1040,12 +1044,9 @@ define( function( require ) {
         playbackParticleIndex++;
       } );
 
-      // Save the new playback state and send out notifications for any changes.
-      var oldState = this.neuronModelPlaybackState;
+     
       this.neuronModelPlaybackState = state;
-      if ( oldState === null || oldState.getMembranePotential() !== state.getMembranePotential() ) {
-        this.membranePotentialChanged = !this.membranePotentialChanged; // toggle the value to trigger change event
-      }
+      this.membranePotential = state.getMembranePotential();
       // For the sake of simplicity, always send out notifications for the
       // concentration changes.
       this.concentrationChanged = !this.concentrationChanged;
@@ -1169,7 +1170,6 @@ define( function( require ) {
 //
 
 //
-
 
 
 //
@@ -1314,10 +1314,7 @@ define( function( require ) {
 //     */
 //    public void membranePotentialChanged();
 //
-//    /**
-//     * Notification that the setting for the visibility of the membrane
-//     * potential chart has changed.
-//     */
+
 //    public void potentialChartVisibilityChanged();
 //
 //    /**
@@ -1326,10 +1323,7 @@ define( function( require ) {
 //     */
 //    public void concentrationReadoutVisibilityChanged();
 //
-//    /**
-//     * Notification that the setting for whether or not the charges are
-//     * shown has changed.
-//     */
+
 //    public void chargesShownChanged();
 //
 //    /**

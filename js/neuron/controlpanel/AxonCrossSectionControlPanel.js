@@ -62,24 +62,22 @@ define( function( require ) {
       children: crossSectionCheckBoxes,
       align: 'left',
       spacing: 5
-      } ), {
+    } ), {
       // panel options
       fill: 'rgb(238,238,238)',
       xMargin: 20,
       yMargin: 6,
-      lineWidth:0
+      lineWidth: 0
     } );
 
-    neuronModel.stimulasLockoutProperty.link(function(stimulasLockout){
+    neuronModel.stimulasLockoutProperty.link( function( stimulasLockout ) {
       // When stimulation is locked out, we also lock out the
       // ability to change the "All Ions Simulated" state, since
       // otherwise ions would have to disappear during an action potential,
       // which would be tricky.
       allIonsSimulatedCheckBox.enabled = !neuronModel.isStimulusInitiationLockedOut();
 
-    });
-
-
+    } );
 
 
   }
