@@ -1044,7 +1044,7 @@ define( function( require ) {
         playbackParticleIndex++;
       } );
 
-     
+
       this.neuronModelPlaybackState = state;
       this.membranePotential = state.getMembranePotential();
       // For the sake of simplicity, always send out notifications for the

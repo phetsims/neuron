@@ -1,3 +1,77 @@
+//  Copyright 2002-2014, University of Colorado Boulder
+
+/**
+ * A class to control the zoom factor.
+ *
+ * @author John Blanco
+ * @author Sharfudeen Ashraf (for Ghent University)
+ */
+define( function( require ) {
+  'use strict';
+
+  var inherit = require( 'PHET_CORE/inherit' );
+  var Dimension2 = require( 'DOT/Dimension2' );
+  var HSlider = require( 'SUN/HSlider' );
+  var VBox = require( 'SCENERY/nodes/VBox' );
+  var TextPushButton = require( 'SUN/buttons/TextPushButton' );
+  var Bounds2 = require( 'DOT/Bounds2' );
+  var Util = require( 'DOT/Util' );
+  var RectangularButtonView = require( 'SUN/buttons/RectangularButtonView' );
+
+
+  function ZoomControl( neuronModel, zoomProperty ) {
+
+    var zoomSliderOptions = {
+      thumbSize: new Dimension2( 15, 22 ),
+      trackSize: new Dimension2( 90, 1 )
+    };
+    var zoomSlider = new HSlider( zoomProperty, { min: 1.2, max: 5 }, zoomSliderOptions );
+    zoomSlider.rotation = -Math.PI / 2;
+
+    var zoomControls = [];
+
+    var plusButton = new TextPushButton( '+', {
+      buttonAppearanceStrategy: RectangularButtonView.flatAppearanceStrategy,
+      xMargin: 4,
+      yMargin: 0,
+      cornerRadius: 2,
+      baseColor: 'white',
+      listener: function() {
+        zoomProperty.set( Util.clamp( zoomProperty.value + 0.1, 1.2, 5 ) );
+      }} );
+    plusButton.touchArea = new Bounds2( plusButton.localBounds.minX - 20, plusButton.localBounds.minY - 5,
+        plusButton.localBounds.maxX + 20, plusButton.localBounds.maxY + 20 );
+
+    var minusButton = new TextPushButton( '-', {
+      buttonAppearanceStrategy: RectangularButtonView.flatAppearanceStrategy,
+      xMargin: 5,
+      yMargin: 0,
+      cornerRadius: 2,
+      baseColor: 'white',
+      listener: function() {
+        zoomProperty.set( Util.clamp( zoomProperty.value - 0.1, 1.2, 5 ) );
+      }} );
+    minusButton.touchArea = new Bounds2( minusButton.localBounds.minX - 20, minusButton.localBounds.minY - 5,
+        minusButton.localBounds.maxX + 20, minusButton.localBounds.maxY + 20 );
+
+    zoomControls.push( plusButton );
+    zoomControls.push( zoomSlider );
+    zoomControls.push( minusButton );
+
+    // vertical panel
+    VBox.call( this, {
+      children: zoomControls,
+      align: 'center',
+      spacing: 3
+    } );
+
+  }
+
+  return inherit( VBox, ZoomControl );
+
+} );
+
+
 //// Copyright 2002-2011, University of Colorado
 //
 //package edu.colorado.phet.neuron.view;
@@ -24,10 +98,7 @@
 //import edu.umd.cs.piccolo.nodes.PText;
 //import edu.umd.cs.piccolo.util.PDimension;
 //
-///**
-// * A control that is meant for a Piccolo canvas that can be used for
-// * controlling the zoom factor.
-// *
+
 // * @author John Blanco
 // */
 //public class ZoomControl extends PNode {

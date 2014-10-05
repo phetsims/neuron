@@ -19,8 +19,6 @@ define( function( require ) {
   var Vector2 = require( 'DOT/Vector2' );
   var Bounds2 = require( 'DOT/Bounds2' );
   var Shape = require( 'KITE/Shape' );
-  var Transform3 = require( 'DOT/Transform3' );
-  var Matrix3 = require( 'DOT/Matrix3' );
   var Dimension2 = require( 'DOT/Dimension2' );
   var Property = require( 'AXON/Property' );
   var ToggleProperty = require( 'AXON/ToggleProperty' );
@@ -34,6 +32,8 @@ define( function( require ) {
   var AxonCrossSectionNode = require( 'NEURON/neuron/view/AxonCrossSectionNode' );
   var MembraneChannelNode = require( 'NEURON/neuron/view/MembraneChannelNode' );
   var ChargeSymbolNode = require( 'NEURON/neuron/view/ChargeSymbolNode' );
+  var ZoomableNode = require( 'NEURON/neuron/view/ZoomableNode' );
+  var ZoomControl = require( 'NEURON/neuron/view/ZoomControl' );
   var MembranePotentialChart = require( 'NEURON/neuron/chart/view/MembranePotentialChart' );
   var IonsAndChannelsLegendPanel = require( 'NEURON/neuron/controlpanel/IonsAndChannelsLegendPanel' );
   var AxonCrossSectionControlPanel = require( 'NEURON/neuron/controlpanel/AxonCrossSectionControlPanel' );
@@ -91,13 +91,17 @@ define( function( require ) {
     this.addChild( new HSlider( mockupOpacityProperty, {min: 0, max: 1}, {top: 10, left: 10} ) );
 
     var worldNodeClipArea = Shape.rect( 70, 0, this.layoutBounds.maxX - 280, this.layoutBounds.maxY - 110 );
-
-    var zoomableWorldNode = new Node( {
-      clipArea: worldNodeClipArea
-    } );
-    thisView.addChild( zoomableWorldNode );
     var zoomableRootNode = new Node();
-    zoomableWorldNode.addChild( zoomableRootNode );
+
+    //Zommable Node zooms in and out the zoomableRootNode contents
+    var zoomProperty = new Property( 1.2 );
+    var zoomableWorldNode = new ZoomableNode( zoomableRootNode, zoomProperty, thisView.model, worldNodeClipArea, viewPortPosition );
+    thisView.addChild( zoomableWorldNode );
+
+    var zoomControl = new ZoomControl( thisView.model, zoomProperty );
+    this.addChild( zoomControl );
+    zoomControl.top = this.layoutBounds.minY + 70;
+    zoomControl.left = this.layoutBounds.minX + 25;
 
     // Create the layers in the desired order.
     var axonBodyLayer = new Node();
@@ -189,43 +193,6 @@ define( function( require ) {
     // The clock adapter calculates the appropriate dt and dispatches it to the interested model
     neuronClockModelAdapter.registerStepCallback( thisView.model.step.bind( thisView.model ) );
 
-
-    //Test for thermometer node
-    var zoomProperty = new Property( 1.2 );
-    var zoomSliderOptions = {
-      thumbSize: new Dimension2( 15, 22 ),
-      top: 150, left: 45,
-      trackSize: new Dimension2( 90, 1 )
-    };
-    var zoomSlider = new HSlider( zoomProperty, { min: 1.2, max: 5 }, zoomSliderOptions );
-    zoomSlider.rotation = -Math.PI / 2;
-    this.addChild( zoomSlider );
-
-
-    zoomProperty.link( function( zoomFactor ) {
-      // Skew the zoom a little so that when zoomed in the membrane
-      // is in a reasonable place and there is room for the chart below
-      // it.
-      var skewThreshold = 1.5;
-      var scaleMatrix;
-      var scaleAroundX;
-      var scaleAroundY;
-      if ( zoomFactor > skewThreshold ) {
-        scaleAroundX = Math.round( viewPortPosition.x );
-        scaleAroundY = (zoomFactor - skewThreshold) * thisView.model.getAxonMembrane().getCrossSectionDiameter() * 0.11;
-        scaleMatrix = Matrix3.translation( scaleAroundX, scaleAroundY ).timesMatrix( Matrix3.scaling( zoomFactor, zoomFactor ) ).timesMatrix( Matrix3.translation( -scaleAroundX, -scaleAroundY ) );
-      }
-      else {
-        scaleAroundX = (Math.round( viewPortPosition.x ));
-        scaleAroundY = 0;
-        scaleMatrix = Matrix3.translation( scaleAroundX, scaleAroundY ).timesMatrix( Matrix3.scaling( zoomFactor, zoomFactor ) ).timesMatrix( Matrix3.translation( -scaleAroundX, -scaleAroundY ) );
-
-      }
-
-      var scaleTransform = new Transform3( scaleMatrix );
-      zoomableRootNode.setTransform( scaleTransform );
-
-    } );
 
     var panelLeftPos = this.layoutBounds.maxX - 30;
 
