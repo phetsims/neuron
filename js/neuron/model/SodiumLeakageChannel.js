@@ -68,7 +68,6 @@ define( function( require ) {
 
   return inherit( AbstractLeakChannel, SodiumLeakageChannel, {
     stepInTime: function( dt ) {
-
       var prevOpenness = this.openness;
       var prevInActivationAmt = this.inactivationAmt;
 

@@ -1,5 +1,4 @@
 //  Copyright 2002-2014, University of Colorado Boulder
-
 /**
  * A class to control the zoom factor.
  *
@@ -18,14 +17,21 @@ define( function( require ) {
   var Util = require( 'DOT/Util' );
   var RectangularButtonView = require( 'SUN/buttons/RectangularButtonView' );
 
+  /**
+   * @param  neuronModel
+   * @param  zoomProperty
+   * @param  minZoom
+   * @param  maxZoom
+   * @constructor
+   */
 
-  function ZoomControl( neuronModel, zoomProperty ) {
+  function ZoomControl( neuronModel, zoomProperty, minZoom, maxZoom ) {
 
     var zoomSliderOptions = {
       thumbSize: new Dimension2( 15, 22 ),
       trackSize: new Dimension2( 90, 1 )
     };
-    var zoomSlider = new HSlider( zoomProperty, { min: 1.2, max: 5 }, zoomSliderOptions );
+    var zoomSlider = new HSlider( zoomProperty, { min: minZoom, max: maxZoom }, zoomSliderOptions );
     zoomSlider.rotation = -Math.PI / 2;
 
     var zoomControls = [];

@@ -94,11 +94,11 @@ define( function( require ) {
     var zoomableRootNode = new Node();
 
     //Zommable Node zooms in and out the zoomableRootNode contents
-    var zoomProperty = new Property( 1.2 );
+    var zoomProperty = new Property( 1.3 );
     var zoomableWorldNode = new ZoomableNode( zoomableRootNode, zoomProperty, thisView.model, worldNodeClipArea, viewPortPosition );
     thisView.addChild( zoomableWorldNode );
 
-    var zoomControl = new ZoomControl( thisView.model, zoomProperty );
+    var zoomControl = new ZoomControl( thisView.model, zoomProperty,zoomProperty.value,5 );
     this.addChild( zoomControl );
     zoomControl.top = this.layoutBounds.minY + 70;
     zoomControl.left = this.layoutBounds.minX + 25;
@@ -117,6 +117,7 @@ define( function( require ) {
     zoomableRootNode.addChild( particleLayer );
     zoomableRootNode.addChild( channelEdgeLayer );
     zoomableRootNode.addChild( chargeSymbolLayer );
+
 
     var axonBodyNode = new AxonBodyNode( this.model.axonMembrane, thisView.mvt );
     axonBodyLayer.addChild( axonBodyNode );
@@ -143,10 +144,7 @@ define( function( require ) {
     // Add a node on every new Channel Model
     thisView.model.membraneChannels.addItemAddedListener( handleChannelAdded );
 
-    //TODO Ashraf need to precisely define particles bounds
-    var particleBounds = new Bounds2( 100, 0, 500, 300 );
-    var particlesNode = new ParticlesNode( thisView.model, thisView.mvt, particleBounds );
-    particleLayer.addChild( particlesNode );
+
 
     var recordPlayButtons = [];
     var playToggleProperty = new ToggleProperty( true, false, neuronClockModelAdapter.pausedProperty );
@@ -309,6 +307,11 @@ define( function( require ) {
     thisView.model.chargesShownProperty.link( function( chargesShown ) {
       chargeSymbolLayer.visible = chargesShown;
     } );
+
+    //TODO Ashraf need to precisely define particles bounds
+    var particleBounds = new Bounds2( 140, 0, 560, 300 );
+    var particlesNode = new ParticlesNode( thisView.model, thisView.mvt, particleBounds );
+    particleLayer.addChild( particlesNode );
   }
 
   return inherit( ScreenView, NeuronView, {

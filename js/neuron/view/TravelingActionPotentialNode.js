@@ -38,9 +38,12 @@ define( function( require ) {
     thisNode.addChild( foreground );
 
     function updateShape() {
-      foreground.setShape( mvt.modelToViewShape( travelingActionPotential.getShape() ) );
-      background.setShape( mvt.modelToViewShape( travelingActionPotential.getShape() ) );
+      var transformedShape = mvt.modelToViewShape( travelingActionPotential.getShape() );
+      foreground.setShape( transformedShape );
+      background.setShape( transformedShape );
+
     }
+
 
     travelingActionPotential.shapeChangedProperty.link( updateShape );
   }

@@ -41,6 +41,7 @@ define( function( require ) {
    */
   function AxonCrossSectionControlPanel( neuronModel ) {
 
+
     var allIonsSimulatedCheckBox = new CheckBox( new Text( allIonsString, TEXT_OPTIONS ), neuronModel.allIonsSimulatedProperty, CHECK_BOX_OPTIONS );
     expandTouchArea( allIonsSimulatedCheckBox );
     var showChargesCheckBox = new CheckBox( new Text( chargesString, TEXT_OPTIONS ), neuronModel.chargesShownProperty, CHECK_BOX_OPTIONS );
@@ -77,6 +78,10 @@ define( function( require ) {
       // which would be tricky.
       allIonsSimulatedCheckBox.enabled = !neuronModel.isStimulusInitiationLockedOut();
 
+    } );
+
+    neuronModel.allIonsSimulatedProperty.lazyLink( function( allIonsSimulated ) {
+        neuronModel.setAllIonsSimulated( allIonsSimulated );
     } );
 
 

@@ -163,6 +163,8 @@ define( function( require ) {
       //potential chart has changed.
       potentialChartVisible: DEFAULT_FOR_MEMBRANE_CHART_VISIBILITY,
       // Controls whether all ions, or just those near membrane, are simulated.
+      // the boolean value that indicates whether all ions are shown in the
+      // simulation, or just those that are moving across the membrane.
       allIonsSimulated: DEFAULT_FOR_SHOW_ALL_IONS,
       // Controls whether charges are depicted.
       chargesShown: DEFAULT_FOR_CHARGES_SHOWN,
@@ -350,7 +352,8 @@ define( function( require ) {
 
       // Step the transient particles.  Since these particles may remove
       // themselves as a result of being stepped, we need to copy the list
-      // in order to avoid concurrent modification exceptions. (Not true in observableArray as ForEach already copies the array and iterates, kept the comment for ref - Ashraf)
+      // in order to avoid concurrent modification exceptions.
+      // (Not true in observableArray as ForEach already copies the array and iterates, kept the comment for ref - Ashraf)
 
       this.transientParticles.forEach( function( particle ) {
         particle.stepInTime( dt );
@@ -468,7 +471,7 @@ define( function( require ) {
 
       // Remove all existing particles.
       this.removeAllParticles();
-      this.allIonsSimulated = false;
+
 
       // Reset all membrane channels.
       this.membraneChannels.forEach( function( membraneChannel ) {
@@ -588,18 +591,17 @@ define( function( require ) {
       // out.  Otherwise, particles would come and go during an action
       // potential, which would be hard to handle and potentially confusing.
       if ( !this.isStimulusInitiationLockedOut() ) {
-        if ( this.allIonsSimulated !== allIonsSimulated ) {
-          this.allIonsSimulatedProperty.set( allIonsSimulated );
 
-          if ( this.allIonsSimulated ) {
-            // Add the bulk particles.
-            this.addInitialBulkParticles();
-          }
-          else {
-            // Remove all particles.
-            this.removeAllParticles();
-          }
+
+        if ( this.allIonsSimulated ) {
+          // Add the bulk particles.
+          this.addInitialBulkParticles();
         }
+        else {
+          // Remove all particles.
+          this.removeAllParticles();
+        }
+
       }
     },
     /**

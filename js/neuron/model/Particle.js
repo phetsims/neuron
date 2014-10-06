@@ -18,7 +18,7 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var Vector2 = require( 'DOT/Vector2' );
   var ViewableParticle = require( 'NEURON/neuron/model/ViewableParticle' );
-  var PropertySet = require( 'AXON/PropertySet' );
+  var Property = require( 'AXON/Property' );
   var StillnessMotionStrategy = require( 'NEURON/neuron/model/StillnessMotionStrategy' );
   var NullFadeStrategy = require( 'NEURON/neuron/model/NullFadeStrategy' );
   var MembraneTraversalMotionStrategy = require( 'NEURON/neuron/model/MembraneTraversalMotionStrategy' );
@@ -38,10 +38,9 @@ define( function( require ) {
     yPos = yPos || 0;
 
     ViewableParticle.call( this, {} );
-    PropertySet.call( this, {
-      // particles while removing themselves will set this property to false
-      continueExisting: true
-    } );
+
+    // particles while removing themselves will set this property to false
+    this.continueExistingProperty = new Property(true);
 
     // Location in space of this particle, units are nano-meters.
     this.position = new Vector2( xPos, yPos );
@@ -69,7 +68,7 @@ define( function( require ) {
         // this particle should listen for this notification and do any
         // cleanup and removal of references needed.  If they don't, there
         // will be memory leaks.
-        this.continueExisting = false;
+        this.continueExistingProperty.value = false;
       }
     },
     getPosition: function() {

@@ -36,6 +36,7 @@ define( function( require ) {
     IDLE: 'IDLE', OPENING: 'OPENING', BECOMING_INACTIVE: 'BECOMING_INACTIVE', INACTIVATED: 'INACTIVATED', RESETTING: 'RESETTING'
   } );
 
+
   var RAND = {nextDouble: function() {
     return Math.random();
   }};
@@ -84,7 +85,6 @@ define( function( require ) {
 
 
     stepInTime: function( dt ) {
-
       // The Membrane Channel Node observed centerLocation,openness and inactivation
       // properties separately.This resulted in too many updates to node and degraded the performance.This method checks
       // notifies a change in state if one of these properties change.
@@ -105,6 +105,7 @@ define( function( require ) {
         console.log( "Sodium Dual  Channel Normalized conductance out of range, = " + normalizedConductance );
         assert && assert( false );
       }
+
 
       // Update the state.
       switch( this.gateState ) {

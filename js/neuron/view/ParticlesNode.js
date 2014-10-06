@@ -12,34 +12,32 @@ define( function( require ) {
   var CanvasNode = require( 'SCENERY/nodes/CanvasNode' );
   var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
   var Color = require( 'SCENERY/util/Color' );
+  var Shape = require( 'KITE/Shape' );
 
 
-  /**
-   * @param {Particles} particles
-   * @param {ModelViewTransform2} modelViewTransform
-   * @constructor
-   */
+
   function ParticlesNode( neuronModel, modelViewTransform, bounds ) {
     var thisNode = this;
-
+    var clipArea = Shape.rect( bounds.minX, bounds.minY, bounds.width, bounds.maxY );
+    CanvasNode.call( thisNode, {pickable: false, canvasBounds: bounds, layerSplit: true, clipArea: clipArea } );
     thisNode.neuronModel = neuronModel;
     thisNode.modelViewTransform = modelViewTransform;
 
-    CanvasNode.call( thisNode, {canvasBounds: bounds } );
-
-    // if during a step we change, then trigger a repaint
     //Use Particles Canvas Node to render all the particles directly
     neuronModel.particlesStateChangedProperty.link( function( newValue ) {
-      thisNode.invalidatePaint();
+        thisNode.invalidatePaint();
     } );
-    thisNode.invalidatePaint();
+
+
   }
 
   return inherit( CanvasNode, ParticlesNode, {
 
     // @param {CanvasContextWrapper} wrapper
     paintCanvas: function( wrapper ) {
+
       var context = wrapper.context;
+
       var thisNode = this;
       var canvasStrokeStyle = Color.BLACK.getCanvasStyle();
 

@@ -46,6 +46,9 @@ define( function( require ) {
       return edgeNode;
     }
 
+    var stringShape;
+    var channelPath;
+
     // Create the channel representation.
     var channel = new Path( new Shape(), {fill: membraneChannelModel.getChannelColor(), lineWidth: 0} );
 
@@ -100,14 +103,13 @@ define( function( require ) {
       var height = transformedChannelSize.height * oversizeFactor;
       var edgeWidth = leftEdgeNode.width; // Assume both edges are the same size.
 
-      var path = new Shape();
-      path.moveTo( 0, 0 );
-      path.quadraticCurveTo( (width + edgeWidth) / 2, height / 8, width + edgeWidth, 0 );
-      path.lineTo( width + edgeWidth, height );
-      path.quadraticCurveTo( (width + edgeWidth) / 2, height * 7 / 8, 0, height );
-      path.close();
-
-      channel.setShape( path );
+      channelPath = new Shape();
+      channelPath.moveTo( 0, 0 );
+      channelPath.quadraticCurveTo( (width + edgeWidth) / 2, height / 8, width + edgeWidth, 0 );
+      channelPath.lineTo( width + edgeWidth, height );
+      channelPath.quadraticCurveTo( (width + edgeWidth) / 2, height * 7 / 8, 0, height );
+      channelPath.close();
+      channel.setShape( channelPath );
       channel.fill = channelColor;
       channel.x = -channel.getBounds().width / 2;
       channel.y = -channel.getBounds().height / 2;
@@ -118,7 +120,7 @@ define( function( require ) {
 
       // If this membrane channel has an inactivation gate, update it.
       if ( membraneChannelModel.getHasInactivationGate() ) {
-        
+
         var transformedOverallSize =
           new Dimension2( mvt.modelToViewDeltaX( membraneChannelModel.getOverallSize().width ),
             mvt.modelToViewDeltaY( membraneChannelModel.getOverallSize().height ) );
@@ -140,7 +142,7 @@ define( function( require ) {
         var ballConnectionPoint = new Vector2( inactivationGateBallNode.x, inactivationGateBallNode.y );
 
         var connectorLength = channelCenterBottomPoint.distance( ballConnectionPoint );
-        var stringShape = new Shape().moveTo( channelEdgeConnectionPoint.x, channelEdgeConnectionPoint.y )
+        stringShape = new Shape().moveTo( channelEdgeConnectionPoint.x, channelEdgeConnectionPoint.y )
           .cubicCurveTo( channelEdgeConnectionPoint.x + connectorLength * 0.25,
             channelEdgeConnectionPoint.y + connectorLength * 0.5, ballConnectionPoint.x - connectorLength * 0.75,
             ballConnectionPoint.y - connectorLength * 0.5, ballConnectionPoint.x, ballConnectionPoint.y );
@@ -171,7 +173,7 @@ define( function( require ) {
       updateRotation();
     }
 
-    membraneChannelModel.channelStateChangedProperty.lazyLink( updateChannelNode );
+   membraneChannelModel.channelStateChangedProperty.lazyLink( updateChannelNode );
 
   }
 

@@ -11,13 +11,12 @@ define( function( require ) {
 
   //imports
   var inherit = require( 'PHET_CORE/inherit' );
-  var PropertySet = require( 'AXON/PropertySet' );
 
   function ViewableParticle() {
 
   }
 
-  return inherit( PropertySet, ViewableParticle, {
+  return inherit( Object, ViewableParticle, {
 
     //subclasses must implement
     getType: function() {

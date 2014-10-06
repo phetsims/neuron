@@ -126,7 +126,7 @@ define( function( require ) {
         var growthFactor = (1 - Math.abs( this.lingerCountdownTimer / LINGER_AT_CROSS_SECTION_TIME - 0.5 ) * 2) * 0.04 + 1;
         var newWidth = crossSectionEllipse.bounds.getWidth() * growthFactor;
         var newHeight = crossSectionEllipse.bounds.getHeight() * growthFactor;
-        this.shape = new Shape().ellipse( 0, 0, newWidth/2, newHeight/2 );
+        this.shape = new Shape().ellipse( 0, 0, newWidth / 2, newHeight / 2 );
       }
 
       this.shapeChangedProperty.set( !this.shapeChangedProperty.get() );
@@ -138,7 +138,7 @@ define( function( require ) {
      * Set the state from a (probably previously captured) version of
      * the interal state.
      */
-    setState:function( state){
+    setState: function( state ) {
       this.travelTimeCountdownTimer = state.getTravelTimeCountdownTimer();
       this.lingerCountdownTimer = state.getLingerCountdownTimer();
       this.updateShape();
@@ -148,8 +148,8 @@ define( function( require ) {
      * Get the state, generally for use in setting the state later for
      * some sort of playback.
      */
-    getState:function(){
-      return new TravelingActionPotentialState(this.travelTimeCountdownTimer, this.lingerCountdownTimer);
+    getState: function() {
+      return new TravelingActionPotentialState( this.travelTimeCountdownTimer, this.lingerCountdownTimer );
     }
 
 
