@@ -12,7 +12,7 @@ define( function( require ) {
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
   var ScreenView = require( 'JOIST/ScreenView' );
-  var ResetAllButton = require( 'SCENERY_PHET/ResetAllButton' );
+  var ResetAllButton = require( 'SCENERY_PHET/buttons/ResetAllButton' );
   var Image = require( 'SCENERY/nodes/Image' );
   var HBox = require( 'SCENERY/nodes/HBox' );
   var HSlider = require( 'SUN/HSlider' );
@@ -39,8 +39,8 @@ define( function( require ) {
   var AxonCrossSectionControlPanel = require( 'NEURON/neuron/controlpanel/AxonCrossSectionControlPanel' );
 
 
-  var PlayPauseButton = require( 'SCENERY_PHET/PlayPauseButton' );
-  var StepButton = require( 'SCENERY_PHET/StepButton' );
+  var PlayPauseButton = require( 'SCENERY_PHET/buttons/PlayPauseButton' );
+  var StepButton = require( 'SCENERY_PHET/buttons/StepButton' );
 
 
   // images
