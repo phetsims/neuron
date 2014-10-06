@@ -22,9 +22,9 @@ define( function( require ) {
   var Dimension2 = require( 'DOT/Dimension2' );
   var Property = require( 'AXON/Property' );
   var ToggleProperty = require( 'AXON/ToggleProperty' );
-  var Text = require( 'SCENERY/nodes/Text' );
   var RectangularPushButton = require( 'SUN/buttons/RectangularPushButton' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
+  var MultiLineText = require( 'SCENERY_PHET/MultiLineText' );
   var Node = require( 'SCENERY/nodes/Node' );
   var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   var AxonBodyNode = require( 'NEURON/neuron/view/AxonBodyNode' );
@@ -98,7 +98,7 @@ define( function( require ) {
     var zoomableWorldNode = new ZoomableNode( zoomableRootNode, zoomProperty, thisView.model, worldNodeClipArea, viewPortPosition );
     thisView.addChild( zoomableWorldNode );
 
-    var zoomControl = new ZoomControl( thisView.model, zoomProperty,zoomProperty.value,5 );
+    var zoomControl = new ZoomControl( thisView.model, zoomProperty, zoomProperty.value, 5 );
     this.addChild( zoomControl );
     zoomControl.top = this.layoutBounds.minY + 70;
     zoomControl.left = this.layoutBounds.minX + 25;
@@ -145,7 +145,6 @@ define( function( require ) {
     thisView.model.membraneChannels.addItemAddedListener( handleChannelAdded );
 
 
-
     var recordPlayButtons = [];
     var playToggleProperty = new ToggleProperty( true, false, neuronClockModelAdapter.pausedProperty );
     var playPauseButton = new PlayPauseButton( playToggleProperty, { radius: 25 } );
@@ -170,13 +169,13 @@ define( function( require ) {
 
 
     var stimulateNeuronButton = new RectangularPushButton( {
-      content: new Text( 'Stimulate Neuron', { font: BUTTON_FONT } ),
+      content: new MultiLineText( 'Stimulate\nNeuron', { font: BUTTON_FONT } ),
       listener: function() { thisView.model.initiateStimulusPulse(); },
       baseColor: '#c28a43',
-      right: thisView.layoutBounds.maxX - 115,
-      bottom: thisView.layoutBounds.maxY - 60,
+      right: recordPlayButtonBox.right + 200,
+      top: recordPlayButtonBox.top - 25,
       minWidth: 50,
-      minHeight: 35
+      minHeight: 65
     } );
 
     this.addChild( stimulateNeuronButton );
