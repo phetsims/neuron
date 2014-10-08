@@ -28,7 +28,8 @@ define( function( require ) {
   var Node = require( 'SCENERY/nodes/Node' );
   var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   var AxonBodyNode = require( 'NEURON/neuron/view/AxonBodyNode' );
-  var ParticlesNode = require( 'NEURON/neuron/view/ParticlesNode' );
+  var TransientParticlesNode = require( 'NEURON/neuron/view/TransientParticlesNode' );
+  var BackgroundParticlesNode = require( 'NEURON/neuron/view/BackgroundParticlesNode' );
   var AxonCrossSectionNode = require( 'NEURON/neuron/view/AxonCrossSectionNode' );
   var MembraneChannelNode = require( 'NEURON/neuron/view/MembraneChannelNode' );
   var ConcentrationReadoutLayerNode = require( 'NEURON/neuron/view/ConcentrationReadoutLayerNode' );
@@ -65,7 +66,7 @@ define( function( require ) {
    */
   function NeuronView( neuronClockModelAdapter ) {
     var thisView = this;
-    thisView.model = neuronClockModelAdapter.model; // model is neuronmodel
+    thisView.neuronModel = neuronClockModelAdapter.model; // model is neuronmodel
     ScreenView.call( thisView, {renderer: 'svg', layoutBounds: new Bounds2( 0, 0, 834, 504 )} );
 
     var viewPortPosition = new Vector2( thisView.layoutBounds.width * 0.42, thisView.layoutBounds.height * 0.30 );
@@ -87,10 +88,10 @@ define( function( require ) {
 
     //Zommable Node zooms in and out the zoomableRootNode contents
     var zoomProperty = new Property( 1.3 );
-    var zoomableWorldNode = new ZoomableNode( zoomableRootNode, zoomProperty, thisView.model, worldNodeClipArea, viewPortPosition );
+    var zoomableWorldNode = new ZoomableNode( zoomableRootNode, zoomProperty, thisView.neuronModel, worldNodeClipArea, viewPortPosition );
     thisView.addChild( zoomableWorldNode );
 
-    var zoomControl = new ZoomControl( thisView.model, zoomProperty, zoomProperty.value, 4 );
+    var zoomControl = new ZoomControl( thisView.neuronModel, zoomProperty, zoomProperty.value, 4 );
     this.addChild( zoomControl );
     zoomControl.top = this.layoutBounds.minY + 70;
     zoomControl.left = this.layoutBounds.minX + 25;
@@ -111,9 +112,9 @@ define( function( require ) {
     zoomableRootNode.addChild( chargeSymbolLayer );
 
 
-    var axonBodyNode = new AxonBodyNode( this.model.axonMembrane, thisView.mvt );
+    var axonBodyNode = new AxonBodyNode( thisView.neuronModel.axonMembrane, thisView.mvt );
     axonBodyLayer.addChild( axonBodyNode );
-    var axonCrossSectionNode = new AxonCrossSectionNode( this.model.axonMembrane, thisView.mvt );
+    var axonCrossSectionNode = new AxonCrossSectionNode( thisView.neuronModel.axonMembrane, thisView.mvt );
     axonCrossSectionLayer.addChild( axonCrossSectionNode );
 
 
@@ -123,27 +124,27 @@ define( function( require ) {
       channelNode.addToCanvas( channelLayer, channelEdgeLayer );// it internally adds to layers, done this way for better layering
 
       // Add the removal listener for if and when this channel is removed from the model.
-      thisView.model.membraneChannels.addItemRemovedListener( function removalListener( removedChannel ) {
+      thisView.neuronModel.membraneChannels.addItemRemovedListener( function removalListener( removedChannel ) {
         if ( removedChannel === addedChannel ) {
           channelNode.removeFromCanvas( channelLayer, channelEdgeLayer );
-          thisView.model.membraneChannels.removeItemRemovedListener( removalListener );
+          thisView.neuronModel.membraneChannels.removeItemRemovedListener( removalListener );
         }
       } );
     }
 
     // Add initial channel nodes.
-    thisView.model.membraneChannels.forEach( handleChannelAdded );
+    thisView.neuronModel.membraneChannels.forEach( handleChannelAdded );
     // Add a node on every new Channel Model
-    thisView.model.membraneChannels.addItemAddedListener( handleChannelAdded );
+    thisView.neuronModel.membraneChannels.addItemAddedListener( handleChannelAdded );
 
 
     var recordPlayButtons = [];
     var playToggleProperty = new ToggleProperty( true, false, neuronClockModelAdapter.pausedProperty );
     var playPauseButton = new PlayPauseButton( playToggleProperty, { radius: 25 } );
     var forwardStepButton = new StepButton( function() { neuronClockModelAdapter.stepClockWhilePaused(); }, playToggleProperty ).mutate( {scale: 1} );
-    thisView.model.pausedProperty.linkAttribute( forwardStepButton, 'enabled' );
+    thisView.neuronModel.pausedProperty.linkAttribute( forwardStepButton, 'enabled' );
     var backwardStepButton = new StepButton( function() { neuronClockModelAdapter.stepClockBackWhilePaused(); }, playToggleProperty ).mutate( {scale: 1, rotation: Math.PI} );
-    thisView.model.pausedProperty.linkAttribute( backwardStepButton, 'enabled' );
+    thisView.neuronModel.pausedProperty.linkAttribute( backwardStepButton, 'enabled' );
 
     recordPlayButtons.push( backwardStepButton );
     recordPlayButtons.push( playPauseButton );
@@ -162,7 +163,7 @@ define( function( require ) {
 
     var stimulateNeuronButton = new RectangularPushButton( {
       content: new MultiLineText( stimulateNeuronString, { font: BUTTON_FONT } ),
-      listener: function() { thisView.model.initiateStimulusPulse(); },
+      listener: function() { thisView.neuronModel.initiateStimulusPulse(); },
       baseColor: '#c28a43',
       right: recordPlayButtonBox.right + 200,
       top: recordPlayButtonBox.top - 25,
@@ -176,22 +177,22 @@ define( function( require ) {
     //TODO: Wire up the reset all button to the model's reset function
     var resetAllButton = new ResetAllButton( {
       listener: function() {
-        thisView.model.reset();
+        thisView.neuronModel.reset();
       },
       right: recordPlayButtonBox.right + 300,
       top: recordPlayButtonBox.top - 20
     } );
     this.addChild( resetAllButton );
 
-    thisView.model.stimulasLockoutProperty.link( function( stimulasLockout ) {
+    thisView.neuronModel.stimulasLockoutProperty.link( function( stimulasLockout ) {
       stimulateNeuronButton.enabled = !stimulasLockout;
-      thisView.model.stimulusPulseInitiated = stimulasLockout;
+      thisView.neuronModel.stimulusPulseInitiated = stimulasLockout;
     } );
 
 
     // NeuronModel uses specialized real time constant clock simulation
     // The clock adapter calculates the appropriate dt and dispatches it to the interested model
-    neuronClockModelAdapter.registerStepCallback( thisView.model.step.bind( thisView.model ) );
+    neuronClockModelAdapter.registerStepCallback( thisView.neuronModel.step.bind( thisView.neuronModel ) );
 
 
     var panelLeftPos = this.layoutBounds.maxX - 30;
@@ -201,7 +202,7 @@ define( function( require ) {
     iosAndChannelsLegendPanel.right = panelLeftPos;
     iosAndChannelsLegendPanel.top = 40;
 
-    var axonCrossSectionControlPanel = new AxonCrossSectionControlPanel( thisView.model );
+    var axonCrossSectionControlPanel = new AxonCrossSectionControlPanel( thisView.neuronModel );
     this.addChild( axonCrossSectionControlPanel );
     axonCrossSectionControlPanel.right = panelLeftPos;
     axonCrossSectionControlPanel.top = iosAndChannelsLegendPanel.bottom + 20;
@@ -221,7 +222,7 @@ define( function( require ) {
      */
     function addChargeSymbols() {
       // Create a sorted list of the membrane channels in the model.
-      var sortedMembraneChannels = thisView.model.membraneChannels.getArray().slice();
+      var sortedMembraneChannels = thisView.neuronModel.membraneChannels.getArray().slice();
       sortMembraneChannelList( sortedMembraneChannels );
 
       // Go through the list and put charge symbols between each pair of channels.
@@ -239,10 +240,10 @@ define( function( require ) {
       var neuronCenterPoint = new Vector2( 0, 0 );  // Assumes center of neuron at (0, 0).
 
       calcChargeSymbolLocations( channel1.getCenterLocation(), channel2.getCenterLocation(), neuronCenterPoint, outerSymbolLocation, innerSymbolLocation );
-      outerChargeSymbol = new ChargeSymbolNode( thisView.model, MAX_CHARGE_SYMBOL_SIZE, 0.1, false );
+      outerChargeSymbol = new ChargeSymbolNode( thisView.neuronModel, MAX_CHARGE_SYMBOL_SIZE, 0.1, false );
       outerChargeSymbol.setTranslation( thisView.mvt.modelToViewPosition( innerSymbolLocation ) );
       chargeSymbolLayer.addChild( outerChargeSymbol );
-      innerChargeSymbol = new ChargeSymbolNode( thisView.model, MAX_CHARGE_SYMBOL_SIZE, 0.1, true );
+      innerChargeSymbol = new ChargeSymbolNode( thisView.neuronModel, MAX_CHARGE_SYMBOL_SIZE, 0.1, true );
       innerChargeSymbol.setTranslation( thisView.mvt.modelToViewPosition( outerSymbolLocation ) );
       chargeSymbolLayer.addChild( innerChargeSymbol );
     }
@@ -306,19 +307,62 @@ define( function( require ) {
 
     addChargeSymbols();
 
-    thisView.model.chargesShownProperty.link( function( chargesShown ) {
+    thisView.neuronModel.chargesShownProperty.link( function( chargesShown ) {
       chargeSymbolLayer.visible = chargesShown;
     } );
 
     //TODO Ashraf need to precisely define particles bounds
     var particleBounds = new Bounds2( 140, 0, 560, 300 );
-    var particlesNode = new ParticlesNode( thisView.model, thisView.mvt, particleBounds );
-    particleLayer.addChild( particlesNode );
+    var activeCanvasIndexProperty = [];
 
-    var concentrationReadoutLayerNode = new ConcentrationReadoutLayerNode( thisView.model, zoomProperty, zoomableRootNode, axonCrossSectionNode );
+    var backgroundParticleCanvasCount = 0;
+    //create multiple background particle node each rendering a subset at a time see class BackgroundParticles
+    function createBackgroundParticleCanvas() {
+      var totalCount = thisView.neuronModel.backgroundParticles.getArray().length;
+      var bucketSize = 100;
+      backgroundParticleCanvasCount = (totalCount / bucketSize) | 0;// make it int
+      if ( totalCount % bucketSize !== 0 ) {
+        backgroundParticleCanvasCount++;
+      }
+
+      totalCount = totalCount - 1; // zero based index
+      _.times( backgroundParticleCanvasCount, function( canvasIndex ) {
+
+        activeCanvasIndexProperty[canvasIndex] = new Property( "true" );
+        var fromIndex = canvasIndex * bucketSize;
+        var upToIndex = fromIndex + bucketSize;
+        var toIndex = upToIndex > totalCount ? totalCount : upToIndex;
+        var particleSlice = thisView.neuronModel.backgroundParticles.getArray().slice( fromIndex, toIndex );
+        var backgroundParticlesNode = new BackgroundParticlesNode( particleSlice, thisView.mvt, particleBounds, activeCanvasIndexProperty[canvasIndex] );
+        particleLayer.addChild( backgroundParticlesNode );
+
+      } );
+
+    }
+
+    createBackgroundParticleCanvas();
+    var transientParticlesNode = new TransientParticlesNode( thisView.neuronModel, thisView.mvt, particleBounds );
+    particleLayer.addChild( transientParticlesNode );
+
+    var currentActiveBackgroundCanvasIndex = 0;
+    thisView.neuronModel.particlesStateChangedProperty.link( function( newValue ) {
+      _.times( backgroundParticleCanvasCount, function( canvasIndex ) {
+        activeCanvasIndexProperty[canvasIndex].value = false;
+      } );
+      //make the background canvas rendering active on a round robin fashion
+      activeCanvasIndexProperty[currentActiveBackgroundCanvasIndex].value = true;
+      currentActiveBackgroundCanvasIndex++;
+
+      if ( currentActiveBackgroundCanvasIndex > backgroundParticleCanvasCount - 1 ) {
+        currentActiveBackgroundCanvasIndex = 0;
+      }
+
+    } );
+
+    var concentrationReadoutLayerNode = new ConcentrationReadoutLayerNode( thisView.neuronModel, zoomProperty, zoomableRootNode, axonCrossSectionNode );
     this.addChild( concentrationReadoutLayerNode );
 
-    thisView.model.concentrationReadoutVisibleProperty.link( function( concentrationVisible ) {
+    thisView.neuronModel.concentrationReadoutVisibleProperty.link( function( concentrationVisible ) {
       concentrationReadoutLayerNode.visible = concentrationVisible;
     } );
 

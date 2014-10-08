@@ -14,20 +14,17 @@ define( function( require ) {
   var Color = require( 'SCENERY/util/Color' );
   var Shape = require( 'KITE/Shape' );
 
-
-
-  function ParticlesNode( neuronModel, modelViewTransform, bounds ) {
+  /**
+   *
+   * @param modelViewTransform
+   * @param bounds
+   * @constructor
+   */
+  function ParticlesNode( modelViewTransform, bounds ) {
     var thisNode = this;
     var clipArea = Shape.rect( bounds.minX, bounds.minY, bounds.width, bounds.maxY );
     CanvasNode.call( thisNode, {pickable: false, canvasBounds: bounds, layerSplit: true, clipArea: clipArea } );
-    thisNode.neuronModel = neuronModel;
     thisNode.modelViewTransform = modelViewTransform;
-
-    //Use Particles Canvas Node to render all the particles directly
-    neuronModel.particlesStateChangedProperty.link( function( newValue ) {
-        thisNode.invalidatePaint();
-    } );
-
 
   }
 
@@ -104,13 +101,15 @@ define( function( require ) {
 
       }
 
-      renderParticles( this.neuronModel.backgroundParticles.getArray() );
-      renderParticles( this.neuronModel.transientParticles.getArray() );
-      renderParticles( this.neuronModel.playbackParticles.getArray() );
+
+      renderParticles( this.getParticlesToRender() );
 
 
+    },
+
+    getParticlesToRender: function() {
+      throw new Error( "getParticlesToRender is to be implemented by sub classes" );
     }
-
 
   } );
 
