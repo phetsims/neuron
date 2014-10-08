@@ -307,12 +307,10 @@ define( function( require ) {
 
     addChargeSymbols();
 
-    thisView.neuronModel.chargesShownProperty.link( function( chargesShown ) {
-      chargeSymbolLayer.visible = chargesShown;
-    } );
 
-    //TODO Ashraf need to precisely define particles bounds
-    var particleBounds = new Bounds2( 140, 0, 560, 300 );
+
+    //TODO Ashraf need to precisely define particles bounds,smaller the better
+    var backgroundParticleBounds = new Bounds2( 160, 10, 540, 300 );
     var activeCanvasIndexProperty = [];
 
     var backgroundParticleCanvasCount = 0;
@@ -333,7 +331,7 @@ define( function( require ) {
         var upToIndex = fromIndex + bucketSize;
         var toIndex = upToIndex > totalCount ? totalCount : upToIndex;
         var particleSlice = thisView.neuronModel.backgroundParticles.getArray().slice( fromIndex, toIndex );
-        var backgroundParticlesNode = new BackgroundParticlesNode( particleSlice, thisView.mvt, particleBounds, activeCanvasIndexProperty[canvasIndex] );
+        var backgroundParticlesNode = new BackgroundParticlesNode( particleSlice, thisView.mvt, backgroundParticleBounds, activeCanvasIndexProperty[canvasIndex] );
         particleLayer.addChild( backgroundParticlesNode );
 
       } );
@@ -341,7 +339,8 @@ define( function( require ) {
     }
 
     createBackgroundParticleCanvas();
-    var transientParticlesNode = new TransientParticlesNode( thisView.neuronModel, thisView.mvt, particleBounds );
+    var transientParticleBounds = new Bounds2( 200, 20, 500, 300 ); // Can be smaller than the background particle bounds //TODO Ashraf verify with John
+    var transientParticlesNode = new TransientParticlesNode( thisView.neuronModel, thisView.mvt, transientParticleBounds );
     particleLayer.addChild( transientParticlesNode );
 
     var currentActiveBackgroundCanvasIndex = 0;

@@ -86,9 +86,14 @@ define( function( require ) {
     }
 
     axonModel.membranePotentialProperty.link( function( membranePotential ) {
-      if ( thisNode.isVisible() ) {
+      if ( axonModel.chargesShown ) {
         updateRepresentation();
       }
+    } );
+
+    axonModel.chargesShownProperty.link( function( chargesShown ) {
+      thisNode.visible = chargesShown;
+      updateRepresentation();
     } );
 
 
@@ -96,7 +101,8 @@ define( function( require ) {
 
   return inherit( Node, ChargeSymbolNode );
 
-} );
+} )
+;
 
 
 //// Copyright 2002-2011, University of Colorado
