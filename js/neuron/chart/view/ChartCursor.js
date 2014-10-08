@@ -53,7 +53,7 @@ define( function( require ) {
       allowTouchSnag: true,
       pressPoint: Vector2.ZERO,
       pressTime: 0,
-      dragCursor:'e-resize',
+      dragCursor: 'e-resize',
 
       start: function( e ) {
         this.currentPoint = e.currentTarget.globalToParentPoint( e.pointer.point );

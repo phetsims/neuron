@@ -20,7 +20,7 @@ define( function( require ) {
   var FILL_COLOR = Color.WHITE;
   // Factor that controls the thickness of the plus and minus sign, must be
   // less than 1.
-  var THICKNESS_FACTOR = 0.3;
+  var THICKNESS_FACTOR = 0.4;
 
   /**
    *
@@ -86,7 +86,9 @@ define( function( require ) {
     }
 
     axonModel.membranePotentialProperty.link( function( membranePotential ) {
-      updateRepresentation();
+      if ( thisNode.isVisible() ) {
+        updateRepresentation();
+      }
     } );
 
 

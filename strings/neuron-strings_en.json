@@ -1,5 +1,6 @@
 {
   "neuron.name": "Neuron",
+  "stimulateNeuron": "Stimulate\nNeuron",
   "legend": "Legend",
   "sodiumIon": "Sodium Ion (Na+)",
   "potassiumIon": "Potassium Ion (K+)",
@@ -14,7 +15,13 @@
   "chartTitle": "Membrane Potential vs. Time",
   "chartYAxisLabel": "Membrane Potential (mV)",
   "chartXAxisLabel": "Time (ms)",
-  "chartClear": "Clear Chart"
+  "chartClear": "Clear Chart",
+  "showLegend": "Show",
+  "units.mM": "mM",
+  "concentrationReadoutPattern.0label.1value.2units": "{0} [{1} {2}]",
+  "potassiumChemicalSymbol": "K+",
+  "sodiumChemicalSymbol": "Na+"
+
 }
 
 

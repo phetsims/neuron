@@ -19,6 +19,7 @@ define( function( require ) {
 
 
   // Labels for control panel check boxes.
+  var showLegendString = require( 'string!NEURON/showLegend' );
   var allIonsString = require( 'string!NEURON/allIons' );
   var potentialChartString = require( 'string!NEURON/potentialChart' );
   var chargesString = require( 'string!NEURON/charges' );
@@ -52,21 +53,24 @@ define( function( require ) {
     expandTouchArea( showPotentialChartCheckBox );
 
 
-    var crossSectionCheckBoxes = [];
-    crossSectionCheckBoxes.push( allIonsSimulatedCheckBox );
-    crossSectionCheckBoxes.push( showChargesCheckBox );
-    crossSectionCheckBoxes.push( showConcentrationsCheckBox );
-    crossSectionCheckBoxes.push( showPotentialChartCheckBox );
+    // Add the images and labels for the ions.
+    var crossectionControlContents = [];
+    crossectionControlContents.push( new Text( showLegendString, {
+      font: new PhetFont( { size: 16, weight: 'bold' } )} ) );
+    crossectionControlContents.push( allIonsSimulatedCheckBox );
+    crossectionControlContents.push( showChargesCheckBox );
+    crossectionControlContents.push( showConcentrationsCheckBox );
+    crossectionControlContents.push( showPotentialChartCheckBox );
 
     // vertical panel
     Panel.call( this, new VBox( {
-      children: crossSectionCheckBoxes,
+      children: crossectionControlContents,
       align: 'left',
       spacing: 5
     } ), {
       // panel options
       fill: 'rgb(238,238,238)',
-      xMargin: 20,
+      xMargin: 5,
       yMargin: 6,
       lineWidth: 0
     } );
@@ -81,7 +85,7 @@ define( function( require ) {
     } );
 
     neuronModel.allIonsSimulatedProperty.lazyLink( function( allIonsSimulated ) {
-        neuronModel.setAllIonsSimulated( allIonsSimulated );
+      neuronModel.setAllIonsSimulated( allIonsSimulated );
     } );
 
 

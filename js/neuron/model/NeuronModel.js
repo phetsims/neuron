@@ -443,7 +443,7 @@ define( function( require ) {
         }
       }
       if ( concentrationChanged ) {
-        this.concentrationChangedProperty = true;
+        this.concentrationChanged = true;
       }
 
 
@@ -1003,6 +1003,8 @@ define( function( require ) {
      */
     setPlaybackState: function( state ) {
 
+      this.concentrationChanged = false;
+
       // Set the membrane channel state.
       this.axonMembrane.setState( state.getAxonMembraneState() );
 
@@ -1049,9 +1051,10 @@ define( function( require ) {
 
       this.neuronModelPlaybackState = state;
       this.membranePotential = state.getMembranePotential();
+
       // For the sake of simplicity, always send out notifications for the
       // concentration changes.
-      this.concentrationChanged = !this.concentrationChanged;
+      this.concentrationChanged = true;
 
     }
 
@@ -1254,36 +1257,8 @@ define( function( require ) {
 //
 
 
-//
-//  private void notifyAllIonsSimulatedChanged(){
-//    for (Listener listener : listeners.getListeners(Listener.class)){
-//      listener.allIonsSimulatedChanged();
-//    }
-//  }
-//
-//  private void notifyStimulusLockoutStateChanged(){
-//    for (Listener listener : listeners.getListeners(Listener.class)){
-//      listener.stimulationLockoutStateChanged();
-//    }
-//  }
-//
-//  private void notifyConcentrationChanged(){
-//    for (Listener listener : listeners.getListeners(Listener.class)){
-//      listener.concentrationChanged();
-//    }
-//  }
-//
-
-//
 
 
-//
-//  /**
-//   * Remove all particles (i.e. ions) from the simulation.
-//   */
-//  private void removeAllParticles(){
-
-//  }
 //
 //  //----------------------------------------------------------------------------
 //  // Inner Classes and Interfaces

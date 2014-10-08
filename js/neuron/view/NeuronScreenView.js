@@ -31,6 +31,7 @@ define( function( require ) {
   var ParticlesNode = require( 'NEURON/neuron/view/ParticlesNode' );
   var AxonCrossSectionNode = require( 'NEURON/neuron/view/AxonCrossSectionNode' );
   var MembraneChannelNode = require( 'NEURON/neuron/view/MembraneChannelNode' );
+  var ConcentrationReadoutLayerNode = require( 'NEURON/neuron/view/ConcentrationReadoutLayerNode' );
   var ChargeSymbolNode = require( 'NEURON/neuron/view/ChargeSymbolNode' );
   var ZoomableNode = require( 'NEURON/neuron/view/ZoomableNode' );
   var ZoomControl = require( 'NEURON/neuron/view/ZoomControl' );
@@ -47,6 +48,8 @@ define( function( require ) {
   var mockupImage = require( 'image!NEURON/neuron-mockup.png' );
   // constants
 
+  //strings
+  var stimulateNeuronString = require( 'string!NEURON/stimulateNeuron' );
 
   var BUTTON_FONT = new PhetFont( 18 );
   // Max size of the charge symbols, tweak as needed.
@@ -72,17 +75,6 @@ define( function( require ) {
       1.3 ); // 3.9 Scale factor - smaller numbers "zoom out", bigger ones "zoom in".
 
 
-    // Create and add the Reset All Button in the bottom right
-    //TODO: Wire up the reset all button to the model's reset function
-    var resetAllButton = new ResetAllButton( {
-      listener: function() {
-        thisView.model.reset();
-      },
-      right: this.layoutBounds.maxX - 10,
-      bottom: this.layoutBounds.maxY - 10
-    } );
-    this.addChild( resetAllButton );
-
     //Show the mock-up and a slider to change its transparency
     var mockupOpacityProperty = new Property( 0 );
     var image = new Image( mockupImage, {pickable: false} );
@@ -98,7 +90,7 @@ define( function( require ) {
     var zoomableWorldNode = new ZoomableNode( zoomableRootNode, zoomProperty, thisView.model, worldNodeClipArea, viewPortPosition );
     thisView.addChild( zoomableWorldNode );
 
-    var zoomControl = new ZoomControl( thisView.model, zoomProperty, zoomProperty.value, 5 );
+    var zoomControl = new ZoomControl( thisView.model, zoomProperty, zoomProperty.value, 4 );
     this.addChild( zoomControl );
     zoomControl.top = this.layoutBounds.minY + 70;
     zoomControl.left = this.layoutBounds.minX + 25;
@@ -150,7 +142,7 @@ define( function( require ) {
     var playPauseButton = new PlayPauseButton( playToggleProperty, { radius: 25 } );
     var forwardStepButton = new StepButton( function() { neuronClockModelAdapter.stepClockWhilePaused(); }, playToggleProperty ).mutate( {scale: 1} );
     thisView.model.pausedProperty.linkAttribute( forwardStepButton, 'enabled' );
-    var backwardStepButton = new StepButton( function() { neuronClockModelAdapter.stepClockBackWhilePaused(); }, playToggleProperty ).mutate( {scale: 1} );
+    var backwardStepButton = new StepButton( function() { neuronClockModelAdapter.stepClockBackWhilePaused(); }, playToggleProperty ).mutate( {scale: 1, rotation: Math.PI} );
     thisView.model.pausedProperty.linkAttribute( backwardStepButton, 'enabled' );
 
     recordPlayButtons.push( backwardStepButton );
@@ -169,7 +161,7 @@ define( function( require ) {
 
 
     var stimulateNeuronButton = new RectangularPushButton( {
-      content: new MultiLineText( 'Stimulate\nNeuron', { font: BUTTON_FONT } ),
+      content: new MultiLineText( stimulateNeuronString, { font: BUTTON_FONT } ),
       listener: function() { thisView.model.initiateStimulusPulse(); },
       baseColor: '#c28a43',
       right: recordPlayButtonBox.right + 200,
@@ -179,6 +171,17 @@ define( function( require ) {
     } );
 
     this.addChild( stimulateNeuronButton );
+
+    // Create and add the Reset All Button in the bottom right
+    //TODO: Wire up the reset all button to the model's reset function
+    var resetAllButton = new ResetAllButton( {
+      listener: function() {
+        thisView.model.reset();
+      },
+      right: recordPlayButtonBox.right + 300,
+      top: recordPlayButtonBox.top - 20
+    } );
+    this.addChild( resetAllButton );
 
     thisView.model.stimulasLockoutProperty.link( function( stimulasLockout ) {
       stimulateNeuronButton.enabled = !stimulasLockout;
@@ -311,6 +314,14 @@ define( function( require ) {
     var particleBounds = new Bounds2( 140, 0, 560, 300 );
     var particlesNode = new ParticlesNode( thisView.model, thisView.mvt, particleBounds );
     particleLayer.addChild( particlesNode );
+
+    var concentrationReadoutLayerNode = new ConcentrationReadoutLayerNode( thisView.model, zoomProperty, zoomableRootNode, axonCrossSectionNode );
+    this.addChild( concentrationReadoutLayerNode );
+
+    thisView.model.concentrationReadoutVisibleProperty.link( function( concentrationVisible ) {
+      concentrationReadoutLayerNode.visible = concentrationVisible;
+    } );
+
   }
 
   return inherit( ScreenView, NeuronView, {

@@ -46,10 +46,6 @@ define( function( require ) {
   var chartClearString = require( 'string!NEURON/chartClear' );
   var chartXAxisLabelString = require( 'string!NEURON/chartXAxisLabel' );
   var chartYAxisLabelString = require( 'string!NEURON/chartYAxisLabel' );
-  /* TODO var concentrationsString = require( 'string!NEURON/concentrations' );
-
-
-   */
 
   var GRID_TICK_TEXT_FONT = new PhetFont( 8 );
 

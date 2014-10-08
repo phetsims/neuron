@@ -36,10 +36,6 @@ define( function( require ) {
     thisNode.axonMembraneModel = axonMembraneModel;
     thisNode.mvt = transform;
 
-
-    // Listen to the axon membrane for events that matter to the visual  representation. TODO
-
-
     // Add the axon body.
     var axonBodyShape = thisNode.mvt.modelToViewShape( axonMembraneModel.axonBodyShape );
     var axonBodyBounds = axonBodyShape.bounds;
