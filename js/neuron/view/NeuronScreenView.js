@@ -21,6 +21,7 @@ define( function( require ) {
   var Shape = require( 'KITE/Shape' );
   var Dimension2 = require( 'DOT/Dimension2' );
   var Property = require( 'AXON/Property' );
+  var ObservableArray = require( 'AXON/ObservableArray' );
   var ToggleProperty = require( 'AXON/ToggleProperty' );
   var RectangularPushButton = require( 'SUN/buttons/RectangularPushButton' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
@@ -33,6 +34,7 @@ define( function( require ) {
   var AxonCrossSectionNode = require( 'NEURON/neuron/view/AxonCrossSectionNode' );
   var MembraneChannelNode = require( 'NEURON/neuron/view/MembraneChannelNode' );
   var ConcentrationReadoutLayerNode = require( 'NEURON/neuron/view/ConcentrationReadoutLayerNode' );
+  var MembraneChannelGateCanvasNode = require( 'NEURON/neuron/view/MembraneChannelGateCanvasNode' );
   var ChargeSymbolNode = require( 'NEURON/neuron/view/ChargeSymbolNode' );
   var ZoomableNode = require( 'NEURON/neuron/view/ZoomableNode' );
   var ZoomControl = require( 'NEURON/neuron/view/ZoomControl' );
@@ -119,17 +121,22 @@ define( function( require ) {
     var axonCrossSectionNode = new AxonCrossSectionNode( thisView.neuronModel.axonMembrane, thisView.mvt );
     axonCrossSectionLayer.addChild( axonCrossSectionNode );
 
+    //For improved performance, the channel gates are rendered directly on canvas
+    //The gate drawing  depends on the visible bounds of edge nodes which is available in membranechannelnodes
+    var membraneChannelNodes = new ObservableArray();
 
     function handleChannelAdded( addedChannel ) {
 
       // Create the view representation for this channel.
       var channelNode = new MembraneChannelNode( addedChannel, thisView.mvt );
-      channelNode.addToCanvas( channelLayer, channelEdgeLayer );// it internally adds to layers, done this way for better layering
+      channelNode.addToCanvas( channelEdgeLayer );// it internally adds to layers, done this way for better layering
+      membraneChannelNodes.add( channelNode );
 
       // Add the removal listener for if and when this channel is removed from the model.
       thisView.neuronModel.membraneChannels.addItemRemovedListener( function removalListener( removedChannel ) {
         if ( removedChannel === addedChannel ) {
-          channelNode.removeFromCanvas( channelLayer, channelEdgeLayer );
+          channelNode.removeFromCanvas( channelEdgeLayer );
+          membraneChannelNodes.remove( channelNode );
           thisView.neuronModel.membraneChannels.removeItemRemovedListener( removalListener );
         }
       } );
@@ -347,13 +354,16 @@ define( function( require ) {
         _.times( backgroundParticleCanvasCount, function( canvasIndex ) {
           activeCanvasIndexProperty[canvasIndex].value = false;
         } );
-        //make the background canvas rendering active on a round robin fashion
-        activeCanvasIndexProperty[currentActiveBackgroundCanvasIndex].value = true;
-        currentActiveBackgroundCanvasIndex++;
+        if ( backgroundParticleCanvasCount ) {
+          //make the background canvas rendering active on a round robin fashion
+          activeCanvasIndexProperty[currentActiveBackgroundCanvasIndex].value = true;
+          currentActiveBackgroundCanvasIndex++;
 
-        if ( currentActiveBackgroundCanvasIndex > backgroundParticleCanvasCount - 1 ) {
-          currentActiveBackgroundCanvasIndex = 0;
+          if ( currentActiveBackgroundCanvasIndex > backgroundParticleCanvasCount - 1 ) {
+            currentActiveBackgroundCanvasIndex = 0;
+          }
         }
+
 
       } );
 
@@ -376,6 +386,10 @@ define( function( require ) {
     } );
 
     createBackgroundParticleCanvas();
+
+    var channelGateBounds = new Bounds2( 250, 50, 450, 250 );
+    var membraneChannelGateCanvasNode = new MembraneChannelGateCanvasNode( thisView.neuronModel, membraneChannelNodes, thisView.mvt, channelGateBounds );
+    channelLayer.addChild( membraneChannelGateCanvasNode );
 
   }
 

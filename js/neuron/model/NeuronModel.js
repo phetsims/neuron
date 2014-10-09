@@ -179,7 +179,8 @@ define( function( require ) {
       stimulusPulseInitiated: false,// observed by Membrane potential chart
       neuronModelPlaybackState: null,
       particlesStateChanged: false, // to trigger canvas invalidation
-      backgroundParticlesRedefined: false // Background particle canvas need to be redefined based on new set of particles
+      backgroundParticlesRedefined: false,// Background particle canvas need to be redefined based on new set of particles
+      channelRepresentationChanged: false // A change in any one of channel representation triggers a paint call
     } );
 
 
@@ -451,6 +452,10 @@ define( function( require ) {
       //invert the value and trigger change event
       this.particlesStateChangedProperty.set( !this.particlesStateChangedProperty.get() );
 
+      //If any one channel's state is changed, trigger a channel representation changed event
+      this.channelRepresentationChanged = false;
+      this.channelRepresentationChanged = _.any( this.membraneChannels.getArray(), 'channelStateChanged' );
+
       // Return model state after each time step.
       return this.getState();
 
@@ -600,8 +605,10 @@ define( function( require ) {
           this.addInitialBulkParticles();
         }
         else {
+          this.backgroundParticlesRedefined = false;
           // Remove all particles.
           this.removeAllParticles();
+          this.backgroundParticlesRedefined = true;
         }
 
       }
