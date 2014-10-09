@@ -13,7 +13,9 @@ define( function( require ) {
   var Dimension2 = require( 'DOT/Dimension2' );
   var Color = require( 'SCENERY/util/Color' );
   var Shape = require( 'KITE/Shape' );
+  var Circle = require( 'SCENERY/nodes/Circle' );
   var Vector2 = require( 'DOT/Vector2' );
+  var Bounds2 = require( 'DOT/Bounds2' );
 
   /**
    * @param {MembraneChannel} membraneChannelModel
@@ -42,7 +44,7 @@ define( function( require ) {
       shape.cubicCurveTo( width / 2, -height / 2, -width / 2, -height / 2, -width / 2, -height / 4 );
       shape.close();
 
-      var edgeNode = new Path( shape, {fill: color, stroke: color.colorUtilsDarker( 0.3 ), lineWidth: 0.5} );
+      var edgeNode = new Path( shape, {fill: color, stroke: color.colorUtilsDarker( 0.3 ), lineWidth: 0.4} );
       return edgeNode;
     }
 
@@ -52,6 +54,8 @@ define( function( require ) {
     // Create the channel representation.
     var channel = new Path( new Shape(), {fill: membraneChannelModel.getChannelColor(), lineWidth: 0} );
 
+    // Skip bounds computation to improve performance
+    channel.computeShapeBounds = function() {return new Bounds2( 0, 0, 0, 0 );};
     // Create the edge representations.
     var edgeNodeWidth = (membraneChannelModel.overallSize.width - membraneChannelModel.channelSize.width) / 2;
     var edgeNodeHeight = membraneChannelModel.overallSize.height;
@@ -73,17 +77,20 @@ define( function( require ) {
     var inactivationGateBallNode;
     var inactivationGateString;
     var edgeColor = membraneChannelModel.getEdgeColor().colorUtilsDarker( 0.3 );
-    var channelColor = membraneChannelModel.getChannelColor();
+
 
     if ( membraneChannelModel.getHasInactivationGate() ) {
 
       // Add the ball and string that make up the inactivation gate.
       inactivationGateString = new Path( new Shape(), {lineWidth: 0.5, stroke: Color.BLACK} );
+      // Skip bounds computation to improve performance
+      inactivationGateString.computeShapeBounds = function() {return new Bounds2( 0, 0, 0, 0 );};
       thisNode.channelLayer.addChild( inactivationGateString );
 
       var ballDiameter = mvt.modelToViewDeltaX( membraneChannelModel.getChannelSize().width );
-      var inactivationBallShape = new Shape().ellipse( 0, 0, ballDiameter / 2, ballDiameter / 2 );
-      inactivationGateBallNode = new Path( inactivationBallShape, {fill: edgeColor, lineWidth: 0.5, stroke: edgeColor} );
+
+      // inactivationBallShape is always a circle, so use the optimized version.
+      inactivationGateBallNode = new Circle( ballDiameter / 2, {fill: edgeColor, lineWidth: 0.5, stroke: edgeColor} );
       thisNode.edgeLayer.addChild( inactivationGateBallNode );
     }
 
@@ -97,11 +104,12 @@ define( function( require ) {
 
       // Make the node a bit bigger than the channel so that the edges can
       // be placed over it with no gaps.
-      var oversizeFactor = 1.1;
+      var oversizeFactor = 1.2; // was 1.1 in Java
 
       var width = transformedChannelSize.width * oversizeFactor;
       var height = transformedChannelSize.height * oversizeFactor;
-      var edgeWidth = leftEdgeNode.width; // Assume both edges are the same size.
+      var edgeNodeBounds = leftEdgeNode.getBounds();
+      var edgeWidth = edgeNodeBounds.width; // Assume both edges are the same size.
 
       channelPath = new Shape();
       channelPath.moveTo( 0, 0 );
@@ -110,12 +118,21 @@ define( function( require ) {
       channelPath.quadraticCurveTo( (width + edgeWidth) / 2, height * 7 / 8, 0, height );
       channelPath.close();
       channel.setShape( channelPath );
-      channel.fill = channelColor;
-      channel.x = -channel.getBounds().width / 2;
-      channel.y = -channel.getBounds().height / 2;
-      leftEdgeNode.x = -transformedChannelSize.width / 2 - leftEdgeNode.width / 2;
+
+      /*
+       The Java Version uses computed bounds which is bit expensive, the current x and y
+       coordinates of the channel is manually calculated. This allows for providing a customized computedBounds function.
+       Kept this code for reference. Ashraf
+       var channelBounds = channel.getBounds();
+       channel.x = -channelBounds.width / 2;
+       channel.y = -channelBounds.height / 2; */
+
+      channel.x = -(width + edgeWidth) / 2;
+      channel.y = -height / 2;
+
+      leftEdgeNode.x = -transformedChannelSize.width / 2 - edgeNodeBounds.width / 2;
       leftEdgeNode.y = 0;
-      rightEdgeNode.x = transformedChannelSize.width / 2 + rightEdgeNode.width / 2;
+      rightEdgeNode.x = transformedChannelSize.width / 2 + edgeNodeBounds.width / 2;
       rightEdgeNode.y = 0;
 
       // If this membrane channel has an inactivation gate, update it.
@@ -151,7 +168,7 @@ define( function( require ) {
 
     }
 
-    //private
+
     function updateLocation() {
       thisNode.channelLayer.translate( mvt.modelToViewPosition( membraneChannelModel.getCenterLocation() ) );
       thisNode.edgeLayer.translate( mvt.modelToViewPosition( membraneChannelModel.getCenterLocation() ) );
@@ -168,12 +185,13 @@ define( function( require ) {
     updateLocation();
     updateRotation();
 
-    function updateChannelNode() {
-      updateRepresentation();
-      updateRotation();
-    }
 
-    membraneChannelModel.channelStateChangedProperty.lazyLink( updateChannelNode );
+    membraneChannelModel.channelStateChangedProperty.lazyLink( function( channelStateChanged ) {
+      if ( channelStateChanged ) {
+        updateRepresentation();
+
+      }
+    } );
 
   }
 

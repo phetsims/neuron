@@ -14,6 +14,7 @@ define( function( require ) {
   var Path = require( 'SCENERY/nodes/Path' );
   var Color = require( 'SCENERY/util/Color' );
   var Shape = require( 'KITE/Shape' );
+  var Bounds2 = require( 'DOT/Bounds2' );
 
   var BACKGROUND_COLOR = new Color( 204, 102, 255 );
   var backgroundStroke = {stroke: BACKGROUND_COLOR, lineWidth: 10, lineCap: 'round', lineJoin: 'round'};
@@ -33,6 +34,10 @@ define( function( require ) {
 
     var background = new Path( new Shape(), backgroundStroke );
     var foreground = new Path( new Shape(), foregroundStroke );
+
+    // Skip bounds computation to improve performance
+    background.computeShapeBounds = function() {return new Bounds2( 0, 0, 0, 0 );};
+    foreground.computeShapeBounds = function() {return new Bounds2( 0, 0, 0, 0 );};
 
     thisNode.addChild( background );
     thisNode.addChild( foreground );

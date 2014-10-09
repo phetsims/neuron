@@ -91,7 +91,7 @@ define( function( require ) {
     var zoomableWorldNode = new ZoomableNode( zoomableRootNode, zoomProperty, thisView.neuronModel, worldNodeClipArea, viewPortPosition );
     thisView.addChild( zoomableWorldNode );
 
-    var zoomControl = new ZoomControl( thisView.neuronModel, zoomProperty, zoomProperty.value, 4 );
+    var zoomControl = new ZoomControl( thisView.neuronModel, zoomProperty, zoomProperty.value, 5 );
     this.addChild( zoomControl );
     zoomControl.top = this.layoutBounds.minY + 70;
     zoomControl.left = this.layoutBounds.minX + 25;
@@ -99,7 +99,8 @@ define( function( require ) {
     // Create the layers in the desired order.
     var axonBodyLayer = new Node();
     var axonCrossSectionLayer = new Node();
-    var particleLayer = new Node();
+    var backgroundParticleLayer = new Node();
+    var transientParticlesLayer = new Node();
     var channelLayer = new Node();
     var channelEdgeLayer = new Node();
     var chargeSymbolLayer = new Node();
@@ -107,7 +108,8 @@ define( function( require ) {
     zoomableRootNode.addChild( axonBodyLayer );
     zoomableRootNode.addChild( axonCrossSectionLayer );
     zoomableRootNode.addChild( channelLayer );
-    zoomableRootNode.addChild( particleLayer );
+    zoomableRootNode.addChild( backgroundParticleLayer );
+    zoomableRootNode.addChild( transientParticlesLayer );
     zoomableRootNode.addChild( channelEdgeLayer );
     zoomableRootNode.addChild( chargeSymbolLayer );
 
@@ -119,6 +121,7 @@ define( function( require ) {
 
 
     function handleChannelAdded( addedChannel ) {
+
       // Create the view representation for this channel.
       var channelNode = new MembraneChannelNode( addedChannel, thisView.mvt );
       channelNode.addToCanvas( channelLayer, channelEdgeLayer );// it internally adds to layers, done this way for better layering
@@ -307,22 +310,25 @@ define( function( require ) {
 
     addChargeSymbols();
 
+    var transientParticleBounds = new Bounds2( 200, 20, 500, 300 ); // Can be smaller than the background particle bounds //TODO Ashraf verify with John
+    var transientParticlesNode = new TransientParticlesNode( thisView.neuronModel, thisView.mvt, transientParticleBounds );
+    transientParticlesLayer.addChild( transientParticlesNode );
 
-
-    //TODO Ashraf need to precisely define particles bounds,smaller the better
-    var backgroundParticleBounds = new Bounds2( 160, 10, 540, 300 );
-    var activeCanvasIndexProperty = [];
-
-    var backgroundParticleCanvasCount = 0;
     //create multiple background particle node each rendering a subset at a time see class BackgroundParticles
     function createBackgroundParticleCanvas() {
+
+      //TODO Ashraf need to precisely define particles bounds,smaller the better
+      var backgroundParticleBounds = new Bounds2( 160, 10, 540, 300 );
+      var activeCanvasIndexProperty = [];
+
+      var backgroundParticleCanvasCount = 0;
       var totalCount = thisView.neuronModel.backgroundParticles.getArray().length;
       var bucketSize = 100;
       backgroundParticleCanvasCount = (totalCount / bucketSize) | 0;// make it int
       if ( totalCount % bucketSize !== 0 ) {
         backgroundParticleCanvasCount++;
       }
-
+      backgroundParticleLayer.removeAllChildren();
       totalCount = totalCount - 1; // zero based index
       _.times( backgroundParticleCanvasCount, function( canvasIndex ) {
 
@@ -332,31 +338,27 @@ define( function( require ) {
         var toIndex = upToIndex > totalCount ? totalCount : upToIndex;
         var particleSlice = thisView.neuronModel.backgroundParticles.getArray().slice( fromIndex, toIndex );
         var backgroundParticlesNode = new BackgroundParticlesNode( particleSlice, thisView.mvt, backgroundParticleBounds, activeCanvasIndexProperty[canvasIndex] );
-        particleLayer.addChild( backgroundParticlesNode );
+        backgroundParticleLayer.addChild( backgroundParticlesNode );
+
+      } );
+
+      var currentActiveBackgroundCanvasIndex = 0;
+      thisView.neuronModel.particlesStateChangedProperty.link( function( newValue ) {
+        _.times( backgroundParticleCanvasCount, function( canvasIndex ) {
+          activeCanvasIndexProperty[canvasIndex].value = false;
+        } );
+        //make the background canvas rendering active on a round robin fashion
+        activeCanvasIndexProperty[currentActiveBackgroundCanvasIndex].value = true;
+        currentActiveBackgroundCanvasIndex++;
+
+        if ( currentActiveBackgroundCanvasIndex > backgroundParticleCanvasCount - 1 ) {
+          currentActiveBackgroundCanvasIndex = 0;
+        }
 
       } );
 
     }
 
-    createBackgroundParticleCanvas();
-    var transientParticleBounds = new Bounds2( 200, 20, 500, 300 ); // Can be smaller than the background particle bounds //TODO Ashraf verify with John
-    var transientParticlesNode = new TransientParticlesNode( thisView.neuronModel, thisView.mvt, transientParticleBounds );
-    particleLayer.addChild( transientParticlesNode );
-
-    var currentActiveBackgroundCanvasIndex = 0;
-    thisView.neuronModel.particlesStateChangedProperty.link( function( newValue ) {
-      _.times( backgroundParticleCanvasCount, function( canvasIndex ) {
-        activeCanvasIndexProperty[canvasIndex].value = false;
-      } );
-      //make the background canvas rendering active on a round robin fashion
-      activeCanvasIndexProperty[currentActiveBackgroundCanvasIndex].value = true;
-      currentActiveBackgroundCanvasIndex++;
-
-      if ( currentActiveBackgroundCanvasIndex > backgroundParticleCanvasCount - 1 ) {
-        currentActiveBackgroundCanvasIndex = 0;
-      }
-
-    } );
 
     var concentrationReadoutLayerNode = new ConcentrationReadoutLayerNode( thisView.neuronModel, zoomProperty, zoomableRootNode, axonCrossSectionNode );
     this.addChild( concentrationReadoutLayerNode );
@@ -364,6 +366,16 @@ define( function( require ) {
     thisView.neuronModel.concentrationReadoutVisibleProperty.link( function( concentrationVisible ) {
       concentrationReadoutLayerNode.visible = concentrationVisible;
     } );
+
+    thisView.neuronModel.backgroundParticlesRedefinedProperty.lazyLink( function( backgroundParticlesRedefined ) {
+      if ( backgroundParticlesRedefined ) {
+
+        createBackgroundParticleCanvas();
+
+      }
+    } );
+
+    createBackgroundParticleCanvas();
 
   }
 

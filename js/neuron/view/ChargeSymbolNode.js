@@ -13,6 +13,7 @@ define( function( require ) {
   var Path = require( 'SCENERY/nodes/Path' );
   var Color = require( 'SCENERY/util/Color' );
   var Shape = require( 'KITE/Shape' );
+  var Bounds2 = require( 'DOT/Bounds2' );
 
 
   var EDGE_STROKE = 0.3;
@@ -40,6 +41,8 @@ define( function( require ) {
 
     // Create the shape that represents this particle.
     var representation = new Path( new Shape(), {fill: FILL_COLOR, lineWidth: EDGE_STROKE, stroke: EDGE_COLOR} );
+    // Skip bounds computation to improve performance
+    representation.computeShapeBounds = function() {return new Bounds2( 0, 0, 0, 0 );};
     thisNode.addChild( representation );
 
 

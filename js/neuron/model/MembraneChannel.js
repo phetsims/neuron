@@ -40,7 +40,8 @@ define( function( require ) {
     var thisChannel = this;
 
     PropertySet.call( thisChannel, {
-      channelStateChanged: false
+      channelStateChanged: false,
+      representationChanged: false // All the channel states are  updated at once at the end stepInTime.This was done for performance reasons.
     } );
 
     //position of the channel
@@ -302,8 +303,9 @@ define( function( require ) {
      notifies a change in state if one of these properties change.
      */
     notifyIfMembraneStateChanged: function( prevOpenness, prevInActivationAmt ) {
+      this.channelStateChanged = false;
       if ( prevOpenness !== this.openness || prevInActivationAmt !== this.inactivationAmt ) {
-        this.channelStateChanged = !this.channelStateChanged;
+        this.channelStateChanged = true;
       }
     },
 
@@ -318,6 +320,19 @@ define( function( require ) {
       this.setOpenness( state.getOpenness() );
       this.setInactivationAmt( state.getInactivationAmt() );
       this.notifyIfMembraneStateChanged( prevOpenness, prevInactivationAmt );
+    },
+
+    //TODO not used at the moment, experimental
+    /**
+     * check to see if membrane has undergone any state change,
+     * if yes trigger a change in representation
+     */
+    notifyIfRepresentationIsChanged: function() {
+      this.representationChanged = false;
+
+      if ( this.channelStateChanged ) {
+        this.representationChanged = true;
+      }
     }
 
   } );

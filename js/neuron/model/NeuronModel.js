@@ -178,7 +178,8 @@ define( function( require ) {
       concentrationChanged: false,
       stimulusPulseInitiated: false,// observed by Membrane potential chart
       neuronModelPlaybackState: null,
-      particlesStateChanged: false // to trigger canvas invalidation
+      particlesStateChanged: false, // to trigger canvas invalidation
+      backgroundParticlesRedefined: false // Background particle canvas need to be redefined based on new set of particles
     } );
 
 
@@ -449,6 +450,7 @@ define( function( require ) {
 
       //invert the value and trigger change event
       this.particlesStateChangedProperty.set( !this.particlesStateChangedProperty.get() );
+
       // Return model state after each time step.
       return this.getState();
 
@@ -611,6 +613,7 @@ define( function( require ) {
      * initially positioned.
      */
     addInitialBulkParticles: function() {
+      this.backgroundParticlesRedefined = false;
       var thisModel = this;
       // Make a list of pre-existing particles.
       var preExistingParticles = _.clone( thisModel.transientParticles.getArray() );
@@ -640,6 +643,9 @@ define( function( require ) {
           backgroundParticle.setMotionStrategy( new SlowBrownianMotionStrategy( backgroundParticle.getPositionReference() ) );
         }
       } );
+
+
+      this.backgroundParticlesRedefined = true;
     },
 
     /**
@@ -1255,8 +1261,6 @@ define( function( require ) {
 //    return playbackSpeed;
 //  }
 //
-
-
 
 
 //
