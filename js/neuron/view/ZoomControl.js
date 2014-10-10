@@ -68,7 +68,8 @@ define( function( require ) {
     VBox.call( this, {
       children: zoomControls,
       align: 'center',
-      spacing: 3
+      resize:false,
+      spacing: 10
     } );
 
   }
