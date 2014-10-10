@@ -14,20 +14,20 @@ define( function( require ) {
   var CanvasNode = require( 'SCENERY/nodes/CanvasNode' );
   var Dimension2 = require( 'DOT/Dimension2' );
   var Vector2 = require( 'DOT/Vector2' );
+  var Shape = require( 'KITE/Shape' );
 
   /**
    *
    * @param neuronModel
-   * @param membraneChannelNodes // The channel gates depends on the positions and bounds of edge nodes which is part of membraneChannelNode
    * @param modelViewTransform
    * @param bounds
    * @constructor
    */
-  function MembraneChannelGateCanvasNode( neuronModel, membraneChannelNodes, modelViewTransform, bounds ) {
+  function MembraneChannelGateCanvasNode( neuronModel, modelViewTransform, bounds ) {
     var thisNode = this;
     CanvasNode.call( thisNode, {pickable: false, canvasBounds: bounds } );
     thisNode.neuronModel = neuronModel;
-    thisNode.membraneChannelNodes = membraneChannelNodes;
+    thisNode.membraneChannels = neuronModel.membraneChannels;
     thisNode.mvt = modelViewTransform;
 
     neuronModel.channelRepresentationChangedProperty.link( function( channelRepresentationChanged ) {
@@ -46,10 +46,29 @@ define( function( require ) {
       var context = wrapper.context;
       var thisNode = this;
 
+      function computeEdgeBounds( membraneChannelModel ) {
+        var edgeNodeWidth = (membraneChannelModel.overallSize.width - membraneChannelModel.channelSize.width) / 2;
+        var edgeNodeHeight = membraneChannelModel.overallSize.height;
+        var transformedEdgeNodeSize = new Dimension2( Math.abs( thisNode.mvt.modelToViewDeltaX( edgeNodeWidth ) ), Math.abs( thisNode.mvt.modelToViewDeltaY( edgeNodeHeight ) ) );
 
-      this.membraneChannelNodes.forEach( function( membraneChannelNode ) {
+        var width = transformedEdgeNodeSize.width;
+        var height = transformedEdgeNodeSize.height;
+        var edgeShape = new Shape();
+        edgeShape.moveTo( -width / 2, height / 4 );
+        edgeShape.cubicCurveTo( -width / 2, height / 2, width / 2, height / 2, width / 2, height / 4 );
+        edgeShape.lineTo( width / 2, -height / 4 );
+        edgeShape.cubicCurveTo( width / 2, -height / 2, -width / 2, -height / 2, -width / 2, -height / 4 );
+        edgeShape.close();
 
-        var membraneChannelModel = membraneChannelNode.membraneChannelModel;
+
+        return  edgeShape.computeBounds();
+
+      }
+
+
+      var edgeNodeBounds = computeEdgeBounds( this.membraneChannels.get( 0 ) );
+
+      this.membraneChannels.forEach( function( membraneChannelModel ) {
         var transformedLocation = thisNode.mvt.modelToViewPosition( membraneChannelModel.getCenterLocation() );
         var rotation = -membraneChannelModel.rotationalAngle + Math.PI / 2;
 
@@ -61,10 +80,8 @@ define( function( require ) {
         // Make the node a bit bigger than the channel so that the edges can
         // be placed over it with no gaps.
         var oversizeFactor = 1.2; // was 1.1 in Java
-
         var width = transformedChannelSize.width * oversizeFactor;
         var height = transformedChannelSize.height * oversizeFactor;
-        var edgeNodeBounds = membraneChannelNode.leftEdgeNode.getBounds();
         var edgeWidth = edgeNodeBounds.width; // Assume both edges are the same size.
         context.save();
         context.translate( transformedLocation.x, transformedLocation.y );
@@ -88,8 +105,8 @@ define( function( require ) {
               thisNode.mvt.modelToViewDeltaY( membraneChannelModel.getOverallSize().height ) );
 
           // Position the ball portion of the inactivation gate.
-          var channelEdgeConnectionPoint = new Vector2( membraneChannelNode.leftEdgeNode.centerX,
-            membraneChannelNode.leftEdgeNode.getBounds().getMaxY() );
+          var channelEdgeConnectionPoint = new Vector2( edgeNodeBounds.centerX - transformedChannelSize.width / 2 - edgeNodeBounds.width / 2, // position it on the left edge, the channel's width expands based on openness (so does the position of edge)
+            edgeNodeBounds.getMaxY() );
           var channelCenterBottomPoint = new Vector2( 0, transformedChannelSize.height / 2 );
           var angle = -Math.PI / 2 * (1 - membraneChannelModel.getInactivationAmt());
           var radius = (1 - membraneChannelModel.getInactivationAmt()) * transformedOverallSize.width / 2 + membraneChannelModel.getInactivationAmt() * channelEdgeConnectionPoint.distance( channelCenterBottomPoint );

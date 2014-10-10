@@ -388,7 +388,7 @@ define( function( require ) {
     createBackgroundParticleCanvas();
 
     var channelGateBounds = new Bounds2( 250, 50, 450, 250 );
-    var membraneChannelGateCanvasNode = new MembraneChannelGateCanvasNode( thisView.neuronModel, membraneChannelNodes, thisView.mvt, channelGateBounds );
+    var membraneChannelGateCanvasNode = new MembraneChannelGateCanvasNode( thisView.neuronModel, thisView.mvt, channelGateBounds );
     channelLayer.addChild( membraneChannelGateCanvasNode );
 
   }
