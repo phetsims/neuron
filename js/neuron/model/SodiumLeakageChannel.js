@@ -21,7 +21,7 @@ define( function( require ) {
 
   var CHANNEL_HEIGHT = NeuronConstants.MEMBRANE_THICKNESS * 1.2; // In nanometers.
   var CHANNEL_WIDTH = NeuronConstants.MEMBRANE_THICKNESS * 0.50; // In nanometers.
-  var BASE_COLOR = Color.interpolateRBGA( NeuronConstants.SODIUM_COLOR, Color.YELLOW, 0.5 );
+  var BASE_COLOR = Color.interpolateRGBA( NeuronConstants.SODIUM_COLOR, Color.YELLOW, 0.5 );
 
   var DEFAULT_PARTICLE_VELOCITY = 7000; // In nanometers per sec of sim time.
 
