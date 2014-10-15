@@ -29,7 +29,7 @@ define( function( require ) {
   var Node = require( 'SCENERY/nodes/Node' );
   var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   var AxonBodyNode = require( 'NEURON/neuron/view/AxonBodyNode' );
-  var ParticlesCanvasLayerNode = require( 'NEURON/neuron/view/ParticlesCanvasLayerNode' );
+  var ParticlesWebGLNode = require( 'NEURON/neuron/view/ParticlesWebGLNode' );
   var AxonCrossSectionNode = require( 'NEURON/neuron/view/AxonCrossSectionNode' );
   var MembraneChannelNode = require( 'NEURON/neuron/view/MembraneChannelNode' );
   var ConcentrationReadoutLayerNode = require( 'NEURON/neuron/view/ConcentrationReadoutLayerNode' );
@@ -42,6 +42,7 @@ define( function( require ) {
   var AxonCrossSectionControlPanel = require( 'NEURON/neuron/controlpanel/AxonCrossSectionControlPanel' );
   var PlayPauseButton = require( 'SCENERY_PHET/buttons/PlayPauseButton' );
   var StepButton = require( 'SCENERY_PHET/buttons/StepButton' );
+
 
   // images
   var mockupImage = require( 'image!NEURON/neuron-mockup.png' );
@@ -63,7 +64,6 @@ define( function( require ) {
     var thisView = this;
     thisView.neuronModel = neuronClockModelAdapter.model; // model is neuronmodel
     ScreenView.call( thisView, {renderer: 'svg', layoutBounds: new Bounds2( 0, 0, 834, 504 )} );
-
     var viewPortPosition = new Vector2( thisView.layoutBounds.width * 0.42, thisView.layoutBounds.height * 0.30 );
     // Set up the model-canvas transform.
     thisView.mvt = ModelViewTransform2.createSinglePointScaleInvertedYMapping(
@@ -85,6 +85,8 @@ define( function( require ) {
     var zoomProperty = new Property( 1.3 );
     var zoomableWorldNode = new ZoomableNode( zoomableRootNode, zoomProperty, thisView.neuronModel, worldNodeClipArea, viewPortPosition );
     thisView.addChild( zoomableWorldNode );
+    var particlesLayerNode = new Node();
+    thisView.addChild( particlesLayerNode );
 
     var zoomControl = new ZoomControl( thisView.neuronModel, zoomProperty, zoomProperty.value, 5 );
     this.addChild( zoomControl );
@@ -94,7 +96,7 @@ define( function( require ) {
     // Create the layers in the desired order.
     var axonBodyLayer = new Node();
     var axonCrossSectionLayer = new Node();
-    var particlesLayerNode = new Node();
+
     var channelLayer = new Node();
     var channelEdgeLayer = new Node();
     var chargeSymbolLayer = new ChargeSymbolsLayerNode( thisView.neuronModel, thisView.mvt );
@@ -102,7 +104,6 @@ define( function( require ) {
     zoomableRootNode.addChild( axonBodyLayer );
     zoomableRootNode.addChild( axonCrossSectionLayer );
     zoomableRootNode.addChild( channelLayer );
-    zoomableRootNode.addChild( particlesLayerNode );
     zoomableRootNode.addChild( channelEdgeLayer );
     zoomableRootNode.addChild( chargeSymbolLayer );
 
@@ -222,13 +223,22 @@ define( function( require ) {
       concentrationReadoutLayerNode.visible = concentrationVisible;
     } );
 
-
     var channelGateBounds = new Bounds2( 250, 50, 450, 250 );
     var membraneChannelGateCanvasNode = new MembraneChannelGateCanvasNode( thisView.neuronModel, thisView.mvt, channelGateBounds );
     channelLayer.addChild( membraneChannelGateCanvasNode );
 
-    var particlesLayerCanvasNode = new ParticlesCanvasLayerNode( thisView.neuronModel, thisView.mvt );
-    particlesLayerNode.addChild( particlesLayerCanvasNode );
+    // var particlesLayerCanvasNode = new ParticlesCanvasLayerNode( thisView.neuronModel, thisView.mvt );
+    //thisView.addChild( particlesLayerCanvasNode );
+    var particleBounds = new Bounds2( 100, 10, 600, 400 );
+    var particlesWebGLNode = new ParticlesWebGLNode( thisView.neuronModel, thisView.mvt, zoomProperty, zoomableRootNode, particleBounds );
+    particlesLayerNode.addChild( particlesWebGLNode );
+
+
+    // Useful for debuggeing TODO to be removed
+    /* var particleSpriteSheetNode = new ParticleSpriteSheetNode( thisView.mvt, zoomProperty );
+     zoomableRootNode.addChild( particleSpriteSheetNode );
+     particleSpriteSheetNode.x = 500;
+     particleSpriteSheetNode.y = 10;*/
 
   }
 

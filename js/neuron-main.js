@@ -13,6 +13,7 @@ define( function( require ) {
   var Sim = require( 'JOIST/Sim' );
   var SimLauncher = require( 'JOIST/SimLauncher' );
 
+
   // strings
   var simTitle = require( 'string!NEURON/neuron.name' );
 
