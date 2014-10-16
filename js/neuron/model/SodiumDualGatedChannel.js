@@ -88,7 +88,6 @@ define( function( require ) {
       // The Membrane Channel Node observed centerLocation,openness and inactivation
       // properties separately.This resulted in too many updates to node and degraded the performance.This method checks
       // notifies a change in state if one of these properties change.
-
       var prevOpenness = this.openness;
       var prevInActivationAmt = this.inactivationAmt;
 

@@ -47,7 +47,6 @@ define( function( require ) {
 
 
     function updateRepresentation() {
-
       var width = maxWidth * Math.abs( (axonModel.getMembranePotential() / maxPotential) );
 
       var drawPlusSymbol = (axonModel.getMembranePotential() > 0 && !polarityReversed) ||

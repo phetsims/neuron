@@ -70,7 +70,7 @@ define( function( require ) {
 
       //draw Sodium Tiles with diff opacity
       context.strokeStyle = this.canvasStrokeStyle;
-      context.lineWidth = 0.3;
+      context.lineWidth = 0;
 
       var opacityString;
       var opacityValue;
@@ -89,9 +89,8 @@ define( function( require ) {
           context.fillStyle = this.sodiumParticle.getRepresentationColor().withAlpha( opacityValue ).getCanvasStyle();// All sodium ions are of the same color,
           context.beginPath();
           particlePos = this.tilePostAt( this.sodiumParticle.getType(), i, j );
-          context.arc( particlePos.x, particlePos.y, this.sodiumParticleViewRadius, 0, 2 * Math.PI, true );
+          context.arc( particlePos.x, particlePos.y, this.sodiumParticleViewRadius, 0, 2 * Math.PI, false );
           context.closePath();
-          context.stroke();
           context.fill();
 
         }

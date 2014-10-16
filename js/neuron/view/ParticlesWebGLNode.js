@@ -75,7 +75,7 @@ define( function( require ) {
     initialize: function( gl ) {
       this.texture = null;
       this.gl = gl;
-      this.updateTextureImage();
+      this.updateTextureImage(gl);
       this.bindTextureImage( gl );
 
     },
@@ -84,7 +84,7 @@ define( function( require ) {
 
       this.gl = gl;
 
-      if(!this.textureBound){
+      if ( !this.textureBound ) {
         this.bindTextureImage( gl );
         this.textureBound = true;
       }
@@ -209,7 +209,8 @@ define( function( require ) {
       return vertexData;
 
     },
-    updateTextureImage: function() {
+    updateTextureImage: function(gl) {
+
       var thisNode = this;
       thisNode.context.clearRect( 0, 0, thisNode.canvas.width, thisNode.canvas.height );
       thisNode.particleTextureMap.updateSpriteSheetDimensions();
@@ -220,9 +221,9 @@ define( function( require ) {
     bindTextureImage: function( gl ) {
 
       if ( this.texture !== null ) {
+        gl.bindTexture( gl.TEXTURE_2D, null );
         gl.deleteTexture( this.texture );
       }
-
 
       var texture = this.texture = gl.createTexture();
       gl.bindTexture( gl.TEXTURE_2D, texture );
@@ -245,7 +246,7 @@ define( function( require ) {
       gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR );
       gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR );
       gl.generateMipmap( gl.TEXTURE_2D );
-      gl.bindTexture( gl.TEXTURE_2D, null );
+
 
 
     },

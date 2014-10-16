@@ -256,6 +256,7 @@ define( function( require ) {
      * @param dt
      */
     step: function( simulationTimeChange ) {
+
       if ( this.neuronModel.isRecord() ) {
         if ( !this.chartIsFull && simulationTimeChange > 0 ) {
           this.updateCountdownTimer -= simulationTimeChange;
