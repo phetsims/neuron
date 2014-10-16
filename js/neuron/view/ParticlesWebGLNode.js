@@ -45,17 +45,23 @@ define( function( require ) {
     this.particleBounds = particleBounds;
     this.visibleParticlesSize = 0; // Partciles within the clipping region of Zoomable Node are considered visible
     this.allParticles = [];
+    this.textureBound = false;
 
     // Get a reference to the ScaleMatrix every time when the User zooms in and out.This Scale matrix is used for
     // appropriately positioning the particle in a zoomed state.
     function updateScaleMatrix( zoomFactor ) {
       thisNode.scaleMatrix = zoomableRootNode.getTransform().getMatrix();
+      thisNode.updateTextureImage();
+      if ( thisNode.gl ) {
+        thisNode.bindTextureImage( thisNode.gl );
+      }
     }
 
-    thisNode.redefineSpriteSheet = false;
+    thisNode.canvas = document.createElement( 'canvas' );
+    thisNode.context = this.canvas.getContext( '2d' );
+
     scaleProperty.link( function( zoomFactor ) {
       updateScaleMatrix();
-      thisNode.redefineSpriteSheet = true; // The User has changed the Zoom level so appropriately make the tiles bigger or smaller
     } );
 
     updateScaleMatrix();
@@ -68,25 +74,29 @@ define( function( require ) {
 
     initialize: function( gl ) {
       this.texture = null;
-      this.canvasTexture = document.createElement( 'canvas' );
-      this.createTextureImage( gl );
+      this.gl = gl;
+      this.updateTextureImage();
+      this.bindTextureImage( gl );
 
     },
 
     render: function( gl, shaderProgram, viewMatrix ) {
 
-      this.allParticles = [];
-      this.allParticles = this.neuronModel.backgroundParticles.getArray();
-      this.allParticles = this.allParticles.concat( this.neuronModel.transientParticles.getArray() );
-      this.allParticles = this.allParticles.concat( this.neuronModel.playbackParticles.getArray() );
+      this.gl = gl;
 
-      if ( this.redefineSpriteSheet ) {
-        this.createTextureImage( gl );
-        this.redefineSpriteSheet = false;
+      if(!this.textureBound){
+        this.bindTextureImage( gl );
+        this.textureBound = true;
       }
+
+      this.allParticles = [];
+      this.allParticles = this.neuronModel.backgroundParticles.getArray().slice();
+      this.allParticles = this.allParticles.concat( this.neuronModel.transientParticles.getArray().slice() );
+      this.allParticles = this.allParticles.concat( this.neuronModel.playbackParticles.getArray().slice() );
+
+
       var uMatrix = viewMatrix;
       gl.uniformMatrix4fv( shaderProgram.uniformLocations.uMatrix, false, uMatrix.entries );
-
 
       //each vertex is made up of 4 values 2  for x and y coordinates  and 2 for uv coordinates
       var vertexBuffer = gl.createBuffer();
@@ -105,8 +115,7 @@ define( function( require ) {
 
       //for debugging TODO will be removed once dev is completed
       //this.setColor(gl,shaderProgram,fSize,stride);
-      var noOfParticles = this.visibleParticlesSize;
-      gl.drawArrays( gl.TRIANGLES, 0, noOfParticles * 6 );
+      gl.drawArrays( gl.TRIANGLES, 0, this.visibleParticlesSize * 6 );
       gl.bindTexture( gl.TEXTURE_2D, null );
       gl.deleteBuffer( vertexBuffer );
 
@@ -134,8 +143,6 @@ define( function( require ) {
       var index = 0;
       var vertexData = [];
       var thisNode = this;
-
-
       this.visibleParticlesSize = 0;
 
       //adjust the bounds based on Zoom factor
@@ -202,20 +209,23 @@ define( function( require ) {
       return vertexData;
 
     },
+    updateTextureImage: function() {
+      var thisNode = this;
+      thisNode.context.clearRect( 0, 0, thisNode.canvas.width, thisNode.canvas.height );
+      thisNode.particleTextureMap.updateSpriteSheetDimensions();
+      thisNode.particleTextureMap.calculateAndAssignCanvasDimensions( thisNode.canvas );
+      thisNode.particleTextureMap.createTiles( thisNode.context );
+    },
 
-    createTextureImage: function( gl ) {
+    bindTextureImage: function( gl ) {
 
       if ( this.texture !== null ) {
         gl.deleteTexture( this.texture );
       }
 
-      this.particleTextureMap.calculateAndAssignCanvasDimensions( this.canvasTexture );
-      var context = this.canvasTexture.getContext( '2d' );
-      this.particleTextureMap.createTiles( context );
 
       var texture = this.texture = gl.createTexture();
       gl.bindTexture( gl.TEXTURE_2D, texture );
-
       gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE );
       gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE );
 
@@ -225,7 +235,7 @@ define( function( require ) {
        gl.pixelStorei( gl.UNPACK_FLIP_Y_WEBGL, true );
        */
 
-      gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.canvasTexture );
+      gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.canvas );
 
       // The alpha is not pre-multiplied in the generated canvas image not
       // doing so results in white patch in the place  of transparent rectangle

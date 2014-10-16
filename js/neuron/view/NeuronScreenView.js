@@ -21,7 +21,6 @@ define( function( require ) {
   var Shape = require( 'KITE/Shape' );
   var Dimension2 = require( 'DOT/Dimension2' );
   var Property = require( 'AXON/Property' );
-  var ObservableArray = require( 'AXON/ObservableArray' );
   var ToggleProperty = require( 'AXON/ToggleProperty' );
   var RectangularPushButton = require( 'SUN/buttons/RectangularPushButton' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
@@ -31,7 +30,6 @@ define( function( require ) {
   var AxonBodyNode = require( 'NEURON/neuron/view/AxonBodyNode' );
   var ParticlesWebGLNode = require( 'NEURON/neuron/view/ParticlesWebGLNode' );
   var AxonCrossSectionNode = require( 'NEURON/neuron/view/AxonCrossSectionNode' );
-  var MembraneChannelNode = require( 'NEURON/neuron/view/MembraneChannelNode' );
   var ConcentrationReadoutLayerNode = require( 'NEURON/neuron/view/ConcentrationReadoutLayerNode' );
   var MembraneChannelGateCanvasNode = require( 'NEURON/neuron/view/MembraneChannelGateCanvasNode' );
   var ChargeSymbolsLayerNode = require( 'NEURON/neuron/view/ChargeSymbolsLayerNode' );
@@ -43,6 +41,8 @@ define( function( require ) {
   var PlayPauseButton = require( 'SCENERY_PHET/buttons/PlayPauseButton' );
   var StepButton = require( 'SCENERY_PHET/buttons/StepButton' );
 
+  // Useful for testing TODO to be removed
+  //var ParticleSpriteSheetNode = require( 'NEURON/neuron/view/ParticleSpriteSheetNode' );
 
   // images
   var mockupImage = require( 'image!NEURON/neuron-mockup.png' );
@@ -64,7 +64,7 @@ define( function( require ) {
     var thisView = this;
     thisView.neuronModel = neuronClockModelAdapter.model; // model is neuronmodel
     ScreenView.call( thisView, {renderer: 'svg', layoutBounds: new Bounds2( 0, 0, 834, 504 )} );
-    var viewPortPosition = new Vector2( thisView.layoutBounds.width * 0.42, thisView.layoutBounds.height * 0.30 );
+    var viewPortPosition = new Vector2( thisView.layoutBounds.width * 0.40, thisView.layoutBounds.height * 0.30 );
     // Set up the model-canvas transform.
     thisView.mvt = ModelViewTransform2.createSinglePointScaleInvertedYMapping(
       Vector2.ZERO, viewPortPosition,
@@ -93,52 +93,26 @@ define( function( require ) {
     zoomControl.top = this.layoutBounds.minY + 70;
     zoomControl.left = this.layoutBounds.minX + 25;
 
-    // Create the layers in the desired order.
+    // Create and add the layers in the desired order.
     var axonBodyLayer = new Node();
     var axonCrossSectionLayer = new Node();
-
     var channelLayer = new Node();
-    var channelEdgeLayer = new Node();
     var chargeSymbolLayer = new ChargeSymbolsLayerNode( thisView.neuronModel, thisView.mvt );
 
     zoomableRootNode.addChild( axonBodyLayer );
     zoomableRootNode.addChild( axonCrossSectionLayer );
     zoomableRootNode.addChild( channelLayer );
-    zoomableRootNode.addChild( channelEdgeLayer );
     zoomableRootNode.addChild( chargeSymbolLayer );
-
 
     var axonBodyNode = new AxonBodyNode( thisView.neuronModel.axonMembrane, thisView.mvt );
     axonBodyLayer.addChild( axonBodyNode );
     var axonCrossSectionNode = new AxonCrossSectionNode( thisView.neuronModel.axonMembrane, thisView.mvt );
     axonCrossSectionLayer.addChild( axonCrossSectionNode );
 
-    //For improved performance, the channel gates are rendered directly on canvas
-    //The gate drawing  depends on the visible bounds of edge nodes which is available in membranechannelnodes
-    var membraneChannelNodes = new ObservableArray();
-
-    function handleChannelAdded( addedChannel ) {
-
-      // Create the view representation for this channel.
-      var channelNode = new MembraneChannelNode( addedChannel, thisView.mvt );
-      channelNode.addToCanvas( channelEdgeLayer );// it internally adds to layers, done this way for better layering
-      membraneChannelNodes.add( channelNode );
-
-      // Add the removal listener for if and when this channel is removed from the model.
-      thisView.neuronModel.membraneChannels.addItemRemovedListener( function removalListener( removedChannel ) {
-        if ( removedChannel === addedChannel ) {
-          channelNode.removeFromCanvas( channelEdgeLayer );
-          membraneChannelNodes.remove( channelNode );
-          thisView.neuronModel.membraneChannels.removeItemRemovedListener( removalListener );
-        }
-      } );
-    }
-
-    // Add initial channel nodes.
-    thisView.neuronModel.membraneChannels.forEach( handleChannelAdded );
-    // Add a node on every new Channel Model
-    thisView.neuronModel.membraneChannels.addItemAddedListener( handleChannelAdded );
-
+    //Channel Gate node renders both channels and edges on the same canvas
+    var channelGateBounds = new Bounds2( 250, 50, 450, 250 );
+    var membraneChannelGateCanvasNode = new MembraneChannelGateCanvasNode( thisView.neuronModel, thisView.mvt, channelGateBounds );
+    channelLayer.addChild( membraneChannelGateCanvasNode );
 
     var recordPlayButtons = [];
     var playToggleProperty = new ToggleProperty( true, false, neuronClockModelAdapter.pausedProperty );
@@ -223,22 +197,22 @@ define( function( require ) {
       concentrationReadoutLayerNode.visible = concentrationVisible;
     } );
 
-    var channelGateBounds = new Bounds2( 250, 50, 450, 250 );
-    var membraneChannelGateCanvasNode = new MembraneChannelGateCanvasNode( thisView.neuronModel, thisView.mvt, channelGateBounds );
-    channelLayer.addChild( membraneChannelGateCanvasNode );
 
-    // var particlesLayerCanvasNode = new ParticlesCanvasLayerNode( thisView.neuronModel, thisView.mvt );
+    // canvas based particle implementation Not used - Left it for Testing Purpose
+    //var particlesLayerCanvasNode = new ParticlesCanvasLayerNode( thisView.neuronModel, thisView.mvt );
     //thisView.addChild( particlesLayerCanvasNode );
+
+
     var particleBounds = new Bounds2( 100, 10, 600, 400 );
     var particlesWebGLNode = new ParticlesWebGLNode( thisView.neuronModel, thisView.mvt, zoomProperty, zoomableRootNode, particleBounds );
     particlesLayerNode.addChild( particlesWebGLNode );
 
 
-    // Useful for debuggeing TODO to be removed
-    /* var particleSpriteSheetNode = new ParticleSpriteSheetNode( thisView.mvt, zoomProperty );
+    // Useful for debugging  TODO  to be removed after Testing
+    /*  var particleSpriteSheetNode = new ParticleSpriteSheetNode( thisView.mvt, zoomProperty );
      zoomableRootNode.addChild( particleSpriteSheetNode );
-     particleSpriteSheetNode.x = 500;
-     particleSpriteSheetNode.y = 10;*/
+     particleSpriteSheetNode.x = 250;
+     particleSpriteSheetNode.y = 10; */
 
   }
 

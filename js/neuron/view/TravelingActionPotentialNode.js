@@ -50,7 +50,9 @@ define( function( require ) {
     }
 
 
-    travelingActionPotential.shapeChangedProperty.link( updateShape );
+    travelingActionPotential.shapeChangedProperty.link( function( shapeChanged ) {
+      updateShape();
+    } );
   }
 
   return inherit( Node, TravelingActionPotentialNode );

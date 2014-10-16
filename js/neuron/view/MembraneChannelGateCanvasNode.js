@@ -15,6 +15,7 @@ define( function( require ) {
   var Dimension2 = require( 'DOT/Dimension2' );
   var Vector2 = require( 'DOT/Vector2' );
   var Shape = require( 'KITE/Shape' );
+  var kite = require( 'KITE/kite' );
 
   /**
    *
@@ -46,6 +47,7 @@ define( function( require ) {
       var context = wrapper.context;
       var thisNode = this;
 
+
       function computeEdgeBounds( membraneChannelModel ) {
         var edgeNodeWidth = (membraneChannelModel.overallSize.width - membraneChannelModel.channelSize.width) / 2;
         var edgeNodeHeight = membraneChannelModel.overallSize.height;
@@ -60,13 +62,60 @@ define( function( require ) {
         edgeShape.cubicCurveTo( width / 2, -height / 2, -width / 2, -height / 2, -width / 2, -height / 4 );
         edgeShape.close();
 
-
-        return  edgeShape.computeBounds();
+        return  edgeShape.computeBounds(new kite.LineStyles( {lineWidth:0.4} ));
 
       }
 
-
       var edgeNodeBounds = computeEdgeBounds( this.membraneChannels.get( 0 ) );
+
+
+      function drawEdge( context, size, membraneChannelModel ) {
+        var width = size.width;
+        var height = size.height;
+
+        context.beginPath();
+        context.moveTo( -width / 2, height / 4 );
+        context.bezierCurveTo( -width / 2, height / 2, width / 2, height / 2, width / 2, height / 4 );
+        context.lineTo( width / 2, -height / 4 );
+        context.bezierCurveTo( width / 2, -height / 2, -width / 2, -height / 2, -width / 2, -height / 4 );
+        context.closePath();
+        context.stroke();
+        context.fill();
+
+
+      }
+
+      function updateEdgeShapes( context, transformedChannelSize, edgeNodeBounds, membraneChannelModel ) {
+
+        // Create the edge representations.
+        var edgeNodeWidth = (membraneChannelModel.overallSize.width - membraneChannelModel.channelSize.width) / 2;
+        var edgeNodeHeight = membraneChannelModel.overallSize.height;
+        var transformedEdgeNodeSize = new Dimension2( Math.abs( thisNode.mvt.modelToViewDeltaX( edgeNodeWidth ) ), Math.abs( thisNode.mvt.modelToViewDeltaY( edgeNodeHeight ) ) );
+        var rotation = -membraneChannelModel.rotationalAngle + Math.PI / 2;
+
+        var transformedChannelPosition = thisNode.mvt.modelToViewPosition( membraneChannelModel.getCenterLocation() );
+
+        context.fillStyle = membraneChannelModel.getEdgeColor().getCanvasStyle();
+        context.strokeStyle = membraneChannelModel.getEdgeColor().colorUtilsDarker( 0.3 ).getCanvasStyle();
+        context.lineWidth = 0.4;
+
+        //left Edge
+        context.save();
+        context.translate( transformedChannelPosition.x, transformedChannelPosition.y );
+        context.rotate( rotation );
+        context.translate( -transformedChannelSize.width / 2 - edgeNodeBounds.width / 2, 0 );
+        //left Edge
+        drawEdge( context, transformedEdgeNodeSize, membraneChannelModel );
+        context.restore();
+        //right edge
+        context.save();
+        context.translate( transformedChannelPosition.x, transformedChannelPosition.y );
+        context.rotate( rotation );
+        context.translate( transformedChannelSize.width / 2 + edgeNodeBounds.width / 2, 0 );
+        drawEdge( context, transformedEdgeNodeSize, membraneChannelModel );
+        context.restore();
+
+      }
 
       this.membraneChannels.forEach( function( membraneChannelModel ) {
         var transformedLocation = thisNode.mvt.modelToViewPosition( membraneChannelModel.getCenterLocation() );
@@ -96,6 +145,8 @@ define( function( require ) {
         context.closePath();
         context.fill();
         context.restore();
+
+        updateEdgeShapes( context, transformedChannelSize, edgeNodeBounds, membraneChannelModel );
 
         // If this membrane channel has an inactivation gate, update it.
         if ( membraneChannelModel.getHasInactivationGate() ) {

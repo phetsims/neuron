@@ -24,12 +24,15 @@ define( function( require ) {
     this.modelViewTransform = modelViewTransform;
     this.particleTextureMap = new ParticleTextureMap( modelViewTransform, scaleProperty );
     thisNode.invalidatePaint();
+
+
   }
 
   return inherit( CanvasNode, ParticleSpriteSheetNode, {
       // @param {CanvasContextWrapper} wrapper
       paintCanvas: function( wrapper ) {
         var context = wrapper.context;
+        this.particleTextureMap.updateSpriteSheetDimensions();
         this.particleTextureMap.createTiles( context );
 
       }

@@ -26,32 +26,24 @@ define( function( require ) {
     this.potassiumParticle = new PotassiumIon();
     this.canvasStrokeStyle = Color.BLACK.getCanvasStyle();
 
-    var thisTextureMap = this;
-
-
-    function updateSpriteSheetDimensions() {
-      thisTextureMap.sodiumParticleViewRadius = modelViewTransform.modelToViewDeltaX( thisTextureMap.sodiumParticle.getRadius() ) * scaleProperty.value;
-      thisTextureMap.tileTotalWidth = 2 * thisTextureMap.sodiumParticleViewRadius * 10; // each row has 10 particles
-      var verticalGapBetweenParticleTypes = 10;
-      //Draw Potassium particle shapes after drawing all the Sodium Particles
-      thisTextureMap.potasiumTileHeightOffset = (2 * thisTextureMap.sodiumParticleViewRadius * 10) + verticalGapBetweenParticleTypes;
-      thisTextureMap.potassiumParticleSize = thisTextureMap.sodiumParticleViewRadius * 1.25;
-      //Height is multiplied by 4, 2 for Sodium sprite Sheet and 2 for potassium
-      thisTextureMap.tileTotalHeght = thisTextureMap.potasiumTileHeightOffset + (2 * thisTextureMap.potassiumParticleSize * 10); // A total of 20 rows
-      thisTextureMap.canvasWidth = 0;
-      thisTextureMap.canvasHeight = 0;
-    }
-
-    updateSpriteSheetDimensions();
-
-    scaleProperty.link( function( newScale ) {
-      updateSpriteSheetDimensions();
-    } );
-
-
   }
 
   return inherit( Object, ParticleTextureMap, {
+
+    updateSpriteSheetDimensions: function() {
+      var thisTextureMap = this;
+      thisTextureMap.sodiumParticleViewRadius = thisTextureMap.modelViewTransform.modelToViewDeltaX( thisTextureMap.sodiumParticle.getRadius() ) * thisTextureMap.scaleProperty.value;
+
+      var verticalGapBetweenParticleTypes = 10;
+      thisTextureMap.potassiumParticleSize = thisTextureMap.modelViewTransform.modelToViewDeltaX( thisTextureMap.potassiumParticle.getRadius() ) * thisTextureMap.scaleProperty.value * 1.2;
+      //Draw Potassium particle shapes after drawing all the Sodium Particles
+      thisTextureMap.potasiumTileHeightOffset = (2 * thisTextureMap.sodiumParticleViewRadius * 10) + verticalGapBetweenParticleTypes;
+      //Height is multiplied by 4, 2 for Sodium sprite Sheet and 2 for potassium
+      thisTextureMap.tileTotalHeght = thisTextureMap.potasiumTileHeightOffset + (2 * thisTextureMap.potassiumParticleSize * 10); // A total of 20 rows
+      thisTextureMap.tileTotalWidth = 2 * thisTextureMap.potassiumParticleSize * 10; // each row has 10 particles
+      thisTextureMap.canvasWidth = 0;
+      thisTextureMap.canvasHeight = 0;
+    },
     calculateAndAssignCanvasDimensions: function( canvas ) {
       this.canvasWidth = canvas.width = Util.toPowerOf2( this.tileTotalWidth );
       this.canvasHeight = canvas.height = Util.toPowerOf2( this.tileTotalHeght );
@@ -91,9 +83,8 @@ define( function( require ) {
 
           opacityString = "." + i + "" + j;
           opacityValue = parseFloat( opacityString );
-          if ( opacityValue >= 0.98 ) {
+          if ( opacityValue === 0.99 ) {
             opacityValue = 1;
-
           }
           context.fillStyle = this.sodiumParticle.getRepresentationColor().withAlpha( opacityValue ).getCanvasStyle();// All sodium ions are of the same color,
           context.beginPath();
@@ -113,7 +104,7 @@ define( function( require ) {
         for ( j = 0; j < 10; j++ ) {
           opacityString = "." + i + "" + j;
           opacityValue = parseFloat( opacityString );
-          if ( opacityValue >= 0.98 ) {
+          if ( opacityValue === 0.99 ) {
             opacityValue = 1;
           }
           particlePos = this.tilePostAt( this.potassiumParticle.getType(), i, j );
