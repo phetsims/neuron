@@ -95,6 +95,6 @@ define( function( require ) {
       this.setSize( this.canvas.width, this.canvas.height );
 
       this.shaderProgram.use();
-    },
+    }
   } );
 } );
