@@ -144,9 +144,9 @@ define( function( require ) {
       // the determination of the channel Rect.
       return this.rotatedChannelRect.containsPoint( pt );
     },
-    // returns a new Instance of Dimension
+
     getChannelSize: function() {
-      return new Dimension2( this.channelSize.width, this.channelSize.height );
+      return  this.channelSize;
     },
     /**
      * Get the overall 2D size of the channel, which includes both the part

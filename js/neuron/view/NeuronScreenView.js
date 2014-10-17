@@ -41,6 +41,7 @@ define( function( require ) {
   var PlayPauseButton = require( 'SCENERY_PHET/buttons/PlayPauseButton' );
   var StepButton = require( 'SCENERY_PHET/buttons/StepButton' );
 
+
   // Useful for testing TODO to be removed
   //var ParticleSpriteSheetNode = require( 'NEURON/neuron/view/ParticleSpriteSheetNode' );
 
@@ -61,6 +62,7 @@ define( function( require ) {
    * @constructor
    */
   function NeuronView( neuronClockModelAdapter ) {
+
     var thisView = this;
     thisView.neuronModel = neuronClockModelAdapter.model; // model is neuronmodel
     ScreenView.call( thisView, {renderer: 'svg', layoutBounds: new Bounds2( 0, 0, 834, 504 )} );

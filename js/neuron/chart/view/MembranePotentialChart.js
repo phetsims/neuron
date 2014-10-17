@@ -37,7 +37,6 @@ define( function( require ) {
   var RectangularButtonView = require( 'SUN/buttons/RectangularButtonView' );
   var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   var dot = require( 'DOT/dot' );
-  var Vector2 = require( 'DOT/Vector2' );
   var MembranePotentialXYDataSeries = require( 'NEURON/neuron/chart/model/MembranePotentialXYDataSeries' );
   var ChartCursor = require( 'NEURON/neuron/chart/view/ChartCursor' );
 
@@ -90,6 +89,12 @@ define( function( require ) {
     //To create Vertical Labels
     var rangeMap = new dot.LinearFunction( 0, numHorizontalGridLines, this.range[1], this.range[0] );
 
+    var bounds2 = new Bounds2( 0, 0, 0, 0 );
+
+    function computeShapeBounds() {
+      return bounds2;
+    }
+
 
     var plotGrid = new Node();
     var lineWidth = 0.3;
@@ -97,6 +102,7 @@ define( function( require ) {
     //vertical grid lines
     for ( var i = 0; i < numVerticalGridLines + 1; i++ ) {
       line = new Line( i * chartDimension.width / numVerticalGridLines, 0, i * chartDimension.width / numVerticalGridLines, chartDimension.height, {stroke: 'gray', lineWidth: lineWidth} );
+      line.computeShapeBounds = computeShapeBounds;
       plotGrid.addChild( line );
       plotGrid.addChild( new Text( domainMap( i ), {font: GRID_TICK_TEXT_FONT, centerX: line.centerX, top: line.bottom + 6} ) );
     }
@@ -104,6 +110,7 @@ define( function( require ) {
     //horizontal grid lines
     for ( i = 0; i < numHorizontalGridLines + 1; i++ ) {
       line = new Line( 0, i * chartDimension.height / numHorizontalGridLines, chartDimension.width, i * chartDimension.height / numHorizontalGridLines, {stroke: 'gray', lineWidth: lineWidth} );
+      line.computeShapeBounds = computeShapeBounds;
       plotGrid.addChild( line );
       plotGrid.addChild( new Text( rangeMap( i ), {font: GRID_TICK_TEXT_FONT, centerY: line.centerY, right: line.left - 6} ) );
 
@@ -181,9 +188,11 @@ define( function( require ) {
 
     thisChart.dataSeries.addDataSeriesListener( function( x, y, xPrevious, yPrevious ) {
       if ( xPrevious && yPrevious && (xPrevious !== 0 || yPrevious !== 0 ) ) {
-        chartContentNode.addChild( new Line( thisChart.chartMvt.modelToViewX( xPrevious ), thisChart.chartMvt.modelToViewY( yPrevious ), thisChart.chartMvt.modelToViewX( x ), thisChart.chartMvt.modelToViewY( y ), {
+        var line = new Line( thisChart.chartMvt.modelToViewX( xPrevious ), thisChart.chartMvt.modelToViewY( yPrevious ), thisChart.chartMvt.modelToViewX( x ), thisChart.chartMvt.modelToViewY( y ), {
             stroke: thisChart.dataSeries.color}
-        ) );
+        );
+        line.computeShapeBounds = computeShapeBounds;
+        chartContentNode.addChild( line );
       }
 
       thisChart.dataSeries.addDataClearListener( function() {
@@ -315,9 +324,8 @@ define( function( require ) {
       this.moveChartCursorToTime( ( recordingCurrentTime - recordingStartTime ) * 1000 );
     },
     moveChartCursorToTime: function( time ) {
-      var cursorPos = this.chartMvt.transformPosition2( new Vector2( time, this.range[1] ) );
-      this.chartCursor.x = cursorPos.x;
-      this.chartCursor.y = cursorPos.y;
+      this.chartCursor.x = this.chartMvt.transformX( time );
+      this.chartCursor.y = this.chartMvt.transformY( this.range[1] );
     },
 
     updateOnSimulationReset: function() {

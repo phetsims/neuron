@@ -32,12 +32,19 @@ define( function( require ) {
     var thisNode = this;
     Node.call( thisNode, {} );
 
+
     var background = new Path( new Shape(), backgroundStroke );
     var foreground = new Path( new Shape(), foregroundStroke );
 
+    var bounds2 = new Bounds2( 0, 0, 0, 0 );
+
+    function computeShapeBounds() {
+      return bounds2;
+    }
+
     // Skip bounds computation to improve performance
-    background.computeShapeBounds = function() {return new Bounds2( 0, 0, 0, 0 );};
-    foreground.computeShapeBounds = function() {return new Bounds2( 0, 0, 0, 0 );};
+    background.computeShapeBounds = computeShapeBounds;
+    foreground.computeShapeBounds = computeShapeBounds;
 
     thisNode.addChild( background );
     thisNode.addChild( foreground );

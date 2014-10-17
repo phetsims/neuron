@@ -670,8 +670,10 @@ define( function( require ) {
       var newParticle = ParticleFactory.createParticle( particleType );
       this.transientParticles.add( newParticle );
       if ( captureZone ) {
-        var location = captureZone.getSuggestedNewParticleLocation();
-        newParticle.setPosition( location );
+
+        //To avoid creation of new Vector instances, the getSuggestionParticleLocation is refactored to update the location (if passed)
+        captureZone.getSuggestedNewParticleLocation( newParticle.getPosition() );
+
       }
       var thisModel = this;
       newParticle.continueExistingProperty.lazyLink( function( newValue ) {
@@ -1063,13 +1065,17 @@ define( function( require ) {
         playbackParticleIndex++;
       } );
 
-
       this.neuronModelPlaybackState = state;
       this.membranePotential = state.getMembranePotential();
 
       // For the sake of simplicity, always send out notifications for the
       // concentration changes.
       this.concentrationChanged = true;
+
+      //If any one channel's state is changed, trigger a channel representation changed event
+      this.channelRepresentationChanged = false;
+      this.channelRepresentationChanged = _.any( this.membraneChannels.getArray(), 'channelStateChanged' );
+
 
     }
 

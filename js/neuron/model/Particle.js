@@ -40,7 +40,7 @@ define( function( require ) {
     ViewableParticle.call( this, {} );
 
     // particles while removing themselves will set this property to false
-    this.continueExistingProperty = new Property(true);
+    this.continueExistingProperty = new Property( true );
 
     // Location in space of this particle, units are nano-meters.
     this.position = new Vector2( xPos, yPos );
@@ -72,7 +72,7 @@ define( function( require ) {
       }
     },
     getPosition: function() {
-      // return new Vector2( this.position.x, this.position.y ); // TODO
+      // return new Vector2( this.position.x, this.position.y ); // TODO why new Position everytime? The State object copies the position, so no need to return a clone
       return this.position;
     },
     /**

@@ -27,9 +27,15 @@ define( function( require ) {
     this.velocityVector = new Vector2();
     this.channel = channel;
     this.maxVelocity = maxVelocity;
+    //This vector is used as a temporary object for  calculating distance without creating new Vector Instances, see createTraversalPoint method
+    this.distanceCalculatorVector = new Vector2();
+    // Holds array of objects with x and y properties (doesn't use vector for performance reasons)
+    // http://jsperf.com/object-notation-vs-constructor
     this.traversalPoints = this.createTraversalPoints( channel, startingLocation );
     this.currentDestinationIndex = 0;
     this.channelHasBeenEntered = false;
+
+
     this.setCourseForCurrentTraversalPoint( startingLocation );
   }
 
@@ -49,7 +55,7 @@ define( function( require ) {
       if ( this.channel.isOpen() || this.channelHasBeenEntered ) {
         // The channel is open, or we are inside it or have gone all the
         // way through, so keep executing this motion strategy.
-        if ( this.currentDestinationIndex >= this.traversalPoints.length || this.maxVelocity * dt < currentPositionRef.distance( this.traversalPoints[ this.currentDestinationIndex] ) ) {
+        if ( this.currentDestinationIndex >= this.traversalPoints.length || this.maxVelocity * dt < this.distanceBetweenPosAndTraversalPoint( currentPositionRef, this.traversalPoints[ this.currentDestinationIndex] ) ) {
           // Move according to the current velocity.
           movableModelElement.setPosition( currentPositionRef.x + this.velocityVector.x * dt,
               currentPositionRef.y + this.velocityVector.y * dt );
@@ -57,7 +63,7 @@ define( function( require ) {
         else {
           // We are close enough to the destination that we should just
           // position ourself there and update to the next traversal point.
-          movableModelElement.setPosition( this.traversalPoints[ this.currentDestinationIndex] );
+          movableModelElement.setPosition( this.traversalPoints[ this.currentDestinationIndex].x, this.traversalPoints[ this.currentDestinationIndex].y );
           this.currentDestinationIndex++;
           this.setCourseForCurrentTraversalPoint( movableModelElement.getPosition() );
           if ( this.currentDestinationIndex === this.traversalPoints.length ) {
@@ -94,12 +100,10 @@ define( function( require ) {
       var points = [];
       var ctr = channel.getCenterLocation();
       var r = channel.getChannelSize().height * 0.65; // Make the point a little outside the channel.
-      var outerOpeningLocation = new Vector2( ctr.x + Math.cos( channel.getRotationalAngle() ) * r,
-          ctr.y + Math.sin( channel.getRotationalAngle() ) * r );
-      var innerOpeningLocation = new Vector2( ctr.x - Math.cos( channel.getRotationalAngle() ) * r,
-          ctr.y - Math.sin( channel.getRotationalAngle() ) * r );
+      var outerOpeningLocation = {x: ctr.x + Math.cos( channel.getRotationalAngle() ) * r, y: ctr.y + Math.sin( channel.getRotationalAngle() ) * r };
+      var innerOpeningLocation = {x: ctr.x - Math.cos( channel.getRotationalAngle() ) * r, y: ctr.y - Math.sin( channel.getRotationalAngle() ) * r };
 
-      if ( startingLocation.distance( innerOpeningLocation ) < startingLocation.distance( outerOpeningLocation ) ) {
+      if ( this.distanceBetweenPosAndTraversalPoint( startingLocation, innerOpeningLocation ) < this.distanceBetweenPosAndTraversalPoint( startingLocation, outerOpeningLocation ) ) {
         points.push( innerOpeningLocation );
         points.push( outerOpeningLocation );
       }
@@ -122,6 +126,19 @@ define( function( require ) {
         // order to make things look a little more "Brownian".
         this.velocityVector.rotate( ( RAND.nextDouble() - 0.5 ) * Math.PI * 0.9 );
       }
+    },
+
+    /**
+     * For performance reasons vector references in traversal points are converted into object literal
+     * this method uses a instance vector to do distance calculation.
+     * @param pos
+     * @param travelsalPoint (object literal with x and y properties)
+     */
+    distanceBetweenPosAndTraversalPoint: function( pos, travelsalPoint ) {
+      this.distanceCalculatorVector.x = travelsalPoint.x;
+      this.distanceCalculatorVector.y = travelsalPoint.y;
+      return pos.distance( this.distanceCalculatorVector );
+
     }
 
   } );

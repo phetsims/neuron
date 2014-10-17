@@ -33,7 +33,6 @@ define( function( require ) {
   var scenery = require( 'SCENERY/scenery' );
   var Vector2 = require( 'DOT/Vector2' );
 
-
   function ParticlesWebGLNode( neuronModel, modelViewTransform, scaleProperty, zoomableRootNode, particleBounds ) {
     var thisNode = this;
     Renderer.WebGL = new Renderer( TextureInterleavedShaderWebGlLayer, 'webgl', scenery.bitmaskSupportsWebGL, {} );
@@ -71,6 +70,11 @@ define( function( require ) {
 
     updateScaleMatrix();
 
+    // For performance reasons and to avoid new vector creation use a single instance
+    this.tilePosVector = new Vector2();
+    this.viewTransformationMatrix = thisNode.modelViewTransform.getMatrix();
+    this.particleViewPosition = new Vector2();
+
     this.invalidatePaint();
 
   }
@@ -100,7 +104,7 @@ define( function( require ) {
       this.allParticles = this.allParticles.concat( this.neuronModel.playbackParticles.getArray().slice() );
 
 
-      var uMatrix = viewMatrix;
+      var uMatrix = viewMatrix; // see TextureInterleavedShaderWebGLLayer for how uMatrix is calculated only once and cached
       gl.uniformMatrix4fv( shaderProgram.uniformLocations.uMatrix, false, uMatrix.entries );
 
       //each vertex is made up of 4 values 2  for x and y coordinates  and 2 for uv coordinates
@@ -150,12 +154,13 @@ define( function( require ) {
       var thisNode = this;
       this.visibleParticlesSize = 0;
 
+      // Use the same reference, the Vertex buffer array uses only the primitives, so no need to create new instances
+      var tilePosVector = this.tilePosVector;
+      var viewTransformationMatrix = this.viewTransformationMatrix;
+      var particleViewPosition = this.particleViewPosition;
 
-      var tilePosVector = new Vector2();
       var textCords = {};
       var vertexCords = {};
-      var viewTransformationMatrix = thisNode.modelViewTransform.getMatrix();
-      var particleViewPosition = new Vector2();
 
       this.allParticles.forEach( function( particle ) {
 
@@ -164,7 +169,7 @@ define( function( require ) {
         particleViewPosition.x = refVector.x;
         particleViewPosition.y = refVector.y;
         viewTransformationMatrix.multiplyVector2( particleViewPosition );
-        
+
 
         if ( !thisNode.particleViewBounds.containsCoordinates( particleViewPosition.x, particleViewPosition.y ) ) {
           return;

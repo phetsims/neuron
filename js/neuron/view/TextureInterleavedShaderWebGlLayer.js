@@ -13,9 +13,22 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var WebGLLayer = require( 'SCENERY/layers/WebGLLayer' );
   var ShaderProgram = require( 'SCENERY/util/ShaderProgram' );
+  var Matrix4 = require( 'DOT/Matrix4' );
+
+
+  //Scenery uses Matrix3 and WebGL uses Matrix4, so we must convert.
+  function matrix3To4( matrix3 ) {
+    return new Matrix4(
+      matrix3.m00(), matrix3.m01(), 0, matrix3.m02(),
+      matrix3.m10(), matrix3.m11(), 0, matrix3.m12(),
+      0, 0, 1, 0,
+      0, 0, 0, 1 );
+  }
 
   function TextureInterleavedShaderWebGlLayer( args ) {
-    WebGLLayer.call( this, args );
+    var thisLayer = this;
+    WebGLLayer.call( thisLayer, args );
+
   }
 
 
@@ -94,7 +107,38 @@ define( function( require ) {
 
       this.setSize( this.canvas.width, this.canvas.height );
 
+
       this.shaderProgram.use();
+    },
+    render: function( scene, args ) {
+
+      // If the context is lost, do not try to render anything.  On Chrome, it does not cause problems, but it seems
+      // safer/faster to only render to an unlost context.
+      if ( this.webglContextIsLost ) {
+        return;
+      }
+      var gl = this.gl;
+
+      if ( this.dirty ) {
+        gl.clear( this.gl.COLOR_BUFFER_BIT );
+
+        // Only ParticlesWebGL Node uses this TextureInterleaved Layer.
+        // The Node doesn't use any transformations. The Scale calculation for the particles are done internally by the ParticlesWebGL Node
+        // So this layer can cache the uniformViewMatrix.
+        // This is not a generic solution but rather works only for ParticlesWebGLNode
+
+        var instance = this.instances[0];
+        if ( !this.uniformViewMatrix ) {
+
+          var modelViewMatrix = matrix3To4( instance.trail.getMatrix() );
+          var projectionMatrix = Matrix4.translation( -1, 1, 0 ).timesMatrix( Matrix4.scaling( 2 / this.logicalWidth, -2 / this.logicalHeight, 1 ) );
+          this.uniformViewMatrix = projectionMatrix.timesMatrix( modelViewMatrix );
+        }
+
+        instance.data.drawable.render( this.shaderProgram, this.uniformViewMatrix );
+
+
+      }
     }
   } );
 } );

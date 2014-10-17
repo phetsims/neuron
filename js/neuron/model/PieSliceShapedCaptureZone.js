@@ -72,12 +72,15 @@ define( function( require ) {
       return this.originPoint;
     },
     // Suggest a random point that is somewhere within the shape.
-    getSuggestedNewParticleLocation: function() {
+    getSuggestedNewParticleLocation: function( point ) {
+      point = point || new Vector2();
       var placementAngle = this.rotationAngle + this.fixedRotationalOffset + (RAND.nextDouble() - 0.5) * this.angleOfExtent;
       var distanceFromOrigin = this.radius * 0.9;
       var xPos = this.originPoint.x + distanceFromOrigin * Math.cos( placementAngle );
       var yPos = this.originPoint.y + distanceFromOrigin * Math.sin( placementAngle );
-      return new Vector2( xPos, yPos );
+      point.x = xPos;
+      point.y = yPos;
+      return point;
     },
     //Derivation function for originPoint and rotation properties
     // see CaptureZone

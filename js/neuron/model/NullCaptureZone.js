@@ -32,8 +32,11 @@ define( function( require ) {
       return false;
     },
     // Suggest a location for placing a new or relocated particle into this capture zone.
-    getSuggestedNewParticleLocation: function() {
-      return Vector2.ZERO;
+    getSuggestedNewParticleLocation: function( point ) {
+      point = point || new Vector2();
+      point.x = 0;
+      point.y = 0;
+      return point;
     },
     getOriginPoint: function() {
       return null;
