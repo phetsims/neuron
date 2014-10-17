@@ -16,6 +16,9 @@ define( function( require ) {
   var Vector2 = require( 'DOT/Vector2' );
   var Shape = require( 'KITE/Shape' );
   var kite = require( 'KITE/kite' );
+  var MembraneChannelTypes = require( 'NEURON/neuron/model/MembraneChannelTypes' );
+  var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
+  var Color = require( 'SCENERY/util/Color' );
 
   /**
    *
@@ -57,6 +60,29 @@ define( function( require ) {
 
     thisNode.edgeNodeBounds = computeEdgeBounds( thisNode.membraneChannels.get( 0 ) );
 
+    //Profiler found too many color instance being created during rendering, so cache it
+    this.channelColors = {};
+    this.channelColors[MembraneChannelTypes.SODIUM_GATED_CHANNEL] = NeuronConstants.SODIUM_COLOR.colorUtilsDarker( 0.2 ).getCanvasStyle();
+    this.channelColors[MembraneChannelTypes.SODIUM_LEAKAGE_CHANNEL] = Color.interpolateRGBA( NeuronConstants.SODIUM_COLOR, Color.YELLOW, 0.5 ).colorUtilsDarker( 0.15 ).getCanvasStyle();
+    this.channelColors[MembraneChannelTypes.POTASSIUM_GATED_CHANNEL] = NeuronConstants.POTASSIUM_COLOR.colorUtilsDarker( 0.2 ).getCanvasStyle();
+    this.channelColors[MembraneChannelTypes.POTASSIUM_LEAKAGE_CHANNEL] = Color.interpolateRGBA( NeuronConstants.POTASSIUM_COLOR, new Color( 0, 200, 255 ), 0.6 ).colorUtilsDarker( 0.2 ).getCanvasStyle();
+
+    this.edgeFillColors = {};
+    this.edgeFillColors[MembraneChannelTypes.SODIUM_GATED_CHANNEL] = NeuronConstants.SODIUM_COLOR.getCanvasStyle();
+    this.edgeFillColors[MembraneChannelTypes.SODIUM_LEAKAGE_CHANNEL] = Color.interpolateRGBA( NeuronConstants.SODIUM_COLOR, Color.YELLOW, 0.5 ).getCanvasStyle();
+    this.edgeFillColors[MembraneChannelTypes.POTASSIUM_GATED_CHANNEL] = NeuronConstants.POTASSIUM_COLOR.getCanvasStyle();
+    this.edgeFillColors[MembraneChannelTypes.POTASSIUM_LEAKAGE_CHANNEL] = Color.interpolateRGBA( NeuronConstants.POTASSIUM_COLOR, new Color( 0, 200, 255 ), 0.6 ).getCanvasStyle();
+
+    this.edgeStrokeColors = {};
+    this.edgeStrokeColors[MembraneChannelTypes.SODIUM_GATED_CHANNEL] = NeuronConstants.SODIUM_COLOR.colorUtilsDarker( 0.3 ).getCanvasStyle();
+    this.edgeStrokeColors[MembraneChannelTypes.SODIUM_LEAKAGE_CHANNEL] = Color.interpolateRGBA( NeuronConstants.SODIUM_COLOR, Color.YELLOW, 0.5 ).colorUtilsDarker( 0.3 ).getCanvasStyle();
+    this.edgeStrokeColors[MembraneChannelTypes.POTASSIUM_GATED_CHANNEL] = NeuronConstants.POTASSIUM_COLOR.colorUtilsDarker( 0.3 ).getCanvasStyle();
+    this.edgeStrokeColors[MembraneChannelTypes.POTASSIUM_LEAKAGE_CHANNEL] = Color.interpolateRGBA( NeuronConstants.POTASSIUM_COLOR, new Color( 0, 200, 255 ), 0.6 ).colorUtilsDarker( 0.3 ).getCanvasStyle();
+
+    this.edgeGateStringColors = {};
+    this.edgeGateStringColors[MembraneChannelTypes.SODIUM_GATED_CHANNEL] = NeuronConstants.SODIUM_COLOR.colorUtilsDarker( 0.3 ).colorUtilsDarker( 0.3 ).getCanvasStyle();
+
+
     thisNode.invalidatePaint();
   }
 
@@ -67,6 +93,16 @@ define( function( require ) {
       var context = wrapper.context;
       var thisNode = this;
       var edgeNodeBounds = thisNode.edgeNodeBounds;
+
+      //Each iteration during Channel rendering updates the same local variable,This is done to avoid new vector creation
+      var transformedChannelLocation = new Vector2();
+      var viewTransformationMatrix = thisNode.mvt.getMatrix();
+
+      //avoid creation of new vector Instances, update x, y positions and use it during rendering
+      var channelEdgeConnectionPoint = new Vector2();
+      var channelCenterBottomPoint = new Vector2();
+      var ballPosition = new Vector2();
+      var ballConnectionPoint = new Vector2();
 
       function drawEdge( context, size, membraneChannelModel ) {
         var width = size.width;
@@ -91,22 +127,23 @@ define( function( require ) {
         var edgeNodeHeight = membraneChannelModel.overallSize.height;
         var transformedEdgeNodeSize = new Dimension2( Math.abs( thisNode.mvt.modelToViewDeltaX( edgeNodeWidth ) ), Math.abs( thisNode.mvt.modelToViewDeltaY( edgeNodeHeight ) ) );
         var rotation = -membraneChannelModel.rotationalAngle + Math.PI / 2;
-        var transformedChannelPosition = thisNode.mvt.modelToViewPosition( membraneChannelModel.getCenterLocation() );
-        context.fillStyle = membraneChannelModel.getEdgeColor().getCanvasStyle();
-        context.strokeStyle = membraneChannelModel.getEdgeColor().colorUtilsDarker( 0.3 ).getCanvasStyle();
+        context.fillStyle = thisNode.edgeFillColors[membraneChannelModel.getChannelType()];
+        context.strokeStyle = thisNode.edgeStrokeColors[membraneChannelModel.getChannelType()];
         context.lineWidth = 0.4;
 
         //left Edge
         context.save();
-        context.translate( transformedChannelPosition.x, transformedChannelPosition.y );
+        context.translate( transformedChannelLocation.x, transformedChannelLocation.y );
         context.rotate( rotation );
         context.translate( -transformedChannelSize.width / 2 - edgeNodeBounds.width / 2, 0 );
+
         //left Edge
         drawEdge( context, transformedEdgeNodeSize, membraneChannelModel );
         context.restore();
+
         //right edge
         context.save();
-        context.translate( transformedChannelPosition.x, transformedChannelPosition.y );
+        context.translate( transformedChannelLocation.x, transformedChannelLocation.y );
         context.rotate( rotation );
         context.translate( transformedChannelSize.width / 2 + edgeNodeBounds.width / 2, 0 );
         drawEdge( context, transformedEdgeNodeSize, membraneChannelModel );
@@ -114,11 +151,15 @@ define( function( require ) {
 
       }
 
+
       this.membraneChannels.forEach( function( membraneChannelModel ) {
 
-        var transformedLocation = thisNode.mvt.modelToViewPosition( membraneChannelModel.getCenterLocation() );
-        var rotation = -membraneChannelModel.rotationalAngle + Math.PI / 2;
+        //Avoid creating new Vectors and use the multiplyVector2 since it doesnt create new vectors
+        transformedChannelLocation.x = membraneChannelModel.getCenterLocation().x;
+        transformedChannelLocation.y = membraneChannelModel.getCenterLocation().y;
+        viewTransformationMatrix.multiplyVector2( transformedChannelLocation );
 
+        var rotation = -membraneChannelModel.rotationalAngle + Math.PI / 2;
         // Set the channel width as a function of the openness of the membrane channel.
         var channelWidth = membraneChannelModel.getChannelSize().width * membraneChannelModel.getOpenness();
         var channelSize = new Dimension2( channelWidth, membraneChannelModel.getChannelSize().height );
@@ -131,10 +172,10 @@ define( function( require ) {
         var height = transformedChannelSize.height * oversizeFactor;
         var edgeWidth = edgeNodeBounds.width; // Assume both edges are the same size.
         context.save();
-        context.translate( transformedLocation.x, transformedLocation.y );
+        context.translate( transformedChannelLocation.x, transformedChannelLocation.y );
         context.rotate( rotation );
         context.translate( -(width + edgeWidth) / 2, -height / 2 );
-        context.fillStyle = membraneChannelModel.getChannelColor().getCanvasStyle();
+        context.fillStyle = thisNode.channelColors[membraneChannelModel.getChannelType()];
         context.beginPath();
         context.moveTo( 0, 0 );
         context.quadraticCurveTo( (width + edgeWidth) / 2, height / 8, width + edgeWidth, 0 );
@@ -154,25 +195,29 @@ define( function( require ) {
               thisNode.mvt.modelToViewDeltaY( membraneChannelModel.getOverallSize().height ) );
 
           // Position the ball portion of the inactivation gate.
-          var channelEdgeConnectionPoint = new Vector2( edgeNodeBounds.centerX - transformedChannelSize.width / 2 - edgeNodeBounds.width / 2, // position it on the left edge, the channel's width expands based on openness (so does the position of edge)
-            edgeNodeBounds.getMaxY() );
-          var channelCenterBottomPoint = new Vector2( 0, transformedChannelSize.height / 2 );
+          // position it on the left edge, the channel's width expands based on openness (so does the position of edge)
+          channelEdgeConnectionPoint.x = edgeNodeBounds.centerX - transformedChannelSize.width / 2 - edgeNodeBounds.width / 2;
+          channelEdgeConnectionPoint.y = edgeNodeBounds.getMaxY();
+          channelCenterBottomPoint.x = 0;
+          channelCenterBottomPoint.y = transformedChannelSize.height / 2;
           var angle = -Math.PI / 2 * (1 - membraneChannelModel.getInactivationAmt());
           var radius = (1 - membraneChannelModel.getInactivationAmt()) * transformedOverallSize.width / 2 + membraneChannelModel.getInactivationAmt() * channelEdgeConnectionPoint.distance( channelCenterBottomPoint );
 
-          var ballPosition = new Vector2( channelEdgeConnectionPoint.x + Math.cos( angle ) * radius,
-              channelEdgeConnectionPoint.y - Math.sin( angle ) * radius );
+          ballPosition.x = channelEdgeConnectionPoint.x + Math.cos( angle ) * radius;
+          ballPosition.y = channelEdgeConnectionPoint.y - Math.sin( angle ) * radius;
+
           var ballDiameter = thisNode.mvt.modelToViewDeltaX( membraneChannelModel.getChannelSize().width );
 
           // Redraw the "string" (actually a strand of protein in real life)
           // that connects the ball to the gate.
-          var ballConnectionPoint = new Vector2( ballPosition.x, ballPosition.y );
+          ballConnectionPoint.x = ballPosition.x;
+          ballConnectionPoint.y = ballPosition.y;
           var connectorLength = channelCenterBottomPoint.distance( ballConnectionPoint );
           context.save();
-          context.translate( transformedLocation.x, transformedLocation.y );
+          context.translate( transformedChannelLocation.x, transformedChannelLocation.y );
           context.rotate( rotation );
           context.lineWidth = 0.5;
-          context.strokeStyle = membraneChannelModel.getEdgeColor().colorUtilsDarker( 0.3 ).getCanvasStyle();
+          context.strokeStyle = thisNode.edgeGateStringColors[membraneChannelModel.getChannelType()];
           context.beginPath();
           context.moveTo( channelEdgeConnectionPoint.x, channelEdgeConnectionPoint.y );
           context.bezierCurveTo( channelEdgeConnectionPoint.x + connectorLength * 0.25,
@@ -180,7 +225,7 @@ define( function( require ) {
               ballConnectionPoint.y - connectorLength * 0.5, ballConnectionPoint.x, ballConnectionPoint.y );
           context.stroke();
           context.beginPath();
-          context.fillStyle = membraneChannelModel.getEdgeColor().colorUtilsDarker( 0.3 ).getCanvasStyle();
+          context.fillStyle = thisNode.edgeGateStringColors[membraneChannelModel.getChannelType()];
           context.arc( ballConnectionPoint.x, ballConnectionPoint.y, ballDiameter / 2, 0, 2 * Math.PI, false );
           context.closePath();
           context.fill();

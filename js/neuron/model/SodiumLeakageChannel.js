@@ -17,6 +17,7 @@ define( function( require ) {
   var PieSliceShapedCaptureZone = require( 'NEURON/neuron/model/PieSliceShapedCaptureZone' );
   var MembraneCrossingDirection = require( 'NEURON/neuron/model/MembraneCrossingDirection' );
   var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
+  var MembraneChannelTypes = require( 'NEURON/neuron/model/MembraneChannelTypes' );
 
 
   var CHANNEL_HEIGHT = NeuronConstants.MEMBRANE_THICKNESS * 1.2; // In nanometers.
@@ -60,6 +61,7 @@ define( function( require ) {
 
     // Update the capture times.
     thisChannel.updateParticleCaptureRate( NOMINAL_LEAK_LEVEL );
+    thisChannel.channelColor = BASE_COLOR.colorUtilsDarker( 0.15 );
 
     // Start the capture timer now, since leak channels are always
     // capturing particles.
@@ -92,7 +94,7 @@ define( function( require ) {
       this.notifyIfMembraneStateChanged( prevOpenness, prevInActivationAmt );
     },
     getChannelColor: function() {
-      return BASE_COLOR.colorUtilsDarker( 0.15 );
+      return this.channelColor;
     },
     getEdgeColor: function() {
       return BASE_COLOR;
@@ -114,6 +116,11 @@ define( function( require ) {
       }
       return result;
     },
+
+    getChannelType: function() {
+      return MembraneChannelTypes.SODIUM_LEAKAGE_CHANNEL;
+    },
+
     /**
      * Update the rate of particle capture based on the supplied normalized
      * value.

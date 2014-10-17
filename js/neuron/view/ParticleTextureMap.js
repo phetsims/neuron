@@ -48,9 +48,9 @@ define( function( require ) {
       this.canvasWidth = canvas.width = Util.toPowerOf2( this.tileTotalWidth );
       this.canvasHeight = canvas.height = Util.toPowerOf2( this.tileTotalHeght );
     },
-    getParticleCoords: function( particleType, xPos, yPos ) {
+    getParticleCoords: function( particleType, xPos, yPos, coords ) {
 
-      var coords = {};
+      coords = coords || {};
       var w = this.sodiumParticleViewRadius;
       if ( particleType === ParticleType.SODIUM_ION ) {
         w = this.sodiumParticleViewRadius;
@@ -123,9 +123,9 @@ define( function( require ) {
       }
 
     },
-    //returns the center pos of the tile
-    tilePostAt: function( particleType, row, column ) {
-      var posVector = new Vector2();
+    //returns or sets the center pos of the tile
+    tilePostAt: function( particleType, row, column, posVector ) {
+      posVector = posVector || new Vector2();
       if ( particleType === ParticleType.SODIUM_ION ) {
         posVector.x = (column * 2 * this.sodiumParticleViewRadius) + this.sodiumParticleViewRadius;
         posVector.y = (row * 2 * this.sodiumParticleViewRadius) + this.sodiumParticleViewRadius;
@@ -141,7 +141,7 @@ define( function( require ) {
 
     },
     //Get the Tile's  normalized coordinates based on particle's opacity
-    getTexCords: function( particleType, opacity ) {
+    getTexCords: function( particleType, opacity, posVector, coords ) {
       if ( opacity >= 1 ) {
         opacity = 0.99; // The Max is 0.99 but mapped to 1 , see createTiles method
       }
@@ -158,9 +158,9 @@ define( function( require ) {
         tileRadius = this.potassiumParticleSize;
       }
 
-      var tilePost = this.tilePostAt( particleType, row, column );
+      var tilePost = this.tilePostAt( particleType, row, column, posVector );
 
-      var coords = {};
+      coords = coords || {};
       // Particle Pos is at center tp get the left corder, substrat the radius and normalize the value by
       // dividing it by canvasWidth, the Tex Coords needs to be on the range of 0..1
       coords.leftX = (tilePost.x - tileRadius) / this.canvasWidth;

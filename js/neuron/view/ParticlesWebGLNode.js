@@ -31,6 +31,7 @@ define( function( require ) {
   var TextureInterleavedShaderWebGlLayer = require( 'NEURON/neuron/view/TextureInterleavedShaderWebGlLayer' );
   var Renderer = require( 'SCENERY/layers/Renderer' );
   var scenery = require( 'SCENERY/scenery' );
+  var Vector2 = require( 'DOT/Vector2' );
 
 
   function ParticlesWebGLNode( neuronModel, modelViewTransform, scaleProperty, zoomableRootNode, particleBounds ) {
@@ -52,8 +53,12 @@ define( function( require ) {
     function updateScaleMatrix( zoomFactor ) {
       thisNode.scaleMatrix = zoomableRootNode.getTransform().getMatrix();
       thisNode.updateTextureImage();
+      //adjust the bounds based on Zoom factor
+      thisNode.particleViewBounds = thisNode.particleBounds.copy();
+      thisNode.particleViewBounds = thisNode.particleViewBounds.transformed( thisNode.scaleMatrix.copy().invert() );
       if ( thisNode.gl ) {
         thisNode.bindTextureImage( thisNode.gl );
+
       }
     }
 
@@ -75,7 +80,7 @@ define( function( require ) {
     initialize: function( gl ) {
       this.texture = null;
       this.gl = gl;
-      this.updateTextureImage(gl);
+      this.updateTextureImage( gl );
       this.bindTextureImage( gl );
 
     },
@@ -145,26 +150,39 @@ define( function( require ) {
       var thisNode = this;
       this.visibleParticlesSize = 0;
 
-      //adjust the bounds based on Zoom factor
-      var particleViewBounds = thisNode.particleBounds.copy();
-      particleViewBounds = particleViewBounds.transformed( thisNode.scaleMatrix.copy().invert() );
+
+      var tilePosVector = new Vector2();
+      var textCords = {};
+      var vertexCords = {};
+      var viewTransformationMatrix = thisNode.modelViewTransform.getMatrix();
+      var particleViewPosition = new Vector2();
 
       this.allParticles.forEach( function( particle ) {
 
-        var particleViewPosition = thisNode.modelViewTransform.modelToViewPosition( particle.getPositionReference() );
-        if ( !particleViewBounds.containsCoordinates( particleViewPosition.x, particleViewPosition.y ) ) {
+        //This is too avoid creation of new vectors
+        var refVector = particle.getPositionReference();
+        particleViewPosition.x = refVector.x;
+        particleViewPosition.y = refVector.y;
+        viewTransformationMatrix.multiplyVector2( particleViewPosition );
+        
+
+        if ( !thisNode.particleViewBounds.containsCoordinates( particleViewPosition.x, particleViewPosition.y ) ) {
           return;
         }
         thisNode.visibleParticlesSize++;
         // Position according to the scaled and Translated Position of ZoomableRootNode. The ScaleProperty is
         // Observed by this class and the scaleMatrix is updated from zoomableRootNode
-        particleViewPosition = thisNode.scaleMatrix.timesVector2( particleViewPosition );
+        thisNode.scaleMatrix.multiplyVector2( particleViewPosition ); // (changes the passed particleViewPosition)
 
         //center Position
         var xPos = particleViewPosition.x | 0;
         var yPos = particleViewPosition.y | 0;
-        var vertexCords = thisNode.particleTextureMap.getParticleCoords( particle.getType(), xPos, yPos );
-        var textCords = thisNode.particleTextureMap.getTexCords( particle.getType(), particle.getOpaqueness() );
+
+        //for performance reasons this method updates vertexCords (and returns the same)   instead of creating a new one
+        vertexCords = thisNode.particleTextureMap.getParticleCoords( particle.getType(), xPos, yPos, vertexCords );
+
+        //for performance reasons this method updates the texCords (and returns the same)  instead of creating a new one
+        textCords = thisNode.particleTextureMap.getTexCords( particle.getType(), particle.getOpaqueness(), tilePosVector, textCords );
 
         //left bottom
         vertexData[index++] = vertexCords.leftX;//x
@@ -209,7 +227,7 @@ define( function( require ) {
       return vertexData;
 
     },
-    updateTextureImage: function(gl) {
+    updateTextureImage: function( gl ) {
 
       var thisNode = this;
       thisNode.context.clearRect( 0, 0, thisNode.canvas.width, thisNode.canvas.height );
@@ -246,7 +264,6 @@ define( function( require ) {
       gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR );
       gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR );
       gl.generateMipmap( gl.TEXTURE_2D );
-
 
 
     },

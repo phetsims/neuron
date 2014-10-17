@@ -33,8 +33,14 @@ define( function( require ) {
   function DualGateChannelTraversalMotionStrategy( channel, startingLocation, maxVelocity ) {
     maxVelocity = maxVelocity || MembraneTraversalMotionStrategy.DEFAULT_MAX_VELOCITY;
     this.velocityVector = new Vector2();
+
+    //This vector is used for calculating distance without creating new Vector Instances, see createTraversalPoint method
+    this.distanceCalculatorVector = new Vector2();
     this.channel = channel;
     this.maxVelocity = maxVelocity;
+
+    // Holds array of objects with x and y properties (doesn't use vector for performance reasons)
+    // http://jsperf.com/object-notation-vs-constructor
     this.traversalPoints = this.createTraversalPoints( channel, startingLocation );
     this.currentDestinationIndex = 0;
     this.bouncing = false;
@@ -61,10 +67,10 @@ define( function( require ) {
           // used again.
           this.currentDestinationIndex = Number.MAX_VALUE;
         }
-        else if ( currentPositionRef.distance( this.traversalPoints[this.currentDestinationIndex] ) < this.velocityVector.magnitude() * dt ) {
+        else if ( this.distanceBetweenPosAndTraversalPoint( currentPositionRef, this.traversalPoints[ this.currentDestinationIndex ] ) < this.velocityVector.magnitude() * dt ) {
           // We have arrived at the first traversal point, so now start
           // heading towards the second.
-          movableModelElement.setPosition( this.traversalPoints[this.currentDestinationIndex] );
+          movableModelElement.setPosition( this.traversalPoints[this.currentDestinationIndex].x, this.traversalPoints[this.currentDestinationIndex].y );
           this.currentDestinationIndex++;
           this.setCourseForPoint( movableModelElement.getPosition(), this.traversalPoints[this.currentDestinationIndex],
             this.velocityVector.magnitude() );
@@ -85,14 +91,16 @@ define( function( require ) {
             // Set the particle up to "bounce", i.e. to turn around
             // and go back whence it came once it reaches the 2nd
             // point.
-            this.traversalPoints[2].set( this.traversalPoints[0] );
+            this.traversalPoints[2].x = this.traversalPoints[0].x;
+            this.traversalPoints[2].y = this.traversalPoints[0].y;
+
             this.bouncing = true; // Flag for tracking that we need to bounce.
           }
         }
-        if ( currentPositionRef.distance( this.traversalPoints[this.currentDestinationIndex ] ) < this.velocityVector.magnitude() * dt ) {
+        if ( this.distanceBetweenPosAndTraversalPoint( currentPositionRef, this.traversalPoints[ this.currentDestinationIndex ] ) < this.velocityVector.magnitude() * dt ) {
           // The element has reached the current traversal point, so
           // it should start moving towards the next.
-          movableModelElement.setPosition( this.traversalPoints[this.currentDestinationIndex] );
+          movableModelElement.setPosition( this.traversalPoints[this.currentDestinationIndex].x, this.traversalPoints[this.currentDestinationIndex].y );
           this.currentDestinationIndex++;
           this.setCourseForPoint( movableModelElement.getPosition(), this.traversalPoints[this.currentDestinationIndex],
             this.velocityVector.magnitude() );
@@ -108,11 +116,12 @@ define( function( require ) {
       }
       else if ( this.currentDestinationIndex === 2 ) {
         // Currently moving towards the 3rd point.
-        if ( currentPositionRef.distance( this.traversalPoints[ this.currentDestinationIndex ] ) < this.velocityVector.magnitude() * dt ) {
+        if ( this.distanceBetweenPosAndTraversalPoint( currentPositionRef, this.traversalPoints[ this.currentDestinationIndex ] ) < this.velocityVector.magnitude() * dt ) {
           // The element has reached the last traversal point, so a
           // new motion strategy is set to have it move away and then
           // fade out.
-          movableModelElement.setPosition( this.traversalPoints[this.currentDestinationIndex] );
+
+          movableModelElement.setPosition( this.traversalPoints[this.currentDestinationIndex].x, this.traversalPoints[this.currentDestinationIndex].y );
           this.currentDestinationIndex = Number.MAX_VALUE;
           var newVelocityVector = new Vector2( this.velocityVector.x, this.velocityVector.y );
           if ( this.bouncing ) {
@@ -159,6 +168,19 @@ define( function( require ) {
         }
       }
     },
+
+    /**
+     * For performance reasons vector references in traversal points are converted into object literal
+     * this method uses a instance vector to do distance calculation.
+     * @param pos
+     * @param travelsalPoint (object literal with x and y properties)
+     */
+    distanceBetweenPosAndTraversalPoint: function( pos, travelsalPoint ) {
+      this.distanceCalculatorVector.x = travelsalPoint.x;
+      this.distanceCalculatorVector.y = travelsalPoint.y;
+      return pos.distance( this.distanceCalculatorVector );
+
+    },
     moveBasedOnCurrentVelocity: function( movable, dt ) {
       movable.setPosition( movable.getPosition().x + this.velocityVector.x * dt,
           movable.getPosition().y + this.velocityVector.y * dt );
@@ -177,11 +199,14 @@ define( function( require ) {
       var ctr = channel.getCenterLocation();
       var r = channel.getChannelSize().height * 0.5;
 
+      // The profiler shows too many vector instances are created from createTravesal method, Since we are dealing with 1000s of particles,for
+      // performance reasons and to reduce memory allocation, changing vector constructor function to use object literal
+      // http://jsperf.com/object-notation-vs-constructor
+
+
       // Create points that represent the inner and outer mouths of the channel.
-      var outerOpeningLocation = new Vector2( ctr.x + Math.cos( channel.getRotationalAngle() ) * r,
-          ctr.y + Math.sin( channel.getRotationalAngle() ) * r );
-      var innerOpeningLocation = new Vector2( ctr.x - Math.cos( channel.getRotationalAngle() ) * r,
-          ctr.y - Math.sin( channel.getRotationalAngle() ) * r );
+      var outerOpeningLocation = {x: ctr.x + Math.cos( channel.getRotationalAngle() ) * r, y: ctr.y + Math.sin( channel.getRotationalAngle() ) * r };
+      var innerOpeningLocation = {x: ctr.x - Math.cos( channel.getRotationalAngle() ) * r, y: ctr.y - Math.sin( channel.getRotationalAngle() ) * r };
 
       // Create a point that just above where the inactivation gate would
       // be if the channel were inactivated.  Since the model doesn't
@@ -189,8 +214,7 @@ define( function( require ) {
       // up to the view), this location is a guess, and may have to be
       // tweaked in order to work well with the view.
       var aboveInactivationGateLocation =
-        new Vector2( ctr.x - Math.cos( channel.getRotationalAngle() ) * r * 0.5,
-            ctr.y - Math.sin( channel.getRotationalAngle() ) * r * 0.5 );
+      {x: ctr.x - Math.cos( channel.getRotationalAngle() ) * r * 0.5, y: ctr.y - Math.sin( channel.getRotationalAngle() ) * r * 0.5 };
 
       if ( startingLocation.distance( innerOpeningLocation ) < startingLocation.distance( outerOpeningLocation ) ) {
         points.push( innerOpeningLocation );

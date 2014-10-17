@@ -18,6 +18,7 @@ define( function( require ) {
   var MembraneCrossingDirection = require( 'NEURON/neuron/model/MembraneCrossingDirection' );
   var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
   var Color = require( 'SCENERY/util/Color' );
+  var MembraneChannelTypes = require( 'NEURON/neuron/model/MembraneChannelTypes' );
 
   var CHANNEL_HEIGHT = NeuronConstants.MEMBRANE_THICKNESS * 1.2; // In nanometers.
   var CHANNEL_WIDTH = NeuronConstants.MEMBRANE_THICKNESS * 0.50; // In nanometers.
@@ -53,6 +54,7 @@ define( function( require ) {
     thisChannel.setMinInterCaptureTime( MIN_INTER_PARTICLE_CAPTURE_TIME );
     thisChannel.setMaxInterCaptureTime( MAX_INTER_PARTICLE_CAPTURE_TIME );
 
+    thisChannel.channelColor = BASE_COLOR.colorUtilsDarker( 0.2 );
     // Start the capture timer now, since leak channels are always
     // capturing particles.
     thisChannel.restartCaptureCountdownTimer( false );
@@ -66,13 +68,16 @@ define( function( require ) {
       this.notifyIfMembraneStateChanged( prevOpenness, prevInActivationAmt );
     },
     getChannelColor: function() {
-      return BASE_COLOR.colorUtilsDarker( 0.2 );
+      return this.channelColor;
     },
     getEdgeColor: function() {
       return BASE_COLOR;
     },
     getParticleTypeToCapture: function() {
       return ParticleType.POTASSIUM_ION;
+    },
+    getChannelType: function() {
+      return MembraneChannelTypes.POTASSIUM_LEAKAGE_CHANNEL;
     },
     //  @Override
     chooseCrossingDirection: function() {

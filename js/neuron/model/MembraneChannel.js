@@ -333,6 +333,10 @@ define( function( require ) {
       if ( this.channelStateChanged ) {
         this.representationChanged = true;
       }
+    },
+
+    getChannelType: function() {
+      throw new Error( 'getChannelType should be implemented in descendant classes.' );
     }
 
   } );

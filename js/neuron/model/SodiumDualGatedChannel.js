@@ -21,6 +21,7 @@ define( function( require ) {
   var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
   var NeuronSharedConstants = require( 'NEURON/neuron/common/NeuronSharedConstants' );
   var MathUtils = require( 'NEURON/neuron/utils/MathUtils' );
+  var MembraneChannelTypes = require( 'NEURON/neuron/model/MembraneChannelTypes' );
 
   var CHANNEL_HEIGHT = NeuronConstants.MEMBRANE_THICKNESS * 1.2; // In nanometers.
   var CHANNEL_WIDTH = NeuronConstants.MEMBRANE_THICKNESS * 0.50; // In nanometers.
@@ -78,6 +79,7 @@ define( function( require ) {
     this.previousNormalizedConductance = 0;
     thisChannel.setExteriorCaptureZone( new PieSliceShapedCaptureZone( thisChannel.getCenterLocation(), CHANNEL_WIDTH * 5, 0, Math.PI * 0.7 ) );
     thisChannel.reset();
+    thisChannel.channelColor = NeuronConstants.SODIUM_COLOR.colorUtilsDarker( 0.2 );
 
   }
 
@@ -208,7 +210,7 @@ define( function( require ) {
     },
 
     getChannelColor: function() {
-      return NeuronConstants.SODIUM_COLOR.colorUtilsDarker( 0.2 );
+      return this.channelColor;
     },
     getEdgeColor: function() {
       return NeuronConstants.SODIUM_COLOR;
@@ -240,6 +242,9 @@ define( function( require ) {
     calculateNormalizedConductance: function() {
       return  Math.min( Math.abs( this.hodgkinHuxleyModel.get_delayed_m3h( this.staggerDelay ) ) / M3H_WHEN_FULLY_OPEN, 1 );
 
+    },
+    getChannelType: function() {
+      return MembraneChannelTypes.SODIUM_GATED_CHANNEL;
     }
 
   } );

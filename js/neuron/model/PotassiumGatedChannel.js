@@ -19,6 +19,7 @@ define( function( require ) {
   var NeuronSharedConstants = require( 'NEURON/neuron/common/NeuronSharedConstants' );
   var MembraneCrossingDirection = require( 'NEURON/neuron/model/MembraneCrossingDirection' );
   var MathUtils = require( 'NEURON/neuron/utils/MathUtils' );
+  var MembraneChannelTypes = require( 'NEURON/neuron/model/MembraneChannelTypes' );
 
   var CHANNEL_HEIGHT = NeuronConstants.MEMBRANE_THICKNESS * 1.2; // In nanometers.
   var CHANNEL_WIDTH = NeuronConstants.MEMBRANE_THICKNESS * 0.50; // In nanometers.
@@ -53,6 +54,7 @@ define( function( require ) {
     thisChannel.staggerDelay = RAND.nextDouble() * MAX_STAGGER_DELAY;
     thisChannel.hodgkinHuxleyModel = hodgkinHuxleyModel;
     thisChannel.setInteriorCaptureZone( new PieSliceShapedCaptureZone( this.getCenterLocation(), CHANNEL_WIDTH * 5, Math.PI, Math.PI * 0.5 ) );
+    thisChannel.channelColor = NeuronConstants.POTASSIUM_COLOR.colorUtilsDarker( 0.2 );
     thisChannel.reset();
   }
 
@@ -96,7 +98,7 @@ define( function( require ) {
       this.setMaxInterCaptureTime( MAX_INTER_CAPTURE_TIME );
     },
     getChannelColor: function() {
-      return NeuronConstants.POTASSIUM_COLOR.colorUtilsDarker( 0.2 );
+      return this.channelColor;
     },
     getEdgeColor: function() {
       return NeuronConstants.POTASSIUM_COLOR;
@@ -106,6 +108,9 @@ define( function( require ) {
     },
     chooseCrossingDirection: function() {
       return MembraneCrossingDirection.IN_TO_OUT;
+    },
+    getChannelType: function() {
+      return MembraneChannelTypes.POTASSIUM_GATED_CHANNEL;
     }
 
   } );
