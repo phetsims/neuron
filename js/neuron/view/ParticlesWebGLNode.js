@@ -9,8 +9,8 @@
  * why we have to scale and draw  the Sprite Sheet dynamically whenever  changes the Zoom property.
  *
  * The code makes use of a different vertex shader, the Default WebglLayer's Vertex shader assumes the TextureCoordinates to be Vertex
- * Coordinates itself.(thats why even Vertex coordinates  are given in normalized coordinates and the actual shape transformation  scaled
- * done using viewMatrix during rendering).This is not applicable in our case as  we have to display 1000s triangles each mapped to a different tile position.
+ * Coordinates itself.(thats why  Vertex coordinates  are given in normalized coordinates).
+ * In base WebGLNode, the transformation of shapes are handled by manipulating the viewMatrix during rendering.This is not applicable in our case as  we have to display 1000s triangles each mapped to a different tile position.
  * So each Vertex is interleaved with the appropriate Texture coordinates and sent to Webgl subsystem. The shaderProgram.attributeLocations.aTexCoord in the
  * SetMaterial method informs the shader how to retrieve the Texture coordinates for each vertex.
  *
@@ -76,6 +76,7 @@ define( function( require ) {
     this.particleViewPosition = new Vector2();
 
     this.invalidatePaint();
+
 
   }
 
@@ -169,15 +170,13 @@ define( function( require ) {
         particleViewPosition.x = refVector.x;
         particleViewPosition.y = refVector.y;
         viewTransformationMatrix.multiplyVector2( particleViewPosition );
-
-
         if ( !thisNode.particleViewBounds.containsCoordinates( particleViewPosition.x, particleViewPosition.y ) ) {
           return;
         }
         thisNode.visibleParticlesSize++;
         // Position according to the scaled and Translated Position of ZoomableRootNode. The ScaleProperty is
         // Observed by this class and the scaleMatrix is updated from zoomableRootNode
-        thisNode.scaleMatrix.multiplyVector2( particleViewPosition ); // (changes the passed particleViewPosition)
+        thisNode.scaleMatrix.multiplyVector2( particleViewPosition ); // (changes, the passed particleViewPosition)
 
         //center Position
         var xPos = particleViewPosition.x | 0;

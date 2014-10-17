@@ -110,8 +110,17 @@ define( function( require ) {
     // is some reason to do otherwise, the center of the cross section is
     // positioned at the origin.
 
-    thisModel.crossSectionEllipseShape = new Shape().ellipse( 0, 0, NeuronConstants.DEFAULT_DIAMETER / 2, NeuronConstants.DEFAULT_DIAMETER / 2 );
+    var ellipseShape = new Shape().ellipse( 0, 0, NeuronConstants.DEFAULT_DIAMETER / 2, NeuronConstants.DEFAULT_DIAMETER / 2 );
+    thisModel.crossSectionEllipseShape = new Shape().ellipse( ellipseShape.x, ellipseShape.y,
+        ellipseShape.bounds.getWidth() / 2, ellipseShape.bounds.getHeight() / 2 );
 
+    //To avoid creating new Vectors instances during animation, the instances are declared and
+    // reused in evaluateCurve method
+    this.ab = new Vector2();
+    this.bc = new Vector2();
+    this.cd = new Vector2();
+    this.abbc = new Vector2();
+    this.bbcd = new Vector2();
   }
 
   return inherit( PropertySet, AxonMembrane, {
@@ -207,9 +216,7 @@ define( function( require ) {
       },
 
       getCrossSectionEllipseShape: function() {
-        return new Shape().ellipse( this.crossSectionEllipseShape.x, this.crossSectionEllipseShape.y,
-            this.crossSectionEllipseShape.bounds.getWidth() / 2, this.crossSectionEllipseShape.bounds.getHeight() / 2 );
-
+        return this.crossSectionEllipseShape;
       },
       reset: function() {
         if ( this.travelingActionPotential ) {
@@ -238,22 +245,29 @@ define( function( require ) {
         if ( t < 0 || t > 1 ) {
           throw new Error( "t is out of range: " + t );
         }
-        var ab = this.linearInterpolation( curve.start, curve.control1, t );
-        var bc = this.linearInterpolation( curve.control1, curve.control2, t );
-        var cd = this.linearInterpolation( curve.control2, curve.end, t );
-        var abbc = this.linearInterpolation( ab, bc, t );
-        var bccd = this.linearInterpolation( bc, cd, t );
+        this.linearInterpolation( curve.start, curve.control1, t, this.ab );
+        this.linearInterpolation( curve.control1, curve.control2, t, this.bc );
+        this.linearInterpolation( curve.control2, curve.end, t, this.cd );
+        this.linearInterpolation( this.ab, this.bc, t, this.abbc );
+        this.linearInterpolation( this.bc, this.cd, t, this.bbcd );
 
-        return this.linearInterpolation( abbc, bccd, t );
+        return this.linearInterpolation( this.abbc, this.bbcd, t );
       },
 
       /**
        * Simple linear interpolation between two points.
        * @param {Vector2} a
        * @param {Vector2} b
+       *
+       * Vector2's blend creates a new Vector and returns, for performance/memory reasons
+       * this code uses this interpolation method
        */
-      linearInterpolation: function( a, b, t ) {
-        return ( new Vector2( a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t ));
+      linearInterpolation: function( a, b, t, out ) {
+        out = out || new Vector2();
+        out.x = a.x + (b.x - a.x) * t;
+        out.y = a.y + (b.y - a.y) * t;
+        return out;
+
       }
     }
   );

@@ -43,7 +43,7 @@ define( function( require ) {
 
 
   // Useful for testing TODO to be removed
-  //var ParticleSpriteSheetNode = require( 'NEURON/neuron/view/ParticleSpriteSheetNode' );
+ // var ParticleSpriteSheetNode = require( 'NEURON/neuron/view/ParticleSpriteSheetNode' );
 
   // images
   var mockupImage = require( 'image!NEURON/neuron-mockup.png' );
@@ -80,17 +80,21 @@ define( function( require ) {
     this.addChild( image );
     this.addChild( new HSlider( mockupOpacityProperty, {min: 0, max: 1}, {top: 10, left: 10} ) );
 
+
     var worldNodeClipArea = Shape.rect( 70, 0, this.layoutBounds.maxX - 280, this.layoutBounds.maxY - 110 );
     var zoomableRootNode = new Node();
+    var minZoom = 1;
+    var maxZoom = 4.5;
+    var defaultZoom = 1.4;
 
     //Zommable Node zooms in and out the zoomableRootNode contents
-    var zoomProperty = new Property( 1.3 );
+    var zoomProperty = new Property( defaultZoom );
     var zoomableWorldNode = new ZoomableNode( zoomableRootNode, zoomProperty, thisView.neuronModel, worldNodeClipArea, viewPortPosition );
     thisView.addChild( zoomableWorldNode );
     var particlesLayerNode = new Node();
     thisView.addChild( particlesLayerNode );
 
-    var zoomControl = new ZoomControl( thisView.neuronModel, zoomProperty, zoomProperty.value, 5 );
+    var zoomControl = new ZoomControl( thisView.neuronModel, zoomProperty, minZoom, maxZoom );
     this.addChild( zoomControl );
     zoomControl.top = this.layoutBounds.minY + 70;
     zoomControl.left = this.layoutBounds.minX + 25;
@@ -211,10 +215,10 @@ define( function( require ) {
 
 
     // Useful for debugging  TODO  to be removed after Testing
-    /*  var particleSpriteSheetNode = new ParticleSpriteSheetNode( thisView.mvt, zoomProperty );
+    /* var particleSpriteSheetNode = new ParticleSpriteSheetNode( thisView.mvt, zoomProperty );
      zoomableRootNode.addChild( particleSpriteSheetNode );
      particleSpriteSheetNode.x = 250;
-     particleSpriteSheetNode.y = 10; */
+     particleSpriteSheetNode.y = 10;*/
 
   }
 

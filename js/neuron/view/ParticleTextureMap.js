@@ -70,7 +70,7 @@ define( function( require ) {
 
       //draw Sodium Tiles with diff opacity
       context.strokeStyle = this.canvasStrokeStyle;
-      context.lineWidth = 0;
+      context.lineWidth = 0.3;
 
       var opacityString;
       var opacityValue;
@@ -92,12 +92,15 @@ define( function( require ) {
           context.arc( particlePos.x, particlePos.y, this.sodiumParticleViewRadius, 0, 2 * Math.PI, false );
           context.closePath();
           context.fill();
-
+          //with full opacity, applying stroke to this arc makes it appear like a rounded rectangle in IPAD TODO
+          if ( opacityValue < 0.3 ) {
+            context.stroke();
+          }
         }
       }
 
       context.strokeStyle = this.canvasStrokeStyle;
-      context.lineWidth = 0.4;
+      context.lineWidth = 0.5;
 
       for ( i = 0; i < 10; i++ ) {
         for ( j = 0; j < 10; j++ ) {
@@ -116,8 +119,9 @@ define( function( require ) {
           context.lineTo( x + this.potassiumParticleSize, y );
           context.lineTo( x, y + this.potassiumParticleSize );
           context.closePath();
-          context.stroke();
           context.fill();
+          context.stroke();
+
 
         }
       }
@@ -145,10 +149,11 @@ define( function( require ) {
       if ( opacity >= 1 ) {
         opacity = 0.99; // The Max is 0.99 but mapped to 1 , see createTiles method
       }
-      var opacityStr = DOTUtil.toFixed( opacity, 2 );
+      var opacityStr = DOTUtil.toFixed( opacity, 4 );
       var parts = opacityStr.split( "." );
       var row = parts[1].charAt( 0 );
       var column = parts[1].charAt( 1 );
+
 
       var tileRadius = 0;
       if ( particleType === ParticleType.SODIUM_ION ) {
