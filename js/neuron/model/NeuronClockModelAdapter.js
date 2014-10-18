@@ -16,6 +16,10 @@ define( function( require ) {
   //imports
   var inherit = require( 'PHET_CORE/inherit' );
   var PropertySet = require( 'AXON/PropertySet' );
+  var EventTimer = require( 'PHET_CORE/EventTimer' );
+
+  // Constant Clock internally used
+  var DEFAULT_FRAMES_PER_SECOND = 30.0;
 
 
   /**
@@ -29,12 +33,13 @@ define( function( require ) {
    */
   function NeuronClockModelAdapter( model, framesPerSecond, dt ) {
 
-    this.model = model;
+    var thisModel = this;
+    thisModel.model = model;
     //delay desired wall time change between ticks
-    this.delay = 1000 / framesPerSecond;
-    this.simulationTimeChange = dt;
-    this.lastSimulationTime = 0.0;
-    this.simulationTime = 0.0;
+    thisModel.delay = 1000 / framesPerSecond;
+    thisModel.simulationTimeChange = dt;
+    thisModel.lastSimulationTime = 0.0;
+    thisModel.simulationTime = 0.0;
     PropertySet.call( this, {
         paused: false,//linked to playPause button
         simulationTimeReset: false
@@ -42,12 +47,24 @@ define( function( require ) {
     );
 
     //private
-    this.stepCallbacks = [];
+    thisModel.stepCallbacks = [];
+
+    // The clock for this simulation.
+    // The simulation time change (dt) on each clock tick is constant,
+    // regardless of when (in wall time) the ticks actually happen.
+    this.eventTimer = new EventTimer( new EventTimer.ConstantEventModel( DEFAULT_FRAMES_PER_SECOND ), function( timeElapsed ) {
+      thisModel.constantStep( timeElapsed );
+    } );
 
   }
 
   return inherit( PropertySet, NeuronClockModelAdapter, {
     step: function( dt ) {
+      // step one frame, assuming 60fps
+      this.eventTimer.step( 1 / 60 );
+    },
+
+    constantStep: function( timeElapsed ) {
       if ( !this.isPaused() ) {
         this.tick( this.simulationTimeChange );
       }

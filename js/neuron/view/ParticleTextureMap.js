@@ -68,8 +68,8 @@ define( function( require ) {
     },
     createTiles: function( context ) {
 
-      //draw Sodium Tiles with diff opacity
-      context.strokeStyle = this.canvasStrokeStyle;
+
+      context.strokeStyle = Color.BLACK.getCanvasStyle();
       context.lineWidth = 0.3;
 
       var opacityString;
@@ -86,21 +86,24 @@ define( function( require ) {
           if ( opacityValue === 0.99 ) {
             opacityValue = 1;
           }
+
           context.fillStyle = this.sodiumParticle.getRepresentationColor().withAlpha( opacityValue ).getCanvasStyle();// All sodium ions are of the same color,
           context.beginPath();
           particlePos = this.tilePostAt( this.sodiumParticle.getType(), i, j );
           context.arc( particlePos.x, particlePos.y, this.sodiumParticleViewRadius, 0, 2 * Math.PI, false );
           context.closePath();
-          context.fill();
+
           //with full opacity, applying stroke to this arc makes it appear like a rounded rectangle in IPAD TODO
           if ( opacityValue < 0.3 ) {
             context.stroke();
           }
+          context.fill();
         }
       }
 
-      context.strokeStyle = this.canvasStrokeStyle;
-      context.lineWidth = 0.5;
+      context.strokeStyle = Color.BLACK.getCanvasStyle();
+      context.lineWidth = opacityValue;
+      context.lineWidth = 1;
 
       for ( i = 0; i < 10; i++ ) {
         for ( j = 0; j < 10; j++ ) {
@@ -112,6 +115,8 @@ define( function( require ) {
           particlePos = this.tilePostAt( this.potassiumParticle.getType(), i, j );
           var x = particlePos.x;
           var y = particlePos.y;
+          //gradually reduce the stroke  for smooth disappearance.
+          context.strokeStyle = Color.BLACK.withAlpha( opacityValue * 1.2 ).getCanvasStyle();
           context.fillStyle = this.potassiumParticle.getRepresentationColor().withAlpha( opacityValue ).getCanvasStyle();// All sodium ions are of the same color,
           context.beginPath();
           context.moveTo( x - this.potassiumParticleSize, y );
@@ -119,8 +124,8 @@ define( function( require ) {
           context.lineTo( x + this.potassiumParticleSize, y );
           context.lineTo( x, y + this.potassiumParticleSize );
           context.closePath();
-          context.fill();
           context.stroke();
+          context.fill();
 
 
         }

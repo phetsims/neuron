@@ -176,11 +176,12 @@ define( function( require ) {
         thisNode.visibleParticlesSize++;
         // Position according to the scaled and Translated Position of ZoomableRootNode. The ScaleProperty is
         // Observed by this class and the scaleMatrix is updated from zoomableRootNode
+
         thisNode.scaleMatrix.multiplyVector2( particleViewPosition ); // (changes, the passed particleViewPosition)
 
         //center Position
-        var xPos = particleViewPosition.x | 0;
-        var yPos = particleViewPosition.y | 0;
+        var xPos = particleViewPosition.x;
+        var yPos = particleViewPosition.y;
 
         //for performance reasons this method updates vertexCords (and returns the same)   instead of creating a new one
         vertexCords = thisNode.particleTextureMap.getParticleCoords( particle.getType(), xPos, yPos, vertexCords );

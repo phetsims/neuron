@@ -43,7 +43,7 @@ define( function( require ) {
 
 
   // Useful for testing TODO to be removed
- // var ParticleSpriteSheetNode = require( 'NEURON/neuron/view/ParticleSpriteSheetNode' );
+  // var ParticleSpriteSheetNode = require( 'NEURON/neuron/view/ParticleSpriteSheetNode' );
 
   // images
   var mockupImage = require( 'image!NEURON/neuron-mockup.png' );
@@ -209,16 +209,16 @@ define( function( require ) {
     //thisView.addChild( particlesLayerCanvasNode );
 
 
-    var particleBounds = new Bounds2( 100, 10, 600, 400 );
+    var particleBounds = new Bounds2( 100, 10, 630, 400 );
     var particlesWebGLNode = new ParticlesWebGLNode( thisView.neuronModel, thisView.mvt, zoomProperty, zoomableRootNode, particleBounds );
     particlesLayerNode.addChild( particlesWebGLNode );
 
 
     // Useful for debugging  TODO  to be removed after Testing
-    /* var particleSpriteSheetNode = new ParticleSpriteSheetNode( thisView.mvt, zoomProperty );
+    /*  var particleSpriteSheetNode = new ParticleSpriteSheetNode( thisView.mvt, zoomProperty );
      zoomableRootNode.addChild( particleSpriteSheetNode );
      particleSpriteSheetNode.x = 250;
-     particleSpriteSheetNode.y = 10;*/
+     particleSpriteSheetNode.y = 10; */
 
   }
 
