@@ -20,7 +20,11 @@
   "units.mM": "mM",
   "concentrationReadoutPattern.0label.1value.2units": "{0} [{1} {2}]",
   "potassiumChemicalSymbol": "K+",
-  "sodiumChemicalSymbol": "Na+"
+  "sodiumChemicalSymbol": "Na+",
+  "fastForward": "Fast Forward",
+  "normal": "Normal",
+  "slowMotion": "Slow Motion"
+
 
 }
 

@@ -38,6 +38,7 @@ define( function( require ) {
   var MembranePotentialChart = require( 'NEURON/neuron/chart/view/MembranePotentialChart' );
   var IonsAndChannelsLegendPanel = require( 'NEURON/neuron/controlpanel/IonsAndChannelsLegendPanel' );
   var AxonCrossSectionControlPanel = require( 'NEURON/neuron/controlpanel/AxonCrossSectionControlPanel' );
+  var SimSpeedControlPanel = require( 'NEURON/neuron/controlpanel/SimSpeedControlPanel' );
   var PlayPauseButton = require( 'SCENERY_PHET/buttons/PlayPauseButton' );
   var StepButton = require( 'SCENERY_PHET/buttons/StepButton' );
 
@@ -170,7 +171,6 @@ define( function( require ) {
       thisView.neuronModel.stimulusPulseInitiated = stimulasLockout;
     } );
 
-
     // NeuronModel uses specialized real time constant clock simulation
     // The clock adapter calculates the appropriate dt and dispatches it to the interested model
     neuronClockModelAdapter.registerStepCallback( thisView.neuronModel.step.bind( thisView.neuronModel ) );
@@ -192,7 +192,7 @@ define( function( require ) {
     var chartHeight = 120;
     var membranePotentialChartNode = new MembranePotentialChart( new Dimension2( worldNodeClipArea.bounds.width - 60, chartHeight ), neuronClockModelAdapter );
     membranePotentialChartNode.left = worldNodeClipArea.bounds.left;
-    membranePotentialChartNode.bottom = thisView.layoutBounds.maxY - 100;
+    membranePotentialChartNode.bottom = thisView.layoutBounds.maxY - 120;
     thisView.addChild( membranePotentialChartNode );
 
 
@@ -204,15 +204,15 @@ define( function( require ) {
     } );
 
 
-    // canvas based particle implementation Not used - Left it for Testing Purpose
-    //var particlesLayerCanvasNode = new ParticlesCanvasLayerNode( thisView.neuronModel, thisView.mvt );
-    //thisView.addChild( particlesLayerCanvasNode );
-
-
     var particleBounds = new Bounds2( 100, 10, 630, 400 );
     var particlesWebGLNode = new ParticlesWebGLNode( thisView.neuronModel, thisView.mvt, zoomProperty, zoomableRootNode, particleBounds );
     particlesLayerNode.addChild( particlesWebGLNode );
 
+
+    var simSpeedControlPanel = new SimSpeedControlPanel( neuronClockModelAdapter.speedProperty );
+    simSpeedControlPanel.left = thisView.layoutBounds.minX + 100;
+    simSpeedControlPanel.bottom = thisView.layoutBounds.maxY - 20;
+    thisView.addChild( simSpeedControlPanel );
 
     // Useful for debugging  TODO  to be removed after Testing
     /*  var particleSpriteSheetNode = new ParticleSpriteSheetNode( thisView.mvt, zoomProperty );
@@ -224,9 +224,9 @@ define( function( require ) {
 
   return inherit( ScreenView, NeuronView, {
 
-    // Called by the animation loop. Optional, so if your view has no animation, you can omit this.
+
     step: function( dt ) {
-      // Handle view animation here.
+
 
     }
   } );

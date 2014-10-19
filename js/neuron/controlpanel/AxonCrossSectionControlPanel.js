@@ -53,7 +53,6 @@ define( function( require ) {
     expandTouchArea( showPotentialChartCheckBox );
 
 
-    // Add the images and labels for the ions.
     var crossectionControlContents = [];
     crossectionControlContents.push( new Text( showLegendString, {
       font: new PhetFont( { size: 16, weight: 'bold' } )} ) );

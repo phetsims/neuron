@@ -17,6 +17,7 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var PropertySet = require( 'AXON/PropertySet' );
   var EventTimer = require( 'PHET_CORE/EventTimer' );
+ 
 
   // Constant Clock internally used
   var DEFAULT_FRAMES_PER_SECOND = 30.0;
@@ -30,6 +31,7 @@ define( function( require ) {
    * @param model (whose simulation timing is controlled by this adapter)
    * @param framesPerSecond the number of frames per second
    * @param dt constant simulation time change between ticks
+
    */
   function NeuronClockModelAdapter( model, framesPerSecond, dt ) {
 
@@ -40,15 +42,15 @@ define( function( require ) {
     thisModel.simulationTimeChange = dt;
     thisModel.lastSimulationTime = 0.0;
     thisModel.simulationTime = 0.0;
+
     PropertySet.call( this, {
         paused: false,//linked to playPause button
-        simulationTimeReset: false
+        simulationTimeReset: false,
+        speed: '1' // factor controlling simulation clock speed)
       }
     );
 
-    //private
     thisModel.stepCallbacks = [];
-
     // The clock for this simulation.
     // The simulation time change (dt) on each clock tick is constant,
     // regardless of when (in wall time) the ticks actually happen.
@@ -61,7 +63,7 @@ define( function( require ) {
   return inherit( PropertySet, NeuronClockModelAdapter, {
     step: function( dt ) {
       // step one frame, assuming 60fps
-      this.eventTimer.step( 1 / 60 );
+      this.eventTimer.step( this.speed / 60 );
     },
 
     constantStep: function( timeElapsed ) {
