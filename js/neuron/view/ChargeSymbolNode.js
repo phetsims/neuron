@@ -42,7 +42,14 @@ define( function( require ) {
     // Create the shape that represents this particle.
     var representation = new Path( new Shape(), {fill: FILL_COLOR, lineWidth: EDGE_STROKE, stroke: EDGE_COLOR} );
     // Skip bounds computation to improve performance
-    representation.computeShapeBounds = function() {return new Bounds2( 0, 0, 0, 0 );};
+    var bounds = new Bounds2( 0, 0, 0, 0 );
+
+    function computeShapeBounds() {
+      return bounds;
+
+    }
+
+    representation.computeShapeBounds = computeShapeBounds;
     thisNode.addChild( representation );
 
 
@@ -63,6 +70,7 @@ define( function( require ) {
 
     function drawPlusSign( width ) {
       var path = new Shape();
+      path.computeShapeBounds = computeShapeBounds;
       var thickness = width * THICKNESS_FACTOR;
       var halfThickness = thickness / 2;
       var halfWidth = width / 2;
@@ -84,7 +92,9 @@ define( function( require ) {
 
     function drawMinusSign( width ) {
       var height = width * THICKNESS_FACTOR;
-      return new Shape().rect( -width / 2, -height / 2, width, height );
+      var rect = new Shape().rect( -width / 2, -height / 2, width, height );
+      rect.computeShapeBounds = computeShapeBounds;
+      return rect;
     }
 
     axonModel.membranePotentialProperty.link( function( membranePotential ) {

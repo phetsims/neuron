@@ -39,12 +39,11 @@ define( function( require ) {
   var dot = require( 'DOT/dot' );
   var MembranePotentialXYDataSeries = require( 'NEURON/neuron/chart/model/MembranePotentialXYDataSeries' );
   var ChartCursor = require( 'NEURON/neuron/chart/view/ChartCursor' );
-
-
   var chartTitleString = require( 'string!NEURON/chartTitle' );
   var chartClearString = require( 'string!NEURON/chartClear' );
   var chartXAxisLabelString = require( 'string!NEURON/chartXAxisLabel' );
   var chartYAxisLabelString = require( 'string!NEURON/chartYAxisLabel' );
+  var Util = require( 'DOT/Util' );
 
   var GRID_TICK_TEXT_FONT = new PhetFont( 8 );
 
@@ -324,7 +323,8 @@ define( function( require ) {
       this.moveChartCursorToTime( ( recordingCurrentTime - recordingStartTime ) * 1000 );
     },
     moveChartCursorToTime: function( time ) {
-      this.chartCursor.x = this.chartMvt.transformX( time );
+
+      this.chartCursor.x = Util.clamp( this.chartMvt.transformX( time ), 0, this.chartDimension.width );
       this.chartCursor.y = this.chartMvt.transformY( this.range[1] );
     },
 

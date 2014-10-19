@@ -191,9 +191,9 @@ define( function( require ) {
 
     var chartHeight = 120;
     var membranePotentialChartNode = new MembranePotentialChart( new Dimension2( worldNodeClipArea.bounds.width - 60, chartHeight ), neuronClockModelAdapter );
-    thisView.addChild( membranePotentialChartNode );
     membranePotentialChartNode.left = worldNodeClipArea.bounds.left;
     membranePotentialChartNode.bottom = thisView.layoutBounds.maxY - 100;
+    thisView.addChild( membranePotentialChartNode );
 
 
     var concentrationReadoutLayerNode = new ConcentrationReadoutLayerNode( thisView.neuronModel, zoomProperty, zoomableRootNode, axonCrossSectionNode );

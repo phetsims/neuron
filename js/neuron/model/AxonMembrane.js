@@ -114,7 +114,7 @@ define( function( require ) {
     thisModel.crossSectionEllipseShape = new Shape().ellipse( ellipseShape.x, ellipseShape.y,
         ellipseShape.bounds.getWidth() / 2, ellipseShape.bounds.getHeight() / 2 );
 
-    //To avoid creating new Vectors instances during animation, the instances are declared and
+    // To avoid creating new Vectors instances during animation, the instances are declared and
     // reused in evaluateCurve method
     this.ab = new Vector2();
     this.bc = new Vector2();
