@@ -35,7 +35,7 @@ define( function( require ) {
       thisTextureMap.sodiumParticleViewRadius = thisTextureMap.modelViewTransform.modelToViewDeltaX( thisTextureMap.sodiumParticle.getRadius() ) * thisTextureMap.scaleProperty.value;
 
       var verticalGapBetweenParticleTypes = 10;
-      thisTextureMap.potassiumParticleSize = thisTextureMap.modelViewTransform.modelToViewDeltaX( thisTextureMap.potassiumParticle.getRadius() ) * thisTextureMap.scaleProperty.value * 1.2;
+      thisTextureMap.potassiumParticleSize = thisTextureMap.modelViewTransform.modelToViewDeltaX( thisTextureMap.potassiumParticle.getRadius() ) * thisTextureMap.scaleProperty.value * 1.25;
       //Draw Potassium particle shapes after drawing all the Sodium Particles
       thisTextureMap.potasiumTileHeightOffset = (2 * thisTextureMap.sodiumParticleViewRadius * 10) + verticalGapBetweenParticleTypes;
       //Height is multiplied by 4, 2 for Sodium sprite Sheet and 2 for potassium
@@ -103,7 +103,7 @@ define( function( require ) {
 
       context.strokeStyle = Color.BLACK.getCanvasStyle();
       context.lineWidth = opacityValue;
-      context.lineWidth = 1;
+      context.lineWidth = 1.1;
 
       for ( i = 0; i < 10; i++ ) {
         for ( j = 0; j < 10; j++ ) {
@@ -115,8 +115,7 @@ define( function( require ) {
           particlePos = this.tilePostAt( this.potassiumParticle.getType(), i, j );
           var x = particlePos.x;
           var y = particlePos.y;
-          //gradually reduce the stroke  for smooth disappearance.
-          context.strokeStyle = Color.BLACK.withAlpha( opacityValue * 1.2 ).getCanvasStyle();
+          context.strokeStyle = Color.BLACK.withAlpha( opacityValue * 1.3 ).getCanvasStyle();
           context.fillStyle = this.potassiumParticle.getRepresentationColor().withAlpha( opacityValue ).getCanvasStyle();// All sodium ions are of the same color,
           context.beginPath();
           context.moveTo( x - this.potassiumParticleSize, y );
