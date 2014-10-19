@@ -34,7 +34,8 @@ define( function( require ) {
       appearanceChanged: false
     } );
 
-    this.position = particle.getPosition().copy();
+    this.positionX = particle.getPositionX();
+    this.positionY = particle.getPositionY();
     this.opaqueness = particle.getOpaqueness();
     this.representationColor = particle.getRepresentationColor();
     this.radius = particle.getRadius();
@@ -48,8 +49,7 @@ define( function( require ) {
      * @param {ParticlePlaybackMemento}memento
      */
     restoreFromMemento: function( memento ) {
-      this.setPosition( memento.getPositionRef() );
-      // Note - setting the position will take care of the notification.
+      this.setPosition( memento.getPositionX(), memento.getPositionY() );
 
       var appearanceChanged = false;
       if ( this.opaqueness !== memento.getOpaqueness() ) {
@@ -69,27 +69,15 @@ define( function( require ) {
       }
     },
 
-    getPosition: function() {
-      return this.position.copy();
-    },
-
     getPositionX: function() {
-      return this.position.x;
+      return this.positionX;
     },
     getPositionY: function() {
-      return this.position.y;
+      return this.positionY;
     },
-
-    getPositionReference: function() {
-      return this.position;
-    },
-
     setPosition: function( x, y ) {
-      if ( !y ) {
-        this.position.set( x );// x is vector
-        return;
-      }
-      this.position.setXY( x, y );
+      this.positionX = x;
+      this.positionY = y;
     },
 
     getRepresentationColor: function() {

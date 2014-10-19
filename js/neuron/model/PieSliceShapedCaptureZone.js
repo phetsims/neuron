@@ -13,7 +13,6 @@ define( function( require ) {
   //imports
   var inherit = require( 'PHET_CORE/inherit' );
   var Shape = require( 'KITE/Shape' );
-  var Vector2 = require( 'DOT/Vector2' );
   var CaptureZone = require( 'NEURON/neuron/model/CaptureZone' );
 
   var RAND = {
@@ -71,16 +70,15 @@ define( function( require ) {
     getOriginPoint: function() {
       return this.originPoint;
     },
-    // Suggest a random point that is somewhere within the shape.
-    getSuggestedNewParticleLocation: function( point ) {
-      point = point || new Vector2();
+    // assign a random point that is somewhere within the shape.
+    assignNewParticleLocation: function( particle ) {
+
       var placementAngle = this.rotationAngle + this.fixedRotationalOffset + (RAND.nextDouble() - 0.5) * this.angleOfExtent;
       var distanceFromOrigin = this.radius * 0.9;
       var xPos = this.originPoint.x + distanceFromOrigin * Math.cos( placementAngle );
       var yPos = this.originPoint.y + distanceFromOrigin * Math.sin( placementAngle );
-      point.x = xPos;
-      point.y = yPos;
-      return point;
+      particle.setPosition( xPos, yPos );
+
     },
     //Derivation function for originPoint and rotation properties
     // see CaptureZone

@@ -15,7 +15,7 @@ define( function( require ) {
 
   //imports
   var inherit = require( 'PHET_CORE/inherit' );
-  var Vector2 = require( 'DOT/Vector2' );
+
 
   /**
    *
@@ -23,8 +23,8 @@ define( function( require ) {
    * @param {Particle} particle
    */
   function ParticlePlaybackMemento( particle ) {
-    this.positionX = particle.getPositionReference().x;
-    this.positionY = particle.getPositionReference().y;
+    this.positionX = particle.getPositionX();
+    this.positionY = particle.getPositionY();
     this.opaqueness = particle.getOpaqueness();
     this.particleType = particle.getType();
     this.radius = particle.getRadius();
@@ -33,8 +33,11 @@ define( function( require ) {
   }
 
   return inherit( Object, ParticlePlaybackMemento, {
-    getPositionRef: function() {
-      return new Vector2( this.positionX, this.positionY );
+    getPositionX: function() {
+      return this.positionX;
+    },
+    getPositionY: function() {
+      return this.positionY;
     },
     getOpaqueness: function() {
       return this.opaqueness;

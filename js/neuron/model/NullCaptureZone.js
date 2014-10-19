@@ -12,7 +12,6 @@ define( function( require ) {
   //imports
   var inherit = require( 'PHET_CORE/inherit' );
   var Shape = require( 'KITE/Shape' );
-  var Vector2 = require( 'DOT/Vector2' );
   var CaptureZone = require( 'NEURON/neuron/model/CaptureZone' );
 
   /**
@@ -31,12 +30,9 @@ define( function( require ) {
     isPointInZone: function( pt ) {
       return false;
     },
-    // Suggest a location for placing a new or relocated particle into this capture zone.
-    getSuggestedNewParticleLocation: function( point ) {
-      point = point || new Vector2();
-      point.x = 0;
-      point.y = 0;
-      return point;
+    // assign a random point that is somewhere within the shape.
+    assignNewParticleLocation: function( particle ) {
+      particle.setPosition( 0, 0 );
     },
     getOriginPoint: function() {
       return null;

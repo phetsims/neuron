@@ -11,7 +11,6 @@ define( function( require ) {
 
 //imports
   var inherit = require( 'PHET_CORE/inherit' );
-  var Vector2 = require( 'DOT/Vector2' );
 
 
   /**
@@ -27,9 +26,9 @@ define( function( require ) {
     isPointInZone: function( pt ) {
       throw new Error( 'isPointInZone should be implemented in descendant classes.' );
     },
-    // Suggest a location for placing a new or relocated particle into this capture zone.
-    getSuggestedNewParticleLocation: function() {
-      return Vector2.ZERO;
+    // assign a random point that is somewhere within the shape.
+    assignNewParticleLocation: function( particle ) {
+      particle.setPosition( 0, 0 );
     },
 
     getOriginPoint: function() {

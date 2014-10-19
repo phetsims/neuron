@@ -671,8 +671,8 @@ define( function( require ) {
       this.transientParticles.add( newParticle );
       if ( captureZone ) {
 
-        //To avoid creation of new Vector instances, the getSuggestionParticleLocation is refactored to update the location (if passed)
-        captureZone.getSuggestedNewParticleLocation( newParticle.getPosition() );
+        //To avoid creation of new Vector instances the capture zone updates the particles position
+        captureZone.assignNewParticleLocation( newParticle );
 
       }
       var thisModel = this;

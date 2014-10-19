@@ -32,9 +32,9 @@ define( function( require ) {
 
     updateSpriteSheetDimensions: function() {
       var thisTextureMap = this;
-      thisTextureMap.sodiumParticleViewRadius = thisTextureMap.modelViewTransform.modelToViewDeltaX( thisTextureMap.sodiumParticle.getRadius() ) * thisTextureMap.scaleProperty.value;
+      thisTextureMap.sodiumParticleViewRadius = thisTextureMap.modelViewTransform.modelToViewDeltaX( thisTextureMap.sodiumParticle.getRadius() ) * thisTextureMap.scaleProperty.value * 1.1;
 
-      var verticalGapBetweenParticleTypes = 10;
+      var verticalGapBetweenParticleTypes = 20;
       thisTextureMap.potassiumParticleSize = thisTextureMap.modelViewTransform.modelToViewDeltaX( thisTextureMap.potassiumParticle.getRadius() ) * thisTextureMap.scaleProperty.value * 1.25;
       //Draw Potassium particle shapes after drawing all the Sodium Particles
       thisTextureMap.potasiumTileHeightOffset = (2 * thisTextureMap.sodiumParticleViewRadius * 10) + verticalGapBetweenParticleTypes;
@@ -70,7 +70,7 @@ define( function( require ) {
 
 
       context.strokeStyle = Color.BLACK.getCanvasStyle();
-      context.lineWidth = 0.3;
+      context.lineWidth = 0.2;
 
       var opacityString;
       var opacityValue;
@@ -92,11 +92,8 @@ define( function( require ) {
           particlePos = this.tilePostAt( this.sodiumParticle.getType(), i, j );
           context.arc( particlePos.x, particlePos.y, this.sodiumParticleViewRadius, 0, 2 * Math.PI, false );
           context.closePath();
-
-          //with full opacity, applying stroke to this arc makes it appear like a rounded rectangle in IPAD TODO
-          if ( opacityValue < 0.3 ) {
-            context.stroke();
-          }
+          //applying stroke with higher opacity makes for this smaller  arc appears like a rounded rectangle in IPAD - Ashraf TODO
+          context.stroke();
           context.fill();
         }
       }
