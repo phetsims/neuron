@@ -11,7 +11,6 @@ define( function( require ) {
   'use strict';
   //imports
   var inherit = require( 'PHET_CORE/inherit' );
-  var Vector2 = require( 'DOT/Vector2' );
   var MotionStrategy = require( 'NEURON/neuron/model/MotionStrategy' );
   var NeuronSharedConstants = require( 'NEURON/neuron/common/NeuronSharedConstants' );
   var TimedFadeAwayStrategy = require( 'NEURON/neuron/model/TimedFadeAwayStrategy' );
@@ -34,11 +33,12 @@ define( function( require ) {
    * Constructor.
    *
    * @param awayPoint       - Point that should be moved away from.
-   * @param currentLocation - Starting location
+   * @param currentLocationX - Starting locationX
+   * @param currentLocationY - Starting locationY
    * @param preFadeTime     - Time before fade out starts, in sim time
    * @param fadeOutDuration - Time of fade out
    */
-  function WanderAwayThenFadeMotionStrategy( awayPoint, currentLocation, preFadeTime, fadeOutDuration ) {
+  function WanderAwayThenFadeMotionStrategy( awayPoint, currentLocationX, currentLocationY, preFadeTime, fadeOutDuration ) {
 
     this.awayPoint = awayPoint;
     this.preFadeCountdownTimer = preFadeTime;
@@ -49,9 +49,10 @@ define( function( require ) {
     this.motionUpdateCountdownTimer = RAND.nextInt( CLOCK_TICKS_BEFORE_MOTION_UPDATE ) * NeuronSharedConstants.DEFAULT_ACTION_POTENTIAL_CLOCK_DT;
     this.velocityUpdateCountdownTimer = RAND.nextInt( CLOCK_TICKS_BEFORE_VELOCITY_UPDATE ) * NeuronSharedConstants.DEFAULT_ACTION_POTENTIAL_CLOCK_DT;
 
-    this.velocity = new Vector2();
+    this.velocityX = 0;
+    this.velocityY = 0;
     // Set an initial velocity and direction.
-    this.updateVelocity( currentLocation );
+    this.updateVelocity( currentLocationX, currentLocationY );
   }
 
   return inherit( MotionStrategy, WanderAwayThenFadeMotionStrategy, {
@@ -63,8 +64,8 @@ define( function( require ) {
       if ( this.motionUpdateCountdownTimer <= 0 ) {
         // Time to update the motion.
         movableModelElement.setPosition(
-            movableModelElement.getPositionReference().x + this.velocity.x * MOTION_UPDATE_PERIOD,
-            movableModelElement.getPositionReference().y + this.velocity.y * MOTION_UPDATE_PERIOD );
+            movableModelElement.getPositionX() + this.velocityX * MOTION_UPDATE_PERIOD,
+            movableModelElement.getPositionY() + this.velocityY * MOTION_UPDATE_PERIOD );
 
         this.motionUpdateCountdownTimer = MOTION_UPDATE_PERIOD;
       }
@@ -72,7 +73,7 @@ define( function( require ) {
       this.velocityUpdateCountdownTimer -= dt;
       if ( this.velocityUpdateCountdownTimer <= 0 ) {
         // Time to update the velocity.
-        this.updateVelocity( movableModelElement.getPositionReference() );
+        this.updateVelocity( movableModelElement.getPositionX(), movableModelElement.getPositionY() );
         this.velocityUpdateCountdownTimer = VELOCITY_UPDATE_PERIOD;
       }
 
@@ -84,12 +85,15 @@ define( function( require ) {
         }
       }
     },
-    updateVelocity: function( currentPosition ) {
+    updateVelocity: function( currentPositionX, currentPositionY ) {
       // Create a velocity vector that causes this to move away from the "away point".
-      var awayAngle = Math.atan2( currentPosition.y - this.awayPoint.y,
-          currentPosition.x - this.awayPoint.x ) + ( RAND.nextDouble() - 0.5 ) * Math.PI;
+      var awayAngle = Math.atan2( currentPositionY - this.awayPoint.y,
+          currentPositionX - this.awayPoint.x ) + ( RAND.nextDouble() - 0.5 ) * Math.PI;
       var newScalerVelocity = MIN_VELOCITY + RAND.nextDouble() * ( MAX_VELOCITY - MIN_VELOCITY );
-      this.velocity.setXY( newScalerVelocity * Math.cos( awayAngle ), newScalerVelocity * Math.sin( awayAngle ) );
+      this.velocityX = newScalerVelocity * Math.cos( awayAngle );
+      this.velocityY = newScalerVelocity * Math.sin( awayAngle );
+
+
     }
 
   } );

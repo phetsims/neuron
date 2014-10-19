@@ -32,7 +32,14 @@ define( function( require ) {
     return Math.random();
   }};
 
-
+  /**
+   *
+   * @param channel
+   * @param startingLocationX
+   * @param startingLocationY
+   * @param maxVelocity
+   * @constructor
+   */
   function DualGateChannelTraversalMotionStrategy( channel, startingLocationX, startingLocationY, maxVelocity ) {
     maxVelocity = maxVelocity || MembraneTraversalMotionStrategy.DEFAULT_MAX_VELOCITY;
     this.velocityVector = new Vector2();
@@ -62,7 +69,7 @@ define( function( require ) {
         if ( !this.channel.isOpen() ) {
           // The channel has closed, so there is no sense in continuing
           // towards it.  The particle should wander and then fade out.
-          movableModelElement.setMotionStrategy( new WanderAwayThenFadeMotionStrategy( this.channel.getCenterLocation(), movableModelElement.getPosition(), 0, 0.002 ) );
+          movableModelElement.setMotionStrategy( new WanderAwayThenFadeMotionStrategy( this.channel.getCenterLocation(), movableModelElement.getPositionX(), movableModelElement.getPositionY(), 0, 0.002 ) );
           // For error checking, set the destination index really high.
           // That way it will be detected if this strategy instance is
           // used again.

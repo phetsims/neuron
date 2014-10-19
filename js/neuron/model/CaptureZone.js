@@ -23,7 +23,7 @@ define( function( require ) {
   }
 
   return inherit( Object, CaptureZone, {
-    isPointInZone: function( pt ) {
+    isPointInZone: function( x,y ) {
       throw new Error( 'isPointInZone should be implemented in descendant classes.' );
     },
     // assign a random point that is somewhere within the shape.

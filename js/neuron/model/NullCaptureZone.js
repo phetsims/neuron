@@ -27,7 +27,7 @@ define( function( require ) {
     getShape: function() {
       return new Shape().ellipse( 0, 0, 0, 0 );
     },
-    isPointInZone: function( pt ) {
+    isPointInZone: function( x,y ) {
       return false;
     },
     // assign a random point that is somewhere within the shape.

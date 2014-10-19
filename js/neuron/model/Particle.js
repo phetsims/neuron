@@ -16,7 +16,6 @@ define( function( require ) {
 
   //imports
   var inherit = require( 'PHET_CORE/inherit' );
-  var Vector2 = require( 'DOT/Vector2' );
   var ViewableParticle = require( 'NEURON/neuron/model/ViewableParticle' );
   var Property = require( 'AXON/Property' );
   var StillnessMotionStrategy = require( 'NEURON/neuron/model/StillnessMotionStrategy' );
@@ -43,7 +42,9 @@ define( function( require ) {
     this.continueExistingProperty = new Property( true );
 
     // Location in space of this particle, units are nano-meters.
-    this.position = new Vector2( xPos, yPos );
+    this.positionX = xPos;
+    this.positionY = yPos;
+
     // Opaqueness value, ranges from 0 (completely transparent) to 1
     // (completely opaque).
     this.opaqueness = 1;
@@ -71,31 +72,20 @@ define( function( require ) {
         this.continueExistingProperty.value = false;
       }
     },
-    getPosition: function() {
-      // return new Vector2( this.position.x, this.position.y ); // TODO why new Position everytime? The State object copies the position, so no need to return a clone
-      return this.position;
-    },
+
 
     isPositionEqual: function( otherX, otherY ) {
-      return this.position.x === otherX && this.position.y === otherY;
+      return this.positionX === otherX && this.positionY === otherY;
     },
 
     getPositionX: function() {
-      return this.position.x;
+      return this.positionX;
     },
     getPositionY: function() {
-      return this.position.y;
+      return this.positionY;
     },
 
-    /**
-     * Get a reference to the current position of the model element.  Be
-     * careful with this.  It is provided primarily for optimization purposes,
-     * and the value should not be changed.
-     *
-     */
-    getPositionReference: function() {
-      return this.position;
-    },
+
     /**
      * Get the radius of the object being moved.  This is generally used when
      * the object needs to "bounce" (i.e. change direction because some limit
@@ -118,13 +108,8 @@ define( function( require ) {
       this.motionStrategy = motionStrategy;
     },
     setPosition: function( x, y ) {
-
-      if ( !y ) {
-        this.position.set( x );// x is vector
-        return;
-      }
-      this.position.setXY( x, y );
-
+      this.positionX = x;
+      this.positionY = y;
     },
 
     isAvailableForCapture: function() {

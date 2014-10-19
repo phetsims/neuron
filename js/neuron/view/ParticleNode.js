@@ -15,6 +15,7 @@ define( function( require ) {
   var Shape = require( 'KITE/Shape' );
   var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
   var Matrix3 = require( 'DOT/Matrix3' );
+  var Vector2 = require( 'DOT/Vector2' );
 
 
   var PARTICLE_EDGE_STROKE = 1;
@@ -35,8 +36,8 @@ define( function( require ) {
     var representation = new Path( new Shape(), {lineWidth: PARTICLE_EDGE_STROKE, stroke: Color.BLACK} );
     thisNode.addChild( representation );
 
-    function updateOffset( newPosition ) {
-      thisNode.translate( modelViewTransform.modelToViewPosition( newPosition ) );
+    function updateOffset( x,y ) {
+      thisNode.translate( modelViewTransform.modelToViewPosition( new Vector2(x,y) ) );
     }
 
     function updateRepresentation( newOpaqueness ) {
@@ -69,7 +70,7 @@ define( function( require ) {
       thisNode.setOpacity( newOpaqueness );
     }
 
-    updateOffset( particle.getPosition() );
+    updateOffset( particle.getPositionX(),particle.getPositionY() );
     updateRepresentation( particle.getOpaqueness() );
   }
 

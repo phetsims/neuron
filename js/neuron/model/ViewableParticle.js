@@ -22,12 +22,13 @@ define( function( require ) {
     getType: function() {
       throw new Error( 'getType should be implemented in descendant classes.' );
     },
-    getPosition: function() {
-      throw new Error( 'getPosition should be implemented in descendant classes.' );
+    getPositionX: function() {
+      throw new Error( 'getPositionX should be implemented in descendant classes.' );
     },
-    getPositionReference: function() {
-      throw new Error( 'getPositionReference should be implemented in descendant classes.' );
+    getPositionY: function() {
+      throw new Error( 'getPositionY should be implemented in descendant classes.' );
     },
+
     /**
      * Get the radius of this particle in nano meters.  This is approximate in
      * the case of non-round particles.

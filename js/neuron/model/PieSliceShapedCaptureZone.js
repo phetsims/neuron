@@ -14,12 +14,17 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var Shape = require( 'KITE/Shape' );
   var CaptureZone = require( 'NEURON/neuron/model/CaptureZone' );
+  var Vector2 = require( 'DOT/Vector2' );
 
   var RAND = {
     nextDouble: function() {
       return Math.random();
     }
   };
+
+  //isPointZone method of captureZone is refactored to use Vector components, this class wide
+  // instance is used for intermediary vector calculations.See isPointInZone method
+  var pointZoneCheckPoint = new Vector2();
 
   /**
    * Constructor - defines the size and orientation of a capture zone which
@@ -56,8 +61,10 @@ define( function( require ) {
       return this.zoneShape;
     },
 
-    isPointInZone: function( pt ) {
-      return this.zoneShape.containsPoint( pt );
+    isPointInZone: function( x, y ) {
+      pointZoneCheckPoint.x = x;
+      pointZoneCheckPoint.y = y;
+      return this.zoneShape.containsPoint( pointZoneCheckPoint );
     },
     setRotationalAngle: function( angle ) {
       this.rotationAngle = angle;

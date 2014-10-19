@@ -20,9 +20,10 @@ define( function( require ) {
 
   return inherit( MotionStrategy, LinearMotionStrategy, {
     move: function( movableModelElement, fadableModelElement, dt ) {
-      var currentPositionRef = movableModelElement.getPositionReference();
-      movableModelElement.setPosition( currentPositionRef.x + this.velocity.x * dt,
-          currentPositionRef.y + this.velocity.y * dt );
+      var currentPositionRefX = movableModelElement.getPositionX();
+      var currentPositionRefY = movableModelElement.getPositionY();
+      movableModelElement.setPosition( currentPositionRefX + this.velocity.x * dt,
+          currentPositionRefY + this.velocity.y * dt );
     }
   } );
 } );

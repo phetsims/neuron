@@ -34,6 +34,7 @@ define( function( require ) {
   var CaptureZoneScanResult = require( 'NEURON/neuron/model/CaptureZoneScanResult' );
   var TimedFadeInStrategy = require( 'NEURON/neuron/model/TimedFadeInStrategy' );
   var NeuronSharedConstants = require( 'NEURON/neuron/common/NeuronSharedConstants' );
+  var MathUtils = require( 'NEURON/neuron/utils/MathUtils' );
 
 
   // Default configuration values.
@@ -792,15 +793,16 @@ define( function( require ) {
 
       thisModel.transientParticles.forEach( function( particle ) {
 
-        if ( (particle.getType() === particleType) && (particle.isAvailableForCapture()) && (zone.isPointInZone( particle.getPositionReference() )) ) {
+        //This method is refactored to use position x,y components instead of vector2 instances
+        if ( (particle.getType() === particleType) && (particle.isAvailableForCapture()) && (zone.isPointInZone( particle.getPositionX(), particle.getPositionY() )) ) {
           totalNumberOfParticles++;
           if ( closestFreeParticle === null ) {
             closestFreeParticle = particle;
-            distanceOfClosestParticle = captureZoneOrigin.distance( closestFreeParticle.getPositionReference() );
+            distanceOfClosestParticle = MathUtils.distanceBetween( captureZoneOrigin.x, captureZoneOrigin.y, closestFreeParticle.getPositionX(), closestFreeParticle.getPositionY() );
           }
-          else if ( captureZoneOrigin.distance( closestFreeParticle.getPosition() ) < distanceOfClosestParticle ) {
+          else if ( MathUtils.distanceBetween( captureZoneOrigin.x, captureZoneOrigin.y, closestFreeParticle.getPositionX(), closestFreeParticle.getPositionY() ) < distanceOfClosestParticle ) {
             closestFreeParticle = particle;
-            distanceOfClosestParticle = captureZoneOrigin.distance( closestFreeParticle.getPositionReference() );
+            distanceOfClosestParticle = MathUtils.distanceBetween( captureZoneOrigin.x, captureZoneOrigin.y, closestFreeParticle.getPositionX(), closestFreeParticle.getPositionY() );
           }
         }
       } );

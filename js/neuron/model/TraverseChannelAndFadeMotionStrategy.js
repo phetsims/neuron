@@ -23,6 +23,14 @@ define( function( require ) {
     return Math.random();
   }};
 
+  /**
+   *
+   * @param channel
+   * @param startingLocationX
+   * @param startingLocationY
+   * @param maxVelocity
+   * @constructor
+   */
   function TraverseChannelAndFadeMotionStrategy( channel, startingLocationX, startingLocationY, maxVelocity ) {
     maxVelocity = maxVelocity || MembraneTraversalMotionStrategy.DEFAULT_MAX_VELOCITY;
     this.velocityVector = new Vector2();
@@ -85,7 +93,7 @@ define( function( require ) {
         // The channel has closed and this element has not yet entered it.
         // Time to replace this motion strategy with a different one.
         movableModelElement.setMotionStrategy( new WanderAwayThenFadeMotionStrategy( this.channel.getCenterLocation(),
-          movableModelElement.getPosition(), 0, 0.002 ) );
+          movableModelElement.getPositionX(), movableModelElement.getPositionY(), 0, 0.002 ) );
       }
     },
     /**

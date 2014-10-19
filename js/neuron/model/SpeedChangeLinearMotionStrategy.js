@@ -14,24 +14,26 @@ define( function( require ) {
 
   //imports
   var inherit = require( 'PHET_CORE/inherit' );
-  var Vector2 = require( 'DOT/Vector2' );
   var MotionStrategy = require( 'NEURON/neuron/model/MotionStrategy' );
 
   function SpeedChangeLinearMotionStrategy( initialVelocity, speedScaleFactor, timeAtFirstSpeed ) {
-    this.velocityVector = new Vector2( initialVelocity.x, initialVelocity.y );
+    this.velocityVectorX = initialVelocity.x;
+    this.velocityVectorY = initialVelocity.y;
     this.speedScaleFactor = speedScaleFactor;
     this.firstSpeedCountdownTimer = timeAtFirstSpeed;
   }
 
   return inherit( MotionStrategy, SpeedChangeLinearMotionStrategy, {
     move: function( movable, fadableModelElement, dt ) {
-      movable.setPosition( movable.getPositionX() + this.velocityVector.x * dt,
-          movable.getPositionY() + this.velocityVector.y * dt );
+      movable.setPosition( movable.getPositionX() + this.velocityVectorX * dt,
+          movable.getPositionY() + this.velocityVectorY * dt );
       if ( this.firstSpeedCountdownTimer > 0 ) {
         this.firstSpeedCountdownTimer -= dt;
         if ( this.firstSpeedCountdownTimer <= 0 ) {
           // Scale the speed.
-          this.velocityVector.multiplyScalar( this.speedScaleFactor );
+          this.velocityVectorX = this.velocityVectorX * this.speedScaleFactor;
+          this.velocityVectorY = this.velocityVectorY * this.speedScaleFactor;
+
         }
       }
     }
