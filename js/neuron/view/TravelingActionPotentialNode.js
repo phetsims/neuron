@@ -51,6 +51,7 @@ define( function( require ) {
 
     function updateShape() {
       var transformedShape = mvt.modelToViewShape( travelingActionPotential.getShape() );
+      transformedShape.computeShapeBounds = computeShapeBounds;
       foreground.setShape( transformedShape );
       background.setShape( transformedShape );
 

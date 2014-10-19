@@ -165,10 +165,8 @@ define( function( require ) {
 
       this.allParticles.forEach( function( particle ) {
 
-        //This is too avoid creation of new vectors
-        var refVector = particle.getPositionReference();
-        particleViewPosition.x = refVector.x;
-        particleViewPosition.y = refVector.y;
+        particleViewPosition.x = particle.getPositionX();
+        particleViewPosition.y = particle.getPositionY();
         viewTransformationMatrix.multiplyVector2( particleViewPosition );
         if ( !thisNode.particleViewBounds.containsCoordinates( particleViewPosition.x, particleViewPosition.y ) ) {
           return;

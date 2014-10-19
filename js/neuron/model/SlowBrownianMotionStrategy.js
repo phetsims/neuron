@@ -26,9 +26,10 @@ define( function( require ) {
     return Math.random();
   }};
 
-  function SlowBrownianMotionStrategy( initialLocation ) {
+  function SlowBrownianMotionStrategy( initialLocationX, initialLocationY ) {
     var thisStrategy = this;
-    thisStrategy.initialLocation = initialLocation;
+    thisStrategy.initialLocationX = initialLocationX;
+    thisStrategy.initialLocationY = initialLocationY;
     // In seconds of sim time.
     thisStrategy.timeUntilNextJump = this.generateNewJumpTime();
   }
@@ -40,17 +41,18 @@ define( function( require ) {
       this.timeUntilNextJump -= dt;
       if ( this.timeUntilNextJump <= 0 ) {
         // It is time to jump.
-        if ( movableModelElement.getPosition().equals( this.initialLocation ) ) {
+        if ( movableModelElement.isPositionEqual( this.initialLocationX, this.initialLocationY ) ) {
           // Jump away from this location.
           var jumpAngle = this.generateNewJumpAngle();
           var jumpDistance = this.generateNewJumpDistance();
-          var currentPosRef = movableModelElement.getPositionReference();
-          movableModelElement.setPosition( currentPosRef.x + jumpDistance * Math.cos( jumpAngle ),
-              currentPosRef.y + jumpDistance * Math.sin( jumpAngle ) );
+          var currentPosRefX = movableModelElement.getPositionX();
+          var currentPosRefY = movableModelElement.getPositionY();
+          movableModelElement.setPosition( currentPosRefX + jumpDistance * Math.cos( jumpAngle ),
+              currentPosRefY + jumpDistance * Math.sin( jumpAngle ) );
         }
         else {
           // Jump back to initial location.
-          movableModelElement.setPosition( this.initialLocation );
+          movableModelElement.setPosition( this.initialLocationX, this.initialLocationY );
         }
         // Reset the jump counter time.
         this.timeUntilNextJump = this.generateNewJumpTime();

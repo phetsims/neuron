@@ -649,7 +649,7 @@ define( function( require ) {
       // Set all new particles to exhibit simple Brownian motion.
       thisModel.backgroundParticles.forEach( function( backgroundParticle ) {
         if ( preExistingParticles.indexOf( backgroundParticle ) === -1 ) {
-          backgroundParticle.setMotionStrategy( new SlowBrownianMotionStrategy( backgroundParticle.getPositionReference() ) );
+          backgroundParticle.setMotionStrategy( new SlowBrownianMotionStrategy( backgroundParticle.getPositionX(), backgroundParticle.getPositionY() ) );
         }
       } );
 

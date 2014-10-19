@@ -138,11 +138,11 @@ define( function( require ) {
       throw new Error( 'getParticleTypeToCapture should be implemented in descendant classes.' );
     },
     // Determine whether the provided point is inside the channel.
-    isPointInChannel: function( pt ) {
+    isPointInChannel: function( x, y ) {
       // Note: A rotational angle of zero is considered to be lying on the
       // side.  Hence the somewhat odd-looking use of height and width in
       // the determination of the channel Rect.
-      return this.rotatedChannelRect.containsPoint( pt );
+      return this.rotatedChannelRect.containsCoordinates( x, y );
     },
 
     getChannelSize: function() {
@@ -286,7 +286,7 @@ define( function( require ) {
      * @param maxVelocity
      */
     moveParticleThroughNeuronMembrane: function( particle, maxVelocity ) {
-      particle.setMotionStrategy( new TraverseChannelAndFadeMotionStrategy( this, particle.getPositionReference(), maxVelocity ) );
+      particle.setMotionStrategy( new TraverseChannelAndFadeMotionStrategy( this, particle.getPositionX(), particle.getPositionY(), maxVelocity ) );
     },
     /**
      * Get the state of this membrane channel as needed for support of record-

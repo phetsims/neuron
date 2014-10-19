@@ -17,26 +17,28 @@ define( function( require ) {
   var WanderAwayThenFadeMotionStrategy = require( 'NEURON/neuron/model/WanderAwayThenFadeMotionStrategy' );
   var TimedFadeAwayStrategy = require( 'NEURON/neuron/model/TimedFadeAwayStrategy' );
 
+  //Theses vectors is used as a temporary object for  calculating distance without creating new Vector Instances, see createTraversalPoint method
+  var distanceCalculatorVectorLHS = new Vector2();
+  var distanceCalculatorVectorRHS = new Vector2();
 
   var RAND = {nextDouble: function() {
     return Math.random();
   }};
 
-  function TraverseChannelAndFadeMotionStrategy( channel, startingLocation, maxVelocity ) {
+  function TraverseChannelAndFadeMotionStrategy( channel, startingLocationX, startingLocationY, maxVelocity ) {
     maxVelocity = maxVelocity || MembraneTraversalMotionStrategy.DEFAULT_MAX_VELOCITY;
     this.velocityVector = new Vector2();
     this.channel = channel;
     this.maxVelocity = maxVelocity;
-    //This vector is used as a temporary object for  calculating distance without creating new Vector Instances, see createTraversalPoint method
-    this.distanceCalculatorVector = new Vector2();
+
     // Holds array of objects with x and y properties (doesn't use vector for performance reasons)
     // http://jsperf.com/object-notation-vs-constructor
-    this.traversalPoints = this.createTraversalPoints( channel, startingLocation );
+    this.traversalPoints = this.createTraversalPoints( channel, startingLocationX, startingLocationY );
     this.currentDestinationIndex = 0;
     this.channelHasBeenEntered = false;
 
 
-    this.setCourseForCurrentTraversalPoint( startingLocation );
+    this.setCourseForCurrentTraversalPoint( startingLocationX, startingLocationY );
   }
 
   return inherit( MembraneTraversalMotionStrategy, TraverseChannelAndFadeMotionStrategy, {
@@ -44,28 +46,29 @@ define( function( require ) {
     //@Override
     move: function( movableModelElement, fadableModelElement, dt ) {
 
-      var currentPositionRef = movableModelElement.getPositionReference();
+      var currentPositionRefX = movableModelElement.getPositionX();
+      var currentPositionRefY = movableModelElement.getPositionY();
 
       if ( !this.channelHasBeenEntered ) {
         // Update the flag the tracks whether this particle has made it
         // to the channel and started traversing it.
-        this.channelHasBeenEntered = this.channel.isPointInChannel( currentPositionRef );
+        this.channelHasBeenEntered = this.channel.isPointInChannel( currentPositionRefX, currentPositionRefY );
       }
 
       if ( this.channel.isOpen() || this.channelHasBeenEntered ) {
         // The channel is open, or we are inside it or have gone all the
         // way through, so keep executing this motion strategy.
-        if ( this.currentDestinationIndex >= this.traversalPoints.length || this.maxVelocity * dt < this.distanceBetweenPosAndTraversalPoint( currentPositionRef, this.traversalPoints[ this.currentDestinationIndex] ) ) {
+        if ( this.currentDestinationIndex >= this.traversalPoints.length || this.maxVelocity * dt < this.distanceBetweenPosAndTraversalPoint( currentPositionRefX, currentPositionRefY, this.traversalPoints[ this.currentDestinationIndex] ) ) {
           // Move according to the current velocity.
-          movableModelElement.setPosition( currentPositionRef.x + this.velocityVector.x * dt,
-              currentPositionRef.y + this.velocityVector.y * dt );
+          movableModelElement.setPosition( currentPositionRefX + this.velocityVector.x * dt,
+              currentPositionRefY + this.velocityVector.y * dt );
         }
         else {
           // We are close enough to the destination that we should just
           // position ourself there and update to the next traversal point.
           movableModelElement.setPosition( this.traversalPoints[ this.currentDestinationIndex].x, this.traversalPoints[ this.currentDestinationIndex].y );
           this.currentDestinationIndex++;
-          this.setCourseForCurrentTraversalPoint( movableModelElement.getPosition() );
+          this.setCourseForCurrentTraversalPoint( movableModelElement.getPositionX(), movableModelElement.getPositionY() );
           if ( this.currentDestinationIndex === this.traversalPoints.length ) {
             // We have traversed through all points and are now
             // presumably on the other side of the membrane, so we need to
@@ -95,15 +98,14 @@ define( function( require ) {
      * @param startingLocation
      * @return
      */
-    createTraversalPoints: function( channel, startingLocation ) {
-
+    createTraversalPoints: function( channel, startingLocationX, startingLocationY ) {
       var points = [];
       var ctr = channel.getCenterLocation();
       var r = channel.getChannelSize().height * 0.65; // Make the point a little outside the channel.
       var outerOpeningLocation = {x: ctr.x + Math.cos( channel.getRotationalAngle() ) * r, y: ctr.y + Math.sin( channel.getRotationalAngle() ) * r };
       var innerOpeningLocation = {x: ctr.x - Math.cos( channel.getRotationalAngle() ) * r, y: ctr.y - Math.sin( channel.getRotationalAngle() ) * r };
 
-      if ( this.distanceBetweenPosAndTraversalPoint( startingLocation, innerOpeningLocation ) < this.distanceBetweenPosAndTraversalPoint( startingLocation, outerOpeningLocation ) ) {
+      if ( this.distanceBetweenPosAndTraversalPoint( startingLocationX, startingLocationY, innerOpeningLocation ) < this.distanceBetweenPosAndTraversalPoint( startingLocationX, startingLocationY, outerOpeningLocation ) ) {
         points.push( innerOpeningLocation );
         points.push( outerOpeningLocation );
       }
@@ -114,10 +116,10 @@ define( function( require ) {
 
       return points;
     },
-    setCourseForCurrentTraversalPoint: function( currentLocation ) {
+    setCourseForCurrentTraversalPoint: function( currentLocationX, currentLocationY ) {
       if ( this.currentDestinationIndex < this.traversalPoints.length ) {
         var dest = this.traversalPoints[this.currentDestinationIndex];
-        this.velocityVector.setXY( dest.x - currentLocation.x, dest.y - currentLocation.y );
+        this.velocityVector.setXY( dest.x - currentLocationX, dest.y - currentLocationY );
         var scaleFactor = this.maxVelocity / this.velocityVector.magnitude();
         this.velocityVector.multiplyScalar( scaleFactor );
       }
@@ -131,13 +133,16 @@ define( function( require ) {
     /**
      * For performance reasons vector references in traversal points are converted into object literal
      * this method uses a instance vector to do distance calculation.
-     * @param pos
+     * @param xPos
+     * @param yPos
      * @param travelsalPoint (object literal with x and y properties)
      */
-    distanceBetweenPosAndTraversalPoint: function( pos, travelsalPoint ) {
-      this.distanceCalculatorVector.x = travelsalPoint.x;
-      this.distanceCalculatorVector.y = travelsalPoint.y;
-      return pos.distance( this.distanceCalculatorVector );
+    distanceBetweenPosAndTraversalPoint: function( posX, posY, travelsalPoint ) {
+      distanceCalculatorVectorLHS.x = posX;
+      distanceCalculatorVectorLHS.y = posY;
+      distanceCalculatorVectorRHS.x = travelsalPoint.x;
+      distanceCalculatorVectorRHS.y = travelsalPoint.y;
+      return distanceCalculatorVectorLHS.distance( distanceCalculatorVectorRHS );
 
     }
 

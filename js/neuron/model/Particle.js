@@ -48,11 +48,11 @@ define( function( require ) {
     // (completely opaque).
     this.opaqueness = 1;
 
-    // Motion strategy for moving this particle around.
-    this.motionStrategy = new StillnessMotionStrategy();
+    // Motion strategy for moving this particle around.StillnessMotionStrategy is stateless so use the singleton instance
+    this.motionStrategy = StillnessMotionStrategy.getInstance();
 
     // Fade strategy for fading in and out.
-    this.fadeStrategy = new NullFadeStrategy();
+    this.fadeStrategy = NullFadeStrategy.getInstance();
 
   }
 
@@ -75,6 +75,18 @@ define( function( require ) {
       // return new Vector2( this.position.x, this.position.y ); // TODO why new Position everytime? The State object copies the position, so no need to return a clone
       return this.position;
     },
+
+    isPositionEqual: function( otherX, otherY ) {
+      return this.position.x === otherX && this.position.y === otherY;
+    },
+
+    getPositionX: function() {
+      return this.position.x;
+    },
+    getPositionY: function() {
+      return this.position.y;
+    },
+
     /**
      * Get a reference to the current position of the model element.  Be
      * careful with this.  It is provided primarily for optimization purposes,
@@ -106,6 +118,7 @@ define( function( require ) {
       this.motionStrategy = motionStrategy;
     },
     setPosition: function( x, y ) {
+
       if ( !y ) {
         this.position.set( x );// x is vector
         return;

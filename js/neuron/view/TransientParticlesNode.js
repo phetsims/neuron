@@ -23,7 +23,7 @@ define( function( require ) {
     ParticlesNode.call( thisNode, modelViewTransform, bounds );
     // if during a step we change, then trigger a repaint
     //Use Particles Canvas Node to render all the particles directly
-    neuronModel.particlesStateChangedProperty.link( function( newValue ) {
+       neuronModel.particlesStateChangedProperty.link( function( newValue ) {
       thisNode.invalidatePaint();
     } );
 

@@ -15,13 +15,26 @@ define( function( require ) {
 
   function NullFadeStrategy() {
 
+
   }
 
   return inherit( FadeStrategy, NullFadeStrategy, {
-    //@Override
-    updateOpaqueness: function( fadableModelElement, dt ) {
-      // Does nothing.
+      //@Override
+      updateOpaqueness: function( fadableModelElement, dt ) {
+        // Does nothing.
+      }
+    },
+    //static.
+    {
+      getInstance: function() {
+        if ( !this.instance ) {
+          // No need to create new instance of NullFadeStrategy , it is stateless
+          // Using a single strategy instance to avoid allocation
+          this.instance = new NullFadeStrategy();
+        }
+        return this.instance;
+      }
     }
-  } );
+  );
 } );
 

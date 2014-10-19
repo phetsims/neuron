@@ -34,7 +34,7 @@ define( function( require ) {
       appearanceChanged: false
     } );
 
-    this.position=particle.getPosition().copy();
+    this.position = particle.getPosition().copy();
     this.opaqueness = particle.getOpaqueness();
     this.representationColor = particle.getRepresentationColor();
     this.radius = particle.getRadius();
@@ -73,12 +73,23 @@ define( function( require ) {
       return this.position.copy();
     },
 
+    getPositionX: function() {
+      return this.position.x;
+    },
+    getPositionY: function() {
+      return this.position.y;
+    },
+
     getPositionReference: function() {
       return this.position;
     },
 
-    setPosition: function( newPos ) {
-      this.position = newPos.copy();
+    setPosition: function( x, y ) {
+      if ( !y ) {
+        this.position.set( x );// x is vector
+        return;
+      }
+      this.position.setXY( x, y );
     },
 
     getRepresentationColor: function() {

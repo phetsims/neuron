@@ -18,9 +18,20 @@ define( function( require ) {
   }
 
   return inherit( MotionStrategy, StillnessMotionStrategy, {
-    move: function( movableModelElement, fadableModelElement, dt ) {
-      // Does nothing, since the object is not moving.
-    }
-  } );
+      move: function( movableModelElement, fadableModelElement, dt ) {
+        // Does nothing, since the object is not moving.
+      }
+    },
+    //static.
+    {
+      getInstance: function() {
+        if ( !this.instance ) {
+          // No need to create new instance of StillnessMotionStrategy , it is stateless
+          // Using a single strategy instance to avoid allocation
+          this.instance = new StillnessMotionStrategy();
+        }
+        return this.instance;
+      }
+    } );
 } );
 
