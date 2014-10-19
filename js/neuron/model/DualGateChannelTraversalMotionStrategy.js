@@ -21,6 +21,8 @@ define( function( require ) {
   var TimedFadeAwayStrategy = require( 'NEURON/neuron/model/TimedFadeAwayStrategy' );
   var SpeedChangeLinearMotionStrategy = require( 'NEURON/neuron/model/SpeedChangeLinearMotionStrategy' );
   var LinearMotionStrategy = require( 'NEURON/neuron/model/LinearMotionStrategy' );
+  var MathUtils = require( 'NEURON/neuron/utils/MathUtils' );
+
 
   // Threshold at which particles will "bounce" back out of the channel
   // rather than traversing it.
@@ -30,21 +32,19 @@ define( function( require ) {
     return Math.random();
   }};
 
-  function DualGateChannelTraversalMotionStrategy( channel, startingLocation, maxVelocity ) {
+
+  function DualGateChannelTraversalMotionStrategy( channel, startingLocationX, startingLocationY, maxVelocity ) {
     maxVelocity = maxVelocity || MembraneTraversalMotionStrategy.DEFAULT_MAX_VELOCITY;
     this.velocityVector = new Vector2();
-
-    //This vector is used for calculating distance without creating new Vector Instances, see createTraversalPoint method
-    this.distanceCalculatorVector = new Vector2();
     this.channel = channel;
     this.maxVelocity = maxVelocity;
 
     // Holds array of objects with x and y properties (doesn't use vector for performance reasons)
     // http://jsperf.com/object-notation-vs-constructor
-    this.traversalPoints = this.createTraversalPoints( channel, startingLocation );
+    this.traversalPoints = this.createTraversalPoints( channel, startingLocationX, startingLocationY );
     this.currentDestinationIndex = 0;
     this.bouncing = false;
-    this.setCourseForCurrentTraversalPoint( startingLocation );
+    this.setCourseForCurrentTraversalPoint( startingLocationX, startingLocationY );
   }
 
   return inherit( MembraneTraversalMotionStrategy, DualGateChannelTraversalMotionStrategy, {
@@ -53,7 +53,8 @@ define( function( require ) {
     move: function( movableModelElement, fadableModelElement, dt ) {
       assert && assert( this.currentDestinationIndex < this.traversalPoints.length );  // Error checking.
       var angularRange = 0;
-      var currentPositionRef = movableModelElement.getPositionReference();
+      var currentPositionRefX = movableModelElement.getPositionX();
+      var currentPositionRefY = movableModelElement.getPositionY();
 
       if ( this.currentDestinationIndex === 0 ) {
         // Currently moving towards the first destination point.  Is the
@@ -67,12 +68,12 @@ define( function( require ) {
           // used again.
           this.currentDestinationIndex = Number.MAX_VALUE;
         }
-        else if ( this.distanceBetweenPosAndTraversalPoint( currentPositionRef, this.traversalPoints[ this.currentDestinationIndex ] ) < this.velocityVector.magnitude() * dt ) {
+        else if ( this.distanceBetweenPosAndTraversalPoint( currentPositionRefX, currentPositionRefY, this.traversalPoints[ this.currentDestinationIndex ] ) < this.velocityVector.magnitude() * dt ) {
           // We have arrived at the first traversal point, so now start
           // heading towards the second.
           movableModelElement.setPosition( this.traversalPoints[this.currentDestinationIndex].x, this.traversalPoints[this.currentDestinationIndex].y );
           this.currentDestinationIndex++;
-          this.setCourseForPoint( movableModelElement.getPosition(), this.traversalPoints[this.currentDestinationIndex],
+          this.setCourseForPoint( movableModelElement.getPositionX(), movableModelElement.getPositionY(), this.traversalPoints[this.currentDestinationIndex],
             this.velocityVector.magnitude() );
         }
         else {
@@ -97,12 +98,12 @@ define( function( require ) {
             this.bouncing = true; // Flag for tracking that we need to bounce.
           }
         }
-        if ( this.distanceBetweenPosAndTraversalPoint( currentPositionRef, this.traversalPoints[ this.currentDestinationIndex ] ) < this.velocityVector.magnitude() * dt ) {
+        if ( this.distanceBetweenPosAndTraversalPoint( currentPositionRefX, currentPositionRefY, this.traversalPoints[ this.currentDestinationIndex ] ) < this.velocityVector.magnitude() * dt ) {
           // The element has reached the current traversal point, so
           // it should start moving towards the next.
           movableModelElement.setPosition( this.traversalPoints[this.currentDestinationIndex].x, this.traversalPoints[this.currentDestinationIndex].y );
           this.currentDestinationIndex++;
-          this.setCourseForPoint( movableModelElement.getPosition(), this.traversalPoints[this.currentDestinationIndex],
+          this.setCourseForPoint( movableModelElement.getPositionX(), movableModelElement.getPositionY(), this.traversalPoints[this.currentDestinationIndex],
             this.velocityVector.magnitude() );
           if ( this.bouncing ) {
             // Slow down if we are bouncing - it looks better this way.
@@ -116,7 +117,7 @@ define( function( require ) {
       }
       else if ( this.currentDestinationIndex === 2 ) {
         // Currently moving towards the 3rd point.
-        if ( this.distanceBetweenPosAndTraversalPoint( currentPositionRef, this.traversalPoints[ this.currentDestinationIndex ] ) < this.velocityVector.magnitude() * dt ) {
+        if ( this.distanceBetweenPosAndTraversalPoint( currentPositionRefX, currentPositionRefY, this.traversalPoints[ this.currentDestinationIndex ] ) < this.velocityVector.magnitude() * dt ) {
           // The element has reached the last traversal point, so a
           // new motion strategy is set to have it move away and then
           // fade out.
@@ -170,20 +171,17 @@ define( function( require ) {
     },
 
     /**
-     * For performance reasons vector references in traversal points are converted into object literal
-     * this method uses a instance vector to do distance calculation.
-     * @param pos
+     * @param xPos
+     * @param yPos
      * @param travelsalPoint (object literal with x and y properties)
      */
-    distanceBetweenPosAndTraversalPoint: function( pos, travelsalPoint ) {
-      this.distanceCalculatorVector.x = travelsalPoint.x;
-      this.distanceCalculatorVector.y = travelsalPoint.y;
-      return pos.distance( this.distanceCalculatorVector );
-
+    distanceBetweenPosAndTraversalPoint: function( posX, posY, travelsalPoint ) {
+      return  MathUtils.distanceBetween( posX, posY, travelsalPoint.x, travelsalPoint.y );
     },
+
     moveBasedOnCurrentVelocity: function( movable, dt ) {
-      movable.setPosition( movable.getPosition().x + this.velocityVector.x * dt,
-          movable.getPosition().y + this.velocityVector.y * dt );
+      movable.setPosition( movable.getPositionX() + this.velocityVector.x * dt,
+          movable.getPositionY() + this.velocityVector.y * dt );
     },
 
     /**
@@ -194,7 +192,7 @@ define( function( require ) {
      * @param startingLocation
      * @return
      */
-    createTraversalPoints: function( channel, startingLocation ) {
+    createTraversalPoints: function( channel, startingLocationX, startingLocationY ) {
       var points = [];
       var ctr = channel.getCenterLocation();
       var r = channel.getChannelSize().height * 0.5;
@@ -216,7 +214,7 @@ define( function( require ) {
       var aboveInactivationGateLocation =
       {x: ctr.x - Math.cos( channel.getRotationalAngle() ) * r * 0.5, y: ctr.y - Math.sin( channel.getRotationalAngle() ) * r * 0.5 };
 
-      if ( startingLocation.distance( innerOpeningLocation ) < startingLocation.distance( outerOpeningLocation ) ) {
+      if ( this.distanceBetweenPosAndTraversalPoint( startingLocationX, startingLocationY, innerOpeningLocation ) < this.distanceBetweenPosAndTraversalPoint( startingLocationX, startingLocationY, outerOpeningLocation ) ) {
         points.push( innerOpeningLocation );
         points.push( aboveInactivationGateLocation );
         points.push( outerOpeningLocation );
@@ -230,19 +228,19 @@ define( function( require ) {
       return points;
     },
 
-    setCourseForPoint: function( startLocation, destination, velocityScaler ) {
-      this.velocityVector.setXY( destination.x - startLocation.x,
-          destination.y - startLocation.y );
+    setCourseForPoint: function( startLocationX, startLocationY, destination, velocityScaler ) {
+      this.velocityVector.setXY( destination.x - startLocationX,
+          destination.y - startLocationY );
       var scaleFactor = this.maxVelocity / this.velocityVector.magnitude();
       this.velocityVector.multiplyScalar( scaleFactor );
 
     },
 
-    setCourseForCurrentTraversalPoint: function( currentLocation ) {
+    setCourseForCurrentTraversalPoint: function( currentLocationX, currentLocationY ) {
       var angularRange = 0;
       if ( this.currentDestinationIndex < this.traversalPoints.length ) {
         var dest = this.traversalPoints[this.currentDestinationIndex ];
-        this.velocityVector.setXY( dest.x - currentLocation.x, dest.y - currentLocation.y );
+        this.velocityVector.setXY( dest.x - currentLocationX, dest.y - currentLocationY );
         var scaleFactor = this.maxVelocity / this.velocityVector.magnitude();
         this.velocityVector.multiplyScalar( scaleFactor );
       }

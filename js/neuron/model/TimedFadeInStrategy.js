@@ -31,7 +31,7 @@ define( function( require ) {
       if ( this.fadeCountdownTimer < 0 ) {
         this.fadeCountdownTimer = 0;
         // Done with the fade in, so set a null fade strategy.
-        fadableModelElement.setFadeStrategy( new NullFadeStrategy() );
+        fadableModelElement.setFadeStrategy( NullFadeStrategy.getInstance() );
       }
     }
 

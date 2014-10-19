@@ -25,8 +25,8 @@ define( function( require ) {
 
   return inherit( MotionStrategy, SpeedChangeLinearMotionStrategy, {
     move: function( movable, fadableModelElement, dt ) {
-      movable.setPosition( movable.getPosition().x + this.velocityVector.x * dt,
-          movable.getPosition().y + this.velocityVector.y * dt );
+      movable.setPosition( movable.getPositionX() + this.velocityVector.x * dt,
+          movable.getPositionY() + this.velocityVector.y * dt );
       if ( this.firstSpeedCountdownTimer > 0 ) {
         this.firstSpeedCountdownTimer -= dt;
         if ( this.firstSpeedCountdownTimer <= 0 ) {

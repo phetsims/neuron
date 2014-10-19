@@ -16,10 +16,8 @@ define( function( require ) {
   var MembraneTraversalMotionStrategy = require( 'NEURON/neuron/model/MembraneTraversalMotionStrategy' );
   var WanderAwayThenFadeMotionStrategy = require( 'NEURON/neuron/model/WanderAwayThenFadeMotionStrategy' );
   var TimedFadeAwayStrategy = require( 'NEURON/neuron/model/TimedFadeAwayStrategy' );
+  var MathUtils = require( 'NEURON/neuron/utils/MathUtils' );
 
-  //Theses vectors is used as a temporary object for  calculating distance without creating new Vector Instances, see createTraversalPoint method
-  var distanceCalculatorVectorLHS = new Vector2();
-  var distanceCalculatorVectorRHS = new Vector2();
 
   var RAND = {nextDouble: function() {
     return Math.random();
@@ -131,19 +129,12 @@ define( function( require ) {
     },
 
     /**
-     * For performance reasons vector references in traversal points are converted into object literal
-     * this method uses a instance vector to do distance calculation.
      * @param xPos
      * @param yPos
      * @param travelsalPoint (object literal with x and y properties)
      */
     distanceBetweenPosAndTraversalPoint: function( posX, posY, travelsalPoint ) {
-      distanceCalculatorVectorLHS.x = posX;
-      distanceCalculatorVectorLHS.y = posY;
-      distanceCalculatorVectorRHS.x = travelsalPoint.x;
-      distanceCalculatorVectorRHS.y = travelsalPoint.y;
-      return distanceCalculatorVectorLHS.distance( distanceCalculatorVectorRHS );
-
+      return  MathUtils.distanceBetween( posX, posY, travelsalPoint.x, travelsalPoint.y );
     }
 
   } );

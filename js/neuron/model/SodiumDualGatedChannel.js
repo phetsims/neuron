@@ -232,7 +232,7 @@ define( function( require ) {
     },
     //@Override
     moveParticleThroughNeuronMembrane: function( particle, maxVelocity ) {
-      particle.setMotionStrategy( new DualGateChannelTraversalMotionStrategy( this, particle.getPositionReference() ) );
+      particle.setMotionStrategy( new DualGateChannelTraversalMotionStrategy( this, particle.getPositionX(), particle.getPositionY() ) );
     },
 
     mapOpennessToNormalizedConductance: function( normalizedConductance ) {
