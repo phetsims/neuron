@@ -17,7 +17,7 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var PropertySet = require( 'AXON/PropertySet' );
   var EventTimer = require( 'PHET_CORE/EventTimer' );
- 
+
 
   // Constant Clock internally used
   var DEFAULT_FRAMES_PER_SECOND = 30.0;
@@ -46,7 +46,7 @@ define( function( require ) {
     PropertySet.call( this, {
         paused: false,//linked to playPause button
         simulationTimeReset: false,
-        speed: '1' // factor controlling simulation clock speed)
+        speed: 1 // factor controlling simulation clock speed)
       }
     );
 
@@ -74,7 +74,10 @@ define( function( require ) {
     reset: function() {
       this.lastSimulationTime = 0.0;
       this.simulationTime = 0.0;
+      this.speed=1;
       PropertySet.prototype.reset.call( this );
+
+      this.model.reset();
     },
     /**
      * Registers a callback that will be notified when the step simulation occurs

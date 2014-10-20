@@ -31,9 +31,9 @@ define( function( require ) {
 
     var radioButtonFont = new PhetFont( { size: 12, weight: 'bold' } );
     var speedRadioButtonGroup = new VerticalAquaRadioButtonGroup( [
-      { node: new Text( fastForwardString, {font: radioButtonFont} ), property: speedProperty, value: '2' },
-      { node: new Text( normalString, {font: radioButtonFont} ), property: speedProperty, value: '1' },
-      { node: new Text( slowMotionString, {font: radioButtonFont} ), property: speedProperty, value: '0.5' }
+      { node: new Text( fastForwardString, {font: radioButtonFont} ), property: speedProperty, value: 2 },
+      { node: new Text( normalString, {font: radioButtonFont} ), property: speedProperty, value: 1 },
+      { node: new Text( slowMotionString, {font: radioButtonFont} ), property: speedProperty, value: 0.5 }
     ] );
 
 

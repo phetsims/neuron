@@ -18,6 +18,7 @@ define( function( require ) {
   var Util = require( 'DOT/Util' );
   var Shape = require( 'KITE/Shape' );
   var Path = require( 'SCENERY/nodes/Path' );
+  var GrippyIndentNode = require( 'NEURON/neuron/chart/view/GrippyIndentNode' );
 
   var WIDTH_PROPORTION = 0.013;
   var CURSOR_FILL_COLOR = new Color( 50, 50, 200, 0.2 );
@@ -45,7 +46,7 @@ define( function( require ) {
     var height = bottomOfPlotArea.y - topOfPlotArea.y;
     var rectShape = new Shape().rect( -width / 2, 0, width, height );
 
-    Path.call( thisChartCursor, rectShape, {fill: CURSOR_FILL_COLOR, stroke: CURSOR_STROKE_COLOR, lineWidth: 0.4} );
+    Path.call( thisChartCursor, rectShape, {fill: CURSOR_FILL_COLOR, stroke: CURSOR_STROKE_COLOR, lineWidth: 0.4, lineDash: [4, 4]} );
 
 
     var chartCursorDragHandler = new SimpleDragHandler( {
@@ -92,6 +93,20 @@ define( function( require ) {
 
 
     thisChartCursor.addInputListener( chartCursorDragHandler );
+
+
+    // Add the indentations that are intended to convey the idea of
+    // "gripability".
+    var indentSpacing = 0.05 * height;
+    var grippyIndent1 = new GrippyIndentNode( width / 2, CURSOR_FILL_COLOR );
+    grippyIndent1.translate( 0, height / 2 - indentSpacing );
+    thisChartCursor.addChild( grippyIndent1 );
+    var grippyIndent2 = new GrippyIndentNode( width / 2, CURSOR_FILL_COLOR );
+    grippyIndent2.translate( 0, height / 2 );
+    thisChartCursor.addChild( grippyIndent2 );
+    var grippyIndent3 = new GrippyIndentNode( width / 2, CURSOR_FILL_COLOR );
+    grippyIndent3.translate( 0, height / 2 + indentSpacing );
+    thisChartCursor.addChild( grippyIndent3 );
 
   }
 

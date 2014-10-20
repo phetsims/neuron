@@ -100,7 +100,7 @@ define( function( require ) {
 
       context.strokeStyle = Color.BLACK.getCanvasStyle();
       context.lineWidth = opacityValue;
-      context.lineWidth = 1.1;
+      context.lineWidth = 1.2;
 
       for ( i = 0; i < 10; i++ ) {
         for ( j = 0; j < 10; j++ ) {

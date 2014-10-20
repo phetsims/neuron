@@ -159,7 +159,8 @@ define( function( require ) {
     // Create and add the Reset All Button in the bottom right
     var resetAllButton = new ResetAllButton( {
       listener: function() {
-        thisView.neuronModel.reset();
+        zoomProperty.value = defaultZoom;
+        neuronClockModelAdapter.reset();
       },
       right: recordPlayButtonBox.right + 300,
       top: recordPlayButtonBox.top - 20
