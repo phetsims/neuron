@@ -15,6 +15,7 @@ define( function( require ) {
   var Shape = require( 'KITE/Shape' );
   var CaptureZone = require( 'NEURON/neuron/model/CaptureZone' );
   var Vector2 = require( 'DOT/Vector2' );
+  var DotUtil = require( 'DOT/Util' );
 
   var RAND = {
     nextDouble: function() {
@@ -90,8 +91,12 @@ define( function( require ) {
     //Derivation function for originPoint and rotation properties
     // see CaptureZone
     updateShape: function() {
-      return new Shape().arc( this.originPoint.x, this.originPoint.y, this.radius, (
-        this.fixedRotationalOffset + this.rotationAngle + this.angleOfExtent / 2), this.angleOfExtent );// ARC2D.PIE startPoint and endPoint is internally added to arc's path
+
+      var startAngle = (this.fixedRotationalOffset + this.rotationAngle + this.angleOfExtent / 2) - this.angleOfExtent;
+      startAngle = DotUtil.moduloBetweenDown( startAngle, 0, Math.PI * 2 );
+      var endAngle = DotUtil.moduloBetweenDown( this.angleOfExtent, 0, Math.PI * 2 );
+
+      return new Shape().arc( this.originPoint.x, this.originPoint.y, this.radius, startAngle, endAngle, true );// ARC2D.PIE startPoint and endPoint is internally added to arc's path
     }
   } );
 } )

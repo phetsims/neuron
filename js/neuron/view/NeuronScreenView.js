@@ -135,7 +135,6 @@ define( function( require ) {
 
     var recordPlayButtonBox = new HBox( {
       children: recordPlayButtons,
-      align: 'left',
       spacing: 5,
       right: thisView.layoutBounds.maxX / 2,
       bottom: thisView.layoutBounds.maxY - 30
@@ -190,19 +189,18 @@ define( function( require ) {
     axonCrossSectionControlPanel.top = iosAndChannelsLegendPanel.bottom + 20;
 
 
-    var chartHeight = 120;
-    var membranePotentialChartNode = new MembranePotentialChart( new Dimension2( worldNodeClipArea.bounds.width - 60, chartHeight ), neuronClockModelAdapter );
-    membranePotentialChartNode.left = worldNodeClipArea.bounds.left;
-    membranePotentialChartNode.bottom = thisView.layoutBounds.maxY - 120;
-    thisView.addChild( membranePotentialChartNode );
-
-
     var concentrationReadoutLayerNode = new ConcentrationReadoutLayerNode( thisView.neuronModel, zoomProperty, zoomableRootNode, axonCrossSectionNode );
     this.addChild( concentrationReadoutLayerNode );
 
     thisView.neuronModel.concentrationReadoutVisibleProperty.link( function( concentrationVisible ) {
       concentrationReadoutLayerNode.visible = concentrationVisible;
     } );
+
+    var chartHeight = 120;
+    var membranePotentialChartNode = new MembranePotentialChart( new Dimension2( worldNodeClipArea.bounds.width - 60, chartHeight ), neuronClockModelAdapter );
+    membranePotentialChartNode.left = worldNodeClipArea.bounds.left;
+    membranePotentialChartNode.bottom = thisView.layoutBounds.maxY - 120;
+    thisView.addChild( membranePotentialChartNode );
 
 
     var particleBounds = new Bounds2( 100, 10, 630, 400 );

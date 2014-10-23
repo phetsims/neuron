@@ -83,7 +83,7 @@ define( function( require ) {
       // aligned on the right side.
       // The Java version uses the Stimulate Button Position a a reference.Since in HTML version the button
       // is positioned at the bottom, the code now uses the following bounds as a reference.
-      var buttonBounds = new Bounds2( 40, 50, 80, 80 ); // Approximation
+      var buttonBounds = new Bounds2( 30, 30, 70, 50 ); // Approximation
 
       var maxExteriorReadoutWidth = Math.max( potassiumExteriorConcentrationReadout.bounds.width, sodiumExteriorConcentrationReadout.bounds.width );
       potassiumExteriorConcentrationReadout.x = buttonBounds.maxX + maxExteriorReadoutWidth - potassiumExteriorConcentrationReadout.bounds.width + 4;
@@ -110,7 +110,7 @@ define( function( require ) {
       // Complicated, no doubt, but it works (at least for now).  If there
       // is some easier way then, by all means, implement it.
 
-      var yOffset = 150 + zoomableRootNode.getScaleVector().x * 10;  // Empirically determined.
+      var yOffset = 140 + zoomableRootNode.getScaleVector().x * 3;  // Empirically determined.
 
       // topCenterOfMembrane = axonCrossSectionNode.localToGlobalPoint( topCenterOfMembrane );
       var maxReadoutWidth = Math.max( potassiumInteriorConcentrationReadout.width, sodiumInteriorConcentrationReadout.getBounds().width );
