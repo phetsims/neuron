@@ -36,8 +36,8 @@ define( function( require ) {
     var representation = new Path( new Shape(), {lineWidth: PARTICLE_EDGE_STROKE, stroke: Color.BLACK} );
     thisNode.addChild( representation );
 
-    function updateOffset( x,y ) {
-      thisNode.translate( modelViewTransform.modelToViewPosition( new Vector2(x,y) ) );
+    function updateOffset( x, y ) {
+      thisNode.translate( modelViewTransform.modelToViewPosition( new Vector2( x, y ) ) );
     }
 
     function updateRepresentation( newOpaqueness ) {
@@ -70,7 +70,7 @@ define( function( require ) {
       thisNode.setOpacity( newOpaqueness );
     }
 
-    updateOffset( particle.getPositionX(),particle.getPositionY() );
+    updateOffset( particle.getPositionX(), particle.getPositionY() );
     updateRepresentation( particle.getOpaqueness() );
   }
 

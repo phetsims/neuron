@@ -22,10 +22,11 @@ define( function( require ) {
    * @param mvt
    * @constructor
    */
-  function ChargeSymbolsLayerNode(neuronModel,mvt) {
+  function ChargeSymbolsLayerNode( neuronModel, mvt ) {
 
-    Node.call(this);
+    Node.call( this );
     var chargeSymbolLayer = this;
+
     /**
      * Add the change symbols to the canvas.  These are added by going through
      * the list of channels and placing two symbols - one intended to be out

@@ -96,7 +96,7 @@ define( function( require ) {
       fill: 'rgb(238,238,238)',
       xMargin: 4,
       yMargin: 6,
-      lineWidth:0
+      lineWidth: 0
     } );
   }
 

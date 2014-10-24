@@ -19,7 +19,7 @@ define( function( require ) {
    * @constructor
    */
   function Record( recordAndPlaybackModel ) {
-    Mode.call(this,{});
+    Mode.call( this, {} );
     this.recordAndPlaybackModel = recordAndPlaybackModel;
   }
 

@@ -74,7 +74,7 @@ define( function( require ) {
     reset: function() {
       this.lastSimulationTime = 0.0;
       this.simulationTime = 0.0;
-      this.speed=1;
+      this.speed = 1;
       PropertySet.prototype.reset.call( this );
 
       this.model.reset();

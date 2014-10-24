@@ -14,8 +14,8 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var RecordAndPlaybackModel = require( 'NEURON/neuron/recordandplayback/RecordAndPlaybackModel' );
 
-  function ParticleCapture( maxRecordPoints,props ) {
-    RecordAndPlaybackModel.call( this, maxRecordPoints,props );
+  function ParticleCapture( maxRecordPoints, props ) {
+    RecordAndPlaybackModel.call( this, maxRecordPoints, props );
   }
 
   return inherit( RecordAndPlaybackModel, ParticleCapture, {

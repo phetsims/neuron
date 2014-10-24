@@ -12,10 +12,10 @@ define( function( require ) {
   var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
 
   function SodiumIon() {
-     Particle.call( this );
+    Particle.call( this );
   }
 
-  return inherit(Particle,SodiumIon, {
+  return inherit( Particle, SodiumIon, {
 
     getType: function() {
       return ParticleType.SODIUM_ION;

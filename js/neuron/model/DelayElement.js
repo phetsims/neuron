@@ -22,7 +22,7 @@ define( function( require ) {
     setValueAndTime: function( value, deltaTime ) {
       this.value = value;
       this.deltaTime = deltaTime;
-     },
+    },
 
     getDeltaTime: function() {
       return this.deltaTime;

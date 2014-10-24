@@ -61,9 +61,9 @@ define( function( require ) {
 
     thisNeuronModelState.particlePlaybackMementos = [];
 
-    neuronModel.transientParticles.forEach(function(particle){
-      thisNeuronModelState.particlePlaybackMementos.push(particle.getPlaybackMemento());
-    });
+    neuronModel.transientParticles.forEach( function( particle ) {
+      thisNeuronModelState.particlePlaybackMementos.push( particle.getPlaybackMemento() );
+    } );
 
   }
 

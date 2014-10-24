@@ -37,8 +37,6 @@ define( function( require ) {
     ] );
 
 
-
-
     Panel.call( this, speedRadioButtonGroup, {
       // panel options
       fill: 'rgb(238,238,238)',

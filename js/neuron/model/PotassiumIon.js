@@ -15,7 +15,7 @@ define( function( require ) {
     Particle.call( this );
   }
 
-  return inherit(Particle,PotassiumIon, {
+  return inherit( Particle, PotassiumIon, {
 
     getType: function() {
       return ParticleType.POTASSIUM_ION;
