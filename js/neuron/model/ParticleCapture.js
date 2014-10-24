@@ -4,12 +4,13 @@
  * be used by membrane channels to tell the model that a particle should be
  * captured for movement through the channel.
  *
- *@author John Blanco
- *@author Sharfudeen Ashraf (for Ghent University)
+ * @author John Blanco
+ * @author Sharfudeen Ashraf (for Ghent University)
  */
 define( function( require ) {
   'use strict';
-  //imports
+
+  // modules
   var inherit = require( 'PHET_CORE/inherit' );
   var RecordAndPlaybackModel = require( 'NEURON/neuron/recordandplayback/RecordAndPlaybackModel' );
 
@@ -21,10 +22,11 @@ define( function( require ) {
     reset: function() {
       RecordAndPlaybackModel.prototype.reset.call( this );
     },
+
     /**
-     * @param {ParticleType}particleType
-     * @param {MembraneChannel}membraneChannel
-     * @param maxVelocity
+     * @param {ParticleType} particleType
+     * @param {MembraneChannel} membraneChannel
+     * @param {number} maxVelocity
      * @param {MembraneCrossingDirection} direction
      */
     requestParticleThroughChannel: function( particleType, membraneChannel, maxVelocity, direction ) {

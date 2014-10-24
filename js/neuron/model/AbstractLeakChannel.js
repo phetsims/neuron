@@ -1,5 +1,7 @@
 // Copyright 2002-2011, University of Colorado
 /**
+ * Abstract base class for all of the leak channels, which are the channels through which ions pass in/out
+ * independent of the action potentials.
  *
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
@@ -13,8 +15,8 @@ define( function( require ) {
   var MembraneChannel = require( 'NEURON/neuron/model/MembraneChannel' );
 
   /**
-   * @param  channelWidth
-   * @param  channelHeight
+   * @param {number} channelWidth
+   * @param {number} channelHeight
    * @param {ParticleCapture} modelContainingParticles
    * @constructor
    */
