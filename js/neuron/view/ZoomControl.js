@@ -34,8 +34,6 @@ define( function( require ) {
     var zoomSlider = new HSlider( zoomProperty, { min: minZoom, max: maxZoom }, zoomSliderOptions );
     zoomSlider.rotation = -Math.PI / 2;
 
-    var zoomControls = [];
-
     var plusButton = new TextPushButton( '+', {
       buttonAppearanceStrategy: RectangularButtonView.flatAppearanceStrategy,
       xMargin: 4,
@@ -60,13 +58,9 @@ define( function( require ) {
     minusButton.touchArea = new Bounds2( minusButton.localBounds.minX - 20, minusButton.localBounds.minY - 5,
         minusButton.localBounds.maxX + 20, minusButton.localBounds.maxY + 20 );
 
-    zoomControls.push( plusButton );
-    zoomControls.push( zoomSlider );
-    zoomControls.push( minusButton );
-
     // vertical panel
     VBox.call( this, {
-      children: zoomControls,
+      children: [plusButton, zoomSlider, minusButton],
       align: 'center',
       resize: false,
       spacing: 10
