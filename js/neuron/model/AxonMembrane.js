@@ -21,9 +21,7 @@ define( function( require ) {
   var AxonMembraneState = require( 'NEURON/neuron/model/AxonMembraneState' );
   var Cubic = require( 'KITE/segments/Cubic' );
 
-
   // Fixed membrane characteristics.
-
   var BODY_LENGTH = NeuronConstants.DEFAULT_DIAMETER * 1.5;
   var BODY_TILT_ANGLE = Math.PI / 4;
 
@@ -48,20 +46,17 @@ define( function( require ) {
       // Points that define the body shape.
       thisModel.vanishingPoint = new Vector2( BODY_LENGTH * Math.cos( BODY_TILT_ANGLE ), BODY_LENGTH * Math.sin( BODY_TILT_ANGLE ) );
 
-      // Find the two points at which the shape will intersect the outer
-      // edge of the cross section.
+      // Find the two points at which the shape will intersect the outer edge of the cross section.
       var r = thisModel.getCrossSectionDiameter() / 2 + thisModel.getMembraneThickness() / 2;
       var theta = BODY_TILT_ANGLE + Math.PI * 0.45; // Multiplier tweaked a bit for improved appearance.
       thisModel.intersectionPointA = new Vector2( r * Math.cos( theta ), r * Math.sin( theta ) );
       theta += Math.PI;
       thisModel.intersectionPointB = new Vector2( r * Math.cos( theta ), r * Math.sin( theta ) );
 
-      // Define the control points for the two curves.  Note that there is
-      // some tweaking in here, so change as needed to get the desired look.
-      // If you can figure it out, that is.  Hints: The shape is drawn
-      // starting as a curve from the vanishing point to intersection point
-      // A, then a line to intersection point B, then as a curve back to the
-      // vanishing point.
+      // Define the control points for the two curves.  Note that there is some tweaking in here, so change as needed
+      // to get the desired look. If you can figure it out, that is.  Hints: The shape is drawn starting as a curve
+      // from the vanishing point to intersection point A, then a line to intersection point B, then as a curve back to
+      // the vanishing point.
 
       var angleToVanishingPt = Math.atan2( thisModel.vanishingPoint.y - thisModel.intersectionPointA.y, thisModel.vanishingPoint.x - thisModel.intersectionPointA.x );
       var ctrlPtRadius = thisModel.intersectionPointA.distance( thisModel.vanishingPoint ) * 0.33;
@@ -88,23 +83,17 @@ define( function( require ) {
       thisModel.curveA = new Cubic( thisModel.vanishingPoint, thisModel.cntrlPtA2, thisModel.cntrlPtA1, thisModel.intersectionPointA );
       thisModel.curveB = new Cubic( thisModel.vanishingPoint, thisModel.cntrlPtB1, thisModel.cntrlPtB2, thisModel.intersectionPointB );
 
-
-      // Reverse Path Iteration for drawing
-      thisModel.axonBodyShape.moveTo( thisModel.intersectionPointA.x,
-        thisModel.intersectionPointA.y );
-      thisModel.axonBodyShape.cubicCurveTo( thisModel.cntrlPtA1.x, thisModel.cntrlPtA1.y, thisModel.cntrlPtA2.x, thisModel.cntrlPtA2.y, thisModel.vanishingPoint.x, thisModel.vanishingPoint.y );
-
-      thisModel.axonBodyShape.moveTo( thisModel.vanishingPoint.x, thisModel.vanishingPoint.y );
-      thisModel.axonBodyShape.cubicCurveTo( thisModel.cntrlPtB1.x,
-        thisModel.cntrlPtB1.y, thisModel.cntrlPtB2.x, thisModel.cntrlPtB2.y, thisModel.intersectionPointB.x,
-        thisModel.intersectionPointB.y );
-
-      thisModel.axonBodyShape.lineTo( thisModel.intersectionPointA.x, thisModel.intersectionPointA.y );
-
-
+      // In order to create the full shape, we reverse one of the curves and the connect the two curves together in
+      // order to create the full shape of the axon body.
+      thisModel.axonBodyShape.moveTo( thisModel.intersectionPointA.x, thisModel.intersectionPointA.y );
+      thisModel.axonBodyShape.cubicCurveTo( thisModel.cntrlPtA1.x, thisModel.cntrlPtA1.y, thisModel.cntrlPtA2.x,
+        thisModel.cntrlPtA2.y, thisModel.vanishingPoint.x, thisModel.vanishingPoint.y );
+      thisModel.axonBodyShape.cubicCurveTo( thisModel.cntrlPtB1.x, thisModel.cntrlPtB1.y, thisModel.cntrlPtB2.x,
+        thisModel.cntrlPtB2.y, thisModel.intersectionPointB.x, thisModel.intersectionPointB.y );
+      thisModel.axonBodyShape.close();
     };
 
-    createAxonBodyShape();//creates axonBodyShape and assigns to this model
+    createAxonBodyShape(); // creates axonBodyShape and assigns to this model
 
     // Shape of the cross section of the membrane.	For now, and unless there
     // is some reason to do otherwise, the center of the cross section is
