@@ -19,7 +19,7 @@ define( function( require ) {
 
   // This value is used to tell if two numbers are different.  It was needed
   // due to some floating point resolution problems that were occurring.
-  var DIFFERENCE_RESOLUTION = 1E-6; // IE-15 TODO
+  var DIFFERENCE_RESOLUTION = 1E-15;
 
 
   function DelayBuffer( maxDelay, minTimeStep ) {

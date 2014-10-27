@@ -25,6 +25,10 @@ define( function( require ) {
     this.sodiumParticle = new SodiumIon();
     this.potassiumParticle = new PotassiumIon();
     this.canvasStrokeStyle = Color.BLACK.getCanvasStyle();
+    this.strokeGapBetweenParticles = 4;
+    //Start building the tiles after a gap
+    this.xMargin = this.strokeGapBetweenParticles;
+    this.yMargin = this.strokeGapBetweenParticles;
 
   }
 
@@ -32,15 +36,26 @@ define( function( require ) {
 
     updateSpriteSheetDimensions: function() {
       var thisTextureMap = this;
-      thisTextureMap.sodiumParticleViewRadius = thisTextureMap.modelViewTransform.modelToViewDeltaX( thisTextureMap.sodiumParticle.getRadius() ) * thisTextureMap.scaleProperty.value * 1.1;
+      thisTextureMap.sodiumParticleViewRadius = thisTextureMap.modelViewTransform.modelToViewDeltaX( thisTextureMap.sodiumParticle.getRadius() ) * thisTextureMap.scaleProperty.value * 1.2;
+      thisTextureMap.potassiumParticleSize = thisTextureMap.modelViewTransform.modelToViewDeltaX( thisTextureMap.potassiumParticle.getRadius() ) * thisTextureMap.scaleProperty.value * 1.35;
 
-      var verticalGapBetweenParticleTypes = 20;
-      thisTextureMap.potassiumParticleSize = thisTextureMap.modelViewTransform.modelToViewDeltaX( thisTextureMap.potassiumParticle.getRadius() ) * thisTextureMap.scaleProperty.value * 1.25;
+
       //Draw Potassium particle shapes after drawing all the Sodium Particles
-      thisTextureMap.potasiumTileHeightOffset = (2 * thisTextureMap.sodiumParticleViewRadius * 10) + verticalGapBetweenParticleTypes;
-      //Height is multiplied by 4, 2 for Sodium sprite Sheet and 2 for potassium
-      thisTextureMap.tileTotalHeght = thisTextureMap.potasiumTileHeightOffset + (2 * thisTextureMap.potassiumParticleSize * 10); // A total of 20 rows
-      thisTextureMap.tileTotalWidth = 2 * thisTextureMap.potassiumParticleSize * 10; // each row has 10 particles
+      thisTextureMap.potasiumTileHeightOffset = thisTextureMap.yMargin;
+      thisTextureMap.potasiumTileHeightOffset += (10 * 2 * thisTextureMap.sodiumParticleViewRadius);
+      thisTextureMap.potasiumTileHeightOffset += 10 * thisTextureMap.strokeGapBetweenParticles;
+
+
+      thisTextureMap.tileTotalHeght = thisTextureMap.potasiumTileHeightOffset;
+      thisTextureMap.tileTotalHeght += 20 * thisTextureMap.potassiumParticleSize;
+      thisTextureMap.tileTotalHeght += 10 * thisTextureMap.strokeGapBetweenParticles;
+      thisTextureMap.tileTotalHeght += thisTextureMap.yMargin;
+
+      var maxParticleSize = Math.max( thisTextureMap.potassiumParticleSize, thisTextureMap.sodiumParticleViewRadius );// each row has 10 particles
+      thisTextureMap.tileTotalWidth = thisTextureMap.xMargin;
+      thisTextureMap.tileTotalWidth += 20 * maxParticleSize;
+      thisTextureMap.tileTotalWidth += 10 * thisTextureMap.strokeGapBetweenParticles;
+
       thisTextureMap.canvasWidth = 0;
       thisTextureMap.canvasHeight = 0;
     },
@@ -70,13 +85,14 @@ define( function( require ) {
 
 
       context.strokeStyle = Color.BLACK.getCanvasStyle();
-      context.lineWidth = 0.2;
+      context.lineWidth = 1;
 
       var opacityString;
       var opacityValue;
       var particlePos;
       var i = 0;
       var j = 0;
+
 
       for ( i = 0; i < 10; i++ ) {
         for ( j = 0; j < 10; j++ ) {
@@ -86,21 +102,20 @@ define( function( require ) {
           if ( opacityValue === 0.99 ) {
             opacityValue = 1;
           }
-
+          context.strokeStyle = Color.BLACK.withAlpha( opacityValue * 1.2 ).getCanvasStyle();
           context.fillStyle = this.sodiumParticle.getRepresentationColor().withAlpha( opacityValue ).getCanvasStyle();// All sodium ions are of the same color,
           context.beginPath();
           particlePos = this.tilePostAt( this.sodiumParticle.getType(), i, j );
           context.arc( particlePos.x, particlePos.y, this.sodiumParticleViewRadius, 0, 2 * Math.PI, false );
-          context.closePath();
-          //applying stroke with higher opacity makes for this smaller  arc appears like a rounded rectangle in IPAD - Ashraf TODO
-          context.stroke();
           context.fill();
+          context.stroke();
+
+
         }
       }
 
       context.strokeStyle = Color.BLACK.getCanvasStyle();
-      context.lineWidth = opacityValue;
-      context.lineWidth = 1.2;
+      context.lineWidth = 2;
 
       for ( i = 0; i < 10; i++ ) {
         for ( j = 0; j < 10; j++ ) {
@@ -142,6 +157,12 @@ define( function( require ) {
         posVector.y += this.potasiumTileHeightOffset;
       }
 
+      posVector.x += this.xMargin; // account for horizontal margin
+      posVector.y += this.yMargin;
+      posVector.x += column * this.strokeGapBetweenParticles; // account for gap between particles
+      posVector.y += row * this.strokeGapBetweenParticles;
+
+
       return posVector;
 
     },
@@ -166,6 +187,7 @@ define( function( require ) {
 
       var tilePost = this.tilePostAt( particleType, row, column, posVector );
 
+      tileRadius += this.strokeGapBetweenParticles / 2;
       coords = coords || {};
       // Particle Pos is at center tp get the left corder, substrat the radius and normalize the value by
       // dividing it by canvasWidth, the Tex Coords needs to be on the range of 0..1

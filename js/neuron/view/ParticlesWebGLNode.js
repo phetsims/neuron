@@ -10,7 +10,7 @@
  *
  * The code makes use of a different vertex shader, the Default WebglLayer's Vertex shader assumes the TextureCoordinates to be Vertex
  * Coordinates itself.(thats why  Vertex coordinates  are given in normalized coordinates).
- * In base WebGLNode, the transformation of shapes are handled by manipulating the viewMatrix during rendering.This is not applicable in our case as  we have to display 1000s triangles each mapped to a different tile position.
+ * In case of Base WebGLNode, the transformation of shapes are handled by manipulating the viewMatrix during rendering.This is not applicable in our case as  we have to display 1000s triangles each mapped to a different tile position.
  * So each Vertex is interleaved with the appropriate Texture coordinates and sent to Webgl subsystem. The shaderProgram.attributeLocations.aTexCoord in the
  * SetMaterial method informs the shader how to retrieve the Texture coordinates for each vertex.
  *

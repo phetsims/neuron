@@ -44,7 +44,7 @@ define( function( require ) {
 
 
   // Useful for testing TODO to be removed
-  // var ParticleSpriteSheetNode = require( 'NEURON/neuron/view/ParticleSpriteSheetNode' );
+ // var ParticleSpriteSheetNode = require( 'NEURON/neuron/view/ParticleSpriteSheetNode' );
 
   // images
   var mockupImage = require( 'image!NEURON/neuron-mockup.png' );
@@ -117,7 +117,7 @@ define( function( require ) {
     axonCrossSectionLayer.addChild( axonCrossSectionNode );
 
     //Channel Gate node renders both channels and edges on the same canvas
-    var channelGateBounds = new Bounds2( 250, 50, 450, 250 );
+    var channelGateBounds = new Bounds2( 220, 50, 450, 250 );
     var membraneChannelGateCanvasNode = new MembraneChannelGateCanvasNode( thisView.neuronModel, thisView.mvt, channelGateBounds );
     channelLayer.addChild( membraneChannelGateCanvasNode );
 
@@ -214,7 +214,7 @@ define( function( require ) {
     thisView.addChild( simSpeedControlPanel );
 
     // Useful for debugging  TODO  to be removed after Testing
-    /*  var particleSpriteSheetNode = new ParticleSpriteSheetNode( thisView.mvt, zoomProperty );
+    /* var particleSpriteSheetNode = new ParticleSpriteSheetNode( thisView.mvt, zoomProperty );
      zoomableRootNode.addChild( particleSpriteSheetNode );
      particleSpriteSheetNode.x = 250;
      particleSpriteSheetNode.y = 10; */

@@ -111,8 +111,8 @@ define( function( require ) {
   var MEMBRANE_POTENTIAL_CHANGE_THRESHOLD = 0.005;
 
   // Default values of opaqueness for newly created particles.
-  var FOREGROUND_PARTICLE_DEFAULT_OPAQUENESS = 0.20;
-  var BACKGROUND_PARTICLE_DEFAULT_OPAQUENESS = 0.05;
+  var FOREGROUND_PARTICLE_DEFAULT_OPAQUENESS = 0.25;
+  var BACKGROUND_PARTICLE_DEFAULT_OPAQUENESS = 0.10;// default alpha in Java was 0.05, which isn't visible in the canvas so slightly increasing to 0.10
 
   var RAND = {nextDouble: function() {
     return Math.random();
@@ -642,7 +642,7 @@ define( function( require ) {
           //CaptureZoneScanResult
           var czsr = thisModel.scanCaptureZoneForFreeParticles( captureZone, ParticleType.SODIUM_ION );
           if ( czsr.numParticlesInZone === 0 ) {
-            thisModel.addBackgroundParticles( ParticleType.SODIUM_ION, captureZone, Math.floor( Math.random() * 2 ) + 1 );
+            thisModel.addBackgroundParticlesToZone( ParticleType.SODIUM_ION, captureZone, Math.floor( Math.random() * 2 ) + 1 );
           }
         }
       } );
@@ -712,6 +712,24 @@ define( function( require ) {
           newParticle.setOpaqueness( BACKGROUND_PARTICLE_DEFAULT_OPAQUENESS );
         }
       } );
+    },
+
+
+    /**
+     * Add the specified particles to the given capture zone.
+     *
+     * @param particleType
+     * @param captureZone
+     * @param numberToAdd
+     */
+    addBackgroundParticlesToZone: function( particleType, captureZone, numberToAdd ) {
+      var newParticle = null;
+      for ( var i = 0; i < numberToAdd; i++ ) {
+        newParticle = this.createBackgroundParticle( particleType );
+        newParticle.setOpaqueness( FOREGROUND_PARTICLE_DEFAULT_OPAQUENESS );
+        captureZone.assignNewParticleLocation( newParticle );
+
+      }
     },
 
 
