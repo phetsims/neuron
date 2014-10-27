@@ -28,6 +28,8 @@ define( function( require ) {
   var NeuronSharedConstants = require( 'NEURON/neuron/common/NeuronSharedConstants' );
   var Line = require( 'SCENERY/nodes/Line' );
   var Panel = require( 'SUN/Panel' );
+  var Path = require( 'SCENERY/nodes/Path' );
+  var Shape = require( 'KITE/Shape' );
   var VBox = require( 'SCENERY/nodes/VBox' );
   var HBox = require( 'SCENERY/nodes/HBox' );
   var LayoutBox = require( 'SCENERY/nodes/LayoutBox' );
@@ -36,6 +38,7 @@ define( function( require ) {
   var TextPushButton = require( 'SUN/buttons/TextPushButton' );
   var RectangularButtonView = require( 'SUN/buttons/RectangularButtonView' );
   var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
+  var RectangularPushButton = require( 'SUN/buttons/RectangularPushButton' );
   var dot = require( 'DOT/dot' );
   var MembranePotentialXYDataSeries = require( 'NEURON/neuron/chart/model/MembranePotentialXYDataSeries' );
   var ChartCursor = require( 'NEURON/neuron/chart/view/ChartCursor' );
@@ -157,9 +160,33 @@ define( function( require ) {
     } );
     clearChartButton.addListener( function() {thisChart.clearChart();} );
 
+    var closeIconRadius = 4;
+
+    var xIcon = new Path( new Shape()
+      .moveTo( -closeIconRadius, -closeIconRadius )
+      .lineTo( closeIconRadius, closeIconRadius )
+      .moveTo( closeIconRadius, -closeIconRadius )
+      .lineTo( -closeIconRadius, closeIconRadius ), {stroke: 'white', lineWidth: 2} );
+    //close button
+    var closeButton = new RectangularPushButton( {
+      baseColor: 'red',
+      content: xIcon,
+      buttonAppearanceStrategy: RectangularButtonView.flatAppearanceStrategy,
+      // click to toggle
+      listener: function() {
+        thisChart.neuronModel.potentialChartVisible = false;
+      }
+    } );
+
+
+    var buttonGroupBox = new LayoutBox( {orientation: 'horizontal',
+      children: [clearChartButton, closeButton],
+      spacing: 20
+    } );
+
     var panelTopContentBox = new LayoutBox( {orientation: 'horizontal',
-      children: [chartTitleNode, clearChartButton],
-      spacing: 80
+      children: [chartTitleNode, buttonGroupBox],
+      spacing: 150
     } );
 
 
