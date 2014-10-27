@@ -13,9 +13,7 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var ScreenView = require( 'JOIST/ScreenView' );
   var ResetAllButton = require( 'SCENERY_PHET/buttons/ResetAllButton' );
-  var Image = require( 'SCENERY/nodes/Image' );
   var HBox = require( 'SCENERY/nodes/HBox' );
-  var HSlider = require( 'SUN/HSlider' );
   var Vector2 = require( 'DOT/Vector2' );
   var Bounds2 = require( 'DOT/Bounds2' );
   var Shape = require( 'KITE/Shape' );
@@ -44,13 +42,9 @@ define( function( require ) {
 
 
   // Useful for testing TODO to be removed
- // var ParticleSpriteSheetNode = require( 'NEURON/neuron/view/ParticleSpriteSheetNode' );
+  // var ParticleSpriteSheetNode = require( 'NEURON/neuron/view/ParticleSpriteSheetNode' );
 
-  // images
-  var mockupImage = require( 'image!NEURON/neuron-mockup.png' );
-  //strings
   var stimulateNeuronString = require( 'string!NEURON/stimulateNeuron' );
-
   var BUTTON_FONT = new PhetFont( 18 );
 
 
@@ -72,14 +66,6 @@ define( function( require ) {
     thisView.mvt = ModelViewTransform2.createSinglePointScaleInvertedYMapping(
       Vector2.ZERO, viewPortPosition,
       1.3 ); // 3.9 Scale factor - smaller numbers "zoom out", bigger ones "zoom in".
-
-
-    //Show the mock-up and a slider to change its transparency
-    var mockupOpacityProperty = new Property( 0 );
-    var image = new Image( mockupImage, {pickable: false} );
-    mockupOpacityProperty.linkAttribute( image, 'opacity' );
-    this.addChild( image );
-    this.addChild( new HSlider( mockupOpacityProperty, {min: 0, max: 1}, {top: 10, left: 10} ) );
 
 
     var worldNodeClipArea = Shape.rect( 70, 0, this.layoutBounds.maxX - 280, this.layoutBounds.maxY - 110 );
