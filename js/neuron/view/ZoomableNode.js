@@ -26,16 +26,16 @@ define( function( require ) {
     var thisNode = this;
     Node.call( thisNode, { clipArea: clipArea } );
     zoomProperty.link( function( zoomFactor ) {
-      // Skew the zoom a little so that when zoomed in the membrane
+      // Zoom toward the top so that when zoomed in the membrane
       // is in a reasonable place and there is room for the chart below
       // it.
-      var skewThreshold = 1.5;
+      var zoomTowardTopThreshold = 1.5;
       var scaleMatrix;
       var scaleAroundX;
       var scaleAroundY;
-      if ( zoomFactor > skewThreshold ) {
+      if ( zoomFactor > zoomTowardTopThreshold ) {
         scaleAroundX = Math.round( viewPortPosition.x );
-        scaleAroundY = (zoomFactor - skewThreshold) * neuronModel.getAxonMembrane().getCrossSectionDiameter() * 0.11;
+        scaleAroundY = (zoomFactor - zoomTowardTopThreshold) * neuronModel.getAxonMembrane().getCrossSectionDiameter() * 0.11;
         scaleMatrix = Matrix3.translation( scaleAroundX, scaleAroundY ).timesMatrix( Matrix3.scaling( zoomFactor, zoomFactor ) ).timesMatrix( Matrix3.translation( -scaleAroundX, -scaleAroundY ) );
       }
       else {
