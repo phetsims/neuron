@@ -18,13 +18,13 @@ define( function( require ) {
   var RectangularButtonView = require( 'SUN/buttons/RectangularButtonView' );
 
   /**
-   * @param  neuronModel
-   * @param  zoomProperty
-   * @param  minZoom
-   * @param  maxZoom
+   * @param {NeuronModel} neuronModel - the main model for the simulation
+   * @param {Property.<number>} zoomProperty - property that indicates how far zoomed in the simulation is, between
+   *                                         - minZoom and maxZoom
+   * @param {number} minZoom - the furthest out the sim can be zoomed (1)
+   * @param {number} maxZoom - the furthest in the sim can be zoomed
    * @constructor
    */
-
   function ZoomControl( neuronModel, zoomProperty, minZoom, maxZoom ) {
 
     var zoomSliderOptions = {
