@@ -34,29 +34,32 @@ define( function( require ) {
     var zoomSlider = new HSlider( zoomProperty, { min: minZoom, max: maxZoom }, zoomSliderOptions );
     zoomSlider.rotation = -Math.PI / 2;
 
-    var plusButton = new TextPushButton( '+', {
-      buttonAppearanceStrategy: RectangularButtonView.flatAppearanceStrategy,
-      xMargin: 4,
-      yMargin: 0,
-      cornerRadius: 2,
-      baseColor: 'white',
-      listener: function() {
-        zoomProperty.set( Util.clamp( zoomProperty.value + 0.1, 1.2, 5 ) );
-      }} );
-    plusButton.touchArea = new Bounds2( plusButton.localBounds.minX - 20, plusButton.localBounds.minY - 5,
-        plusButton.localBounds.maxX + 20, plusButton.localBounds.maxY + 20 );
+    function createZoomControlButton( content, cb ) {
+      var ctrlButton = new TextPushButton( content, {
+        buttonAppearanceStrategy: RectangularButtonView.flatAppearanceStrategy,
+        xMargin: 5,
+        yMargin: 0,
+        cornerRadius: 2,
+        baseColor: 'white',
+        listener: function() {
+          cb();
+        }} );
 
-    var minusButton = new TextPushButton( '-', {
-      buttonAppearanceStrategy: RectangularButtonView.flatAppearanceStrategy,
-      xMargin: 5,
-      yMargin: 0,
-      cornerRadius: 2,
-      baseColor: 'white',
-      listener: function() {
-        zoomProperty.set( Util.clamp( zoomProperty.value - 0.1, 1.2, 5 ) );
-      }} );
-    minusButton.touchArea = new Bounds2( minusButton.localBounds.minX - 20, minusButton.localBounds.minY - 5,
-        minusButton.localBounds.maxX + 20, minusButton.localBounds.maxY + 20 );
+      ctrlButton.touchArea = new Bounds2( ctrlButton.localBounds.minX - 20, ctrlButton.localBounds.minY - 5,
+          ctrlButton.localBounds.maxX + 20, ctrlButton.localBounds.maxY + 20 );
+
+      return ctrlButton;
+    }
+
+
+    var plusButton = createZoomControlButton( "+", function() {
+      zoomProperty.set( Util.clamp( zoomProperty.value + 0.1, 1.2, 5 ) );
+    } );
+
+    var minusButton = createZoomControlButton( "-", function() {
+      zoomProperty.set( Util.clamp( zoomProperty.value - 0.1, 1.2, 5 ) );
+    } );
+
 
     // vertical panel
     VBox.call( this, {
