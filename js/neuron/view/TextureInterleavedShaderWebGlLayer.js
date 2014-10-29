@@ -69,10 +69,6 @@ define( function( require ) {
           //TODO: Is this needed here in the vertex shader?
           'uniform vec4 uColor;\n' +
           'void main() {\n' +
-
-          //This texture is not needed for rectangles, but we (JO/SR) don't expect it to be expensive, so we leave
-          //it for simplicity
-          //  '  texCoord = aVertex.xy;\n' +
           '  texCoord = aTexCoord;\n' +
           '  gl_Position = uMatrix * vec4( aVertex, 1 );\n' +
           '}',

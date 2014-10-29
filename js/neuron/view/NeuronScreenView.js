@@ -189,8 +189,8 @@ define( function( require ) {
     thisView.addChild( membranePotentialChartNode );
 
 
-    var particleBounds = new Bounds2( 100, 10, 630, 400 );
-    var particlesWebGLNode = new ParticlesWebGLNode( thisView.neuronModel, thisView.mvt, zoomProperty, zoomableRootNode, particleBounds );
+
+    var particlesWebGLNode = new ParticlesWebGLNode( thisView.neuronModel, thisView.mvt, zoomProperty, zoomableRootNode,worldNodeClipArea );
     particlesLayerNode.addChild( particlesWebGLNode );
 
 

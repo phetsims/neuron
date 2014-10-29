@@ -9,7 +9,7 @@
  * why we have to scale and draw  the Sprite Sheet dynamically whenever  changes the Zoom property.
  *
  * The code makes use of a different vertex shader, the Default WebglLayer's Vertex shader assumes the TextureCoordinates to be Vertex
- * Coordinates itself.(thats why  Vertex coordinates  are given in normalized coordinates).
+ * Coordinates itself.(thats why  Vertex coordinates  are given in normalized coordinates ).
  * In case of Base WebGLNode, the transformation of shapes are handled by manipulating the viewMatrix during rendering.This is not applicable in our case as  we have to display 1000s triangles each mapped to a different tile position.
  * So each Vertex is interleaved with the appropriate Texture coordinates and sent to Webgl subsystem. The shaderProgram.attributeLocations.aTexCoord in the
  * SetMaterial method informs the shader how to retrieve the Texture coordinates for each vertex.
@@ -24,7 +24,6 @@ define( function( require ) {
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
   var WebGLNode = require( 'SCENERY/nodes/WebGLNode' );
-  var Bounds2 = require( 'DOT/Bounds2' );
   var WebGLLayer = require( 'SCENERY/layers/WebGLLayer' );
   var Color = require( 'SCENERY/util/Color' );
   var ParticleTextureMap = require( 'NEURON/neuron/view/ParticleTextureMap' );
@@ -32,32 +31,44 @@ define( function( require ) {
   var Renderer = require( 'SCENERY/layers/Renderer' );
   var scenery = require( 'SCENERY/scenery' );
   var Vector2 = require( 'DOT/Vector2' );
+  var Vector3 = require( 'DOT/Vector3' );
 
-  function ParticlesWebGLNode( neuronModel, modelViewTransform, scaleProperty, zoomableRootNode, particleBounds ) {
+  /**
+   *
+   * @param {NeuronModel} neuronModel
+   * @param {ModelViewTransform2} modelViewTransform
+   * @param {Property}scaleProperty
+   * @param {Node}zoomableRootNode
+   * @param {Rect}clipArea
+   * @constructor
+   */
+  function ParticlesWebGLNode( neuronModel, modelViewTransform, scaleProperty, zoomableRootNode, clipArea ) {
     var thisNode = this;
     Renderer.WebGL = new Renderer( TextureInterleavedShaderWebGlLayer, 'webgl', scenery.bitmaskSupportsWebGL, {} );
-    WebGLNode.call( this, {canvasBounds: new Bounds2( 0, 0, 500, 400 )} );
+    WebGLNode.call( this );
     this.neuronModel = neuronModel;
     this.modelViewTransform = modelViewTransform;
     this.particleTextureMap = new ParticleTextureMap( modelViewTransform, scaleProperty );
     this.scaleProperty = scaleProperty;
     this.zoomableRootNode = zoomableRootNode;
-    this.particleBounds = particleBounds;
-    this.visibleParticlesSize = 0; // Partciles within the clipping region of Zoomable Node are considered visible
+    this.particleBounds = clipArea.bounds;
+    this.visibleParticlesSize = 0; // Only Particles within the clipping region of Zoomable Node are considered visible
     this.allParticles = [];
     this.textureBound = false;
 
     // Get a reference to the ScaleMatrix every time when the User zooms in and out.This Scale matrix is used for
     // appropriately positioning the particle in a zoomed state.
     function updateScaleMatrix( zoomFactor ) {
-      thisNode.scaleMatrix = zoomableRootNode.getTransform().getMatrix();
+      thisNode.zoomTransformationMatrix = zoomableRootNode.getTransform().getMatrix();
       thisNode.updateTextureImage();
       //adjust the bounds based on Zoom factor
       thisNode.particleViewBounds = thisNode.particleBounds.copy();
-      thisNode.particleViewBounds = thisNode.particleViewBounds.transformed( thisNode.scaleMatrix.copy().invert() );
+
+      // Particle View bounds is used to manually clip particles, because of Zoom functionality
+      // once scaled up/down the actual bounds gets minimized or maximized
+      thisNode.particleViewBounds = thisNode.particleViewBounds.transformed( thisNode.zoomTransformationMatrix.copy().invert() );
       if ( thisNode.gl ) {
         thisNode.bindTextureImage( thisNode.gl );
-
       }
     }
 
@@ -74,6 +85,7 @@ define( function( require ) {
     this.tilePosVector = new Vector2();
     this.viewTransformationMatrix = thisNode.modelViewTransform.getMatrix();
     this.particleViewPosition = new Vector2();
+    this.viewPortPosition = new Vector3();
 
     this.invalidatePaint();
 
@@ -87,6 +99,7 @@ define( function( require ) {
       this.gl = gl;
       this.updateTextureImage( gl );
       this.bindTextureImage( gl );
+
 
     },
 
@@ -117,7 +130,7 @@ define( function( require ) {
 
       var fSize = floatArrayTextCoords.BYTES_PER_ELEMENT;
 
-      //  use 4 if UV in interleaved 4 bytes for each vertex, 2 for xy coordinates and 2 for uv (interleaved)
+      //  use 4 if UV in interleaved. 4 bytes for each vertex (ie 2 for xy coordinates and 2 for uv (interleaved))
       var stride = 4;
       var uvOffset = fSize * 2; // (offset indicating how to retrive the UV in ur case after the first 2 values)
       gl.vertexAttribPointer( shaderProgram.attributeLocations.aVertex, 2, gl.FLOAT, false, fSize * stride, 0 );
@@ -174,8 +187,7 @@ define( function( require ) {
         thisNode.visibleParticlesSize++;
         // Position according to the scaled and Translated Position of ZoomableRootNode. The ScaleProperty is
         // Observed by this class and the scaleMatrix is updated from zoomableRootNode
-
-        thisNode.scaleMatrix.multiplyVector2( particleViewPosition ); // (changes, the passed particleViewPosition)
+        thisNode.zoomTransformationMatrix.multiplyVector2( particleViewPosition ); // (changes, the passed particleViewPosition)
 
         //center Position
         var xPos = particleViewPosition.x;
