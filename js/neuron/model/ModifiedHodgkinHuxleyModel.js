@@ -16,7 +16,6 @@ define( function( require ) {
 
   // imports
   var inherit = require( 'PHET_CORE/inherit' );
-  var BaseHodgkinHuxleyModel = require( 'NEURON/neuron/model/BaseHodgkinHuxleyModel' );
   var DelayBuffer = require( 'NEURON/neuron/model/DelayBuffer' );
   var NeuronSharedConstants = require( 'NEURON/neuron/common/NeuronSharedConstants' );
 
@@ -69,7 +68,7 @@ define( function( require ) {
 
   }
 
-  return inherit( BaseHodgkinHuxleyModel, ModifiedHodgkinHuxleyModel, {
+  return inherit( Object, ModifiedHodgkinHuxleyModel, {
 
     reset: function() {
       this.n4DelayBuffer.clear();
@@ -186,6 +185,13 @@ define( function( require ) {
 
     get_n4: function() { return this.n4; },
 
+    /**
+     * Get a delayed version of the n^4 amount, which is the variable factor
+     * that governs the potassium channel conductance.
+     *
+     * @param delayAmount - Time delay in seconds.
+     * @return
+     */
     get_delayed_n4: function( delayAmount ) {
       if ( delayAmount <= 0 ) {
         return this.n4;
@@ -199,6 +205,13 @@ define( function( require ) {
       return this.m3h;
     },
 
+    /**
+     * Get a delayed version of the m3h amount, which is the variable factor
+     * that governs the sodium channel conductance.
+     *
+     * @param delayAmount - Time delay in seconds.
+     * @return
+     */
     get_delayed_m3h: function( delayAmount ) {
       var delayedM3h = 0;
 
@@ -361,6 +374,11 @@ define( function( require ) {
       return this.getV() / 1000;
     },
 
+    /**
+     * Stimulate the neuron in a way that simulates a depolarization signal
+     * coming to this neuron.  If the neuron is in the correct state, this
+     * will trigger an action potential.
+     */
     stimulate: function() {
       // Add a fixed amount to the voltage across the membrane.
       this.setV( this.getV() + 15 );
