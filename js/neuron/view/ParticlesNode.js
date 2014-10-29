@@ -1,6 +1,7 @@
 // Copyright 2002-2011, University of Colorado
 /**
- * For performance  reason uses a single canvasNode  to render all the particles
+ * For performance  reason uses a single canvasNode  to render all the particles.
+ * This class is replaced by ParticlesWebGLNode which uses WebGL to render the particles
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 define( function( require ) {

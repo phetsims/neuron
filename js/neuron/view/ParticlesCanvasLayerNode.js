@@ -1,6 +1,6 @@
 // Copyright 2002-2011, University of Colorado
 /**
- * For performance  reason uses a canvasNodes  to render the particles
+ * This class is replaced by ParticlesWebGLNode
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 define( function( require ) {

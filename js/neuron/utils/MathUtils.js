@@ -14,6 +14,15 @@ define( function( require ) {
 
   }
 
+  /**
+   * A method to calculate distance by reusing vector instances.
+   * This method is created to reduce Vector2 instance allocation during distance calcualtion
+   * @param posX
+   * @param posY
+   * @param otherPosX
+   * @param otherPosY
+   * @returns {*}
+   */
   MathUtils.distanceBetween = function( posX, posY, otherPosX, otherPosY ) {
     distanceCalculatorVectorLHS.x = posX;
     distanceCalculatorVectorLHS.y = posY;

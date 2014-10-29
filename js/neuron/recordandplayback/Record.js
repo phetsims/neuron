@@ -27,7 +27,7 @@ define( function( require ) {
     step: function( simulationTimeChange ) {
       this.recordAndPlaybackModel.setTime( this.recordAndPlaybackModel.getTime() + simulationTimeChange );
       var state = this.recordAndPlaybackModel.stepInTime( simulationTimeChange );
-      //todo: only record the point if we have space
+      // only record the point if we have space
       this.recordAndPlaybackModel.addRecordedPoint( new DataPoint( this.recordAndPlaybackModel.getTime(), state ) );
     },
     toString: function() {

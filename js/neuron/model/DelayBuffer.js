@@ -161,33 +161,4 @@ define( function( require ) {
   return DelayBuffer;
 
 
-} );//// Copyright 2002-2011, University of Colorado
-//
-//package edu.colorado.phet.neuron.model;
-//
-///**
-// * This class is a delay buffer that allows information to be put into it
-// * and then extracted based on the amount of time in the past that a value
-// * is needed.
-// *
-// * NOTE: If this turns out to be useful for other applications, it should be
-// * made to handle generics.
-// *
-// * @author John Blanco
-// */
-//public class DelayBuffer {
-
-
-//
-
-//
-
-//
-//  private class DelayElement{
-//
-//    private double value;
-//    private double deltaTime;
-//
-//
-//  }
-//}
+} );

@@ -3,7 +3,7 @@
 /**
  * Interface for a particle that can be viewed, i.e. displayed to the user.
  * @author John Blanco
- * @Sharfudeen Ashraf (for Ghnet University)
+ * @Sharfudeen Ashraf (for Ghent University)
  */
 
 define( function( require ) {

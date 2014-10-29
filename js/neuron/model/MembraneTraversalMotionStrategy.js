@@ -18,7 +18,6 @@ define( function( require ) {
 
   }
 
-
   MembraneTraversalMotionStrategy.DEFAULT_MAX_VELOCITY = 40000;
   return  inherit( MotionStrategy, MembraneTraversalMotionStrategy, {
 
