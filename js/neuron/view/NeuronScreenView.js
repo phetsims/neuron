@@ -16,6 +16,7 @@ define( function( require ) {
   var HBox = require( 'SCENERY/nodes/HBox' );
   var Vector2 = require( 'DOT/Vector2' );
   var Bounds2 = require( 'DOT/Bounds2' );
+  var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
   var Shape = require( 'KITE/Shape' );
   var Dimension2 = require( 'DOT/Dimension2' );
   var Property = require( 'AXON/Property' );
@@ -24,6 +25,7 @@ define( function( require ) {
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
   var MultiLineText = require( 'SCENERY_PHET/MultiLineText' );
   var Node = require( 'SCENERY/nodes/Node' );
+  var Path = require( 'SCENERY/nodes/Path' );
   var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   var AxonBodyNode = require( 'NEURON/neuron/view/AxonBodyNode' );
   var ParticlesWebGLNode = require( 'NEURON/neuron/view/ParticlesWebGLNode' );
@@ -189,8 +191,7 @@ define( function( require ) {
     thisView.addChild( membranePotentialChartNode );
 
 
-
-    var particlesWebGLNode = new ParticlesWebGLNode( thisView.neuronModel, thisView.mvt, zoomProperty, zoomableRootNode,worldNodeClipArea );
+    var particlesWebGLNode = new ParticlesWebGLNode( thisView.neuronModel, thisView.mvt, zoomProperty, zoomableRootNode, worldNodeClipArea );
     particlesLayerNode.addChild( particlesWebGLNode );
 
 
@@ -199,11 +200,18 @@ define( function( require ) {
     simSpeedControlPanel.bottom = thisView.layoutBounds.maxY - 20;
     thisView.addChild( simSpeedControlPanel );
 
-    // Useful for debugging  TODO  to be removed after Testing
-    /* var particleSpriteSheetNode = new ParticleSpriteSheetNode( thisView.mvt, zoomProperty );
-     zoomableRootNode.addChild( particleSpriteSheetNode );
-     particleSpriteSheetNode.x = 250;
-     particleSpriteSheetNode.y = 10; */
+
+    // Particles WebGL layer doesn't support bounds clipping, so a border like shape is applied and added as a top node
+    // with the same color as the screen background. Now particles are properly appeared to be clipped.
+    // ref https://github.com/phetsims/neuron/issues/7
+    var clipAreaBounds = worldNodeClipArea.bounds;
+    var maskingBorder = new Shape();
+    var maskLineWidth = 8;
+    maskingBorder.moveTo( clipAreaBounds.x, -maskLineWidth / 2 );
+    maskingBorder.lineTo( clipAreaBounds.maxX + (maskLineWidth / 2), -maskLineWidth / 2 );
+    maskingBorder.lineTo( clipAreaBounds.maxX + (maskLineWidth / 2), clipAreaBounds.maxY );
+    maskingBorder.lineTo( clipAreaBounds.x, clipAreaBounds.maxY );
+    thisView.addChild( new Path( maskingBorder, {stroke: NeuronConstants.SCREEN_BACKGROUND, lineWidth: maskLineWidth} ) );
 
   }
 

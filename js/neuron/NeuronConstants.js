@@ -23,7 +23,8 @@ define( function( require ) {
     POTASSIUM_COLOR: new Color( 0, 240, 100 ),
     PROJECT_NAME: "neuron",
     MEMBRANE_THICKNESS: 4, // In nanometers, obtained from web research.
-    DEFAULT_DIAMETER: 150 // In nanometers.
+    DEFAULT_DIAMETER: 150, // In nanometers.
+    SCREEN_BACKGROUND: '#ccfefa'
   } );
 
 } );
