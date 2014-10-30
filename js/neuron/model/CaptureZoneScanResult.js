@@ -14,13 +14,5 @@ define( function( require ) {
     this.numParticlesInZone = numParticlesInZone;
   }
 
-  CaptureZoneScanResult.prototype = {
-    getClosestFreeParticle: function() {
-      return this.closestFreeParticle;
-    },
-    getNumParticlesInZone: function() {
-      return this.numParticlesInZone;
-    }
-  };
   return CaptureZoneScanResult;
 } );
