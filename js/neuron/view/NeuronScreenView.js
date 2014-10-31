@@ -185,9 +185,9 @@ define( function( require ) {
     } );
 
     var chartHeight = 120;
-    var membranePotentialChartNode = new MembranePotentialChart( new Dimension2( worldNodeClipArea.bounds.width - 60, chartHeight ), neuronClockModelAdapter );
+    var membranePotentialChartNode = new MembranePotentialChart( new Dimension2( worldNodeClipArea.bounds.width - 62, chartHeight ), neuronClockModelAdapter );
     membranePotentialChartNode.left = worldNodeClipArea.bounds.left;
-    membranePotentialChartNode.bottom = thisView.layoutBounds.maxY - 120;
+    membranePotentialChartNode.bottom = thisView.layoutBounds.maxY - 114;
     thisView.addChild( membranePotentialChartNode );
 
 
@@ -202,14 +202,14 @@ define( function( require ) {
 
 
     // Particles WebGL layer doesn't support bounds clipping, so a border like shape is applied and added as a top node
-    // with the same color as the screen background. Now particles are properly appeared to be clipped.
+    // with the same color as the screen background. Now particles appear to be properly clipped.
     // ref https://github.com/phetsims/neuron/issues/7
     var clipAreaBounds = worldNodeClipArea.bounds;
     var maskingBorder = new Shape();
     var maskLineWidth = 8;
     maskingBorder.moveTo( clipAreaBounds.x, -maskLineWidth / 2 );
-    maskingBorder.lineTo( clipAreaBounds.maxX + (maskLineWidth / 2), -maskLineWidth / 2 );
-    maskingBorder.lineTo( clipAreaBounds.maxX + (maskLineWidth / 2), clipAreaBounds.maxY );
+    maskingBorder.lineTo( clipAreaBounds.maxX + (maskLineWidth / 2)+1, -maskLineWidth / 2 );
+    maskingBorder.lineTo( clipAreaBounds.maxX + (maskLineWidth / 2)+1, clipAreaBounds.maxY );
     maskingBorder.lineTo( clipAreaBounds.x, clipAreaBounds.maxY );
     thisView.addChild( new Path( maskingBorder, {stroke: NeuronConstants.SCREEN_BACKGROUND, lineWidth: maskLineWidth} ) );
 

@@ -201,7 +201,7 @@ define( function( require ) {
             children: [chartYAxisLabelNode, plotNode],
             spacing: 5
           } ), chartXAxisLabelNode], align: 'center', spacing: 3 }
-      ), {fill: 'white', xMargin: 10, yMargin: 6, lineWidth: 1 }
+      ), {fill: 'white', xMargin: 10, yMargin: 6, lineWidth: 1,  cornerRadius: 2 }
     );
 
 
