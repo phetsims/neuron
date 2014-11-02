@@ -12,8 +12,9 @@ define( function( require ) {
   var Dimension2 = require( 'DOT/Dimension2' );
   var HSlider = require( 'SUN/HSlider' );
   var VBox = require( 'SCENERY/nodes/VBox' );
-  var TextPushButton = require( 'SUN/buttons/TextPushButton' );
-  var Bounds2 = require( 'DOT/Bounds2' );
+  var Path = require( 'SCENERY/nodes/Path' );
+  var Shape = require( 'KITE/Shape' );
+  var RectangularPushButton = require( 'SUN/buttons/RectangularPushButton' );
   var Util = require( 'DOT/Util' );
   var RectangularButtonView = require( 'SUN/buttons/RectangularButtonView' );
 
@@ -28,36 +29,52 @@ define( function( require ) {
   function ZoomControl( neuronModel, zoomProperty, minZoom, maxZoom ) {
 
     var zoomSliderOptions = {
-      thumbSize: new Dimension2( 15, 22 ),
+      thumbSize: new Dimension2( 18, 24 ),
       trackSize: new Dimension2( 90, 1 )
     };
     var zoomSlider = new HSlider( zoomProperty, { min: minZoom, max: maxZoom }, zoomSliderOptions );
     zoomSlider.rotation = -Math.PI / 2;
 
-    function createZoomControlButton( content, cb ) {
-      var ctrlButton = new TextPushButton( content, {
+    function createZoomControlButton( contentNode, marginOptions, listener ) {
+      var ctrlButton = new RectangularPushButton( {
+        content: contentNode,
         buttonAppearanceStrategy: RectangularButtonView.flatAppearanceStrategy,
-        xMargin: 5,
-        yMargin: 0,
         cornerRadius: 2,
-        baseColor: 'white',
-        listener: function() {
-          cb();
-        }} );
-
-      ctrlButton.touchArea = new Bounds2( ctrlButton.localBounds.minX - 20, ctrlButton.localBounds.minY - 5,
-          ctrlButton.localBounds.maxX + 20, ctrlButton.localBounds.maxY + 20 );
+        xMargin: marginOptions.xMargin,
+        yMargin: marginOptions.yMargin,
+        baseColor: 'rgb( 240,240,240 )',
+        listener: listener
+      } );
 
       return ctrlButton;
     }
 
+    var sideLength = 24;// length of one side of the button
+    var symbolLength = 0.5 * sideLength;
+    var symbolLineWidth = 0.12 * sideLength;
 
-    var plusButton = createZoomControlButton( "+", function() {
-      zoomProperty.set( Util.clamp( zoomProperty.value + 0.1, 1.2, 5 ) );
+    var plusSymbolShape = new Shape()
+      .moveTo( symbolLength / 2, 0 )
+      .lineTo( symbolLength / 2, symbolLength )
+      .moveTo( 0, symbolLength / 2 )
+      .lineTo( symbolLength, symbolLength / 2 );
+
+    var minusSymbolShape = new Shape()
+      .moveTo( -symbolLength / 2, 0 )
+      .lineTo( symbolLength / 2, 0 );
+
+    var symbolOptions = {
+      lineWidth: symbolLineWidth,
+      stroke: 'black',
+      centerX: sideLength / 2,
+      centerY: sideLength / 2
+    };
+    var plusButton = createZoomControlButton( new Path( plusSymbolShape, symbolOptions ), {xMargin: 6, yMargin: 6}, function() {
+      zoomProperty.set( Util.clamp( zoomProperty.value + 0.1, minZoom, maxZoom ) );
     } );
 
-    var minusButton = createZoomControlButton( "-", function() {
-      zoomProperty.set( Util.clamp( zoomProperty.value - 0.1, 1.2, 5 ) );
+    var minusButton = createZoomControlButton( new Path( minusSymbolShape, symbolOptions ), {xMargin: 6, yMargin: 10}, function() {
+      zoomProperty.set( Util.clamp( zoomProperty.value - 0.1, minZoom, maxZoom ) );
     } );
 
 
@@ -66,7 +83,7 @@ define( function( require ) {
       children: [plusButton, zoomSlider, minusButton],
       align: 'center',
       resize: false,
-      spacing: 10
+      spacing: 12
     } );
 
   }
