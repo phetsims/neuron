@@ -68,6 +68,7 @@ define( function( require ) {
     var thisChart = this;
     Node.call( thisChart, {} );
     thisChart.chartDimension = chartDimension;
+    thisChart.clock = neuronClockModelAdapter;
     thisChart.neuronModel = neuronClockModelAdapter.model;
 
     thisChart.updateCountdownTimer = 0; // Init to zero to an update occurs right away.
@@ -128,12 +129,6 @@ define( function( require ) {
     neuronClockModelAdapter.simulationTimeResetProperty.link( function( simulationTimeReset ) {
       if ( simulationTimeReset ) {
         thisChart.updateOnSimulationReset();
-      }
-    } );
-
-    neuronClockModelAdapter.pausedProperty.link( function( paused ) {
-      if ( paused ) {
-        thisChart.updateOnClockPaused();
       }
     } );
 
@@ -201,7 +196,7 @@ define( function( require ) {
             children: [chartYAxisLabelNode, plotNode],
             spacing: 5
           } ), chartXAxisLabelNode], align: 'center', spacing: 3 }
-      ), {fill: 'white', xMargin: 10, yMargin: 6, lineWidth: 1,  cornerRadius: 2 }
+      ), {fill: 'white', xMargin: 10, yMargin: 6, lineWidth: 1, cornerRadius: 2 }
     );
 
 
@@ -211,6 +206,7 @@ define( function( require ) {
     thisChart.neuronModel.potentialChartVisibleProperty.link( function( chartVisibile ) {
       thisChart.visible = chartVisibile;
     } );
+
 
     thisChart.dataSeries.addDataSeriesListener( function( x, y, xPrevious, yPrevious ) {
       if ( xPrevious && yPrevious && (xPrevious !== 0 || yPrevious !== 0 ) ) {
@@ -230,7 +226,16 @@ define( function( require ) {
     this.chartCursor = new ChartCursor( thisChart );
     plotNode.addChild( this.chartCursor );
 
-    thisChart.neuronModel.timeProperty.link( thisChart.updateChartCursor.bind( this ) );
+    neuronClockModelAdapter.pausedProperty.link( function( paused ) {
+      thisChart.updateOnClockPaused();
+    } );
+
+    thisChart.neuronModel.timeProperty.link( thisChart.updateChartCursor.bind( thisChart ) );
+    thisChart.neuronModel.modeProperty.link( function( mode ) {
+      if ( mode ) {
+        thisChart.updateChartCursor.bind( thisChart );
+      }
+    } );
 
 
   }
@@ -350,7 +355,6 @@ define( function( require ) {
       this.moveChartCursorToTime( ( recordingCurrentTime - recordingStartTime ) * 1000 );
     },
     moveChartCursorToTime: function( time ) {
-
       this.chartCursor.x = Util.clamp( this.chartMvt.transformX( time ), 0, this.chartDimension.width );
       this.chartCursor.y = this.chartMvt.transformY( this.range[1] );
     },

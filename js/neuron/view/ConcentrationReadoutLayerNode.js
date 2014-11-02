@@ -136,8 +136,9 @@ define( function( require ) {
       positionConcentrationReadoutPositions();
     } );
 
-    neuronModel.concentrationChangedProperty.link( function( concentrationChanged ) {
-      if ( concentrationChanged && thisNode.isVisible() ) {
+
+    neuronModel.membranePotentialProperty.link( function( membranePotential ) {
+      if ( thisNode.isVisible() ) {
         updateConcentrationReadoutValues();
       }
     } );

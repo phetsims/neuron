@@ -58,6 +58,8 @@ define( function( require ) {
       thisModel.constantStep( timeElapsed );
     } );
 
+
+
   }
 
   return inherit( PropertySet, NeuronClockModelAdapter, {
@@ -87,7 +89,9 @@ define( function( require ) {
     registerStepCallback: function( callback ) {
       this.stepCallbacks.push( callback );
     },
-
+    setPaused: function( p ) {
+      this.paused = p;
+    },
     isPaused: function() {
       return this.paused;
     },

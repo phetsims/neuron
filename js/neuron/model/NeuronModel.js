@@ -838,7 +838,8 @@ define( function( require ) {
       }
       else {
         // Currently NOT locked out, see if that should change.
-        if ( this.isActionPotentialInProgress() || (this.isPlayback() && this.getTime() < this.getMaxRecordedTime()) ) {
+        var backwards = this.getTime() - this.getMaxRecordedTime() > 0 ? false : true;
+        if ( this.isActionPotentialInProgress() || (this.isPlayback() && backwards) ) {
           this.setStimulasLockout( true );
         }
       }

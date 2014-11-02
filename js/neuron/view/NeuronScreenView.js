@@ -157,7 +157,7 @@ define( function( require ) {
 
     thisView.neuronModel.stimulasLockoutProperty.link( function( stimulasLockout ) {
       stimulateNeuronButton.enabled = !stimulasLockout;
-      thisView.neuronModel.stimulusPulseInitiated = stimulasLockout;
+
     } );
 
     // NeuronModel uses specialized real time constant clock simulation

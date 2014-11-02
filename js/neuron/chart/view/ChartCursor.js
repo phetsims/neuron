@@ -60,12 +60,12 @@ define( function( require ) {
         this.currentPoint = e.currentTarget.globalToParentPoint( e.pointer.point );
         this.pressPoint = this.currentPoint.copy();
         this.pressTime = membranePotentialChart.chartMvt.viewToModelPosition( new Vector2( thisChartCursor.x, thisChartCursor.y ) ).x;
-        membranePotentialChart.pausedWhenDragStarted = membranePotentialChart.neuronModel.isPaused();
+        membranePotentialChart.pausedWhenDragStarted = membranePotentialChart.clock.isPaused();
         if ( !membranePotentialChart.pausedWhenDragStarted ) {
           // The user must be trying to grab the cursor while
           // the recorded content is being played back.  Pause the
           // clock.
-          membranePotentialChart.neuronModel.setPaused( true );
+          membranePotentialChart.clock.setPaused( true );
         }
       },
 
@@ -86,7 +86,7 @@ define( function( require ) {
           // The clock wasn't paused when the user grabbed this
           // cursor, so now that they are releasing the cursor we
           // should un-pause the clock.
-          membranePotentialChart.neuronModel.setPaused( false );
+          membranePotentialChart.clock.setPaused( false );
         }
       }
     } );
