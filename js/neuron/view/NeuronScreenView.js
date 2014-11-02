@@ -33,6 +33,7 @@ define( function( require ) {
   var ConcentrationReadoutLayerNode = require( 'NEURON/neuron/view/ConcentrationReadoutLayerNode' );
   var MembraneChannelGateCanvasNode = require( 'NEURON/neuron/view/MembraneChannelGateCanvasNode' );
   var ChargeSymbolsLayerNode = require( 'NEURON/neuron/view/ChargeSymbolsLayerNode' );
+  var StepBackButton = require( 'NEURON/neuron/view/StepBackButton' );
   var ZoomableNode = require( 'NEURON/neuron/view/ZoomableNode' );
   var ZoomControl = require( 'NEURON/neuron/view/ZoomControl' );
   var MembranePotentialChart = require( 'NEURON/neuron/chart/view/MembranePotentialChart' );
@@ -114,7 +115,7 @@ define( function( require ) {
     var playPauseButton = new PlayPauseButton( playToggleProperty, { radius: 25 } );
     var forwardStepButton = new StepButton( function() { neuronClockModelAdapter.stepClockWhilePaused(); }, playToggleProperty );
     thisView.neuronModel.pausedProperty.linkAttribute( forwardStepButton, 'enabled' );
-    var backwardStepButton = new StepButton( function() { neuronClockModelAdapter.stepClockBackWhilePaused(); }, playToggleProperty ).mutate( {rotation: Math.PI} );
+    var backwardStepButton = new StepBackButton( function() { neuronClockModelAdapter.stepClockBackWhilePaused(); }, playToggleProperty );
     thisView.neuronModel.pausedProperty.linkAttribute( backwardStepButton, 'enabled' );
 
     recordPlayButtons.push( backwardStepButton );
@@ -208,8 +209,8 @@ define( function( require ) {
     var maskingBorder = new Shape();
     var maskLineWidth = 8;
     maskingBorder.moveTo( clipAreaBounds.x, -maskLineWidth / 2 );
-    maskingBorder.lineTo( clipAreaBounds.maxX + (maskLineWidth / 2)+1, -maskLineWidth / 2 );
-    maskingBorder.lineTo( clipAreaBounds.maxX + (maskLineWidth / 2)+1, clipAreaBounds.maxY );
+    maskingBorder.lineTo( clipAreaBounds.maxX + (maskLineWidth / 2) + 1, -maskLineWidth / 2 );
+    maskingBorder.lineTo( clipAreaBounds.maxX + (maskLineWidth / 2) + 1, clipAreaBounds.maxY );
     maskingBorder.lineTo( clipAreaBounds.x, clipAreaBounds.maxY );
     thisView.addChild( new Path( maskingBorder, {stroke: NeuronConstants.SCREEN_BACKGROUND, lineWidth: maskLineWidth} ) );
 
