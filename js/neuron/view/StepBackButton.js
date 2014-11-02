@@ -1,7 +1,7 @@
 // Copyright 2002-2013, University of Colorado Boulder
 
 /**
- * StepBack Button button generally  used along side play/pause and forward buttons.
+ * StepBack Button button is generally used along side play/pause and forward buttons.
  * Though the listener is generic, the button is typically used to step back in time frame
  *
  * This class uses the same drawing code as StepButton but differs in the following ways
@@ -27,7 +27,7 @@ define( function( require ) {
   var DEFAULT_RADIUS = 20;
 
   function StepBackButton( stepFunction, playProperty, options ) {
-    var stepButton = this;
+    var stepBackButton = this;
     options = _.extend( {
       radius: DEFAULT_RADIUS
     }, options );
@@ -51,7 +51,7 @@ define( function( require ) {
     }, options ) );
     this.enabled = false;
 
-    playProperty.link( function( value ) { stepButton.enabled = !value; } );
+    playProperty.link( function( value ) { stepBackButton.enabled = !value; } );
   }
 
   return inherit( RoundPushButton, StepBackButton );
