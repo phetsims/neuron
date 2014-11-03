@@ -46,7 +46,7 @@ define( function( require ) {
     var height = bottomOfPlotArea.y - topOfPlotArea.y;
     var rectShape = new Shape().rect( -width / 2, 0, width, height );
 
-    Path.call( thisChartCursor, rectShape, {fill: CURSOR_FILL_COLOR, stroke: CURSOR_STROKE_COLOR, lineWidth: 0.4, lineDash: [4, 4]} );
+    Path.call( thisChartCursor, rectShape, { cursor: "e-resize", fill: CURSOR_FILL_COLOR, stroke: CURSOR_STROKE_COLOR, lineWidth: 0.4, lineDash: [4, 4]} );
 
 
     var chartCursorDragHandler = new SimpleDragHandler( {
@@ -107,6 +107,7 @@ define( function( require ) {
     var grippyIndent3 = new GrippyIndentNode( width / 2, CURSOR_FILL_COLOR );
     grippyIndent3.translate( 0, height / 2 + indentSpacing );
     thisChartCursor.addChild( grippyIndent3 );
+
 
   }
 

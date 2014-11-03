@@ -85,7 +85,6 @@ define( function( require ) {
     thisView.addChild( particlesLayerNode );
 
 
-
     // Create and add the layers in the desired order.
     var axonBodyLayer = new Node();
     var axonCrossSectionLayer = new Node();
@@ -155,7 +154,6 @@ define( function( require ) {
 
     thisView.neuronModel.stimulasLockoutProperty.link( function( stimulasLockout ) {
       stimulateNeuronButton.enabled = !stimulasLockout;
-
     } );
 
     // NeuronModel uses specialized real time constant clock simulation
