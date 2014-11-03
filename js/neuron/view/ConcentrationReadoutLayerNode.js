@@ -83,15 +83,15 @@ define( function( require ) {
       // aligned on the right side.
       // The Java version uses the Stimulate Button Position a a reference.Since in HTML version the button
       // is positioned at the bottom, the code now uses the following bounds as a reference.
-      var buttonBounds = new Bounds2( 30, 30, 70, 50 ); // Approximation
+      var referenceBounds = new Bounds2( 30, 20, 70, 40 ); // Approximation
 
       var maxExteriorReadoutWidth = Math.max( potassiumExteriorConcentrationReadout.bounds.width, sodiumExteriorConcentrationReadout.bounds.width );
-      potassiumExteriorConcentrationReadout.x = buttonBounds.maxX + maxExteriorReadoutWidth - potassiumExteriorConcentrationReadout.bounds.width + 4;
-      potassiumExteriorConcentrationReadout.y = buttonBounds.y;
+      potassiumExteriorConcentrationReadout.x = referenceBounds.maxX + maxExteriorReadoutWidth - potassiumExteriorConcentrationReadout.bounds.width + 4;
+      potassiumExteriorConcentrationReadout.y = referenceBounds.y;
 
       //Place it below
-      sodiumExteriorConcentrationReadout.x = buttonBounds.maxX + maxExteriorReadoutWidth - sodiumExteriorConcentrationReadout.bounds.width + 4;
-      sodiumExteriorConcentrationReadout.y = buttonBounds.bottom;
+      sodiumExteriorConcentrationReadout.x = referenceBounds.maxX + maxExteriorReadoutWidth - sodiumExteriorConcentrationReadout.bounds.width + 4;
+      sodiumExteriorConcentrationReadout.y = referenceBounds.bottom;
 
       // Set the interior cell readouts to be in a location that will always
       // be in the cell regardless of how zoomed out or in it is.
@@ -110,14 +110,14 @@ define( function( require ) {
       // Complicated, no doubt, but it works (at least for now).  If there
       // is some easier way then, by all means, implement it.
 
-      var yOffset = 140 + zoomableRootNode.getScaleVector().x * 3;  // Empirically determined.
+      var yOffset = 145 + zoomableRootNode.getScaleVector().x * 9;  // Empirically determined.
 
       // topCenterOfMembrane = axonCrossSectionNode.localToGlobalPoint( topCenterOfMembrane );
       var maxReadoutWidth = Math.max( potassiumInteriorConcentrationReadout.width, sodiumInteriorConcentrationReadout.getBounds().width );
       potassiumInteriorConcentrationReadout.x = topCenterOfMembrane.x - maxReadoutWidth / 2;
       potassiumInteriorConcentrationReadout.y = topCenterOfMembrane.y + yOffset;
       sodiumInteriorConcentrationReadout.x = potassiumInteriorConcentrationReadout.x;
-      sodiumInteriorConcentrationReadout.y = potassiumInteriorConcentrationReadout.bottom + 25;
+      sodiumInteriorConcentrationReadout.y = potassiumInteriorConcentrationReadout.bottom + 16;
     }
 
 

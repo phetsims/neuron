@@ -39,21 +39,22 @@ define( function( require ) {
       thisTextureMap.sodiumParticleViewRadius = thisTextureMap.modelViewTransform.modelToViewDeltaX( thisTextureMap.sodiumParticle.getRadius() ) * thisTextureMap.scaleProperty.value * 1.2;
       thisTextureMap.potassiumParticleSize = thisTextureMap.modelViewTransform.modelToViewDeltaX( thisTextureMap.potassiumParticle.getRadius() ) * thisTextureMap.scaleProperty.value * 1.35;
 
+      var totalParticlesPerColumn = 20;
 
       //Draw Potassium particle shapes after drawing all the Sodium Particles
       thisTextureMap.potasiumTileHeightOffset = thisTextureMap.yMargin;
-      thisTextureMap.potasiumTileHeightOffset += (10 * 2 * thisTextureMap.sodiumParticleViewRadius);
+      thisTextureMap.potasiumTileHeightOffset += (totalParticlesPerColumn * thisTextureMap.sodiumParticleViewRadius);
       thisTextureMap.potasiumTileHeightOffset += 10 * thisTextureMap.strokeGapBetweenParticles;
 
 
       thisTextureMap.tileTotalHeght = thisTextureMap.potasiumTileHeightOffset;
-      thisTextureMap.tileTotalHeght += 20 * thisTextureMap.potassiumParticleSize;
+      thisTextureMap.tileTotalHeght += totalParticlesPerColumn * thisTextureMap.potassiumParticleSize;
       thisTextureMap.tileTotalHeght += 10 * thisTextureMap.strokeGapBetweenParticles;
       thisTextureMap.tileTotalHeght += thisTextureMap.yMargin;
 
       var maxParticleSize = Math.max( thisTextureMap.potassiumParticleSize, thisTextureMap.sodiumParticleViewRadius );// each row has 10 particles
       thisTextureMap.tileTotalWidth = thisTextureMap.xMargin;
-      thisTextureMap.tileTotalWidth += 20 * maxParticleSize;
+      thisTextureMap.tileTotalWidth += totalParticlesPerColumn * maxParticleSize;
       thisTextureMap.tileTotalWidth += 10 * thisTextureMap.strokeGapBetweenParticles;
 
       thisTextureMap.canvasWidth = 0;
@@ -93,9 +94,11 @@ define( function( require ) {
       var i = 0;
       var j = 0;
 
+      var particlesPerColumn = 10;
+      var particlesPerRow = 10;
 
-      for ( i = 0; i < 10; i++ ) {
-        for ( j = 0; j < 10; j++ ) {
+      for ( i = 0; i < particlesPerRow; i++ ) {
+        for ( j = 0; j < particlesPerColumn; j++ ) {
 
           opacityString = "." + i + "" + j;
           opacityValue = parseFloat( opacityString );
@@ -115,10 +118,10 @@ define( function( require ) {
       }
 
       context.strokeStyle = Color.BLACK.getCanvasStyle();
-      context.lineWidth = 2;
+      context.lineWidth = 3;
 
-      for ( i = 0; i < 10; i++ ) {
-        for ( j = 0; j < 10; j++ ) {
+      for ( i = 0; i < particlesPerRow; i++ ) {
+        for ( j = 0; j < particlesPerColumn; j++ ) {
           opacityString = "." + i + "" + j;
           opacityValue = parseFloat( opacityString );
           if ( opacityValue === 0.99 ) {

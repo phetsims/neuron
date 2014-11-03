@@ -64,18 +64,18 @@ define( function( require ) {
     var thisView = this;
     thisView.neuronModel = neuronClockModelAdapter.model; // model is neuronmodel
     ScreenView.call( thisView, {renderer: 'svg', layoutBounds: new Bounds2( 0, 0, 834, 504 )} );
-    var viewPortPosition = new Vector2( thisView.layoutBounds.width * 0.40, thisView.layoutBounds.height * 0.30 );
+    var viewPortPosition = new Vector2( thisView.layoutBounds.width * 0.40, thisView.layoutBounds.height - 255 );
     // Set up the model-canvas transform.
     thisView.mvt = ModelViewTransform2.createSinglePointScaleInvertedYMapping(
       Vector2.ZERO, viewPortPosition,
-      1.3 ); // 3.9 Scale factor - smaller numbers "zoom out", bigger ones "zoom in".
+      2.45 ); // 3.9 Scale factor - smaller numbers "zoom out", bigger ones "zoom in".
 
 
     var worldNodeClipArea = Shape.rect( 70, 0, this.layoutBounds.maxX - 280, this.layoutBounds.maxY - 110 );
     var zoomableRootNode = new Node();
-    var minZoom = 1;
-    var maxZoom = 4.5;
-    var defaultZoom = 1.4;
+    var minZoom = 0.5;
+    var maxZoom = 6;
+    var defaultZoom = 0.7;
 
     //Zommable Node zooms in and out the zoomableRootNode contents
     var zoomProperty = new Property( defaultZoom );
@@ -84,10 +84,7 @@ define( function( require ) {
     var particlesLayerNode = new Node();
     thisView.addChild( particlesLayerNode );
 
-    var zoomControl = new ZoomControl( thisView.neuronModel, zoomProperty, minZoom, maxZoom );
-    this.addChild( zoomControl );
-    zoomControl.top = this.layoutBounds.minY + 70;
-    zoomControl.left = this.layoutBounds.minX + 25;
+
 
     // Create and add the layers in the desired order.
     var axonBodyLayer = new Node();
@@ -122,6 +119,7 @@ define( function( require ) {
     recordPlayButtons.push( playPauseButton );
     recordPlayButtons.push( forwardStepButton );
 
+
     var recordPlayButtonBox = new HBox( {
       children: recordPlayButtons,
       spacing: 5,
@@ -137,7 +135,7 @@ define( function( require ) {
       listener: function() { thisView.neuronModel.initiateStimulusPulse(); },
       baseColor: '#c28a43',
       right: recordPlayButtonBox.right + 200,
-      top: recordPlayButtonBox.top - 25,
+      top: recordPlayButtonBox.top - 15,
       minWidth: 50,
       minHeight: 65
     } );
@@ -185,10 +183,23 @@ define( function( require ) {
       concentrationReadoutLayerNode.visible = concentrationVisible;
     } );
 
-    var chartHeight = 120;
+    // Particles WebGL layer doesn't support bounds clipping, so a border like shape is applied and added as a top node
+    // with the same color as the screen background. Now particles appear to be properly clipped.
+    // ref https://github.com/phetsims/neuron/issues/7
+    var clipAreaBounds = worldNodeClipArea.bounds;
+    var maskingShape = new Shape();
+    var maskLineWidth = 12;
+    maskingShape.moveTo( clipAreaBounds.x - (maskLineWidth / 2) - 1, -maskLineWidth / 2 );
+    maskingShape.lineTo( clipAreaBounds.x - (maskLineWidth / 2) - 1, clipAreaBounds.maxY + 4 );
+    maskingShape.lineTo( clipAreaBounds.maxX + (maskLineWidth / 2) + 1, clipAreaBounds.maxY + 4 );
+    maskingShape.lineTo( clipAreaBounds.maxX + (maskLineWidth / 2 ) + 1, -maskLineWidth / 2 );
+    var maskNode = new Path( maskingShape, {stroke: NeuronConstants.SCREEN_BACKGROUND, lineWidth: maskLineWidth} );
+    thisView.addChild( maskNode );
+
+    var chartHeight = 100;
     var membranePotentialChartNode = new MembranePotentialChart( new Dimension2( worldNodeClipArea.bounds.width - 62, chartHeight ), neuronClockModelAdapter );
     membranePotentialChartNode.left = worldNodeClipArea.bounds.left;
-    membranePotentialChartNode.bottom = thisView.layoutBounds.maxY - 114;
+    membranePotentialChartNode.bottom = thisView.layoutBounds.maxY - 105;
     thisView.addChild( membranePotentialChartNode );
 
 
@@ -198,21 +209,14 @@ define( function( require ) {
 
     var simSpeedControlPanel = new SimSpeedControlPanel( neuronClockModelAdapter.speedProperty );
     simSpeedControlPanel.left = thisView.layoutBounds.minX + 100;
-    simSpeedControlPanel.bottom = thisView.layoutBounds.maxY - 20;
+    simSpeedControlPanel.bottom = thisView.layoutBounds.maxY - 10;
     thisView.addChild( simSpeedControlPanel );
 
+    var zoomControl = new ZoomControl( thisView.neuronModel, zoomProperty, minZoom, maxZoom );
+    this.addChild( zoomControl );
+    zoomControl.top = this.layoutBounds.minY + 70;
+    zoomControl.left = this.layoutBounds.minX + 25;
 
-    // Particles WebGL layer doesn't support bounds clipping, so a border like shape is applied and added as a top node
-    // with the same color as the screen background. Now particles appear to be properly clipped.
-    // ref https://github.com/phetsims/neuron/issues/7
-    var clipAreaBounds = worldNodeClipArea.bounds;
-    var maskingBorder = new Shape();
-    var maskLineWidth = 8;
-    maskingBorder.moveTo( clipAreaBounds.x, -maskLineWidth / 2 );
-    maskingBorder.lineTo( clipAreaBounds.maxX + (maskLineWidth / 2) + 1, -maskLineWidth / 2 );
-    maskingBorder.lineTo( clipAreaBounds.maxX + (maskLineWidth / 2) + 1, clipAreaBounds.maxY );
-    maskingBorder.lineTo( clipAreaBounds.x, clipAreaBounds.maxY );
-    thisView.addChild( new Path( maskingBorder, {stroke: NeuronConstants.SCREEN_BACKGROUND, lineWidth: maskLineWidth} ) );
 
   }
 

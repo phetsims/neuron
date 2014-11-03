@@ -125,7 +125,6 @@ define( function( require ) {
 
         var instance = this.instances[0];
         if ( !this.uniformViewMatrix ) {
-
           var modelViewMatrix = matrix3To4( instance.trail.getMatrix() );
           var projectionMatrix = Matrix4.translation( -1, 1, 0 ).timesMatrix( Matrix4.scaling( 2 / this.logicalWidth, -2 / this.logicalHeight, 1 ) );
           this.uniformViewMatrix = projectionMatrix.timesMatrix( modelViewMatrix );

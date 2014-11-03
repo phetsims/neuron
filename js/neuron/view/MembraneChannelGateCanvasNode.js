@@ -79,8 +79,9 @@ define( function( require ) {
     this.edgeStrokeColors[MembraneChannelTypes.POTASSIUM_GATED_CHANNEL] = NeuronConstants.POTASSIUM_COLOR.colorUtilsDarker( 0.3 ).getCanvasStyle();
     this.edgeStrokeColors[MembraneChannelTypes.POTASSIUM_LEAKAGE_CHANNEL] = Color.interpolateRGBA( NeuronConstants.POTASSIUM_COLOR, new Color( 0, 200, 255 ), 0.6 ).colorUtilsDarker( 0.3 ).getCanvasStyle();
 
-    this.edgeGateStringColors = {};
-    this.edgeGateStringColors[MembraneChannelTypes.SODIUM_GATED_CHANNEL] = NeuronConstants.SODIUM_COLOR.colorUtilsDarker( 0.3 ).colorUtilsDarker( 0.3 ).getCanvasStyle();
+    this.edgeGateBallColors = {};
+    this.edgeGateBallColors[MembraneChannelTypes.SODIUM_GATED_CHANNEL] = NeuronConstants.SODIUM_COLOR.colorUtilsDarker( 0.3 ).getCanvasStyle();
+    this.edgeGateStringColor = Color.BLACK.getCanvasStyle();
 
     //Each iteration during Channel rendering updates the same local variable,This is done to avoid new vector creation
     this.transformedChannelLocation = new Vector2();
@@ -150,6 +151,7 @@ define( function( require ) {
         var edgeNodeWidth = (membraneChannelModel.overallSize.width - membraneChannelModel.channelSize.width) / 2;
         var edgeNodeHeight = membraneChannelModel.overallSize.height;
 
+        edgeNodeWidth = edgeNodeWidth - 0.2; // adjustment for Canvas pixel width
         //update the same local transformedEdgeNodeSize instead of creating a new Dimension2 object
         transformedEdgeNodeSize.width = Math.abs( thisNode.mvt.modelToViewDeltaX( edgeNodeWidth ) );
         transformedEdgeNodeSize.height = Math.abs( thisNode.mvt.modelToViewDeltaY( edgeNodeHeight ) );
@@ -157,7 +159,7 @@ define( function( require ) {
         var rotation = -membraneChannelModel.rotationalAngle + Math.PI / 2;
         context.fillStyle = thisNode.edgeFillColors[membraneChannelModel.getChannelType()];
         context.strokeStyle = thisNode.edgeStrokeColors[membraneChannelModel.getChannelType()];
-        context.lineWidth = 0.4;
+        context.lineWidth = 0.9;
 
         //left Edge
         context.save();
@@ -197,7 +199,7 @@ define( function( require ) {
 
         // Make the node a bit bigger than the channel so that the edges can
         // be placed over it with no gaps.
-        var oversizeFactor = 1.2; // was 1.1 in Java
+        var oversizeFactor = 1.18;
         var width = transformedChannelSize.width * oversizeFactor;
         var height = transformedChannelSize.height * oversizeFactor;
         var edgeWidth = edgeNodeBounds.width; // Assume both edges are the same size.
@@ -215,7 +217,6 @@ define( function( require ) {
         context.fill();
         context.restore();
 
-        updateEdgeShapes( context, edgeNodeBounds, membraneChannelModel );
 
         // If this membrane channel has an inactivation gate, update it.
         if ( membraneChannelModel.getHasInactivationGate() ) {
@@ -245,8 +246,8 @@ define( function( require ) {
           context.save();
           context.translate( transformedChannelLocation.x, transformedChannelLocation.y );
           context.rotate( rotation );
-          context.lineWidth = 0.5;
-          context.strokeStyle = thisNode.edgeGateStringColors[membraneChannelModel.getChannelType()];
+          context.lineWidth = 1.1;
+          context.strokeStyle = thisNode.edgeGateStringColor;
           context.beginPath();
           context.moveTo( channelEdgeConnectionPoint.x, channelEdgeConnectionPoint.y );
           context.bezierCurveTo( channelEdgeConnectionPoint.x + connectorLength * 0.25,
@@ -254,12 +255,15 @@ define( function( require ) {
               ballConnectionPoint.y - connectorLength * 0.5, ballConnectionPoint.x, ballConnectionPoint.y );
           context.stroke();
           context.beginPath();
-          context.fillStyle = thisNode.edgeGateStringColors[membraneChannelModel.getChannelType()];
+          context.fillStyle = thisNode.edgeGateBallColors[membraneChannelModel.getChannelType()];
           context.arc( ballConnectionPoint.x, ballConnectionPoint.y, ballDiameter / 2, 0, 2 * Math.PI, false );
           context.closePath();
           context.fill();
           context.restore();
         }
+
+        //for better layering draw edge after ball and string
+        updateEdgeShapes( context, edgeNodeBounds, membraneChannelModel );
 
       } );
 

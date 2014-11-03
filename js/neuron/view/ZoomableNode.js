@@ -29,17 +29,16 @@ define( function( require ) {
       // Zoom toward the top so that when zoomed in the membrane
       // is in a reasonable place and there is room for the chart below
       // it.
-      var zoomTowardTopThreshold = 1.5;
+
+      var zoomTowardTopThreshold = 0.6;
       var scaleMatrix;
-      var scaleAroundX;
+      var scaleAroundX = Math.round( viewPortPosition.x );
       var scaleAroundY;
       if ( zoomFactor > zoomTowardTopThreshold ) {
-        scaleAroundX = Math.round( viewPortPosition.x );
-        scaleAroundY = (zoomFactor - zoomTowardTopThreshold) * neuronModel.getAxonMembrane().getCrossSectionDiameter() * 0.11;
+        scaleAroundY = (zoomFactor - zoomTowardTopThreshold) * neuronModel.getAxonMembrane().getCrossSectionDiameter() * 0.075;
         scaleMatrix = Matrix3.translation( scaleAroundX, scaleAroundY ).timesMatrix( Matrix3.scaling( zoomFactor, zoomFactor ) ).timesMatrix( Matrix3.translation( -scaleAroundX, -scaleAroundY ) );
       }
       else {
-        scaleAroundX = (Math.round( viewPortPosition.x ));
         scaleAroundY = 0;
         scaleMatrix = Matrix3.translation( scaleAroundX, scaleAroundY ).timesMatrix( Matrix3.scaling( zoomFactor, zoomFactor ) ).timesMatrix( Matrix3.translation( -scaleAroundX, -scaleAroundY ) );
 
