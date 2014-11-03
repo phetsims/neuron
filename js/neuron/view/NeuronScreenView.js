@@ -73,7 +73,7 @@ define( function( require ) {
 
     var worldNodeClipArea = Shape.rect( 70, 0, this.layoutBounds.maxX - 280, this.layoutBounds.maxY - 110 );
     var zoomableRootNode = new Node();
-    var minZoom = 0.5;
+    var minZoom = 0.7;
     var maxZoom = 6;
     var defaultZoom = 0.7;
 
