@@ -33,7 +33,7 @@ define( function( require ) {
   var ConcentrationReadoutLayerNode = require( 'NEURON/neuron/view/ConcentrationReadoutLayerNode' );
   var MembraneChannelGateCanvasNode = require( 'NEURON/neuron/view/MembraneChannelGateCanvasNode' );
   var ChargeSymbolsLayerNode = require( 'NEURON/neuron/view/ChargeSymbolsLayerNode' );
-  var StepBackButton = require( 'NEURON/neuron/view/StepBackButton' );
+  var StepBackButton = require( 'SCENERY_PHET/buttons/StepBackButton' );
   var ZoomableNode = require( 'NEURON/neuron/view/ZoomableNode' );
   var ZoomControl = require( 'NEURON/neuron/view/ZoomControl' );
   var MembranePotentialChart = require( 'NEURON/neuron/chart/view/MembranePotentialChart' );
