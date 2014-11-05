@@ -22,7 +22,7 @@ define( function( require ) {
      * @param {MembraneChannelTypes} channelType
      * @param {ParticleCapture} particleModel
      * @param {HodgkinHuxleyModel} hodgkinHuxleyModel
-     * @returns {*}
+     * @returns {MembraneChannel}
      */
     createMembraneChannel: function( channelType, particleModel, hodgkinHuxleyModel ) {
       var membraneChannel = null;

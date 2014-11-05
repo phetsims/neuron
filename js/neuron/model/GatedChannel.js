@@ -14,8 +14,8 @@ define( function( require ) {
   var MembraneChannel = require( 'NEURON/neuron/model/MembraneChannel' );
 
   /**
-   * @param  channelWidth
-   * @param  channelHeight
+   * @param  {number} channelWidth
+   * @param  {number} channelHeight
    * @param {ParticleCapture} modelContainingParticles
    * @constructor
    */

@@ -13,9 +13,11 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var FadeStrategy = require( 'NEURON/neuron/model/FadeStrategy' );
 
+  /**
+   *
+   * @constructor
+   */
   function NullFadeStrategy() {
-
-
   }
 
   return inherit( FadeStrategy, NullFadeStrategy, {

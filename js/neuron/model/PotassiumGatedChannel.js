@@ -45,7 +45,7 @@ define( function( require ) {
 
   /**
    * @param {ParticleCapture} modelContainingParticles
-   * @param {IHodgkinHuxleyModel}hodgkinHuxleyModel
+   * @param {ModifiedHodgkinHuxleyModel} hodgkinHuxleyModel
    * @constructor
    */
   function PotassiumGatedChannel( modelContainingParticles, hodgkinHuxleyModel ) {

@@ -19,17 +19,18 @@ define( function( require ) {
   var DelayBuffer = require( 'NEURON/neuron/model/DelayBuffer' );
   var NeuronSharedConstants = require( 'NEURON/neuron/common/NeuronSharedConstants' );
 
-
-  /*
+  /**
    Amount of time used for each iteration of the model.  This is fixed,
    and when the model is stepped it breaks whether time step is presented
    into units of this duration.  This is needed because below a certain
-   time value the model doesn't work - it becomes unstable.*/
-
+   time value the model doesn't work - it becomes unstable.
+   */
   var INTERNAL_TIME_STEP = 0.005; // In milliseconds, not seconds.
-
   var MAX_DELAY = 0.001; // In seconds of simulation time.
-
+  /**
+   *
+   * @constructor
+   */
   function ModifiedHodgkinHuxleyModel() {
 
     var thisModel = this;

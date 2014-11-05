@@ -65,7 +65,7 @@ define( function( require ) {
           // The user must be trying to grab the cursor while
           // the recorded content is being played back.  Pause the
           // clock.
-          membranePotentialChart.clock.setPaused( true );
+          membranePotentialChart.setPaused( true );
         }
       },
 
@@ -86,7 +86,7 @@ define( function( require ) {
           // The clock wasn't paused when the user grabbed this
           // cursor, so now that they are releasing the cursor we
           // should un-pause the clock.
-          membranePotentialChart.clock.setPaused( false );
+          membranePotentialChart.setPaused( false );
         }
       }
     } );

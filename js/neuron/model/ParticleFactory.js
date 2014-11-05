@@ -14,6 +14,11 @@ define( function( require ) {
 
   return{
     //factory method for creating a particle of the specified type.
+    /**
+     *
+     * @param {enum} particleType // ParticleType enum constants
+     * @returns {Particle}
+     */
     createParticle: function( particleType ) {
       var newParticle = null;
 

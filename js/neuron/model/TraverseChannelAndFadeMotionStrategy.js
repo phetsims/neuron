@@ -10,6 +10,7 @@
  */
 define( function( require ) {
   'use strict';
+
   //imports
   var inherit = require( 'PHET_CORE/inherit' );
   var Vector2 = require( 'DOT/Vector2' );
@@ -25,10 +26,10 @@ define( function( require ) {
 
   /**
    *
-   * @param channel
-   * @param startingLocationX
-   * @param startingLocationY
-   * @param maxVelocity
+   * @param {MembraneChannel} channel
+   * @param {number} startingLocationX
+   * @param {number} startingLocationY
+   * @param {number} maxVelocity
    * @constructor
    */
   function TraverseChannelAndFadeMotionStrategy( channel, startingLocationX, startingLocationY, maxVelocity ) {

@@ -1,7 +1,5 @@
 // Copyright 2002-2011, University of Colorado
-
 /**
- /**
  * This class contains state information about the model for a given point
  * in time.  It contains enough information for the playback feature, but
  * not necessarily enough to fully restore the simulation to an arbitrary
@@ -14,9 +12,13 @@ define( function( require ) {
   'use strict';
 
   //imports
-  //imports
   var inherit = require( 'PHET_CORE/inherit' );
 
+  /*
+   * JavaScript object dictionary only supports String as keys,but the channel's state are stored
+   * against Membrane Channel object(key). This "map" utility  supports this functionality by allowing any object to be used as key.
+   * @returns {{put: put, get: get}}
+   */
   function map() {
     var keys = [], values = [];
 
@@ -38,10 +40,9 @@ define( function( require ) {
   }
 
   /**
-   * Constructor, which extracts the needed state information from the
-   * model.
    *
-   * @param {NeuronModel}neuronModel
+   * @param {NeuronModel} neuronModel
+   * @constructor
    */
   function NeuronModelState( neuronModel ) {
 

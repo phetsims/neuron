@@ -41,9 +41,9 @@ define( function( require ) {
 
 
   /**
-   * @param  channelWidth
+   * @param {number} channelWidth
    * @param {ParticleCapture} modelContainingParticles
-   * @param {IHodgkinHuxleyModel}hodgkinHuxleyModel
+   * @param {ModifiedHodgkinHuxleyModel} hodgkinHuxleyModel
    * @constructor
    */
   function SodiumLeakageChannel( modelContainingParticles, hodgkinHuxleyModel ) {

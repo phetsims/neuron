@@ -32,11 +32,11 @@ define( function( require ) {
   /**
    * Constructor.
    *
-   * @param awayPoint       - Point that should be moved away from.
-   * @param currentLocationX - Starting locationX
-   * @param currentLocationY - Starting locationY
-   * @param preFadeTime     - Time before fade out starts, in sim time
-   * @param fadeOutDuration - Time of fade out
+   * @param {Vector2} awayPoint - Point that should be moved away from.
+   * @param {number} currentLocationX - Starting locationX
+   * @param {number} currentLocationY - Starting locationY
+   * @param {number} preFadeTime     - Time before fade out starts, in sim time
+   * @param {number} fadeOutDuration - Time of fade out
    */
   function WanderAwayThenFadeMotionStrategy( awayPoint, currentLocationX, currentLocationY, preFadeTime, fadeOutDuration ) {
 

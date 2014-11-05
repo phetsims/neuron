@@ -25,6 +25,11 @@ define( function( require ) {
   var TRAVELING_TIME = 0.0020; // In seconds of sim time (not wall time).
   var LINGER_AT_CROSS_SECTION_TIME = 0.0005; // In seconds of sim time (not wall time).
 
+  /**
+   *
+   * @param {AxonMembrane} axonMembrane
+   * @constructor
+   */
   function TravelingActionPotential( axonMembrane ) {
     var thisPotential = this;
     thisPotential.axonMembrane = axonMembrane;
@@ -136,7 +141,7 @@ define( function( require ) {
     },
     /**
      * Set the state from a (probably previously captured) version of
-     * the interal state.
+     * the internal state.
      */
     setState: function( state ) {
       this.travelTimeCountdownTimer = state.getTravelTimeCountdownTimer();

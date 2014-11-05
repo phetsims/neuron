@@ -14,6 +14,11 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var MotionStrategy = require( 'NEURON/neuron/model/MotionStrategy' );
 
+  /**
+   *
+   * @param {Vector2} velocity
+   * @constructor
+   */
   function LinearMotionStrategy( velocity ) {
     this.velocity = velocity;// In nanometers per second of simulation time.
   }

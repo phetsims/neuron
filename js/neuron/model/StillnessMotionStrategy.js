@@ -13,6 +13,10 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var MotionStrategy = require( 'NEURON/neuron/model/MotionStrategy' );
 
+  /**
+   *
+   * @constructor
+   */
   function StillnessMotionStrategy() {
 
   }

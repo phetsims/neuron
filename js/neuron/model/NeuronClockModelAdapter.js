@@ -28,9 +28,9 @@ define( function( require ) {
    * Creates a NeuronClock based on a number of requested frames per second.
    * This uses the same value for elapsed simulation time, and should be used for simulations
    * that run in real time (e.g. one sim time second equals one wall clock second)
-   * @param model (whose simulation timing is controlled by this adapter)
-   * @param framesPerSecond the number of frames per second
-   * @param dt constant simulation time change between ticks
+   * @param {NeuronModel} model (whose simulation timing is controlled by this adapter, Note:- The Adapter is generic and doesn't have any dependency on the model it controls)
+   * @param {number} framesPerSecond the number of frames per second
+   * @param {number} dt constant simulation time change between ticks
 
    */
   function NeuronClockModelAdapter( model, framesPerSecond, dt ) {
@@ -57,7 +57,6 @@ define( function( require ) {
     this.eventTimer = new EventTimer( new EventTimer.ConstantEventModel( DEFAULT_FRAMES_PER_SECOND ), function( timeElapsed ) {
       thisModel.constantStep( timeElapsed );
     } );
-
 
 
   }

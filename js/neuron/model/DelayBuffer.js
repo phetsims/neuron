@@ -14,6 +14,7 @@
 define( function( require ) {
   'use strict';
 
+  // modules
   var DelayElement = require( 'NEURON/neuron/model/DelayElement' );
 
 
@@ -21,7 +22,12 @@ define( function( require ) {
   // due to some floating point resolution problems that were occurring.
   var DIFFERENCE_RESOLUTION = 1E-15;
 
-
+  /**
+   *
+   * @param {number} maxDelay // In seconds of simulation time.
+   * @param {number} minTimeStep // sim the clock rate, often several orders of magnitude slower than real time.
+   * @constructor
+   */
   function DelayBuffer( maxDelay, minTimeStep ) {
     var thisBuffer = this;
     thisBuffer.numEntries = Math.ceil( maxDelay / minTimeStep );

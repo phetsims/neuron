@@ -26,7 +26,6 @@ define( function( require ) {
   var CHANNEL_HEIGHT = NeuronConstants.MEMBRANE_THICKNESS * 1.2; // In nanometers.
   var CHANNEL_WIDTH = NeuronConstants.MEMBRANE_THICKNESS * 0.50; // In nanometers.
 
-  //
   // Constant used when calculating how open this gate should be based on
   // a value that exists within the Hodgkin-Huxley model.  This was
   // empirically determined.
@@ -64,9 +63,9 @@ define( function( require ) {
 
 
   /**
-   * @param  channelWidth
+   * @param {number} channelWidth
    * @param {ParticleCapture} modelContainingParticles
-   * @param {IHodgkinHuxleyModel}hodgkinHuxleyModel
+   * @param {ModifiedHodgkinHuxleyModel} hodgkinHuxleyModel
    * @constructor
    */
   function SodiumDualGatedChannel( modelContainingParticles, hodgkinHuxleyModel ) {

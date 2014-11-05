@@ -10,7 +10,12 @@ define( function( require ) {
   //imports
   var inherit = require( 'PHET_CORE/inherit' );
 
-
+  /**
+   *
+   * @param {number} travelTimeCountdownTimer
+   * @param {number} lingerCountdownTimer
+   * @constructor
+   */
   function TravelingActionPotentialState( travelTimeCountdownTimer, lingerCountdownTimer ) {
     this.travelTimeCountdownTimer = travelTimeCountdownTimer;
     this.lingerCountdownTimer = lingerCountdownTimer;

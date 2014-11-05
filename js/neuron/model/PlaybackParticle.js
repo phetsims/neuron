@@ -22,14 +22,14 @@ define( function( require ) {
   /**
    * Construct a playback particle.
    *
-   * @param {Particle}particle - Real particle from which this playback particle
+   * @param {Particle} particle - Real particle from which this playback particle
    * should be constructed.
    * @constructor
    */
   function PlaybackParticle( particle ) {
     particle = particle || new PotassiumIon();// Construct as potassium by default.  This choice is arbitrary.
 
-    //ViewableParticle is a PropertySet
+    // ViewableParticle is a PropertySet
     ViewableParticle.call( this, {
       appearanceChanged: false
     } );

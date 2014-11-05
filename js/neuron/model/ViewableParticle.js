@@ -12,6 +12,10 @@ define( function( require ) {
   //imports
   var inherit = require( 'PHET_CORE/inherit' );
 
+  /**
+   *
+   * @constructor
+   */
   function ViewableParticle() {
 
   }

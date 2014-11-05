@@ -26,6 +26,12 @@ define( function( require ) {
     return Math.random();
   }};
 
+  /**
+   *
+   * @param {number} initialLocationX
+   * @param {number} initialLocationY
+   * @constructor
+   */
   function SlowBrownianMotionStrategy( initialLocationX, initialLocationY ) {
     var thisStrategy = this;
     thisStrategy.initialLocationX = initialLocationX;

@@ -9,17 +9,13 @@
 define( function( require ) {
   'use strict';
 
-//imports
+  // modules
   var inherit = require( 'PHET_CORE/inherit' );
 
-
   /**
-   *
    * @constructor
    */
   function CaptureZone() {
-
-
   }
 
   return inherit( Object, CaptureZone, {

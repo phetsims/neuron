@@ -9,6 +9,10 @@
 
 define( function( require ) {
   'use strict';
+  /**
+   * Abstract Base class
+   * @constructor
+   */
   function FadeStrategy() {
   }
 

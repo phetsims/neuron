@@ -11,6 +11,10 @@ define( function( require ) {
   var Particle = require( 'NEURON/neuron/model/Particle' );
   var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
 
+  /**
+   *
+   * @constructor
+   */
   function PotassiumIon() {
     Particle.call( this );
   }

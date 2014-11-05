@@ -29,8 +29,8 @@ define( function( require ) {
   /**
    * Construct a particle.
    *
-   * @param xPos - Initial X position of this particle.
-   * @param yPos - Initial Y position of this particle.
+   * @param {number} xPos - Initial X position of this particle.
+   * @param {number} yPos - Initial Y position of this particle.
    */
   function Particle( xPos, yPos ) {
     xPos = xPos || 0;

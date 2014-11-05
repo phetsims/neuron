@@ -10,7 +10,7 @@
 define( function( require ) {
   'use strict';
 
-  //imports
+  // modules
   var inherit = require( 'PHET_CORE/inherit' );
   var PropertySet = require( 'AXON/PropertySet' );
   var Vector2 = require( 'DOT/Vector2' );
@@ -37,12 +37,14 @@ define( function( require ) {
       travelingActionPotentialEnded: false
     } );
 
+    // Traveling action potential that moves down the membrane.
     thisAxonMembrane.travelingActionPotential = null;
 
     //-----------------------------------------------------------------------------------------------------------------
     // Create the shape of the axon body
     //-----------------------------------------------------------------------------------------------------------------
 
+    // Shape of the body of the axon.
     thisAxonMembrane.axonBodyShape = new Shape();
     // Points that define the body shape.
     thisAxonMembrane.vanishingPoint = new Vector2( BODY_LENGTH * Math.cos( BODY_TILT_ANGLE ), BODY_LENGTH * Math.sin( BODY_TILT_ANGLE ) );

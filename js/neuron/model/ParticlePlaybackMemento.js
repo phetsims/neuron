@@ -19,8 +19,8 @@ define( function( require ) {
 
   /**
    *
-   * @constructor
    * @param {Particle} particle
+   * @constructor
    */
   function ParticlePlaybackMemento( particle ) {
     this.positionX = particle.getPositionX();

@@ -367,6 +367,10 @@ define( function( require ) {
     updateOnClockPaused: function() {
       this.updateChartCursorPos();
       this.updateChartCursorVisibility();
+    },
+
+    setPaused:function(paused){
+      this.neuronModel.pauseClock(paused);
     }
 
   } );

@@ -23,25 +23,26 @@ define( function( require ) {
     }
   };
 
-  //isPointZone method of captureZone is refactored to use Vector components, this class wide
+  // isPointZone method of captureZone is refactored to use Vector components, this class wide
   // instance is used for intermediary vector calculations.See isPointInZone method
   var pointZoneCheckPoint = new Vector2();
 
   /**
-   * Constructor - defines the size and orientation of a capture zone which
+   * This class defines the size and orientation of a capture zone which
    * is shaped like a pie slice.  For more information on what exactly a
    * capture zone is, see the parent class javadoc.
    *
-   * @param {Vector2}center - Location of the center of this capture zone, i.e. where
+   * @param {Vector2} center - Location of the center of this capture zone, i.e. where
    * the point of the pie is.
-   * @param radius - specifies the distance from the point of
+   * @param {number} radius - specifies the distance from the point of
    * the pie slice to the outer rounded edge, in nanometers.
-   * @param fixedRotationalOffset - The amount of rotation from 0 that
+   * @param {number} fixedRotationalOffset - The amount of rotation from 0 that
    * this capture zone always has, and that cannot be changed after
    * construction.  Note that 0 indicates that the point of the pie is at
    * the left and the rounded part at the right.
-   * @param angleOfExtent - in radians, extent of the arc.  A value of PI
+   * @param {number} angleOfExtent - in radians, extent of the arc.  A value of PI
    * would be a half circle, PI/2 is a quarter circle.
+   * @constructor
    */
   function PieSliceShapedCaptureZone( center, radius, fixedRotationalOffset, angleOfExtent ) {
     var thisZone = this;

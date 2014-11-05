@@ -1,5 +1,4 @@
 //  Copyright 2002-2014, University of Colorado Boulder
-
 /**
  * Model for the 'Neuron' screen.
  * This class represents the main class for modeling the axon.  It acts as the
@@ -121,7 +120,7 @@ define( function( require ) {
 
   /**
    * Main constructor for NeuronModel, which contains all of the model logic for the entire sim screen.
-   * @param {NeuronClock} neuronClock
+   * @param {NeuronClockModelAdapter} neuronClock
    * @constructor
    */
   function NeuronModel( neuronClock ) {
@@ -1098,8 +1097,14 @@ define( function( require ) {
       //If any one channel's state is changed, trigger a channel representation changed event
       this.channelRepresentationChanged = false;
       this.channelRepresentationChanged = _.any( this.membraneChannels.getArray(), 'channelStateChanged' );
-
-
+    },
+    /**
+     * Used to control the paused state of Neuron clock
+     * Example : Clock is paused on/off when user drags the MembranePotential chart cursor
+     * @param paused
+     */
+    pauseClock: function( paused ) {
+      this.clock.setPaused( paused );
     }
 
   } );

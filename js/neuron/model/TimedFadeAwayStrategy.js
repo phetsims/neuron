@@ -12,9 +12,9 @@ define( function( require ) {
 
 
   /**
-   * Constructor
    *
-   * @param fadeTime - time, in seconds of sim time, for this to fade away.
+   * @param {number} fadeTime - time, in seconds of sim time, for this to fade away.
+   * @constructor
    */
   function TimedFadeAwayStrategy( fadeTime ) {
     this.fadeTime = fadeTime;

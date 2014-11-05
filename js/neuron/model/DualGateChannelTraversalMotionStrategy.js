@@ -8,6 +8,7 @@
  * model representation and the view representation of the dual-gated channel.
  * If changes are made to either, this class would need to be revised to
  * handle them.
+ *
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
  */
@@ -34,10 +35,10 @@ define( function( require ) {
 
   /**
    *
-   * @param channel
-   * @param startingLocationX
-   * @param startingLocationY
-   * @param maxVelocity
+   * @param {MembraneChannel} channel
+   * @param {number} startingLocationX
+   * @param {number} startingLocationY
+   * @param {number} maxVelocity
    * @constructor
    */
   function DualGateChannelTraversalMotionStrategy( channel, startingLocationX, startingLocationY, maxVelocity ) {

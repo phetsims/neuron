@@ -15,7 +15,7 @@ define( function( require ) {
 
   /**
    *
-   * @param {MembraneChannel}membraneChannel
+   * @param {MembraneChannel} membraneChannel
    * @constructor
    */
   function MembraneChannelState( membraneChannel ) {
