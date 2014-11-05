@@ -21,20 +21,22 @@ define( function( require ) {
   var Util = require( 'DOT/Util' );
   var Bounds2 = require( 'DOT/Bounds2' );
 
-  // Constants that control aspects of the concentration readout.
-  var CONCENTRATION_READOUT_NUM_PLACES = 5;
-
-  var READ_OUT_FONT_SIZE = 18;
+  //strings
   var concentrationReadoutPattern0label1value2unitsString = require( 'string!NEURON/concentrationReadoutPattern.0label.1value.2units' );
   var potassiumChemicalSymbolString = require( 'string!NEURON/potassiumChemicalSymbol' );
   var sodiumChemicalSymbolString = require( 'string!NEURON/sodiumChemicalSymbol' );
   var unitsmMString = require( 'string!NEURON/units.mM' );
 
+  // Constants that control aspects of the concentration readout.
+  var CONCENTRATION_READOUT_NUM_PLACES = 5;
+  var READ_OUT_FONT_SIZE = 18;
+
   /**
    *
-   * @param neuronModel
-   * @param zoomableRootNode
-   * @param axonCrossSectionNode
+   * @param {NeuronModel} neuronModel
+   * @param {Node} zoomableRootNode
+   * @param {Property} zoomProperty
+   * @param {AxonCrossSectionNode} axonCrossSectionNode
    * @constructor
    */
   function ConcentrationReadoutLayerNode( neuronModel, zoomProperty, zoomableRootNode, axonCrossSectionNode ) {

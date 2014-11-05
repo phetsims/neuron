@@ -18,6 +18,12 @@ define( function( require ) {
   var DOTUtil = require( 'DOT/Util' );
   var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
 
+  /**
+   *
+   * @param {ModelViewTransform2} modelViewTransform
+   * @param {Property} scaleProperty
+   * @constructor
+   */
   function ParticleTextureMap( modelViewTransform, scaleProperty ) {
     this.modelViewTransform = modelViewTransform;
     this.scaleProperty = scaleProperty;

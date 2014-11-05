@@ -43,13 +43,10 @@ define( function( require ) {
   var PlayPauseButton = require( 'SCENERY_PHET/buttons/PlayPauseButton' );
   var StepButton = require( 'SCENERY_PHET/buttons/StepButton' );
 
-
-  // Useful for testing TODO to be removed
-  // var ParticleSpriteSheetNode = require( 'NEURON/neuron/view/ParticleSpriteSheetNode' );
-
+  //Strings
   var stimulateNeuronString = require( 'string!NEURON/stimulateNeuron' );
-  var BUTTON_FONT = new PhetFont( 18 );
 
+  var BUTTON_FONT = new PhetFont( 18 );
 
   /**
    * Constructor for the NeuronView

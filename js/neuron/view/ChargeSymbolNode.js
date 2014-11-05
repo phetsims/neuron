@@ -25,10 +25,10 @@ define( function( require ) {
 
   /**
    *
-   * @param axonModel - Model where the potential is obtained.
-   * @param maxWidth - Max width in screen coords, which also defines max height.
-   * @param maxPotential - The potential at which the max size is shown.
-   * @param polarityReversed - Whether the polarity is reversed, meaning that
+   * @param {NeuronModel} axonModel - Model where the potential is obtained.
+   * @param {number} maxWidth - Max width in screen coords, which also defines max height.
+   * @param {number} maxPotential - The potential at which the max size is shown.
+   * @param {boolean} polarityReversed - Whether the polarity is reversed, meaning that
    * a plus is shown for a negative value and vice versa.
    */
   function ChargeSymbolNode( axonModel, maxWidth, maxPotential, polarityReversed ) {

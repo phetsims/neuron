@@ -16,8 +16,8 @@ define( function( require ) {
 
   /**
    *
-   * @param neuronModel
-   * @param mvt
+   * @param {NeuronModel} neuronModel
+   * @param {ModelViewTransform2} mvt
    * @constructor
    */
   function ParticlesCanvasLayerNode( neuronModel, mvt ) {

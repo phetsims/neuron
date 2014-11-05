@@ -17,8 +17,8 @@ define( function( require ) {
 
   /**
    *
-   * @param modelViewTransform
-   * @param bounds
+   * @param {ModelViewTransform2D} modelViewTransform
+   * @param {Bounds2} bounds
    * @constructor
    */
   function ParticlesNode( modelViewTransform, bounds ) {

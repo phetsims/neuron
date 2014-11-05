@@ -16,7 +16,12 @@ define( function( require ) {
   var Bounds2 = require( 'DOT/Bounds2' );
   var ParticleTextureMap = require( 'NEURON/neuron/view/ParticleTextureMap' );
 
-
+  /**
+   *
+   * @param {ModelViewTransform2D} modelViewTransform
+   * @param {Property} scaleProperty
+   * @constructor
+   */
   function ParticleSpriteSheetNode( modelViewTransform, scaleProperty ) {
 
     var thisNode = this;

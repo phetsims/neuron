@@ -22,9 +22,9 @@ define( function( require ) {
 
   /**
    *
-   * @param neuronModel
-   * @param modelViewTransform
-   * @param bounds
+   * @param {NeuronModel} neuronModel
+   * @param {ModelViewTransform2} modelViewTransform
+   * @param {Bounds2} bounds
    * @constructor
    */
   function MembraneChannelGateCanvasNode( neuronModel, modelViewTransform, bounds ) {

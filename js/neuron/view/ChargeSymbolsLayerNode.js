@@ -18,8 +18,8 @@ define( function( require ) {
   var MAX_CHARGE_SYMBOL_SIZE = 5;// was 8
   /**
    *
-   * @param neuronModel
-   * @param mvt
+   * @param {NeuronModel} neuronModel
+   * @param {ModelViewTransform2} mvt
    * @constructor
    */
   function ChargeSymbolsLayerNode( neuronModel, mvt ) {
@@ -64,11 +64,11 @@ define( function( require ) {
      * Calculate the locations of the charge symbols and set the two provided
      * points accordingly.
      *
-     * @param p1
-     * @param p2
-     * @param center
-     * @param outerPoint
-     * @param innerPoint
+     * @param {Vector2} p1
+     * @param {Vector2} p2
+     * @param {Vector2} center
+     * @param {Vector2} outerPoint //out parameter
+     * @param {Vector2} innerPoint //out parameter
      */
     function calcChargeSymbolLocations( p1, p2, neuronCenter, outerPoint, innerPoint ) {
       // Find the center point between the given points.
