@@ -19,7 +19,7 @@ define( function( require ) {
   /**
    *
    * @param {ModelViewTransform2D} modelViewTransform
-   * @param {Property} scaleProperty
+   * @param {Property.<number>} scaleProperty
    * @constructor
    */
   function ParticleSpriteSheetNode( modelViewTransform, scaleProperty ) {

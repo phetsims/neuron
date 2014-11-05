@@ -15,8 +15,8 @@ define( function( require ) {
 
   /**
    *
-   * @param time
-   * @param state
+   * @param {number} time
+   * @param {Object} state
    * @constructor
    */
   function DataPoint( time, state ) {

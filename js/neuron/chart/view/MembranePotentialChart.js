@@ -59,7 +59,7 @@ define( function( require ) {
 
   /**
    *
-   * @param {Dimension2}chartDimension
+   * @param {Dimension2} chartDimension
    * @param {NeuronClockModelAdapter }neuronClockModelAdapter
    * @constructor
    */

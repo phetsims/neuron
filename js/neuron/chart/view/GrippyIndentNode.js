@@ -21,8 +21,8 @@ define( function( require ) {
 
   /**
    *
-   * @param diameter
-   * @param baseColor
+   * @param {number} diameter
+   * @param {Color} baseColor
    * @constructor
    */
   function GrippyIndentNode( diameter, baseColor ) {

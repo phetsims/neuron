@@ -37,9 +37,9 @@ define( function( require ) {
    *
    * @param {NeuronModel} neuronModel
    * @param {ModelViewTransform2} modelViewTransform
-   * @param {Property}scaleProperty
-   * @param {Node}zoomableRootNode
-   * @param {Rect}clipArea
+   * @param {Property.<number>} scaleProperty
+   * @param {Node} zoomableRootNode
+   * @param {Shape} clipArea
    * @constructor
    */
   function ParticlesWebGLNode( neuronModel, modelViewTransform, scaleProperty, zoomableRootNode, clipArea ) {

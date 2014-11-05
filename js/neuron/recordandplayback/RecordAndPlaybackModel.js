@@ -17,8 +17,10 @@ define( function( require ) {
   var Live = require( 'NEURON/neuron/recordandplayback/Live' );
   var ObservableArray = require( 'AXON/ObservableArray' );
 
-
   /**
+   *
+   * @param {number} maxRecordPoints
+   * @param {Object} props
    * @constructor
    */
   function RecordAndPlaybackModel( maxRecordPoints, props ) {

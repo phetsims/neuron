@@ -26,7 +26,7 @@ define( function( require ) {
 
 
   /**
-   * @param membranePotentialChart
+   * @param {MembranePotentialChart} membranePotentialChart
    * @constructor
    */
   function ChartCursor( membranePotentialChart ) {

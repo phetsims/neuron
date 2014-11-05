@@ -9,21 +9,21 @@
 define( function( require ) {
   'use strict';
 
-  //imports
+  // modules
   var inherit = require( 'PHET_CORE/inherit' );
   var Panel = require( 'SUN/Panel' );
   var VerticalAquaRadioButtonGroup = require( 'SUN/VerticalAquaRadioButtonGroup' );
   var Text = require( 'SCENERY/nodes/Text' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
 
-  // Labels for speed radio buttons
+  // strings Labels for speed radio buttons
   var fastForwardString = require( 'string!NEURON/fastForward' );
   var normalString = require( 'string!NEURON/normal' );
   var slowMotionString = require( 'string!NEURON/slowMotion' );
 
 
   /**
-   * @param speedProperty
+   * @param {Property.<number>} speedProperty
    * @constructor
    */
   function SimSpeedControlPanel( speedProperty ) {

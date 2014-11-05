@@ -15,21 +15,22 @@ define( function( require ) {
 
   /**
    *
-   * @param neuronModel
-   * @param zoomableRootNode
-   * @param viewPortPosition
-   * @param zoomProperty
+   * @param {NeuronModel} neuronModel
+   * @param {Node} zoomableRootNode
+   * @param {Property.<number>} zoomProperty
+   * @param {shape} clipArea
+   * @param {Vector2} viewPortPosition
    * @constructor
    */
-  function ZoomableNode( zoomableRootNode, zoomProperty, neuronModel, clipArea, viewPortPosition ) {
+  function ZoomableNode( neuronModel, zoomableRootNode, zoomProperty, clipArea, viewPortPosition ) {
 
     var thisNode = this;
     Node.call( thisNode, { clipArea: clipArea } );
     zoomProperty.link( function( zoomFactor ) {
+
       // Zoom toward the top so that when zoomed in the membrane
       // is in a reasonable place and there is room for the chart below
       // it.
-
       var zoomTowardTopThreshold = 0.6;
       var scaleMatrix;
       var scaleAroundX = Math.round( viewPortPosition.x );

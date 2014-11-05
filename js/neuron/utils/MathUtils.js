@@ -1,12 +1,17 @@
 // Copyright 2002-2011, University of Colorado
-
+/**
+ * A utility class - Has methods to do certain Math operations without creating new Vector2 instances
+ *
+ * @author Sharfudeen Ashraf (for Ghent University)
+ */
 define( function( require ) {
   'use strict';
 
   //imports
   var Vector2 = require( 'DOT/Vector2' );
 
-  //Theses vectors is used as a temporary object for  calculating distance without creating new Vector Instances, see createTraversalPoint method
+  // Theses vectors is used as a temporary object for  calculating distance
+  // without creating new Vector Instances, see createTraversalPoint method
   var distanceCalculatorVectorLHS = new Vector2();
   var distanceCalculatorVectorRHS = new Vector2();
 
@@ -17,11 +22,11 @@ define( function( require ) {
   /**
    * A method to calculate distance by reusing vector instances.
    * This method is created to reduce Vector2 instance allocation during distance calcualtion
-   * @param posX
-   * @param posY
-   * @param otherPosX
-   * @param otherPosY
-   * @returns {*}
+   * @param {number} posX
+   * @param {number} posY
+   * @param {number} otherPosX
+   * @param {number} otherPosY
+   * @returns {number}
    */
   MathUtils.distanceBetween = function( posX, posY, otherPosX, otherPosY ) {
     distanceCalculatorVectorLHS.x = posX;

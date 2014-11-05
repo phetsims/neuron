@@ -21,7 +21,7 @@ define( function( require ) {
   /**
    *
    * @param {ModelViewTransform2} modelViewTransform
-   * @param {Property} scaleProperty
+   * @param {Property.<number>} scaleProperty
    * @constructor
    */
   function ParticleTextureMap( modelViewTransform, scaleProperty ) {

@@ -14,7 +14,7 @@ define( function( require ) {
   /**
    * @param {NeuronModel} neuronModel
    * @param {ModelViewTransform2} modelViewTransform
-   * @param {Bounds2}bounds
+   * @param {Bounds2} bounds
    * @constructor
    */
   function TransientParticlesNode( neuronModel, modelViewTransform, bounds ) {

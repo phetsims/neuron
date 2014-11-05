@@ -19,7 +19,7 @@ define( function( require ) {
    * @param {Array} particles // a slice of background particles array
    * @param {ModelViewTransform2} modelViewTransform
    * @param {Bounds2} bounds
-   * @param {Property} activeCanvasProperty
+   * @param {Property.<boolean>} activeCanvasProperty
    * @constructor
    */
   function BackgroundParticlesNode( particles, modelViewTransform, bounds, activeCanvasProperty ) {

@@ -25,6 +25,11 @@ define( function( require ) {
       0, 0, 0, 1 );
   }
 
+  /**
+  *
+  * @param {Object} args // args passed by Scenery framework when Instantiating this layer
+  * @constructor
+  */
   function TextureInterleavedShaderWebGlLayer( args ) {
     var thisLayer = this;
     WebGLLayer.call( thisLayer, args );

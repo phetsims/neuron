@@ -11,6 +11,7 @@
 define( function( require ) {
   'use strict';
 
+  // modules
   var HBox = require( 'SCENERY/nodes/HBox' );
   var inherit = require( 'PHET_CORE/inherit' );
   var Panel = require( 'SUN/Panel' );
@@ -29,7 +30,6 @@ define( function( require ) {
   var PotassiumIon = require( 'NEURON/neuron/model/PotassiumIon' );
   var SodiumIon = require( 'NEURON/neuron/model/SodiumIon' );
 
-
   // strings
   var legendString = require( 'string!NEURON/legend' );
   var sodiumIonString = require( 'string!NEURON/sodiumIon' );
@@ -39,7 +39,10 @@ define( function( require ) {
   var sodiumLeakChannelString = require( 'string!NEURON/sodiumLeakChannel' );
   var potassiumLeakChannelString = require( 'string!NEURON/potassiumLeakChannel' );
 
-
+  /**
+   *
+   * @constructor
+   */
   function IonsAndChannelsLegendPanel() {
 
     // The model-view transforms below are used to make nodes that usually

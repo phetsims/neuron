@@ -9,7 +9,7 @@
 define( function( require ) {
   'use strict';
 
-  //imports
+  // modules
   var inherit = require( 'PHET_CORE/inherit' );
   var Node = require( 'SCENERY/nodes/Node' );
   var Text = require( 'SCENERY/nodes/Text' );
@@ -34,8 +34,8 @@ define( function( require ) {
   /**
    *
    * @param {NeuronModel} neuronModel
+   * @param {Property.<number>} zoomProperty
    * @param {Node} zoomableRootNode
-   * @param {Property} zoomProperty
    * @param {AxonCrossSectionNode} axonCrossSectionNode
    * @constructor
    */

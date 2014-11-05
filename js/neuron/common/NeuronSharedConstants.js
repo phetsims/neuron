@@ -3,13 +3,16 @@
 define( function( require ) {
   'use strict';
 
+  /**
+   *
+   * @constructor
+   */
   function NeuronSharedConstants() {
 
   }
 
   // Clock
   NeuronSharedConstants.CLOCK_FRAME_RATE = 15; // fps, frames per second (wall time)
-
 
   // Set up the clock ranges for the various modules.  Note that for this
   // sim the clock rates are often several orders of magnitude slower than

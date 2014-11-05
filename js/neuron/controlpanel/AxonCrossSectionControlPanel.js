@@ -9,14 +9,13 @@
 define( function( require ) {
   'use strict';
 
-  //imports
+  // modules
   var inherit = require( 'PHET_CORE/inherit' );
   var Panel = require( 'SUN/Panel' );
   var CheckBox = require( 'SUN/CheckBox' );
   var Text = require( 'SCENERY/nodes/Text' );
   var VBox = require( 'SCENERY/nodes/VBox' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
-
 
   // Labels for control panel check boxes.
   var showLegendString = require( 'string!NEURON/showLegend' );
@@ -27,7 +26,6 @@ define( function( require ) {
 
   var CHECK_BOX_OPTIONS = { boxWidth: 20 };
   var TEXT_OPTIONS = { font: new PhetFont( 14 ) };
-
   var TOUCH_AREA_EXPAND_X = 10;
   var TOUCH_AREA_EXPAND_Y = 3;
 

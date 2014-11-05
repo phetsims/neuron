@@ -14,6 +14,10 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var PropertySet = require( 'AXON/PropertySet' );
 
+  /**
+   *
+   * @constructor
+   */
   function Mode() {
 
   }

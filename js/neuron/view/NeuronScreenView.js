@@ -76,7 +76,7 @@ define( function( require ) {
 
     //Zommable Node zooms in and out the zoomableRootNode contents
     var zoomProperty = new Property( defaultZoom );
-    var zoomableWorldNode = new ZoomableNode( zoomableRootNode, zoomProperty, thisView.neuronModel, worldNodeClipArea, viewPortPosition );
+    var zoomableWorldNode = new ZoomableNode(thisView.neuronModel, zoomableRootNode, zoomProperty,  worldNodeClipArea, viewPortPosition );
     thisView.addChild( zoomableWorldNode );
     var particlesLayerNode = new Node();
     thisView.addChild( particlesLayerNode );

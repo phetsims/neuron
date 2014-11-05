@@ -10,6 +10,11 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var XYDataSeries = require( 'LIGHTBULB/XYDataSeries' );
 
+  /**
+   *
+   * @param {Object} options // ex {color:'black'}
+   * @constructor
+   */
   function MembranePotentialXYDataSeries( options ) {
 
     XYDataSeries.call( this, options );
