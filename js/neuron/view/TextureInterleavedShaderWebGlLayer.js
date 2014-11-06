@@ -27,10 +27,10 @@ define( function( require ) {
   }
 
   /**
-  *
-  * @param {Object} args // args passed by Scenery framework when Instantiating this layer
-  * @constructor
-  */
+   *
+   * @param {Object} args // args passed by Scenery framework when Instantiating this layer
+   * @constructor
+   */
   function TextureInterleavedShaderWebGlLayer( args ) {
     var thisLayer = this;
     WebGLLayer.call( thisLayer, args );
@@ -68,11 +68,9 @@ define( function( require ) {
           'uniform mat4 uMatrix;\n' +
 
           // The texture coordinates (if any)
-          //TODO: Is this needed here in the vertex shader?
           'varying vec2 texCoord;\n' +
 
           // The color to render (if any)
-          //TODO: Is this needed here in the vertex shader?
           'uniform vec4 uColor;\n' +
           'void main() {\n' +
           '  texCoord = aTexCoord;\n' +

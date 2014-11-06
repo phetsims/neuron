@@ -136,7 +136,7 @@ define( function( require ) {
       gl.vertexAttribPointer( shaderProgram.attributeLocations.aVertex, 2, gl.FLOAT, false, fSize * stride, 0 );
       this.setMaterial( gl, shaderProgram, fSize, stride, uvOffset );
 
-      //for debugging TODO will be removed once dev is completed
+      // To see how tiles are formed uncomment setting the color - useful for debugging
       //this.setColor(gl,shaderProgram,fSize,stride);
       gl.drawArrays( gl.TRIANGLES, 0, this.visibleParticlesSize * 6 );
       gl.bindTexture( gl.TEXTURE_2D, null );
@@ -263,7 +263,8 @@ define( function( require ) {
       gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE );
       gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE );
 
-      /* //useful debugging to know the size of the shape in case if the shape is not correctly matched with the Tetxture..TODO will be removed
+      /*
+       // useful debugging to know the size of the shape in case if the shape is not correctly matched with the Tetxture..
        gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.MIRRORED_REPEAT );
        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.MIRRORED_REPEAT );
        gl.pixelStorei( gl.UNPACK_FLIP_Y_WEBGL, true );

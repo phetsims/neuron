@@ -322,19 +322,6 @@ define( function( require ) {
       this.notifyIfMembraneStateChanged( prevOpenness, prevInactivationAmt );
     },
 
-    //TODO not used at the moment, experimental
-    /**
-     * check to see if membrane has undergone any state change,
-     * if yes trigger a change in representation
-     */
-    notifyIfRepresentationIsChanged: function() {
-      this.representationChanged = false;
-
-      if ( this.channelStateChanged ) {
-        this.representationChanged = true;
-      }
-    },
-
     getChannelType: function() {
       throw new Error( 'getChannelType should be implemented in descendant classes.' );
     }

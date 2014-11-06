@@ -28,14 +28,14 @@ define( function( require ) {
     var backgroundParticleLayer = new Node();
     thisNode.addChild( backgroundParticleLayer );
 
-    var transientParticleBounds = new Bounds2( 200, 20, 500, 300 ); // Can be smaller than the background particle bounds //TODO Ashraf verify with John
+    var transientParticleBounds = new Bounds2( 200, 20, 500, 300 ); // Can be smaller than the background particle bounds
     var transientParticlesNode = new TransientParticlesNode( neuronModel, mvt, transientParticleBounds );
     thisNode.addChild( transientParticlesNode );
 
     //create multiple background particle node each rendering a subset at a time see class BackgroundParticles
     function createBackgroundParticleCanvas() {
 
-      //TODO Ashraf need to precisely define particles bounds,smaller the better
+      // particles bounds,smaller the better
       var backgroundParticleBounds = new Bounds2( 160, 10, 540, 300 );
       var activeCanvasIndexProperty = [];
 
