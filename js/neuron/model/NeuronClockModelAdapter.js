@@ -64,7 +64,9 @@ define( function( require ) {
   return inherit( PropertySet, NeuronClockModelAdapter, {
     step: function( dt ) {
       // step one frame, assuming 60fps
-      this.eventTimer.step( this.speed / 60 );
+      if ( !this.isPaused() ) {
+        this.eventTimer.step( this.speed / 60 );
+      }
     },
 
     constantStep: function( timeElapsed ) {

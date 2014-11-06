@@ -5,8 +5,8 @@
  * Particles are rendered by mapping their rectangular corners with a dynamically created SpriteSheet tiles.
  *
  * The Tile shapes (Circle or Rhombus) are arranged by Opacity value ranging from 0.00 to 0.99 (A total of 100 tiles for each particle, 10 rows and 10 columns)
- * The Tiles doesn't get created on every  webgl render call  but only when the user zooms in and out.Having a fixed Sprite sheet results in  pixelation thats
- * why we have to scale and draw  the Sprite Sheet dynamically whenever  changes the Zoom property.
+ * The Tiles doesn't get created on every  webgl render call  but only when the user zooms in and out.
+ * Having a fixed Sprite sheet results in  pixelation thats  why we have to scale and draw  the Sprite Sheet dynamically whenever  changes the Zoom property.
  *
  * The code makes use of a different vertex shader, the Default WebglLayer's Vertex shader assumes the TextureCoordinates to be Vertex
  * Coordinates itself.(thats why  Vertex coordinates  are given in normalized coordinates ).
@@ -14,7 +14,7 @@
  * So each Vertex is interleaved with the appropriate Texture coordinates and sent to Webgl subsystem. The shaderProgram.attributeLocations.aTexCoord in the
  * SetMaterial method informs the shader how to retrieve the Texture coordinates for each vertex.
  *
- * The Particles position is also transformed using the Zoomable Node's transform matrix to take care of the position when scaled.
+ * The Particles position is also transformed using the Zoomable Node's transform matrix to take care of the particle's position when scaled.
  *
  * * @author Sharfudeen Ashraf (for Ghent University)
  */

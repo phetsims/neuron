@@ -368,9 +368,13 @@ define( function( require ) {
       this.updateChartCursorPos();
       this.updateChartCursorVisibility();
     },
-
+    /**
+     * Used to control the paused state of Neuron clock
+     * Example : Clock is paused on/off when user drags the MembranePotential chart cursor
+     * @param paused
+     */
     setPaused:function(paused){
-      this.neuronModel.pauseClock(paused);
+      this.clock.setPaused( paused );
     }
 
   } );

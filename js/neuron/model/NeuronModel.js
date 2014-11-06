@@ -120,14 +120,11 @@ define( function( require ) {
 
   /**
    * Main constructor for NeuronModel, which contains all of the model logic for the entire sim screen.
-   * @param {NeuronClockModelAdapter} neuronClock
    * @constructor
    */
-  function NeuronModel( neuronClock ) {
+  function NeuronModel() {
     var thisModel = this;
     var maxRecordPoints = Math.ceil( NeuronSharedConstants.TIME_SPAN * 1000 / NeuronSharedConstants.MIN_ACTION_POTENTIAL_CLOCK_DT );
-    //constantDtClock
-    thisModel.clock = neuronClock;
     thisModel.axonMembrane = new AxonMembrane();
 
     // List of the particles that come and go when the simulation is working in real time.
@@ -1097,16 +1094,7 @@ define( function( require ) {
       //If any one channel's state is changed, trigger a channel representation changed event
       this.channelRepresentationChanged = false;
       this.channelRepresentationChanged = _.any( this.membraneChannels.getArray(), 'channelStateChanged' );
-    },
-    /**
-     * Used to control the paused state of Neuron clock
-     * Example : Clock is paused on/off when user drags the MembranePotential chart cursor
-     * @param paused
-     */
-    pauseClock: function( paused ) {
-      this.clock.setPaused( paused );
     }
-
   } );
 } );
 

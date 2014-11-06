@@ -50,10 +50,8 @@ define( function( require ) {
 
   /**
    * Constructor for the NeuronView
-   * @param {NeuronClockModelAdapter} neuronClockModelAdapter which contains the neuron
-   * NeuronModel uses specialized real time constant clock simulation
+   * @param {NeuronClockModelAdapter} neuronClockModelAdapter - holds the NeuronModel which uses specialized real time constant clock
    * The clock adapter calculates the appropriate real time dt and dispatches it to the actual model
-   * model for the entire screen
    * @constructor
    */
   function NeuronView( neuronClockModelAdapter ) {
@@ -67,7 +65,6 @@ define( function( require ) {
       Vector2.ZERO, viewPortPosition,
       2.45 ); // 3.9 Scale factor - smaller numbers "zoom out", bigger ones "zoom in".
 
-
     var worldNodeClipArea = Shape.rect( 70, 0, this.layoutBounds.maxX - 280, this.layoutBounds.maxY - 110 );
     var zoomableRootNode = new Node();
     var minZoom = 0.7;
@@ -76,7 +73,7 @@ define( function( require ) {
 
     //Zommable Node zooms in and out the zoomableRootNode contents
     var zoomProperty = new Property( defaultZoom );
-    var zoomableWorldNode = new ZoomableNode(thisView.neuronModel, zoomableRootNode, zoomProperty,  worldNodeClipArea, viewPortPosition );
+    var zoomableWorldNode = new ZoomableNode( thisView.neuronModel, zoomableRootNode, zoomProperty, worldNodeClipArea, viewPortPosition );
     thisView.addChild( zoomableWorldNode );
     var particlesLayerNode = new Node();
     thisView.addChild( particlesLayerNode );
