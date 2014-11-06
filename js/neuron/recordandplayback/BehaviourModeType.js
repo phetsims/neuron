@@ -11,7 +11,7 @@ define( function() {
   'use strict';
 
   return Object.freeze( {
-    pauseAtEndOfPlayback: 'pauseAtEndOfPlayback',
-    recordAtEndOfPlayback: 'recordAtEndOfPlayback'
+    pauseAtEndOfPlayback: true,
+    recordAtEndOfPlayback: false
   } );
 } );
