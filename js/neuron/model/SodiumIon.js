@@ -5,7 +5,8 @@
  */
 define( function( require ) {
   'use strict';
-  //imports
+
+  // modules
   var inherit = require( 'PHET_CORE/inherit' );
   var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
   var Particle = require( 'NEURON/neuron/model/Particle' );

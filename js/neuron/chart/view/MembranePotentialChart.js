@@ -21,7 +21,7 @@
 define( function( require ) {
   'use strict';
 
-  //imports
+  // modules
   var inherit = require( 'PHET_CORE/inherit' );
   var Node = require( 'SCENERY/nodes/Node' );
   var Bounds2 = require( 'DOT/Bounds2' );
@@ -42,16 +42,17 @@ define( function( require ) {
   var dot = require( 'DOT/dot' );
   var MembranePotentialXYDataSeries = require( 'NEURON/neuron/chart/model/MembranePotentialXYDataSeries' );
   var ChartCursor = require( 'NEURON/neuron/chart/view/ChartCursor' );
+  var Util = require( 'DOT/Util' );
+
+  // strings
   var chartTitleString = require( 'string!NEURON/chartTitle' );
   var chartClearString = require( 'string!NEURON/chartClear' );
   var chartXAxisLabelString = require( 'string!NEURON/chartXAxisLabel' );
   var chartYAxisLabelString = require( 'string!NEURON/chartYAxisLabel' );
-  var Util = require( 'DOT/Util' );
+
 
   var GRID_TICK_TEXT_FONT = new PhetFont( 8 );
-
   var TIME_SPAN = 25; // In seconds.
-
 
   // This value sets the frequency of chart updates, which helps to reduce
   // the processor consumption.
@@ -373,7 +374,7 @@ define( function( require ) {
      * Example : Clock is paused on/off when user drags the MembranePotential chart cursor
      * @param paused
      */
-    setPaused:function(paused){
+    setPaused: function( paused ) {
       this.clock.setPaused( paused );
     }
 

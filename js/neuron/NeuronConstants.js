@@ -1,6 +1,6 @@
 // Copyright 2002-2011, University of Colorado
 /**
- * TemplateConstants is a collection of constants that configure global properties.
+ * NeuronConstants is a collection of constants that configure global properties.
  * If you change something here, it will change *everywhere* in this simulation.
  *
  * @author Chris Malley (cmalley@pixelzoom.com)
@@ -8,7 +8,8 @@
  */
 define( function( require ) {
   'use strict';
-  //imports
+
+  // modules
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
   var Color = require( 'SCENERY/util/Color' );
 

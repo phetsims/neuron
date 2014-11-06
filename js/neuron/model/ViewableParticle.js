@@ -3,13 +3,13 @@
 /**
  * Interface for a particle that can be viewed, i.e. displayed to the user.
  * @author John Blanco
- * @Sharfudeen Ashraf (for Ghent University)
+ * @author Sharfudeen Ashraf (for Ghent University)
  */
 
 define( function( require ) {
   'use strict';
 
-  //imports
+  // modules
   var inherit = require( 'PHET_CORE/inherit' );
 
   /**

@@ -1,5 +1,6 @@
 //  Copyright 2002-2014, University of Colorado Boulder
-
+// This node is a container for AxonBody,cross section,
+// channels all of which needs to be zoomed in and out together
 /**
  *
  * @author John Blanco
@@ -8,6 +9,7 @@
 define( function( require ) {
   'use strict';
 
+  // modules
   var inherit = require( 'PHET_CORE/inherit' );
   var Node = require( 'SCENERY/nodes/Node' );
   var Transform3 = require( 'DOT/Transform3' );

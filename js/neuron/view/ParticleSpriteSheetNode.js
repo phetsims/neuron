@@ -1,16 +1,14 @@
 // Copyright 2002-2011, University of Colorado
 /**
-
- *
-
- * The Node instances is not attached to any scenegraph in production.
+ * The Node instances is meant for debugging purpose only
  * (During development we can attach it to a scenegraph node to see how particle tiles are laid out)
  *
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 define( function( require ) {
   'use strict';
-  //imports
+
+  // modules
   var inherit = require( 'PHET_CORE/inherit' );
   var CanvasNode = require( 'SCENERY/nodes/CanvasNode' );
   var Bounds2 = require( 'DOT/Bounds2' );

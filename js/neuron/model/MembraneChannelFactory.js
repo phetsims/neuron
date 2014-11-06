@@ -8,7 +8,8 @@
 
 define( function( require ) {
   'use strict';
-  //imports
+
+  // modules
   var MembraneChannelTypes = require( 'NEURON/neuron/model/MembraneChannelTypes' );
   var PotassiumGatedChannel = require( 'NEURON/neuron/model/PotassiumGatedChannel' );
   var SodiumLeakageChannel = require( 'NEURON/neuron/model/SodiumLeakageChannel' );

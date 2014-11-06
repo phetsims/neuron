@@ -9,7 +9,7 @@
 define( function( require ) {
   'use strict';
 
-  // imports
+  // modules
   var inherit = require( 'PHET_CORE/inherit' );
   var MembraneChannel = require( 'NEURON/neuron/model/MembraneChannel' );
 

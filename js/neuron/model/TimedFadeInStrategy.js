@@ -7,7 +7,7 @@
 define( function( require ) {
   'use strict';
 
-  //imports
+  // modules
   var inherit = require( 'PHET_CORE/inherit' );
   var FadeStrategy = require( 'NEURON/neuron/model/FadeStrategy' );
   var NullFadeStrategy = require( 'NEURON/neuron/model/NullFadeStrategy' );

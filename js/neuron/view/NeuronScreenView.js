@@ -43,7 +43,7 @@ define( function( require ) {
   var PlayPauseButton = require( 'SCENERY_PHET/buttons/PlayPauseButton' );
   var StepButton = require( 'SCENERY_PHET/buttons/StepButton' );
 
-  //Strings
+  // strings
   var stimulateNeuronString = require( 'string!NEURON/stimulateNeuron' );
 
   var BUTTON_FONT = new PhetFont( 18 );

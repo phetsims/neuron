@@ -13,7 +13,7 @@
 define( function( require ) {
   'use strict';
 
-  //import
+  // modules
   var inherit = require( 'PHET_CORE/inherit' );
   var ViewableParticle = require( 'NEURON/neuron/model/ViewableParticle' );
   var PotassiumIon = require( 'NEURON/neuron/model/PotassiumIon' );

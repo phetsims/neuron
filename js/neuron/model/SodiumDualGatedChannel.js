@@ -11,7 +11,7 @@
 define( function( require ) {
   'use strict';
 
-  // imports
+  // modules
   var inherit = require( 'PHET_CORE/inherit' );
   var GatedChannel = require( 'NEURON/neuron/model/GatedChannel' );
   var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );

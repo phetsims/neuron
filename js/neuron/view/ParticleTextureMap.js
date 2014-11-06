@@ -8,7 +8,8 @@
  */
 define( function( require ) {
   'use strict';
-  //imports
+
+  // modules
   var inherit = require( 'PHET_CORE/inherit' );
   var PotassiumIon = require( 'NEURON/neuron/model/PotassiumIon' );
   var SodiumIon = require( 'NEURON/neuron/model/SodiumIon' );

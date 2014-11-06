@@ -14,7 +14,7 @@
 define( function( require ) {
   'use strict';
 
-  // imports
+  // modules
   var inherit = require( 'PHET_CORE/inherit' );
   var DelayBuffer = require( 'NEURON/neuron/model/DelayBuffer' );
   var NeuronSharedConstants = require( 'NEURON/neuron/common/NeuronSharedConstants' );

@@ -12,7 +12,8 @@
 
 define( function( require ) {
   'use strict';
-  //imports
+
+  // modules
   var inherit = require( 'PHET_CORE/inherit' );
   var MotionStrategy = require( 'NEURON/neuron/model/MotionStrategy' );
 

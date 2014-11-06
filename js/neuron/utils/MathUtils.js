@@ -7,7 +7,7 @@
 define( function( require ) {
   'use strict';
 
-  //imports
+  // modules
   var Vector2 = require( 'DOT/Vector2' );
 
   // Theses vectors is used as a temporary object for  calculating distance

@@ -9,7 +9,7 @@
 define( function( require ) {
   'use strict';
 
-  //imports
+
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
   var ParticlesNode = require( 'NEURON/neuron/view/ParticlesNode' );

@@ -17,7 +17,8 @@ define( function( require ) {
   var VBox = require( 'SCENERY/nodes/VBox' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
 
-  // Labels for control panel check boxes.
+
+  // strings Labels for control panel check boxes.
   var showLegendString = require( 'string!NEURON/showLegend' );
   var allIonsString = require( 'string!NEURON/allIons' );
   var potentialChartString = require( 'string!NEURON/potentialChart' );

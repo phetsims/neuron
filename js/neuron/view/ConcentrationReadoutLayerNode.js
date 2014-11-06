@@ -21,7 +21,7 @@ define( function( require ) {
   var Util = require( 'DOT/Util' );
   var Bounds2 = require( 'DOT/Bounds2' );
 
-  //strings
+  // strings
   var concentrationReadoutPattern0label1value2unitsString = require( 'string!NEURON/concentrationReadoutPattern.0label.1value.2units' );
   var potassiumChemicalSymbolString = require( 'string!NEURON/potassiumChemicalSymbol' );
   var sodiumChemicalSymbolString = require( 'string!NEURON/sodiumChemicalSymbol' );

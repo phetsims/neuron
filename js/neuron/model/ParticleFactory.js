@@ -7,7 +7,8 @@
 
 define( function( require ) {
   'use strict';
-  //imports
+
+  // modules
   var PotassiumIon = require( 'NEURON/neuron/model/PotassiumIon' );
   var SodiumIon = require( 'NEURON/neuron/model/SodiumIon' );
   var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
