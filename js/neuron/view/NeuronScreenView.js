@@ -122,13 +122,16 @@ define( function( require ) {
 
     this.addChild( recordPlayButtonBox );
 
+    //space between layout edge and controls like reset,zoom control,legend,speed panel etc
+    var leftPadding = 20;
+
 
     var stimulateNeuronButton = new RectangularPushButton( {
       content: new MultiLineText( stimulateNeuronString, { font: BUTTON_FONT } ),
       listener: function() { thisView.neuronModel.initiateStimulusPulse(); },
       baseColor: '#c28a43',
       right: recordPlayButtonBox.right + 200,
-      top: recordPlayButtonBox.top - 15,
+      top: recordPlayButtonBox.top - 10,
       minWidth: 50,
       minHeight: 65
     } );
@@ -142,7 +145,7 @@ define( function( require ) {
         neuronClockModelAdapter.reset();
       },
       right: recordPlayButtonBox.right + 300,
-      top: recordPlayButtonBox.top - 20
+      top: recordPlayButtonBox.top - 10
     } );
     this.addChild( resetAllButton );
 
@@ -155,7 +158,7 @@ define( function( require ) {
     neuronClockModelAdapter.registerStepCallback( thisView.neuronModel.step.bind( thisView.neuronModel ) );
 
 
-    var panelLeftPos = this.layoutBounds.maxX - 30;
+    var panelLeftPos = this.layoutBounds.maxX - leftPadding;
 
     var iosAndChannelsLegendPanel = new IonsAndChannelsLegendPanel();
     this.addChild( iosAndChannelsLegendPanel );
@@ -200,14 +203,14 @@ define( function( require ) {
 
 
     var simSpeedControlPanel = new SimSpeedControlPanel( neuronClockModelAdapter.speedProperty );
-    simSpeedControlPanel.left = thisView.layoutBounds.minX + 100;
+    simSpeedControlPanel.left = thisView.layoutBounds.minX + leftPadding;
     simSpeedControlPanel.bottom = thisView.layoutBounds.maxY - 10;
     thisView.addChild( simSpeedControlPanel );
 
     var zoomControl = new ZoomControl( thisView.neuronModel, zoomProperty, minZoom, maxZoom );
     this.addChild( zoomControl );
     zoomControl.top = this.layoutBounds.minY + 70;
-    zoomControl.left = this.layoutBounds.minX + 25;
+    zoomControl.left = this.layoutBounds.minX + leftPadding;
 
 
   }

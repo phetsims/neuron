@@ -145,7 +145,6 @@ define( function( require ) {
         thisChart.neuronModel.startRecording();
       }
 
-
     } );
 
     var chartTitleNode = new Text( chartTitleString, {font: new PhetFont( {size: 16, weight: 'bold'} )} );
