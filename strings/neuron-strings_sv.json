@@ -1,0 +1,21 @@
+{
+  "StimulateButton.caption": "<html><center>Stimulera<br>neuron</center></html>",
+  "ShowCharges": "Visa laddningar",
+  "Legend.potassiumGatedChannel": "Kaliumstyrd kanal",
+  "Legend.title": "Teckenförklaring",
+  "Chart.title": "Membranpotential vs. tid",
+  "Legend.sodiumGatedChannel": "Natriumstyrd kanal",
+  "ModuleTitle.AxonCrossSection": "Aktionspotential",
+  "Chart.xAxisLabel": "Tid (s)",
+  "ShowConcentrations": "Visa koncentrationer",
+  "Legend.sodiumIon": "Natriumjon (Na+)",
+  "ShowAllIons": "Visa alla joner",
+  "ShowPotentialChart": "Potentialdiagram",
+  "Control.title": "Kontroll",
+  "Chart.yAxisLabel": "Membranpotential (mV)",
+  "translation.credits": "AndersGölstam",
+  "Chart.clear": "Rensa diagram",
+  "Legend.sodiumLeakChannel": "Natriumpassiv kanal",
+  "Legend.potassiumLeakChannel": "Kaliumpassiv kanal",
+  "Legend.potassiumIon": "Kaliumjon (K+)"
+}

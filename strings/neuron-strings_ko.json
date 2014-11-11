@@ -1,0 +1,22 @@
+{
+  "StimulateButton.caption": "<html><center>뉴런 자극</center></html>",
+  "ShowCharges": "하전 보기",
+  "Legend.potassiumGatedChannel": "칼륨 제어 채널",
+  "Legend.title": "범례",
+  "Chart.title": "막 전위 vs 시간",
+  "neuron.name": "뉴런",
+  "Legend.sodiumGatedChannel": "나트륨 제어 채널",
+  "ModuleTitle.AxonCrossSection": "활동 전위",
+  "Chart.xAxisLabel": "시간 (ms)",
+  "ShowConcentrations": "농도 보기",
+  "Legend.sodiumIon": "나트륨 이온 (Na+)",
+  "ShowAllIons": "모든 이온 보기",
+  "ShowPotentialChart": "전위 차트 보기",
+  "Control.title": "제어",
+  "Chart.yAxisLabel": "막 전위 (mV)",
+  "translation.credits": "이화국 전북대 명예교수(www.whakuk.com)",
+  "Chart.clear": "차트 지우기",
+  "Legend.sodiumLeakChannel": "나트륨 누출 채널",
+  "Legend.potassiumLeakChannel": "칼륨 누출 채널",
+  "Legend.potassiumIon": "칼륨 이온 (K+)"
+}

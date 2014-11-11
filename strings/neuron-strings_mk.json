@@ -1,0 +1,23 @@
+{
+  "StimulateButton.caption": "<html><center>КЛИКНИ <br>СТИМУЛИРАЈ<br> НЕВРОН</center></html>",
+  "ShowCharges": "Покажи ги наелектризирањата",
+  "Legend.potassiumGatedChannel": "Канал (врата) за КАЛИУМ",
+  "Legend.title": "легенда",
+  "Chart.title": "Потенцијал на мембрана vs. Време",
+  "neuron.name": "НЕВРОН",
+  "Legend.sodiumGatedChannel": "Канал (врата) за НАТРИУМ",
+  "ModuleTitle.AxonCrossSection": "Акционен потенцијал",
+  "Chart.xAxisLabel": "Време (ms)",
+  "ShowConcentrations": "Покажи ги концентрациите",
+  "Legend.sodiumIon": "Натриумов јон  (Na+)",
+  "ShowAllIons": "Покажи ги сите јони",
+  "ShowPotentialChart": "График на Потенцијалот",
+  "int.minControlPanelWidth": "220",
+  "Control.title": "Контроли",
+  "Chart.yAxisLabel": "Потенцијал на мембрана (mV)",
+  "translation.credits": "Зоран Христовски",
+  "Chart.clear": "Избриши график",
+  "Legend.sodiumLeakChannel": "Процеп за Натриум",
+  "Legend.potassiumLeakChannel": "Процеп за Калиум",
+  "Legend.potassiumIon": "Калиумов јон (K+)"
+}

@@ -1,0 +1,22 @@
+{
+  "StimulateButton.caption": "<html><center>Ingereld a<br>neuront!</center></html>",
+  "ShowCharges": "Töltéseket mutat",
+  "Legend.potassiumGatedChannel": "Kapuzott káliumcsatorna",
+  "Legend.title": "Jelölések",
+  "Chart.title": "A membránpotenciál időbeli változása",
+  "neuron.name": "Neuron működése",
+  "Legend.sodiumGatedChannel": "Kapuzott nátriumcsatorna",
+  "ModuleTitle.AxonCrossSection": "Akciópotenciál",
+  "Chart.xAxisLabel": "Idő (ms)",
+  "ShowConcentrations": "Koncentrációkat mutat",
+  "Legend.sodiumIon": "<html>Nátriumion (Na<sup>+</sup>)</html>",
+  "ShowAllIons": "Minden iont mutat",
+  "ShowPotentialChart": "Potenciálgrafikon",
+  "Control.title": "Szabályozás",
+  "Chart.yAxisLabel": "Membránpotenciál (mV)",
+  "translation.credits": "<html><a href=\"http://nasa.web.elte.hu/defhu.htm\">Nagy Sándor</a><br>ELTE, <a href=\"http://www.chem.elte.hu/pr/\">Kémiai Intézet</a>, Budapest</html>",
+  "Chart.clear": "Grafikont töröl",
+  "Legend.sodiumLeakChannel": "Szivárgó nátriumcsatorna",
+  "Legend.potassiumLeakChannel": "Szivárgó káliumcsatorna",
+  "Legend.potassiumIon": "<html>Káliumion (K<sup>+</sup>)</html>"
+}
