@@ -1,9 +1,7 @@
 //  Copyright 2002-2014, University of Colorado Boulder
 
 /**
- * Main entry point for the sim.
- *
- * @author Sam Reid (PhET Interactive Simulations)
+ * Main entry point for the neuron sim.
  */
 define( function( require ) {
   'use strict';
@@ -13,7 +11,6 @@ define( function( require ) {
   var Sim = require( 'JOIST/Sim' );
   var SimLauncher = require( 'JOIST/SimLauncher' );
 
-
   // strings
   var simTitle = require( 'string!NEURON/neuron.name' );
 
@@ -21,7 +18,7 @@ define( function( require ) {
     credits: {
       //TODO fill in credits
       leadDesign: '',
-      softwareDevelopment: 'Sam Reid',
+      softwareDevelopment: '',
       team: '',
       thanks: ''
     }

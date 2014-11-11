@@ -2,8 +2,6 @@
 
 /**
  * RequireJS configuration file for the sim.
- *
- * @author Sam Reid (PhET Interactive Simulations)
  */
 require.config(
   {
@@ -38,10 +36,8 @@ require.config(
       SUN: '../../sun/js',
       LIGHTBULB: '../../lightbulb/js',
 
-
       // this sim
       NEURON: '.'
-
     },
 
     urlArgs: new Date().getTime()  // cache buster to make browser reload all included scripts
