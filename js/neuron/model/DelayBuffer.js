@@ -4,8 +4,7 @@
  * and then extracted based on the amount of time in the past that a value
  * is needed.
  *
- * NOTE: If this turns out to be useful for other applications, it should be
- * made to handle generics.
+ * NOTE: If this turns out to be useful for other applications, it should be generalized.
  *
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
@@ -16,7 +15,6 @@ define( function( require ) {
 
   // modules
   var DelayElement = require( 'NEURON/neuron/model/DelayElement' );
-
 
   // This value is used to tell if two numbers are different.  It was needed
   // due to some floating point resolution problems that were occurring.
@@ -42,9 +40,7 @@ define( function( require ) {
       thisBuffer.delayElements[idx] = new DelayElement();
     } );
 
-    // Head and tail pointers for FIFO-type behavior.  FIFO management is
-    // done explicitly rather than using the Queue class in order to do some
-    // optimizations for performance.
+    // Head and tail pointers for FIFO-type behavior.
     thisBuffer.head = 0;
     thisBuffer.tail = 0;
     // Set the initial conditions.
@@ -111,7 +107,7 @@ define( function( require ) {
         // at least 1, since this buffer doesn't hold a non-delayed value.
         var offset = Math.max( Math.round( delayAmount / this.previousDeltaTime ), 1 );
         if ( (this.filling && offset > this.head) || offset > this.numEntries ) {
-          // The user is asking for data that we don't have yet, so
+          // The caller is asking for data that we don't have yet, so
           // give them the oldest data available.
           delayedValue = this.delayElements[this.tail].getValue();
         }
@@ -126,7 +122,7 @@ define( function( require ) {
       }
       else {
         // There is variation in the delta time values in the buffer, so
-        // we need to go through them, add the delays, and find the
+        // we need to go through them, add up the delays, and find the
         // closest data.
         var delayReached = false;
         index = this.head > 0 ? this.head - 1 : this.numEntries - 1;
@@ -156,6 +152,7 @@ define( function( require ) {
 
       return delayedValue;
     },
+
     clear: function() {
       this.head = 0;
       this.tail = 0;
@@ -165,6 +162,4 @@ define( function( require ) {
   };
 
   return DelayBuffer;
-
-
 } );

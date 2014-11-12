@@ -19,9 +19,11 @@ define( function( require ) {
   }
 
   return inherit( Object, CaptureZone, {
+
     isPointInZone: function( x, y ) {
       throw new Error( 'isPointInZone should be implemented in descendant classes.' );
     },
+
     // assign a random point that is somewhere within the shape.
     assignNewParticleLocation: function( particle ) {
       particle.setPosition( 0, 0 );
@@ -30,9 +32,11 @@ define( function( require ) {
     getOriginPoint: function() {
       throw new Error( 'getOriginPoint should be implemented in descendant classes.' );
     },
+
     setRotationalAngle: function( angle ) {
       throw new Error( 'setRotationalAngle should be implemented in descendant classes.' );
     },
+
     setOriginPoint: function( centerPoint ) {
       throw new Error( 'setOriginPoint should be implemented in descendant classes.' );
     }
