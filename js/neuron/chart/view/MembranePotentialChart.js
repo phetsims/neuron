@@ -179,43 +179,28 @@ define( function( require ) {
       spacing: 20
     } );
 
-    // Scale and fit the Title Node within Chart's bounds
-    var maxTitleWidth = 0.4 * chartDimension.width;
+    // Scale to fit the Title Node within Chart's bounds
+    var maxTitleWidth = 250;
     var titleNodeScaleFactor = Math.min( 1, maxTitleWidth / chartTitleNode.width );
     chartTitleNode.scale( titleNodeScaleFactor );
 
-    var panelTopContentBox = new LayoutBox( {orientation: 'horizontal',
-      children: [chartTitleNode, buttonGroupBox],
-      spacing: 150
+    var panelTopContentBox = new HBox( {children: [chartTitleNode, buttonGroupBox],
+      spacing: 120 * titleNodeScaleFactor
     } );
 
-    var axisLabelFontSize = 12;
-    var chartXAxisLabelNode = new Text( chartXAxisLabelString, {font: new PhetFont( {size: axisLabelFontSize} )} );
-    var chartYAxisLabelNode = new Text( chartYAxisLabelString, {font: new PhetFont( {size: axisLabelFontSize} )} );
+
+    var axisLabelFont = {font: new PhetFont( {size: 12} )};
+    var chartXAxisLabelNode = new Text( chartXAxisLabelString, axisLabelFont );
+    var chartYAxisLabelNode = new Text( chartYAxisLabelString, axisLabelFont );
     chartYAxisLabelNode.rotation = -Math.PI / 2;
 
-    // Scale and fit the Y axis within Chart's bounds
+    // Scale to fit the Y axis within Chart's bounds
     var yAxisMaxHeight = chartDimension.height;
     var yAxisLabelScaleFactor = Math.min( 1, yAxisMaxHeight / (0.8 * chartYAxisLabelNode.height) );
     chartYAxisLabelNode.scale( yAxisLabelScaleFactor );
 
-
-    // vertical panel
-    Panel.call( this, new VBox( {
-          children: [panelTopContentBox, new HBox( {
-            children: [chartYAxisLabelNode, plotNode],
-            spacing: 5
-          } ), chartXAxisLabelNode], align: 'center', spacing: 3 }
-      ), {fill: 'white', xMargin: 10, yMargin: 6, lineWidth: 1, cornerRadius: 2 }
-    );
-
-
     // domain(0,25) map -> range(-100,100)
     thisChart.chartMvt = ModelViewTransform2.createRectangleInvertedYMapping( new Bounds2( this.domain[0], this.range[0], this.domain[1], this.range[1] ), new Bounds2( 0, 0, chartDimension.width, chartDimension.height ), 1, 1 );
-
-    thisChart.neuronModel.potentialChartVisibleProperty.link( function( chartVisibile ) {
-      thisChart.visible = chartVisibile;
-    } );
 
 
     thisChart.dataSeries.addDataSeriesListener( function( x, y, xPrevious, yPrevious ) {
@@ -245,6 +230,27 @@ define( function( require ) {
       if ( mode ) {
         thisChart.updateChartCursor.bind( thisChart );
       }
+    } );
+
+    var xMargin = 12;
+    var xSpace = 4;
+    // align exactly with clipped area's edges
+    var contentWidth = chartYAxisLabelNode.width + plotNode.width + (2 * xMargin) + xSpace;
+    var maxPanelWidth = 554;
+    var adjustMargin = (maxPanelWidth - contentWidth) / 2;
+
+    // vertical panel
+    Panel.call( this, new VBox( {
+          children: [panelTopContentBox, new HBox( {
+            children: [chartYAxisLabelNode, plotNode],
+            spacing: xSpace
+          } ), chartXAxisLabelNode], align: 'center', spacing: 4 }
+      ), {fill: 'white', xMargin: xMargin + adjustMargin, yMargin: 6, lineWidth: 1, cornerRadius: 2 }
+    );
+
+
+    thisChart.neuronModel.potentialChartVisibleProperty.link( function( chartVisibile ) {
+      thisChart.visible = chartVisibile;
     } );
 
 

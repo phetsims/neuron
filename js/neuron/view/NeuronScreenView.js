@@ -192,9 +192,8 @@ define( function( require ) {
     } );
 
 
-
     var chartHeight = 100;
-    var membranePotentialChartNode = new MembranePotentialChart( new Dimension2( worldNodeClipArea.bounds.width - 62, chartHeight ), neuronClockModelAdapter );
+    var membranePotentialChartNode = new MembranePotentialChart( new Dimension2( worldNodeClipArea.bounds.width - 60, chartHeight ), neuronClockModelAdapter );
     membranePotentialChartNode.left = worldNodeClipArea.bounds.left;
     membranePotentialChartNode.bottom = thisView.layoutBounds.maxY - 105;
     thisView.addChild( membranePotentialChartNode );
