@@ -179,15 +179,25 @@ define( function( require ) {
       spacing: 20
     } );
 
+    // Scale and fit the Title Node within Chart's bounds
+    var maxTitleWidth = 0.4 * chartDimension.width;
+    var titleNodeScaleFactor = Math.min( 1, maxTitleWidth / chartTitleNode.width );
+    chartTitleNode.scale( titleNodeScaleFactor );
+
     var panelTopContentBox = new LayoutBox( {orientation: 'horizontal',
       children: [chartTitleNode, buttonGroupBox],
       spacing: 150
     } );
 
-
-    var chartXAxisLabelNode = new Text( chartXAxisLabelString, {font: new PhetFont( {size: 10} )} );
-    var chartYAxisLabelNode = new Text( chartYAxisLabelString, {font: new PhetFont( {size: 10} )} );
+    var axisLabelFontSize = 12;
+    var chartXAxisLabelNode = new Text( chartXAxisLabelString, {font: new PhetFont( {size: axisLabelFontSize} )} );
+    var chartYAxisLabelNode = new Text( chartYAxisLabelString, {font: new PhetFont( {size: axisLabelFontSize} )} );
     chartYAxisLabelNode.rotation = -Math.PI / 2;
+
+    // Scale and fit the Y axis within Chart's bounds
+    var yAxisMaxHeight = chartDimension.height;
+    var yAxisLabelScaleFactor = Math.min( 1, yAxisMaxHeight / (0.8 * chartYAxisLabelNode.height) );
+    chartYAxisLabelNode.scale( yAxisLabelScaleFactor );
 
 
     // vertical panel

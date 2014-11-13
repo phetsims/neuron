@@ -29,7 +29,7 @@ define( function( require ) {
 
   // Constants that control aspects of the concentration readout.
   var CONCENTRATION_READOUT_NUM_PLACES = 5;
-  var READ_OUT_FONT_SIZE = 18;
+  var READ_OUT_FONT_SIZE = 16;
 
   /**
    *
@@ -112,14 +112,14 @@ define( function( require ) {
       // Complicated, no doubt, but it works (at least for now).  If there
       // is some easier way then, by all means, implement it.
 
-      var yOffset = 145 + zoomableRootNode.getScaleVector().x * 9;  // Empirically determined.
+      var yOffset = 140 + zoomableRootNode.getScaleVector().x * 9;  // Empirically determined.
 
       // topCenterOfMembrane = axonCrossSectionNode.localToGlobalPoint( topCenterOfMembrane );
       var maxReadoutWidth = Math.max( potassiumInteriorConcentrationReadout.width, sodiumInteriorConcentrationReadout.getBounds().width );
       potassiumInteriorConcentrationReadout.x = topCenterOfMembrane.x - maxReadoutWidth / 2;
       potassiumInteriorConcentrationReadout.y = topCenterOfMembrane.y + yOffset;
       sodiumInteriorConcentrationReadout.x = potassiumInteriorConcentrationReadout.x;
-      sodiumInteriorConcentrationReadout.y = potassiumInteriorConcentrationReadout.bottom + 16;
+      sodiumInteriorConcentrationReadout.y = potassiumInteriorConcentrationReadout.bottom + 15;
     }
 
 

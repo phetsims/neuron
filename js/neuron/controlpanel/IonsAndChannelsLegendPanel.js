@@ -53,41 +53,49 @@ define( function( require ) {
 
     var CHANNEL_MVT = ModelViewTransform2.createSinglePointScaleInvertedYMapping( Vector2.ZERO, Vector2.ZERO, 4 );
 
+    var maxLegendTitleWidth = 140;
+
+    // Scale and fit the legendItemTextNode within panel's bounds
+    function scaleAndFitTextItem( textItemNode ) {
+      var textNodeScaleFactor = Math.min( 1, maxLegendTitleWidth / textItemNode.width );
+      textItemNode.scale( textNodeScaleFactor );
+      return textItemNode;
+    }
 
     // Add the images and labels for the ions.
     var legendTextOptions = {font: new PhetFont( { size: 12 } )};
     var imageAndLabelChildren = [];
-    imageAndLabelChildren.push( new Text( legendString, {
-      font: new PhetFont( { size: 16, weight: 'bold' } )} ) );
+    imageAndLabelChildren.push( scaleAndFitTextItem( new Text( legendString, {font: new PhetFont( { size: 16, weight: 'bold' } )} ) ) );
 
     var imageNode = new ParticleNode( new SodiumIon(), PARTICLE_MVT );
-    var nodeLabelBox = new HBox( { spacing: 8, children: [ imageNode, new Text( sodiumIonString, legendTextOptions ) ] } );
+    var nodeLabelBox = new HBox( { spacing: 8, children: [ imageNode, scaleAndFitTextItem( new Text( sodiumIonString, legendTextOptions ) ) ] } );
     imageAndLabelChildren.push( nodeLabelBox );
 
     imageNode = new ParticleNode( new PotassiumIon(), PARTICLE_MVT );
-    nodeLabelBox = new HBox( { spacing: 8, children: [  imageNode, new Text( potassiumIonString, legendTextOptions ) ] } );
+    nodeLabelBox = new HBox( { spacing: 8, children: [  imageNode, scaleAndFitTextItem( new Text( potassiumIonString, legendTextOptions ) ) ] } );
     imageAndLabelChildren.push( nodeLabelBox );
 
     imageNode = new MembraneChannelNode( new SodiumDualGatedChannel(), CHANNEL_MVT );
     imageNode.rotate( -Math.PI / 2 );
-    nodeLabelBox = new HBox( { spacing: 8, children: [  imageNode, new Text( sodiumGatedChannelString, legendTextOptions )] } );
+    nodeLabelBox = new HBox( { spacing: 8, children: [  imageNode, scaleAndFitTextItem( new Text( sodiumGatedChannelString, legendTextOptions ) )] } );
     imageAndLabelChildren.push( nodeLabelBox );
 
     imageNode = new MembraneChannelNode( new PotassiumGatedChannel(), CHANNEL_MVT );
     imageNode.rotate( -Math.PI / 2 );
-    nodeLabelBox = new HBox( { spacing: 8, children: [  imageNode, new Text( potassiumGatedChannelString, legendTextOptions ) ] } );
+    nodeLabelBox = new HBox( { spacing: 8, children: [  imageNode, scaleAndFitTextItem( new Text( potassiumGatedChannelString, legendTextOptions ) ) ] } );
     imageAndLabelChildren.push( nodeLabelBox );
 
     imageNode = new MembraneChannelNode( new SodiumLeakageChannel(), CHANNEL_MVT );
     imageNode.rotate( -Math.PI / 2 );
-    nodeLabelBox = new HBox( { spacing: 8, children: [  imageNode, new Text( sodiumLeakChannelString, legendTextOptions ) ] } );
+    nodeLabelBox = new HBox( { spacing: 8, children: [  imageNode, scaleAndFitTextItem( new Text( sodiumLeakChannelString, legendTextOptions ) ) ] } );
     imageAndLabelChildren.push( nodeLabelBox );
 
 
     imageNode = new MembraneChannelNode( new PotassiumLeakageChannel(), CHANNEL_MVT );
     imageNode.rotate( -Math.PI / 2 );
-    nodeLabelBox = new HBox( { spacing: 8, children: [ imageNode, new Text( potassiumLeakChannelString, legendTextOptions ) ] } );
+    nodeLabelBox = new HBox( { spacing: 8, children: [ imageNode, scaleAndFitTextItem( new Text( potassiumLeakChannelString, legendTextOptions ) ) ] } );
     imageAndLabelChildren.push( nodeLabelBox );
+
 
     // vertical panel
     Panel.call( this, new VBox( {

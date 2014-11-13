@@ -78,6 +78,19 @@ define( function( require ) {
     var particlesLayerNode = new Node();
     thisView.addChild( particlesLayerNode );
 
+    // Particles WebGL layer doesn't support bounds clipping, so a border like shape is applied and added as a top node
+    // with the same color as the screen background. Now particles appear to be properly clipped.
+    // ref https://github.com/phetsims/neuron/issues/7
+    var clipAreaBounds = worldNodeClipArea.bounds;
+    var maskingShape = new Shape();
+    var maskLineWidth = 12;
+    maskingShape.moveTo( clipAreaBounds.x - (maskLineWidth / 2) - 1, -maskLineWidth / 2 );
+    maskingShape.lineTo( clipAreaBounds.x - (maskLineWidth / 2) - 1, clipAreaBounds.maxY + 4 );
+    maskingShape.lineTo( clipAreaBounds.maxX + (maskLineWidth / 2) + 1, clipAreaBounds.maxY + 4 );
+    maskingShape.lineTo( clipAreaBounds.maxX + (maskLineWidth / 2 ) + 1, -maskLineWidth / 2 );
+    var maskNode = new Path( maskingShape, {stroke: NeuronConstants.SCREEN_BACKGROUND, lineWidth: maskLineWidth} );
+    thisView.addChild( maskNode );
+
 
     // Create and add the layers in the desired order.
     var axonBodyLayer = new Node();
@@ -178,18 +191,7 @@ define( function( require ) {
       concentrationReadoutLayerNode.visible = concentrationVisible;
     } );
 
-    // Particles WebGL layer doesn't support bounds clipping, so a border like shape is applied and added as a top node
-    // with the same color as the screen background. Now particles appear to be properly clipped.
-    // ref https://github.com/phetsims/neuron/issues/7
-    var clipAreaBounds = worldNodeClipArea.bounds;
-    var maskingShape = new Shape();
-    var maskLineWidth = 12;
-    maskingShape.moveTo( clipAreaBounds.x - (maskLineWidth / 2) - 1, -maskLineWidth / 2 );
-    maskingShape.lineTo( clipAreaBounds.x - (maskLineWidth / 2) - 1, clipAreaBounds.maxY + 4 );
-    maskingShape.lineTo( clipAreaBounds.maxX + (maskLineWidth / 2) + 1, clipAreaBounds.maxY + 4 );
-    maskingShape.lineTo( clipAreaBounds.maxX + (maskLineWidth / 2 ) + 1, -maskLineWidth / 2 );
-    var maskNode = new Path( maskingShape, {stroke: NeuronConstants.SCREEN_BACKGROUND, lineWidth: maskLineWidth} );
-    thisView.addChild( maskNode );
+
 
     var chartHeight = 100;
     var membranePotentialChartNode = new MembranePotentialChart( new Dimension2( worldNodeClipArea.bounds.width - 62, chartHeight ), neuronClockModelAdapter );
