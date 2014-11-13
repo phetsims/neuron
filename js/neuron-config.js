@@ -2,8 +2,6 @@
 
 /**
  * RequireJS configuration file for the sim.
- *
- * @author Sam Reid (PhET Interactive Simulations)
  */
 require.config(
   {
@@ -25,8 +23,7 @@ require.config(
       string: '../../chipper/requirejs-plugins/string',
 
       // common directories, uppercase names to identify them in require imports
-      ASSERT: '../../assert/js',
-      AXON: '../../axon/js',
+        AXON: '../../axon/js',
       BRAND: '../../brand/js',
       DOT: '../../dot/js',
       JOIST: '../../joist/js',
@@ -38,10 +35,8 @@ require.config(
       SUN: '../../sun/js',
       LIGHTBULB: '../../lightbulb/js',
 
-
       // this sim
       NEURON: '.'
-
     },
 
     urlArgs: new Date().getTime()  // cache buster to make browser reload all included scripts

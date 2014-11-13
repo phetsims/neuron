@@ -1,7 +1,7 @@
 // Copyright 2002-2011, University of Colorado
 /**
- * The Delay buffer keeps an array of DelayElements, through which it puts and extracts information based on
- * the amount of elapsed time
+ * DelayElements are used as the individual entries in a DelayBuffer.  Each delay element consists of a value and
+ * a time difference, generally from the time of the previous entry.
  *
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
@@ -11,7 +11,6 @@ define( function( require ) {
   'use strict';
 
   /**
-   *
    * @param {number} value  // calculated by  Hodgkin-Huxley model
    * @param {number} deltaTime
    * @constructor
@@ -28,6 +27,7 @@ define( function( require ) {
     getValue: function() {
       return this.value;
     },
+
     setValueAndTime: function( value, deltaTime ) {
       this.value = value;
       this.deltaTime = deltaTime;

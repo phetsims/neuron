@@ -1,0 +1,21 @@
+{
+  "StimulateButton.caption": "<html><center>Pobudź<br> neuron</center></html>",
+  "ShowCharges": "Ładunki",
+  "Legend.potassiumGatedChannel": "Kanał potasowy zamknięty",
+  "Legend.title": "Legenda",
+  "Chart.title": "Potencjał błony w zależności od czasu",
+  "Legend.sodiumGatedChannel": "Kanał sodowy zamknięty",
+  "ModuleTitle.AxonCrossSection": "Potencjał czynnościowy",
+  "Chart.xAxisLabel": "Czas (ms)",
+  "ShowConcentrations": "Koncentracje jonów",
+  "Legend.sodiumIon": "Jon sodu (Na+)",
+  "ShowAllIons": "Wszystkie jony",
+  "ShowPotentialChart": "Wykres potencjału",
+  "Control.title": "Pokaż",
+  "Chart.yAxisLabel": "Potencjał błony (mV)",
+  "translation.credits": "Andrzej Batorski",
+  "Chart.clear": "Wyczyść wykres",
+  "Legend.sodiumLeakChannel": "Kanał sodowy otwarty",
+  "Legend.potassiumLeakChannel": "Kanał potasowy otwarty",
+  "Legend.potassiumIon": "Jon potasu (K+)"
+}
