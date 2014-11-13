@@ -124,13 +124,10 @@ define( function( require ) {
     var chartContentNode = new Node();
     plotNode.addChild( chartContentNode );
 
-
     neuronClockModelAdapter.registerStepCallback( thisChart.step.bind( thisChart ) );
 
-    neuronClockModelAdapter.simulationTimeResetProperty.link( function( simulationTimeReset ) {
-      if ( simulationTimeReset ) {
-        thisChart.updateOnSimulationReset();
-      }
+    neuronClockModelAdapter.registerRestCallback( function() {
+      thisChart.updateOnSimulationReset();
     } );
 
 

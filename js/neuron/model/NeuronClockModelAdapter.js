@@ -45,12 +45,12 @@ define( function( require ) {
 
     PropertySet.call( this, {
         paused: false,//linked to playPause button
-        simulationTimeReset: false,
         speed: 1 // factor controlling simulation clock speed)
       }
     );
 
     thisModel.stepCallbacks = [];
+    thisModel.resetCallBacks = [];
     // The clock for this simulation.
     // The simulation time change (dt) on each clock tick is constant,
     // regardless of when (in wall time) the ticks actually happen.
@@ -80,6 +80,10 @@ define( function( require ) {
       this.speed = 1;
       PropertySet.prototype.reset.call( this );
 
+      //fire reset event callback
+      for ( var i = 0; i < this.resetCallBacks.length; i++ ) {
+        this.resetCallBacks[i]();
+      }
       this.model.reset();
     },
     /**
@@ -90,6 +94,14 @@ define( function( require ) {
     registerStepCallback: function( callback ) {
       this.stepCallbacks.push( callback );
     },
+
+    /**
+     * Registers a callback that will be notified when the clock is reset
+     */
+    registerRestCallback: function( callback ) {
+      this.resetCallBacks.push( callback );
+    },
+
     setPaused: function( p ) {
       this.paused = p;
     },

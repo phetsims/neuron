@@ -83,7 +83,7 @@ define( function( require ) {
     // ref https://github.com/phetsims/neuron/issues/7
     var clipAreaBounds = worldNodeClipArea.bounds;
     var maskingShape = new Shape();
-    var maskLineWidth = 12;
+    var maskLineWidth = 14;
     maskingShape.moveTo( clipAreaBounds.x - (maskLineWidth / 2) - 1, -maskLineWidth / 2 );
     maskingShape.lineTo( clipAreaBounds.x - (maskLineWidth / 2) - 1, clipAreaBounds.maxY + 4 );
     maskingShape.lineTo( clipAreaBounds.maxX + (maskLineWidth / 2) + 1, clipAreaBounds.maxY + 4 );
