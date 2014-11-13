@@ -285,6 +285,7 @@ define( function( require ) {
       }
     } );
 
+
     this.reset(); // This does initialization
   }
 
@@ -554,7 +555,6 @@ define( function( require ) {
      * @return
      */
     requestParticleThroughChannel: function( particleType, channel, maxVelocity, direction ) {
-
       var captureZone;
       if ( direction === MembraneCrossingDirection.IN_TO_OUT ) {
         captureZone = channel.getInteriorCaptureZone();
@@ -571,8 +571,6 @@ define( function( require ) {
       // Set a motion strategy that will cause this particle to move across
       // the membrane.
       channel.moveParticleThroughNeuronMembrane( particleToCapture, maxVelocity );
-
-
     },
 
 
@@ -1056,7 +1054,6 @@ define( function( require ) {
         membraneChannel.setState( mcs );
 
       } );
-
 
       // Set the state of the playback particles.  This maps the particle
       // mementos in to the playback particles so that we don't have to

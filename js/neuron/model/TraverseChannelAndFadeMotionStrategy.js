@@ -44,6 +44,8 @@ define( function( require ) {
     this.currentDestinationIndex = 0;
     this.channelHasBeenEntered = false;
 
+    this.startingLocationX = startingLocationX;
+    this.startingLocationY = startingLocationY;
 
     this.setCourseForCurrentTraversalPoint( startingLocationX, startingLocationY );
   }
@@ -55,6 +57,11 @@ define( function( require ) {
 
       var currentPositionRefX = movableModelElement.getPositionX();
       var currentPositionRefY = movableModelElement.getPositionY();
+
+
+      if ( dt < 0 ) {
+        return  this.moveBack( movableModelElement, fadableModelElement, dt );
+      }
 
       if ( !this.channelHasBeenEntered ) {
         // Update the flag the tracks whether this particle has made it
@@ -71,6 +78,7 @@ define( function( require ) {
               currentPositionRefY + this.velocityVector.y * dt );
         }
         else {
+
           // We are close enough to the destination that we should just
           // position ourself there and update to the next traversal point.
           movableModelElement.setPosition( this.traversalPoints[ this.currentDestinationIndex].x, this.traversalPoints[ this.currentDestinationIndex].y );
@@ -96,6 +104,64 @@ define( function( require ) {
         movableModelElement.setMotionStrategy( new WanderAwayThenFadeMotionStrategy( this.channel.getCenterLocation(),
           movableModelElement.getPositionX(), movableModelElement.getPositionY(), 0, 0.002 ) );
       }
+    },
+
+    /**
+     * The directional movement of the particle is guided by a set of predefined traversal points.
+     * When a Particle  is near one of the traversal points, its direction and velocity is recalculated based
+     * on the next traversal point's location (setCourseForCurrentTraversalPoint method)
+     * When the particle goes back in time frame, the "currentDestinationIndex" which is the pointer to
+     * the traversal points array needs to be decremented and when the traversal index reaches zero, original starting location needs to be used for finding the reverse direction.
+     *
+     * @param {Particle} movableModelElement
+     * @param {Particle} fadableModelElement
+     * @param {number} dt
+     */
+    moveBack: function( movableModelElement, fadableModelElement, dt ) {
+      var currentPositionRefX = movableModelElement.getPositionX();
+      var currentPositionRefY = movableModelElement.getPositionY();
+
+      var traveledDistance = Math.abs( this.maxVelocity * dt );
+
+      if ( this.channelHasBeenEntered ) {
+        fadableModelElement.setOpaqueness( 1 );
+      }
+      else {
+        fadableModelElement.setFadeStrategy( new TimedFadeAwayStrategy( 0.002 ) );
+      }
+
+      //check if it should change direction
+      if ( this.currentDestinationIndex >= this.traversalPoints.length - 1 ) {
+        var distBetweenPosAndCurrentTraversePoint = this.distanceBetweenPosAndTraversalPoint( currentPositionRefX, currentPositionRefY, this.traversalPoints[ this.currentDestinationIndex - 1] );
+        if ( traveledDistance >= distBetweenPosAndCurrentTraversePoint ) {
+
+          // The particle is near a traversal point, find the previous traversal point and set the particle's direction towards it.
+          this.currentDestinationIndex = this.currentDestinationIndex - 1;
+          if ( this.currentDestinationIndex >= 1 ) {
+            movableModelElement.setPosition( this.traversalPoints[ this.currentDestinationIndex - 1].x, this.traversalPoints[ this.currentDestinationIndex - 1].y );
+            this.setCourseForCurrentTraversalPoint( movableModelElement.getPositionX(), movableModelElement.getPositionY() );
+          }
+          else {
+            movableModelElement.setPosition( this.traversalPoints[ 0].x, this.traversalPoints[ 0].y );
+            this.setCourseForCurrentTraversalPoint( this.startingLocationX, this.startingLocationY );
+            this.channelHasBeenEntered = !this.channelHasBeenEntered;
+          }
+        }
+      }
+
+      if ( this.currentDestinationIndex === 0 ) {
+        //check if it has come close to original position, if yes remove the particle (going back in time before the particle is created)
+        var distanceToOriginalPos = MathUtils.distanceBetween( currentPositionRefX, currentPositionRefY, this.startingLocationX, this.startingLocationY );
+        if ( traveledDistance >= distanceToOriginalPos ) {
+          fadableModelElement.continueExistingProperty.value = false;
+          return;
+        }
+
+      }
+
+      movableModelElement.setPosition( currentPositionRefX + this.velocityVector.x * dt,
+          currentPositionRefY + this.velocityVector.y * dt );
+
     },
     /**
      * Create the points through which a particle must move when traversing
@@ -140,11 +206,12 @@ define( function( require ) {
     /**
      * @param xPos
      * @param yPos
-     * @param travelsalPoint (object literal with x and y properties)
+     * @param traversalPoint (object literal with x and y properties)
      */
-    distanceBetweenPosAndTraversalPoint: function( posX, posY, travelsalPoint ) {
-      return  MathUtils.distanceBetween( posX, posY, travelsalPoint.x, travelsalPoint.y );
+    distanceBetweenPosAndTraversalPoint: function( posX, posY, traversalPoint ) {
+      return  MathUtils.distanceBetween( posX, posY, traversalPoint.x, traversalPoint.y );
     }
 
   } );
-} );
+} )
+;

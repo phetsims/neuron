@@ -155,7 +155,9 @@ define( function( require ) {
 
     setTime: function( t ) {
       this.time = t;
-      if ( this.isPlayback() && this.getNumRecordedPoints() > 0 ) {//Only restore state if during playback and state has been recorded
+      var isPlayBackVal = this.isPlayback();
+      var recordPtsLength = this.getNumRecordedPoints();
+      if ( isPlayBackVal && (recordPtsLength > 0) ) {//Only restore state if during playback and state has been recorded
         this.setPlaybackState( this.getPlaybackState().getState() ); //Sets the model state to reflect the current playback index.
       }
     },
@@ -253,10 +255,7 @@ define( function( require ) {
     },
 
     setPlaybackSpeed: function( speed ) {
-      if ( speed !== this.playbackMode.getSpeed() ) {
-        this.playbackMode.setSpeed( speed );
-
-      }
+      this.playbackMode.setSpeed( speed );
     },
 
     /**
