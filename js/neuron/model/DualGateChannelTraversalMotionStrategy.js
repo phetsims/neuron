@@ -25,7 +25,6 @@ define( function( require ) {
   var LinearMotionStrategy = require( 'NEURON/neuron/model/LinearMotionStrategy' );
   var MathUtils = require( 'NEURON/neuron/utils/MathUtils' );
 
-
   // Threshold at which particles will "bounce" back out of the channel
   // rather than traversing it.
   var INACTIVATION_BOUNCE_THRESHOLD = 0.5;
