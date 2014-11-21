@@ -4,7 +4,7 @@
  * Base class for fade strategies that can be used to fade model elements in and out
  *
  * @author John Blanco
- * @Sharfudeen Ashraf (for Ghnet University)
+ * @Sharfudeen Ashraf (for Ghent University)
  */
 
 define( function( require ) {
