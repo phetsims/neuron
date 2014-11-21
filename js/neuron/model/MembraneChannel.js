@@ -22,6 +22,7 @@ define( function( require ) {
   var Rectangle = require( 'DOT/Rectangle' );
   var Color = require( 'SCENERY/util/Color' );
 
+  // constants
   var SIDE_HEIGHT_TO_CHANNEL_HEIGHT_RATIO = 1.3;
   var DEFAULT_PARTICLE_VELOCITY = 40000; // In nanometers per sec of sim time.
   var RAND = {

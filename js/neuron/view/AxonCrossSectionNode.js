@@ -16,6 +16,7 @@ define( function( require ) {
   var Color = require( 'SCENERY/util/Color' );
   var Shape = require( 'KITE/Shape' );
 
+  // constants
   var MEMBRANE_COLOR = Color.YELLOW;
   var LINE_WIDTH = 1;
 

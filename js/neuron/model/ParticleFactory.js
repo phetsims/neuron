@@ -14,10 +14,10 @@ define( function( require ) {
   var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
 
   return{
-    //factory method for creating a particle of the specified type.
     /**
+     * factory method for creating a particle of the specified type
      *
-     * @param {enum} particleType // ParticleType enum constants
+     * @param {enum} particleType - ParticleType enum constants
      * @returns {Particle}
      */
     createParticle: function( particleType ) {

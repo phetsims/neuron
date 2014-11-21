@@ -9,12 +9,11 @@ define( function( require ) {
   'use strict';
 
   // modules
+  var inherit = require( 'PHET_CORE/inherit' );
   var NeuronModel = require( 'NEURON/neuron/model/NeuronModel' );
   var NeuronScreenView = require( 'NEURON/neuron/view/NeuronScreenView' );
   var NeuronClockModelAdapter = require( 'NEURON/neuron/model/NeuronClockModelAdapter' );
   var NeuronSharedConstants = require( 'NEURON/neuron/common/NeuronSharedConstants' );
-
-  var inherit = require( 'PHET_CORE/inherit' );
   var Screen = require( 'JOIST/Screen' );
 
   // strings

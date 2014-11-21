@@ -16,7 +16,6 @@ define( function( require ) {
   var ShaderProgram = require( 'SCENERY/util/ShaderProgram' );
   var Matrix4 = require( 'DOT/Matrix4' );
 
-
   //Scenery uses Matrix3 and WebGL uses Matrix4, so we must convert.
   function matrix3To4( matrix3 ) {
     return new Matrix4(
@@ -34,9 +33,7 @@ define( function( require ) {
   function TextureInterleavedShaderWebGlLayer( args ) {
     var thisLayer = this;
     WebGLLayer.call( thisLayer, args );
-
   }
-
 
   return inherit( WebGLLayer, TextureInterleavedShaderWebGlLayer, {
     /**
@@ -107,9 +104,9 @@ define( function( require ) {
 
       this.setSize( this.canvas.width, this.canvas.height );
 
-
       this.shaderProgram.use();
     },
+
     render: function( scene, args ) {
 
       // If the context is lost, do not try to render anything.  On Chrome, it does not cause problems, but it seems

@@ -13,7 +13,6 @@ define( function( require ) {
   var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
 
   /**
-   *
    * @constructor
    */
   function PotassiumIon() {

@@ -34,7 +34,6 @@ define( function( require ) {
   var Vector3 = require( 'DOT/Vector3' );
 
   /**
-   *
    * @param {NeuronModel} neuronModel
    * @param {ModelViewTransform2} modelViewTransform
    * @param {Property.<number>} scaleProperty

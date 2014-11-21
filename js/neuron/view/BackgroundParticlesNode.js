@@ -9,11 +9,9 @@
 define( function( require ) {
   'use strict';
 
-
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
   var ParticlesNode = require( 'NEURON/neuron/view/ParticlesNode' );
-
 
   /**
    * @param {Array} particles // a slice of background particles array
@@ -32,7 +30,6 @@ define( function( require ) {
         thisNode.invalidatePaint();
       }
     } );
-
   }
 
   return inherit( ParticlesNode, BackgroundParticlesNode, {

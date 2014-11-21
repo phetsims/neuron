@@ -21,13 +21,11 @@ define( function( require ) {
   var normalString = require( 'string!NEURON/normal' );
   var slowMotionString = require( 'string!NEURON/slowMotion' );
 
-
   /**
    * @param {Property.<number>} speedProperty
    * @constructor
    */
   function SimSpeedControlPanel( speedProperty ) {
-
 
     var radioButtonFont = new PhetFont( { size: 12, weight: 'bold' } );
     var speedRadioButtonGroup = new VerticalAquaRadioButtonGroup( [

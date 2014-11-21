@@ -18,10 +18,8 @@ define( function( require ) {
   var PropertySet = require( 'AXON/PropertySet' );
   var EventTimer = require( 'PHET_CORE/EventTimer' );
 
-
   // Constant Clock internally used
   var DEFAULT_FRAMES_PER_SECOND = 30.0;
-
 
   /**
    * Constructor.

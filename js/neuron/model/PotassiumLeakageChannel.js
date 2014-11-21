@@ -20,9 +20,9 @@ define( function( require ) {
   var Color = require( 'SCENERY/util/Color' );
   var MembraneChannelTypes = require( 'NEURON/neuron/model/MembraneChannelTypes' );
 
+  // constants
   var CHANNEL_HEIGHT = NeuronConstants.MEMBRANE_THICKNESS * 1.2; // In nanometers.
   var CHANNEL_WIDTH = NeuronConstants.MEMBRANE_THICKNESS * 0.50; // In nanometers.
-
   var BASE_COLOR = Color.interpolateRGBA( NeuronConstants.POTASSIUM_COLOR, new Color( 0, 200, 255 ), 0.6 );
   var DEFAULT_PARTICLE_VELOCITY = 5000; // In nanometers per sec of sim time.
 

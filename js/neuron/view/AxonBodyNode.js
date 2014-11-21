@@ -20,7 +20,7 @@ define( function( require ) {
   var LinearGradient = require( 'SCENERY/util/LinearGradient' );
   var TravelingActionPotentialNode = require( 'NEURON/neuron/view/TravelingActionPotentialNode' );
 
-
+  // constants
   var AXON_BODY_COLOR = new Color( 221, 216, 44 );
   var LINE_WIDTH = 1;// STROKE
   var SHOW_GRADIENT_LINE = false;

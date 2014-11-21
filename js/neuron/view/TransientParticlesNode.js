@@ -6,7 +6,6 @@
 define( function( require ) {
   'use strict';
 
-
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
   var ParticlesNode = require( 'NEURON/neuron/view/ParticlesNode' );
@@ -26,7 +25,6 @@ define( function( require ) {
     neuronModel.particlesStateChangedProperty.link( function( newValue ) {
       thisNode.invalidatePaint();
     } );
-
   }
 
   return inherit( ParticlesNode, TransientParticlesNode, {
@@ -38,6 +36,5 @@ define( function( require ) {
     }
 
   } );
-
 } );
     

@@ -14,7 +14,6 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
 
   /**
-   *
    * @param {number} time
    * @param {Object} state
    * @constructor

@@ -15,7 +15,6 @@ define( function( require ) {
   var PropertySet = require( 'AXON/PropertySet' );
 
   /**
-   *
    * @constructor
    */
   function Mode() {

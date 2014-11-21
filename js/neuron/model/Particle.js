@@ -23,7 +23,7 @@ define( function( require ) {
   var MembraneTraversalMotionStrategy = require( 'NEURON/neuron/model/MembraneTraversalMotionStrategy' );
   var ParticlePlaybackMemento = require( 'NEURON/neuron/model/ParticlePlaybackMemento' );
 
-
+  // constants
   var DEFAULT_PARTICLE_RADIUS = 0.75;  // In nanometers.
 
   /**

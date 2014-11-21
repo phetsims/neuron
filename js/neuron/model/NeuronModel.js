@@ -35,7 +35,6 @@ define( function( require ) {
   var NeuronSharedConstants = require( 'NEURON/neuron/common/NeuronSharedConstants' );
   var MathUtils = require( 'NEURON/neuron/utils/MathUtils' );
 
-
   // Default configuration values.
   var DEFAULT_FOR_SHOW_ALL_IONS = true;
   var DEFAULT_FOR_MEMBRANE_CHART_VISIBILITY = false;

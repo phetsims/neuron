@@ -25,6 +25,7 @@ define( function( require ) {
     getType: function() {
       return ParticleType.SODIUM_ION;
     },
+
     getRepresentationColor: function() {
       return NeuronConstants.SODIUM_COLOR;
     }

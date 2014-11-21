@@ -46,6 +46,7 @@ define( function( require ) {
   // strings
   var stimulateNeuronString = require( 'string!NEURON/stimulateNeuron' );
 
+  // constants
   var BUTTON_FONT = new PhetFont( 18 );
 
   /**
