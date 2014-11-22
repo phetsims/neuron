@@ -24,7 +24,6 @@ define( function( require ) {
   var CURSOR_FILL_COLOR = new Color( 50, 50, 200, 0.2 );
   var CURSOR_STROKE_COLOR = Color.DARK_GRAY;
 
-
   /**
    * @param {MembranePotentialChart} membranePotentialChart
    * @constructor

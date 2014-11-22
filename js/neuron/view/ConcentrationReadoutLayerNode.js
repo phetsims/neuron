@@ -122,7 +122,6 @@ define( function( require ) {
       sodiumInteriorConcentrationReadout.y = potassiumInteriorConcentrationReadout.bottom + 15;
     }
 
-
     positionConcentrationReadoutPositions();
     updateConcentrationReadoutValues();
 
@@ -138,9 +137,8 @@ define( function( require ) {
       positionConcentrationReadoutPositions();
     } );
 
-
-    neuronModel.membranePotentialProperty.link( function( membranePotential ) {
-      if ( thisNode.isVisible() ) {
+    neuronModel.concentrationChangedProperty.link( function( concentrationChanged ) {
+      if ( concentrationChanged && thisNode.isVisible() ) {
         updateConcentrationReadoutValues();
       }
     } );

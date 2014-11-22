@@ -489,7 +489,7 @@ define( function( require ) {
       this.hodgkinHuxleyModel.reset();
 
       // Reset the concentration readout values.
-      var concentrationChanged = false;
+      var concentrationChanged = this.concentrationChanged = false;
       if ( this.sodiumExteriorConcentration !== NOMINAL_SODIUM_EXTERIOR_CONCENTRATION ) {
         this.sodiumExteriorConcentration = NOMINAL_SODIUM_EXTERIOR_CONCENTRATION;
         concentrationChanged = true;
@@ -508,7 +508,7 @@ define( function( require ) {
       }
       if ( concentrationChanged ) {
 
-        this.concentrationChangedProperty.set( !this.concentrationChanged ); // Trigger property change
+        this.concentrationChangedProperty.set( true ); // Trigger concentrationReadout change
       }
 
       // Reset the stimulation lockout.
