@@ -21,6 +21,7 @@ define( function( require ) {
   var MathUtils = require( 'NEURON/neuron/utils/MathUtils' );
   var MembraneChannelTypes = require( 'NEURON/neuron/model/MembraneChannelTypes' );
 
+  // constants
   var CHANNEL_HEIGHT = NeuronConstants.MEMBRANE_THICKNESS * 1.2; // In nanometers.
   var CHANNEL_WIDTH = NeuronConstants.MEMBRANE_THICKNESS * 0.50; // In nanometers.
 

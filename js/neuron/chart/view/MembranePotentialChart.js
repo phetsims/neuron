@@ -50,7 +50,7 @@ define( function( require ) {
   var chartXAxisLabelString = require( 'string!NEURON/chartXAxisLabel' );
   var chartYAxisLabelString = require( 'string!NEURON/chartYAxisLabel' );
 
-
+  // constants
   var GRID_TICK_TEXT_FONT = new PhetFont( 8 );
   var TIME_SPAN = 25; // In seconds.
 

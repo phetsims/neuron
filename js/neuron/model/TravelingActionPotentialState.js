@@ -11,7 +11,6 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
 
   /**
-   *
    * @param {number} travelTimeCountdownTimer
    * @param {number} lingerCountdownTimer
    * @constructor

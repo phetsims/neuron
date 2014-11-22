@@ -8,7 +8,6 @@
 define( function( require ) {
   'use strict';
 
-
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
   var CanvasNode = require( 'SCENERY/nodes/CanvasNode' );
@@ -17,7 +16,6 @@ define( function( require ) {
   var Shape = require( 'KITE/Shape' );
 
   /**
-   *
    * @param {ModelViewTransform2D} modelViewTransform
    * @param {Bounds2} bounds
    * @constructor
@@ -27,7 +25,6 @@ define( function( require ) {
     var clipArea = Shape.rect( bounds.minX, bounds.minY, bounds.width, bounds.maxY );
     CanvasNode.call( thisNode, {pickable: false, canvasBounds: bounds, layerSplit: true, clipArea: clipArea } );
     thisNode.modelViewTransform = modelViewTransform;
-
   }
 
   return inherit( CanvasNode, ParticlesNode, {

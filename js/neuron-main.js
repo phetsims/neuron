@@ -17,7 +17,7 @@ define( function( require ) {
   var simOptions = {
     credits: {
       leadDesign: 'Noah Podolefsky',
-      softwareDevelopment: 'John Blanco, Ashraf Thahir',
+      softwareDevelopment: 'John Blanco, Sharfudeen Ashraf',
       team: 'Wendy Adams, Amanda McGarry, Katherine Perkins',
       thanks: '\u2022 Conversion of this simulation to HTML5 was funded in part by the Ghent University.'
     }

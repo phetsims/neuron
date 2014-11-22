@@ -19,11 +19,10 @@ define( function( require ) {
   var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
   var MembraneChannelTypes = require( 'NEURON/neuron/model/MembraneChannelTypes' );
 
-
+  // constants
   var CHANNEL_HEIGHT = NeuronConstants.MEMBRANE_THICKNESS * 1.2; // In nanometers.
   var CHANNEL_WIDTH = NeuronConstants.MEMBRANE_THICKNESS * 0.50; // In nanometers.
   var BASE_COLOR = Color.interpolateRGBA( NeuronConstants.SODIUM_COLOR, Color.YELLOW, 0.5 );
-
   var DEFAULT_PARTICLE_VELOCITY = 7000; // In nanometers per sec of sim time.
 
   // Controls the rate of leakage when no action potential is occurring.
@@ -38,7 +37,6 @@ define( function( require ) {
   var RAND = {nextDouble: function() {
     return Math.random();
   }};
-
 
   /**
    * @param {number} channelWidth

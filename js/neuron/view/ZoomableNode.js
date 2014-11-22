@@ -16,7 +16,6 @@ define( function( require ) {
   var Matrix3 = require( 'DOT/Matrix3' );
 
   /**
-   *
    * @param {NeuronModel} neuronModel
    * @param {Node} zoomableRootNode
    * @param {Property.<number>} zoomProperty
@@ -53,7 +52,6 @@ define( function( require ) {
     } );
 
     thisNode.addChild( zoomableRootNode );
-
   }
 
   return inherit( Node, ZoomableNode );

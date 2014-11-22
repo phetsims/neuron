@@ -21,7 +21,7 @@ define( function( require ) {
   var Shape = require( 'KITE/Shape' );
   var TravelingActionPotentialState = require( 'NEURON/neuron/model/TravelingActionPotentialState' );
 
-
+  // constants
   var TRAVELING_TIME = 0.0020; // In seconds of sim time (not wall time).
   var LINGER_AT_CROSS_SECTION_TIME = 0.0005; // In seconds of sim time (not wall time).
 

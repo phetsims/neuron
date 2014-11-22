@@ -18,7 +18,6 @@ define( function( require ) {
   var ViewableParticle = require( 'NEURON/neuron/model/ViewableParticle' );
   var PotassiumIon = require( 'NEURON/neuron/model/PotassiumIon' );
 
-
   /**
    * Construct a playback particle.
    *

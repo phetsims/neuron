@@ -15,7 +15,6 @@ define( function( require ) {
   var RecordAndPlaybackModel = require( 'NEURON/neuron/recordandplayback/RecordAndPlaybackModel' );
 
   /**
-   *
    * @param {number} maxRecordPoints
    * @param {Object} options
    * @constructor

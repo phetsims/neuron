@@ -16,18 +16,16 @@ define( function( require ) {
   var Text = require( 'SCENERY/nodes/Text' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
 
-  // strings Labels for speed radio buttons
+  // strings - labels for speed radio buttons
   var fastForwardString = require( 'string!NEURON/fastForward' );
   var normalString = require( 'string!NEURON/normal' );
   var slowMotionString = require( 'string!NEURON/slowMotion' );
-
 
   /**
    * @param {Property.<number>} speedProperty
    * @constructor
    */
   function SimSpeedControlPanel( speedProperty ) {
-
 
     var radioButtonFont = new PhetFont( { size: 12, weight: 'bold' } );
     var speedRadioButtonGroup = new VerticalAquaRadioButtonGroup( [

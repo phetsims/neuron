@@ -20,7 +20,6 @@ define( function( require ) {
   var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
 
   /**
-   *
    * @param {ModelViewTransform2} modelViewTransform
    * @param {Property.<number>} scaleProperty
    * @constructor

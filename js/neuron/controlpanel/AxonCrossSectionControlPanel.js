@@ -17,14 +17,14 @@ define( function( require ) {
   var VBox = require( 'SCENERY/nodes/VBox' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
 
-
-  // strings Labels for control panel check boxes.
+  // strings - labels for control panel check boxes
   var showLegendString = require( 'string!NEURON/showLegend' );
   var allIonsString = require( 'string!NEURON/allIons' );
   var potentialChartString = require( 'string!NEURON/potentialChart' );
   var chargesString = require( 'string!NEURON/charges' );
   var concentrationsString = require( 'string!NEURON/concentrations' );
 
+  // constants
   var CHECK_BOX_OPTIONS = { boxWidth: 20 };
   var TEXT_OPTIONS = { font: new PhetFont( 14 ) };
   var TOUCH_AREA_EXPAND_X = 10;

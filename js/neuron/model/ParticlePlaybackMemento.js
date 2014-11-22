@@ -16,7 +16,6 @@ define( function( require ) {
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
 
-
   /**
    *
    * @param {Particle} particle

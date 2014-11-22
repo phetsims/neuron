@@ -17,7 +17,7 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var MotionStrategy = require( 'NEURON/neuron/model/MotionStrategy' );
 
-
+  // constants
   var MAX_JUMP_DISTANCE = 1; // In nanometers.
   var MIN_JUMP_DISTANCE = 0.1;  // In nanometers.
   var MIN_TIME_TO_NEXT_JUMP = 0.0009;  // In seconds of sim time, not wall time.

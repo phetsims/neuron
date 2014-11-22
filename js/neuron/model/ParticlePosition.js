@@ -5,6 +5,5 @@ define( function() {
   return Object.freeze( {
     'INSIDE_MEMBRANE': 'INSIDE_MEMBRANE',
     'OUTSIDE_MEMBRANE': 'OUTSIDE_MEMBRANE'
-
   } );
 } );

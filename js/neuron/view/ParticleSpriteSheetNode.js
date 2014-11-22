@@ -15,7 +15,6 @@ define( function( require ) {
   var ParticleTextureMap = require( 'NEURON/neuron/view/ParticleTextureMap' );
 
   /**
-   *
    * @param {ModelViewTransform2D} modelViewTransform
    * @param {Property.<number>} scaleProperty
    * @constructor

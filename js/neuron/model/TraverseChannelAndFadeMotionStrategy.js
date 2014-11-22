@@ -19,7 +19,6 @@ define( function( require ) {
   var TimedFadeAwayStrategy = require( 'NEURON/neuron/model/TimedFadeAwayStrategy' );
   var MathUtils = require( 'NEURON/neuron/utils/MathUtils' );
 
-
   var RAND = {nextDouble: function() {
     return Math.random();
   }};

@@ -16,7 +16,7 @@ define( function( require ) {
   var NeuronSharedConstants = require( 'NEURON/neuron/common/NeuronSharedConstants' );
   var TimedFadeAwayStrategy = require( 'NEURON/neuron/model/TimedFadeAwayStrategy' );
 
-
+  // constants
   var CLOCK_TICKS_BEFORE_MOTION_UPDATE = 5;
   var CLOCK_TICKS_BEFORE_VELOCITY_UPDATE = CLOCK_TICKS_BEFORE_MOTION_UPDATE * 10;
   var MOTION_UPDATE_PERIOD = NeuronSharedConstants.DEFAULT_ACTION_POTENTIAL_CLOCK_DT * CLOCK_TICKS_BEFORE_MOTION_UPDATE;

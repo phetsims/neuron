@@ -16,7 +16,7 @@ define( function( require ) {
   var Shape = require( 'KITE/Shape' );
   var Bounds2 = require( 'DOT/Bounds2' );
 
-
+  // constants
   var EDGE_STROKE = 0.3;
   var EDGE_COLOR = new Color( 255, 102, 0 );
   var FILL_COLOR = Color.WHITE;

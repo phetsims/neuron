@@ -20,6 +20,7 @@ define( function( require ) {
   var Path = require( 'SCENERY/nodes/Path' );
   var GrippyIndentNode = require( 'NEURON/neuron/chart/view/GrippyIndentNode' );
 
+  // constants
   var WIDTH_PROPORTION = 0.013;
   var CURSOR_FILL_COLOR = new Color( 50, 50, 200, 0.2 );
   var CURSOR_STROKE_COLOR = Color.DARK_GRAY;

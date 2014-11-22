@@ -19,7 +19,6 @@ define( function( require ) {
   var ObservableArray = require( 'AXON/ObservableArray' );
 
   /**
-   *
    * @param {number} maxRecordPoints
    * @param {Object} props
    * @constructor
