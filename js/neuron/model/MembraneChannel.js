@@ -253,7 +253,7 @@ define( function( require ) {
     },
     //convenience method
     setInactivationAmt: function( inactivationAmt ) {
-      this.inactivationAmt = inactivationAmt;//will fire prop change
+      this.inactivationAmt = inactivationAmt;
     },
     //convenience method
     getOpenness: function() {

@@ -14,6 +14,7 @@ define( function( require ) {
   'use strict';
 
   // modules
+  var inherit = require( 'PHET_CORE/inherit' );
   var DelayElement = require( 'NEURON/neuron/model/DelayElement' );
 
   // This value is used to tell if two numbers are different.  It was needed
@@ -21,7 +22,6 @@ define( function( require ) {
   var DIFFERENCE_RESOLUTION = 1E-15;
 
   /**
-   *
    * @param {number} maxDelay // In seconds of simulation time.
    * @param {number} minTimeStep // sim the clock rate, often several orders of magnitude slower than real time.
    * @constructor
@@ -47,8 +47,7 @@ define( function( require ) {
     thisBuffer.clear();
   }
 
-  DelayBuffer.prototype = {
-
+  return inherit( Object, DelayBuffer, {
     addValue: function( value, deltaTime ) {
       this.delayElements[this.head].setValueAndTime( value, deltaTime );
       this.head = (this.head + 1) % this.numEntries;
@@ -109,7 +108,7 @@ define( function( require ) {
         if ( (this.filling && offset > this.head) || offset > this.numEntries ) {
           // The caller is asking for data that we don't have yet, so
           // give them the oldest data available.
-          delayedValue = this.delayElements[this.tail].getValue();
+          delayedValue = this.delayElements[this.tail].value;
         }
         else {
           index = this.head - offset;
@@ -117,7 +116,7 @@ define( function( require ) {
             // Handle wraparound.
             index = this.numEntries + index;
           }
-          delayedValue = this.delayElements[index].getValue();
+          delayedValue = this.delayElements[index].value;
         }
       }
       else {
@@ -128,7 +127,7 @@ define( function( require ) {
         index = this.head > 0 ? this.head - 1 : this.numEntries - 1;
         var accumulatedDelay = 0;
         while ( !delayReached ) {
-          accumulatedDelay += this.delayElements[index].getDeltaTime();
+          accumulatedDelay += this.delayElements[index].deltaTime;
           if ( accumulatedDelay >= delayAmount ) {
             // We've found the data.  Note that it may not be the
             // exact time requested - we're assuming it is close
@@ -146,8 +145,10 @@ define( function( require ) {
             // Keep going through the buffer.
             index = index - 1 > 0 ? index - 1 : this.numEntries - 1;
           }
+
+
         }
-        delayedValue = this.delayElements[index].getValue();
+        delayedValue = this.delayElements[index].value;
       }
 
       return delayedValue;
@@ -159,7 +160,6 @@ define( function( require ) {
       this.previousDeltaTime = -1;
       this.filling = true;
     }
-  };
+  } );
 
-  return DelayBuffer;
 } );

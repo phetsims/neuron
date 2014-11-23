@@ -10,8 +10,11 @@
 define( function( require ) {
   'use strict';
 
+  // modules
+  var inherit = require( 'PHET_CORE/inherit' );
+
   /**
-   * @param {number} value  // calculated by  Hodgkin-Huxley model
+   * @param {number} value
    * @param {number} deltaTime
    * @constructor
    */
@@ -22,23 +25,12 @@ define( function( require ) {
     this.deltaTime = deltaTime;
   }
 
-  DelayElement.prototype = {
-
-    getValue: function() {
-      return this.value;
-    },
-
+  return inherit( Object, DelayElement, {
     setValueAndTime: function( value, deltaTime ) {
       this.value = value;
       this.deltaTime = deltaTime;
-    },
-
-    getDeltaTime: function() {
-      return this.deltaTime;
     }
-  };
-
-  return DelayElement;
+  } );
 
 } );
 

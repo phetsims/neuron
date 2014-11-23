@@ -274,6 +274,7 @@ define( function( require ) {
       }
     },
     clearHistoryRemainder: function() {
+      this.historyRemainderCleared = false;
       var keep = [];
       var thisModel = this;
       this.recordHistory.forEach( function( dataPoint ) {
@@ -284,7 +285,7 @@ define( function( require ) {
 
       this.recordHistory.clear();
       this.recordHistory.addAll( keep.slice() );
-      this.historyRemainderCleared = !this.historyRemainderCleared;// trigger event listeners
+      this.historyRemainderCleared = true;
     },
 
     resetAll: function() {

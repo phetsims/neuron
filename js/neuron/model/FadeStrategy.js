@@ -9,6 +9,10 @@
 
 define( function( require ) {
   'use strict';
+
+  // modules
+  var inherit = require( 'PHET_CORE/inherit' );
+
   /**
    * Abstract Base class
    * @constructor
@@ -16,7 +20,7 @@ define( function( require ) {
   function FadeStrategy() {
   }
 
-  FadeStrategy.prototype = {
+  return inherit( Object, FadeStrategy, {
     /**
      * Fade the associated model element according to the specified amount of
      * time and the nature of the strategy.
@@ -36,7 +40,5 @@ define( function( require ) {
     shouldContinueExisting: function( fadableModelElement ) {
       return true;
     }
-  };
-
-  return FadeStrategy;
+  } );
 } );

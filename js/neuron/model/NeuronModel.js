@@ -290,7 +290,7 @@ define( function( require ) {
 
   return inherit( ParticleCapture, NeuronModel, {
 
-    //dispatched from NeuronClockModelAdapter's step function
+    // dispatched from NeuronClockModelAdapter's step function
     step: function( simulationTimeChange ) {
       if ( simulationTimeChange < 0 && this.getPlaybackSpeed() > 0 ) {
         // This is a step backwards in time but the record-and-playback
