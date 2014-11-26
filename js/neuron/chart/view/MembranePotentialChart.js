@@ -40,7 +40,7 @@ define( function( require ) {
   var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   var RectangularPushButton = require( 'SUN/buttons/RectangularPushButton' );
   var dot = require( 'DOT/dot' );
-  var MembranePotentialXYDataSeries = require( 'NEURON/neuron/chart/model/MembranePotentialXYDataSeries' );
+  var XYDataSeries = require( 'LIGHTBULB/XYDataSeries' );
   var ChartCursor = require( 'NEURON/neuron/chart/view/ChartCursor' );
   var Util = require( 'DOT/Util' );
 
@@ -75,7 +75,7 @@ define( function( require ) {
     thisChart.updateCountdownTimer = 0; // Init to zero to an update occurs right away.
     thisChart.timeIndexOfFirstDataPt = 0;
     thisChart.pausedWhenDragStarted = false;
-    thisChart.dataSeries = new MembranePotentialXYDataSeries( {color: 'red'} );
+    thisChart.dataSeries = new XYDataSeries( {color: 'red'} );
 
     var plotNode = new Node();
     thisChart.addChild( plotNode );
@@ -209,7 +209,7 @@ define( function( require ) {
         chartContentNode.addChild( line );
       }
 
-      thisChart.dataSeries.addDataClearListener( function() {
+      thisChart.dataSeries.on( 'cleared', function() {
         chartContentNode.removeAllChildren();
       } );
 
