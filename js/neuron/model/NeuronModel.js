@@ -168,7 +168,7 @@ define( function( require ) {
       membranePotential: 0,
       // Notification Property that the state of stimulation lockout, which prevents
       // stimuli from being initiated too close together, has changed.
-      stimulasLockout: false,
+      stimulusLockout: false,
       playbackParticlesVisible: false,
       concentrationChanged: false,
       stimulusPulseInitiated: false,// observed by Membrane potential chart
@@ -339,7 +339,7 @@ define( function( require ) {
       }
 
       // Update the stimulus lockout state.
-      this.updateStimulasLockoutState();
+      this.updateStimulusLockoutState();
 
       // Step the channels.
       this.membraneChannels.forEach( function( channel ) {
@@ -461,7 +461,7 @@ define( function( require ) {
     // Listen to the record-and-playback model for events that affect the
     // state of the sim model.
     updateRecordPlayBack: function() {
-      this.updateStimulasLockoutState();
+      this.updateStimulusLockoutState();
       this.updateSimAndPlaybackParticleVisibility();
     },
 
@@ -510,7 +510,7 @@ define( function( require ) {
       }
 
       // Reset the stimulation lockout.
-      this.setStimulasLockout( false );
+      this.setStimulusLockout( false );
 
       // Set the membrane chart to its initial state.
       this.setPotentialChartVisible( DEFAULT_FOR_MEMBRANE_CHART_VISIBILITY );
@@ -733,7 +733,7 @@ define( function( require ) {
       if ( !this.isStimulusInitiationLockedOut() ) {
         this.stimulusPulseInitiated = true;
         this.axonMembrane.initiateTravelingActionPotential();
-        this.updateStimulasLockoutState();
+        this.updateStimulusLockoutState();
       }
     },
 
@@ -821,11 +821,11 @@ define( function( require ) {
       return new CaptureZoneScanResult( closestFreeParticle, totalNumberOfParticles );
     },
 
-    updateStimulasLockoutState: function() {
-      if ( this.stimulasLockout ) {
+    updateStimulusLockoutState: function() {
+      if ( this.stimulusLockout ) {
         // Currently locked out, see if that should change.
         if ( !this.isPlayback() && !this.isActionPotentialInProgress() ) {
-          this.setStimulasLockout( false );
+          this.setStimulusLockout( false );
         }
       }
       else {
@@ -834,7 +834,7 @@ define( function( require ) {
 
 
         if ( this.isActionPotentialInProgress() || (this.isPlayback() && backwards) ) {
-          this.setStimulasLockout( true );
+          this.setStimulusLockout( true );
         }
       }
     },
@@ -991,7 +991,7 @@ define( function( require ) {
      * @return
      */
     isStimulusInitiationLockedOut: function() {
-      return this.stimulasLockout;
+      return this.stimulusLockout;
     },
     setPotentialChartVisible: function( isVisible ) {
       this.potentialChartVisibleProperty.set( isVisible );
@@ -1012,8 +1012,8 @@ define( function( require ) {
     isPotentialChartVisible: function() {
       return this.potentialChartVisible;
     },
-    setStimulasLockout: function( lockout ) {
-      this.stimulasLockoutProperty.set( lockout );
+    setStimulusLockout: function( lockout ) {
+      this.stimulusLockoutProperty.set( lockout );
       if ( !lockout ) {
         this.stimulusPulseInitiated = false;
       }

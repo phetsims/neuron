@@ -163,8 +163,8 @@ define( function( require ) {
     } );
     this.addChild( resetAllButton );
 
-    thisView.neuronModel.stimulasLockoutProperty.link( function( stimulasLockout ) {
-      stimulateNeuronButton.enabled = !stimulasLockout;
+    thisView.neuronModel.stimulusLockoutProperty.link( function( stimulusLockout ) {
+      stimulateNeuronButton.enabled = !stimulusLockout;
     } );
 
     // NeuronModel uses specialized real time constant clock simulation
