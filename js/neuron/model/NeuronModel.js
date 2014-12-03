@@ -57,7 +57,6 @@ define( function( require ) {
   var NUM_SODIUM_LEAK_CHANNELS = 3;
   var NUM_POTASSIUM_LEAK_CHANNELS = 7;
 
-
   // Nominal concentration values.
   var NOMINAL_SODIUM_EXTERIOR_CONCENTRATION = 145;     // In millimolar (mM)
   var NOMINAL_SODIUM_INTERIOR_CONCENTRATION = 10;      // In millimolar (mM)

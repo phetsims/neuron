@@ -9,10 +9,10 @@
  * The user can clear the chart and trigger another action potential to start
  * recording data again.
  * <p/>
- * This chart also controls the record-and-playback state of the model.  This
- * is done so that the window of recorded data in the model matches that shown
- * in the chart, allowing the user to set the model state at any time shown in
- * the chart.
+ * This chart can also be used to control the record-and-playback state of the
+ * model.  This is done so that the window of recorded data in the model matches
+ * that shown in the chart, allowing the user to set the model state to any time
+ * shown in the chart.
  * <p/>
  *
  * @author John Blanco
@@ -61,6 +61,8 @@ define( function( require ) {
 
   var bounds2 = new Bounds2( 0, 0, 0, 0 );
 
+  //REVIEW - This seems odd - why is there a function called computeShapeBounds that does no computing and always
+  // returns a zero bounds?
   function computeShapeBounds() { return bounds2; }
 
   /**

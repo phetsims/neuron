@@ -1,10 +1,14 @@
 //  Copyright 2002-2014, University of Colorado Boulder
 
 /**
- * The clock for this simulation.
- * The simulation time change (dt) on each clock tick is constant,
- * regardless of when (in wall time) the ticks actually happen.
+ * The clock for this simulation. The simulation time change (dt) on each
+ * clock tick is constant, regardless of when (in wall time) the ticks
+ * actually happen.
  *
+ * Note: The whole approach of using explicit clocks and clock adapters is
+ * a holdover from PhET's Java days, and is present in this sim because the
+ * sim was ported from a Java version.  Use of this technique is not
+ * recommended for new HTML5/JavaScript simulations.
  *
  * @author Chris Malley (cmalley@pixelzoom.com)
  * @author Sharfudeen Ashraf (for Ghent University)
@@ -22,7 +26,7 @@ define( function( require ) {
   var DEFAULT_FRAMES_PER_SECOND = 30.0;
 
   /**
-   * Constructor.
+   * @constructor
    * Creates a NeuronClock based on a number of requested frames per second.
    * This uses the same value for elapsed simulation time, and should be used for simulations
    * that run in real time (e.g. one sim time second equals one wall clock second)
@@ -60,6 +64,7 @@ define( function( require ) {
   }
 
   return inherit( PropertySet, NeuronClockModelAdapter, {
+
     step: function( dt ) {
       // step one frame, assuming 60fps
       if ( !this.isPaused() ) {
@@ -72,6 +77,7 @@ define( function( require ) {
         this.tick( this.simulationTimeChange );
       }
     },
+
     reset: function() {
       this.lastSimulationTime = 0.0;
       this.simulationTime = 0.0;
@@ -84,6 +90,7 @@ define( function( require ) {
       }
       this.model.reset();
     },
+
     /**
      * Registers a callback that will be notified when the step simulation occurs
      * Neuron Clock uses specialized real time step simulation
@@ -100,12 +107,10 @@ define( function( require ) {
       this.resetCallBacks.push( callback );
     },
 
-    setPaused: function( p ) {
-      this.paused = p;
-    },
-    isPaused: function() {
-      return this.paused;
-    },
+    setPaused: function( p ) { this.paused = p; },
+
+    isPaused: function() { return this.paused; },
+
     /**
      * Update the clock, updating the wall time and possibly simulation time.
      */
@@ -118,7 +123,9 @@ define( function( require ) {
 
 
     },
-// @private
+
+    // @private below this line
+
     fireChanged: function() {
       var changedCallbacks = this.changedCallbacks.slice( 0 ); // copy to prevent concurrent modification
       for ( var i = 0; i < changedCallbacks.length; i++ ) {
@@ -132,6 +139,7 @@ define( function( require ) {
     getDt: function() {
       this.getSimulationTimeChange();//This method uses Constant Time Strategy (The strategy interface itself is not exposed as in Java) Ashraf
     },
+
     getSimulationTimeChange: function( dt ) {
       return this.simulationTime - this.lastSimulationTime;
     },
@@ -143,6 +151,7 @@ define( function( require ) {
     getSimulationTimeChangeForPausedClock: function() {
       return this.simulationTimeChange;
     },
+
     setSimulationTimeNoUpdate: function( simulationTime ) {
       this.lastSimulationTime = this.simulationTime;
       this.simulationTime = simulationTime;
@@ -162,6 +171,4 @@ define( function( require ) {
       this.tick( -this.getSimulationTimeChangeForPausedClock() );
     }
   } );
-
-} )
-;
+} );

@@ -25,7 +25,7 @@ define( function( require ) {
     /**
      * Move the associated model element according to the specified amount of
      * time and the nature of the motion strategy.  The fadable interface is
-     * also passed in, since it is possible for the motion stratagy to update
+     * also passed in, since it is possible for the motion strategy to update
      * the fade strategy.
      *
      * @param{Movable} movableModelElement

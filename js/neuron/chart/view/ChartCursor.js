@@ -21,7 +21,7 @@ define( function( require ) {
   var GrippyIndentNode = require( 'NEURON/neuron/chart/view/GrippyIndentNode' );
 
   // constants
-  var WIDTH_PROPORTION = 0.013;
+  var WIDTH_PROPORTION = 0.013; // empirically determined
   var CURSOR_FILL_COLOR = new Color( 50, 50, 200, 0.2 );
   var CURSOR_STROKE_COLOR = Color.DARK_GRAY;
 
@@ -32,10 +32,12 @@ define( function( require ) {
   function ChartCursor( membranePotentialChart ) {
 
     var thisChartCursor = this;
+    //REVIEW - The following comment appears to be in the wrong place.
     // Add a handler to the chart cursor that will track when it is moved
     // by the user and will set the model time accordingly.
 
-    //Chart Cursor
+    //REVIEW - Don't understand the following comment, and it doesn't seem to appear in the original Java code.
+    // Chart Cursor
     var topOfPlotArea = membranePotentialChart.chartMvt.modelToViewPosition( new Vector2( 0, membranePotentialChart.range[1] ) ); // UpperBound
     var bottomOfPlotArea = membranePotentialChart.chartMvt.modelToViewPosition( new Vector2( 0, membranePotentialChart.range[0] ) );//lowerBound
 
@@ -46,8 +48,13 @@ define( function( require ) {
     var height = bottomOfPlotArea.y - topOfPlotArea.y;
     var rectShape = new Shape().rect( -width / 2, 0, width, height );
 
-    Path.call( thisChartCursor, rectShape, { cursor: "e-resize", fill: CURSOR_FILL_COLOR, stroke: CURSOR_STROKE_COLOR, lineWidth: 0.4, lineDash: [4, 4]} );
-
+    Path.call( thisChartCursor, rectShape, {
+      cursor: "e-resize",
+      fill: CURSOR_FILL_COLOR,
+      stroke: CURSOR_STROKE_COLOR,
+      lineWidth: 0.4,
+      lineDash: [4, 4]
+    } );
 
     var chartCursorDragHandler = new SimpleDragHandler( {
 
@@ -62,9 +69,9 @@ define( function( require ) {
         this.pressTime = membranePotentialChart.chartMvt.viewToModelPosition( new Vector2( thisChartCursor.x, thisChartCursor.y ) ).x;
         membranePotentialChart.pausedWhenDragStarted = membranePotentialChart.clock.isPaused();
         if ( !membranePotentialChart.pausedWhenDragStarted ) {
-          // The user must be trying to grab the cursor while
-          // the recorded content is being played back.  Pause the
-          // clock.
+          // The user must be trying to grab the cursor while the sim is
+          // running or while recorded content is being played back.  Pause
+          // the clock.
           membranePotentialChart.setPaused( true );
         }
       },
