@@ -589,7 +589,7 @@ define( function( require ) {
      */
     setAllIonsSimulated: function( allIonsSimulated ) {
 
-      // This can only be changed when the stimlus initiation is not locked
+      // This can only be changed when the stimulus initiation is not locked
       // out.  Otherwise, particles would come and go during an action
       // potential, which would be hard to handle and potentially confusing.
       if ( !this.isStimulusInitiationLockedOut() ) {

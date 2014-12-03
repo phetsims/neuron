@@ -1,7 +1,7 @@
 // Copyright 2002-2011, University of Colorado
 
 /**
- * Base class for fade strategies that can be used to fade model elements in and out
+ * Abstract base class for fade strategies that can be used to fade model elements in and out
  *
  * @author John Blanco
  * @Sharfudeen Ashraf (for Ghent University)
@@ -14,7 +14,6 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
 
   /**
-   * Abstract Base class
    * @constructor
    */
   function FadeStrategy() {

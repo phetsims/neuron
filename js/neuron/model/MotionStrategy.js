@@ -33,6 +33,7 @@ define( function( require ) {
      * @param dt
      */
     move: function( movableModelElement, fadableModelElement, dt ) {
+      //REVIEW: Should throw exception if called in base class, otherwise it's kind of pointless to have.
 
     }
 

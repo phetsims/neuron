@@ -41,7 +41,7 @@ define( function( require ) {
    */
   function AxonCrossSectionControlPanel( neuronModel ) {
 
-    var maxButtonTextWidth = 100;
+    var maxButtonTextWidth = 100; // empirically determined
 
     // Scale and fit the ButtonText within panel's bounds
     function scaleAndFitTextItem( textItemNode ) {
@@ -90,6 +90,7 @@ define( function( require ) {
 
     } );
 
+    //REVIEW - This looks odd.  It looks like it is essentially linking a property to itself.  Why is it here?
     neuronModel.allIonsSimulatedProperty.lazyLink( function( allIonsSimulated ) {
       neuronModel.setAllIonsSimulated( allIonsSimulated );
     } );
