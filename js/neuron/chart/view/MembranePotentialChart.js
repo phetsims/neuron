@@ -53,10 +53,15 @@ define( function( require ) {
   // constants
   var GRID_TICK_TEXT_FONT = new PhetFont( 8 );
   var TIME_SPAN = 25; // In seconds.
+  var MAX_PANEL_WIDTH = 554;
 
   // This value sets the frequency of chart updates, which helps to reduce
   // the processor consumption.
   var UPDATE_PERIOD = 1 * NeuronSharedConstants.DEFAULT_ACTION_POTENTIAL_CLOCK_DT; // In seconds
+
+  var bounds2 = new Bounds2( 0, 0, 0, 0 );
+
+  function computeShapeBounds() { return bounds2; }
 
   /**
    *
@@ -87,17 +92,14 @@ define( function( require ) {
     var numVerticalGridLines = 25;
     var numHorizontalGridLines = 8;
 
-    //To create Horizontal Labels
+    // create a function to generate Horizontal Labels (The dot.LinearFunction returns a map function which can be used
+    // to get the appropriate Label value based on the index of Vertical Line)
+
     var domainMap = new dot.LinearFunction( 0, numVerticalGridLines, this.domain[0], this.domain[1] );
 
     //To create Vertical Labels
+    // Example:- for the value of 3 it returns a value of -50 and for 5 it returns 0 (because range is between -100  t0 100)
     var rangeMap = new dot.LinearFunction( 0, numHorizontalGridLines, this.range[1], this.range[0] );
-
-    var bounds2 = new Bounds2( 0, 0, 0, 0 );
-
-    function computeShapeBounds() {
-      return bounds2;
-    }
 
 
     var plotGrid = new Node();
@@ -196,7 +198,7 @@ define( function( require ) {
     var yAxisLabelScaleFactor = Math.min( 1, yAxisMaxHeight / (0.8 * chartYAxisLabelNode.height) );
     chartYAxisLabelNode.scale( yAxisLabelScaleFactor );
 
-    // domain(0,25) map -> range(-100,100)
+    // use domain(0,25) and range(-100,100) as Model View Map
     thisChart.chartMvt = ModelViewTransform2.createRectangleInvertedYMapping( new Bounds2( this.domain[0], this.range[0], this.domain[1], this.range[1] ), new Bounds2( 0, 0, chartDimension.width, chartDimension.height ), 1, 1 );
 
 
@@ -233,8 +235,7 @@ define( function( require ) {
     var xSpace = 4;
     // align exactly with clipped area's edges
     var contentWidth = chartYAxisLabelNode.width + plotNode.width + (2 * xMargin) + xSpace;
-    var maxPanelWidth = 554;
-    var adjustMargin = (maxPanelWidth - contentWidth) / 2;
+    var adjustMargin = (MAX_PANEL_WIDTH - contentWidth) / 2;
 
     // vertical panel
     Panel.call( this, new VBox( {
