@@ -28,11 +28,11 @@ define( function( require ) {
      * also passed in, since it is possible for the motion stratagy to update
      * the fade strategy.
      *
-     * @param{Movable} moveableModelElement
+     * @param{Movable} movableModelElement
      * @param {IFadable} fadableModelElement
      * @param dt
      */
-    move: function( moveableModelElement, fadableModelElement, dt ) {
+    move: function( movableModelElement, fadableModelElement, dt ) {
 
     }
 
