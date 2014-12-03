@@ -74,12 +74,12 @@ define( function( require ) {
   function MembranePotentialChart( chartDimension, neuronClockModelAdapter ) {
 
     var thisChart = this;
-    Node.call( thisChart, {} );
+    Node.call( thisChart );
     thisChart.chartDimension = chartDimension;
     thisChart.clock = neuronClockModelAdapter;
     thisChart.neuronModel = neuronClockModelAdapter.model;
 
-    thisChart.updateCountdownTimer = 0; // Init to zero to an update occurs right away.
+    thisChart.updateCountdownTimer = 0; // Init to zero so that an update occurs right away.
     thisChart.timeIndexOfFirstDataPt = 0;
     thisChart.pausedWhenDragStarted = false;
     thisChart.dataSeries = new XYDataSeries( {color: 'red'} );
@@ -100,7 +100,7 @@ define( function( require ) {
     var domainMap = new dot.LinearFunction( 0, numVerticalGridLines, this.domain[0], this.domain[1] );
 
     //To create Vertical Labels
-    // Example:- for the value of 3 it returns a value of -50 and for 5 it returns 0 (because range is between -100  t0 100)
+    // Example:- for the value of 3 it returns a value of -50 and for 5 it returns 0 (because range is -100 to 100)
     var rangeMap = new dot.LinearFunction( 0, numHorizontalGridLines, this.range[1], this.range[0] );
 
 
@@ -138,8 +138,7 @@ define( function( require ) {
     thisChart.neuronModel.stimulusPulseInitiatedProperty.link( function( stimulusPulseInitiated ) {
       if ( stimulusPulseInitiated ) {
         if ( !thisChart.neuronModel.isPotentialChartVisible() ) {
-          // If the chart is not visible, we clear any previous
-          // recording.
+          // If the chart is not visible, we clear any previous recording.
           thisChart.clearChart();
         }
         // Start recording, if it isn't already happening.
@@ -151,9 +150,11 @@ define( function( require ) {
     var chartTitleNode = new Text( chartTitleString, {font: new PhetFont( {size: 16, weight: 'bold'} )} );
     var clearChartButton = new TextPushButton( chartClearString, {
       font: new PhetFont( {size: 12} ),
-      baseColor: 'silver',
+      //REVIEW - FYI: I deleted the color so that the default would be used.  The gray looked disabled.
+      //REVIEW - Why is the flat strategy used?  I tried removing this to use the default strategy, and thought it looked good.  Any reason?
       buttonAppearanceStrategy: RectangularButtonView.flatAppearanceStrategy
     } );
+    //REVIEW - the listener can be added as an option during the construction step above, for slightly cleaner code.
     clearChartButton.addListener( function() {thisChart.clearChart();} );
 
     var closeIconRadius = 4;
@@ -167,6 +168,7 @@ define( function( require ) {
     var closeButton = new RectangularPushButton( {
       baseColor: 'red',
       content: xIcon,
+      //REVIEW - Why is the flat strategy used?  I tried removing this to use the default strategy, and thought it looked good.  Any reason?
       buttonAppearanceStrategy: RectangularButtonView.flatAppearanceStrategy,
       // click to toggle
       listener: function() {
@@ -249,8 +251,8 @@ define( function( require ) {
     );
 
 
-    thisChart.neuronModel.potentialChartVisibleProperty.link( function( chartVisibile ) {
-      thisChart.visible = chartVisibile;
+    thisChart.neuronModel.potentialChartVisibleProperty.link( function( chartVisible ) {
+      thisChart.visible = chartVisible;
     } );
 
 
@@ -265,6 +267,7 @@ define( function( require ) {
      * @param voltage - Voltage in volts.
      * @param update  - Controls if graph should be refreshed on the screen.
      */
+    //REVIEW - the update param appears to be unused, can it be removed?
     addDataPoint: function( time, voltage, update ) {
 
       if ( this.dataSeries.length === 0 ) {
@@ -289,7 +292,7 @@ define( function( require ) {
         this.chartIsFull = true;
       }
       else {
-        console.log( "MembrancePotential Chart Warning: Attempt to add data to full chart, ignoring." );
+        console.log( "MembranePotential Chart Warning: Attempt to add data to full chart, ignoring." );
       }
     },
 
@@ -305,12 +308,14 @@ define( function( require ) {
       }
       return timeOfLastDataPoint;
     },
+
     /**
      * Update the chart based on the current time and the model that is being
      * monitored.
      *
      * @param dt
      */
+    //REVIEW - Parameter docs don't match.
     step: function( simulationTimeChange ) {
 
       if ( this.neuronModel.isRecord() ) {

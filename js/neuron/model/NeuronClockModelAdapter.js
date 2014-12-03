@@ -103,6 +103,7 @@ define( function( require ) {
     /**
      * Registers a callback that will be notified when the clock is reset
      */
+    //REVIEW - this looks like a typo - should be "Reset" instead of "Rest", correct?
     registerRestCallback: function( callback ) {
       this.resetCallBacks.push( callback );
     },

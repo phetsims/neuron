@@ -60,17 +60,17 @@ define( function( require ) {
     expandTouchArea( showPotentialChartCheckBox );
 
 
-    var crossectionControlContents = [];
-    crossectionControlContents.push( new Text( showLegendString, {
+    var crossSectionControlContents = [];
+    crossSectionControlContents.push( new Text( showLegendString, {
       font: new PhetFont( { size: 16, weight: 'bold' } )} ) );
-    crossectionControlContents.push( allIonsSimulatedCheckBox );
-    crossectionControlContents.push( showChargesCheckBox );
-    crossectionControlContents.push( showConcentrationsCheckBox );
-    crossectionControlContents.push( showPotentialChartCheckBox );
+    crossSectionControlContents.push( allIonsSimulatedCheckBox );
+    crossSectionControlContents.push( showChargesCheckBox );
+    crossSectionControlContents.push( showConcentrationsCheckBox );
+    crossSectionControlContents.push( showPotentialChartCheckBox );
 
     // vertical panel
     Panel.call( this, new VBox( {
-      children: crossectionControlContents,
+      children: crossSectionControlContents,
       align: 'left',
       spacing: 5
     } ), {
