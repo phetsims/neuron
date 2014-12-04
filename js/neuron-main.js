@@ -18,7 +18,7 @@ define( function( require ) {
     credits: {
       leadDesign: 'Noah Podolefsky',
       softwareDevelopment: 'John Blanco, Sharfudeen Ashraf',
-      team: 'Wendy Adams, Amanda McGarry, Katherine Perkins',
+      team: 'Wendy Adams, Fanny (Benay) Bentley, Janet Casagrand, Mike Klymkowsky,\nAmanda McGarry, Ariel Paul, Katherine Perkins',
       thanks: '\u2022 Conversion of this simulation to HTML5 was funded in part by the Ghent University.'
     }
   };

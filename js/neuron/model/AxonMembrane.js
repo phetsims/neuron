@@ -24,7 +24,7 @@ define( function( require ) {
   var BODY_LENGTH = NeuronConstants.DEFAULT_DIAMETER * 1.5;
   var BODY_TILT_ANGLE = Math.PI / 4;
 
-  /*
+  /**
    * @constructor
    */
   function AxonMembrane() {
