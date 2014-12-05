@@ -1,0 +1,9 @@
+
+Implementation Notes for the Neuron Simulation, HTML5 Version
+=============================================================
+
+This simulation was ported from a Java version.  As such, there are a number of things that are done in the code that
+would likely have been done in a very different manner if this had been written from scratch as in JavaScript.  It is
+important to keep this in mind when maintaining this code, since otherwise there are likely to be a lot of moments
+where the maintainer is thinking things like, "Why the heck did they do this? I'm going to do it differently!", thus
+ending up with a mish-mash of coding styles.

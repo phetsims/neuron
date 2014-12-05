@@ -24,8 +24,8 @@ define( function( require ) {
     // they never change after construction.  It may be necessary to add
     // some or all of them later if this changes, or if membrane channels
     // need to come and go dynamically.
-    this.openness = membraneChannel.getOpenness();
-    this.inactivationAmt = membraneChannel.getInactivationAmt();
+    this.openness = membraneChannel.getOpenness(); // @private
+    this.inactivationAmt = membraneChannel.getInactivationAmt();  // @private
   }
 
   return inherit( Object, MembraneChannelState, {
