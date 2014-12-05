@@ -1,7 +1,7 @@
 // Copyright 2002-2011, University of Colorado
 /**
- * Base class for gated membrane channels, i.e. channels that can open and
- * close.
+ * Base class for gated membrane channels, i.e. channels that open and close.
+ *
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
  */

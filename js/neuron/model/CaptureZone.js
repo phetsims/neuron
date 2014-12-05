@@ -1,7 +1,7 @@
 // Copyright 2002-2011, University of Colorado
 /**
- * Base class for "Capture Zones", which are essentially two dimensional
- * spaces where particles can be captured.
+ * Abstract base class for "Capture Zones", which are essentially two dimensional spaces where particles can be
+ * captured.
  *
  *@author John Blanco
  *@author Sharfudeen Ashraf (for Ghent University)

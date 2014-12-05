@@ -1,13 +1,12 @@
 //  Copyright 2002-2014, University of Colorado Boulder
 /**
- * A motion strategy for traversing through a dual-gate channel, meaning one
+ * A motion strategy for traversing through a dual-gated channel, meaning one
  * that has a gate and an inactivation level.
  * <p/>
  * This strategy makes several assumptions about the nature of the dual-gate
  * channel and how it is portrayed.  These assumptions depend both on the
  * model representation and the view representation of the dual-gated channel.
- * If changes are made to either, this class would need to be revised to
- * handle them.
+ * If changes are made to either, this class may need to be revised.
  *
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
@@ -179,12 +178,12 @@ define( function( require ) {
     },
 
     /**
-     * @param xPos
-     * @param yPos
-     * @param travelsalPoint (object literal with x and y properties)
+     * @param posX
+     * @param posY
+     * @param traversalPoint (object literal with x and y properties)
      */
-    distanceBetweenPosAndTraversalPoint: function( posX, posY, travelsalPoint ) {
-      return  MathUtils.distanceBetween( posX, posY, travelsalPoint.x, travelsalPoint.y );
+    distanceBetweenPosAndTraversalPoint: function( posX, posY, traversalPoint ) {
+      return  MathUtils.distanceBetween( posX, posY, traversalPoint.x, traversalPoint.y );
     },
 
     moveBasedOnCurrentVelocity: function( movable, dt ) {
@@ -197,7 +196,8 @@ define( function( require ) {
      * this channel.
      *
      * @param channel
-     * @param startingLocation
+     * @param startingLocationX
+     * @param startingLocationY
      * @return
      */
     createTraversalPoints: function( channel, startingLocationX, startingLocationY ) {

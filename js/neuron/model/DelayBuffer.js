@@ -1,10 +1,10 @@
 // Copyright 2002-2011, University of Colorado
 /**
- * This class is a delay buffer that allows information to be put into it
- * and then extracted based on the amount of time in the past that a value
- * is needed.
+ * This class is a delay buffer that allows information to be put into it and then extracted based on the amount of
+ * time in the past that a value is needed.
  *
- * NOTE: If this turns out to be useful for other applications, it should be generalized.
+ * NOTE: This seems like it might be useful in other simulations.  If this turns out to be true, it will need some
+ * work to generalize.
  *
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)

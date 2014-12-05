@@ -1,7 +1,7 @@
 // Copyright 2002-2011, University of Colorado
 /**
- * Abstract base class for membrane channels, which represent any channel
- * through which atoms can go through to cross a membrane.
+ * Abstract base class for membrane channels, which represent any channel through which atoms can go through to cross a
+ * membrane.
  *
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
@@ -45,7 +45,7 @@ define( function( require ) {
       representationChanged: false // All the channel states are  updated at once at the end stepInTime.This was done for performance reasons.
     } );
 
-    //position of the channel
+    // position of the channel
     this.centerLocation = new Vector2();
     // Variable that defines how open the channel is.Valid range is 0 to 1, 0 means fully closed, 1 is fully open.
     this.openness = 0;
@@ -53,8 +53,7 @@ define( function( require ) {
     // Valid range is 0 to 1, 0 means completely active, 1 is completely inactive.
     this.inactivationAmt = 0;
 
-    // Reference to the model that contains that particles that will be moving
-    // through this channel.
+    // Reference to the model that contains that particles that will be moving through this channel.
     thisChannel.modelContainingParticles = modelContainingParticles;
     thisChannel.rotationalAngle = 0; // In radians.
     // Size of channel only, i.e. where the atoms pass through.
