@@ -4,12 +4,12 @@
  * The clock for this simulation. The simulation time change (dt) on each
  * clock tick is constant, regardless of when (in wall time) the ticks
  * actually happen.
- *
+ * <p/>
  * Note: The whole approach of using explicit clocks and clock adapters is
  * a holdover from PhET's Java days, and is present in this sim because the
  * sim was ported from a Java version.  Use of this technique is not
  * recommended for new HTML5/JavaScript simulations.
- *
+ * <p/>
  * @author Chris Malley (cmalley@pixelzoom.com)
  * @author Sharfudeen Ashraf (for Ghent University)
  */

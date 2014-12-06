@@ -1,5 +1,9 @@
 // Copyright 2002-2011, University of Colorado
 /**
+ * //REVIEW - is the comment below correct and up to date?  I'm seeing this used in ParticlesCanvasLayerNode.  Please
+ * either update the comment, remove the class, or add documentation that states why it should be kept around even if
+ * it isn't used.
+ *
  * For performance  reasons, there are multiple Background Particles canvas node each renders a subset of background particles and are rendered in a round robin fashion.
  * The assumption is since Background particles exhibit slow random brownian motion this way of rendering wont affect the realism
  * EXPERIMENTAL CLASS NOT USED because the WebGL version of Particle implementation  is found to be performing far better.

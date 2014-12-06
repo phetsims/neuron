@@ -35,6 +35,8 @@ define( function( require ) {
   function ChargeSymbolNode( axonModel, maxWidth, maxPotential, polarityReversed ) {
     var thisNode = this;
     Node.call( thisNode );
+    //REVIEW - Looks like usage for several of the vars below was moved into the constructor (very nice!) so they don't
+    // need to be retained as properties.
     this.axonModel = axonModel;
     this.maxWidth = maxWidth;
     this.polarityReversed = polarityReversed;

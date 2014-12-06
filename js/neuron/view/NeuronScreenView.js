@@ -220,6 +220,7 @@ define( function( require ) {
   return inherit( ScreenView, NeuronView, {
 
 
+    //REVIEW - Why is this here?
     step: function( dt ) {
 
 

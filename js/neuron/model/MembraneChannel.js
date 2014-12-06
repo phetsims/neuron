@@ -41,14 +41,18 @@ define( function( require ) {
     var thisChannel = this;
 
     PropertySet.call( thisChannel, {
+      //REVIEW - I was able to figure out what the following two props were all about by looking through the code, but
+      // they could use a bit more documentation to make it clear why they're here.
       channelStateChanged: false,
       representationChanged: false // All the channel states are  updated at once at the end stepInTime.This was done for performance reasons.
     } );
 
     // position of the channel
     this.centerLocation = new Vector2();
-    // Variable that defines how open the channel is.Valid range is 0 to 1, 0 means fully closed, 1 is fully open.
+
+    // Variable that defines how open the channel is. Valid range is 0 to 1, 0 means fully closed, 1 is fully open.
     this.openness = 0;
+
     // Variable that defines how inactivated the channel is, which is distinct from openness.
     // Valid range is 0 to 1, 0 means completely active, 1 is completely inactive.
     this.inactivationAmt = 0;
@@ -56,7 +60,8 @@ define( function( require ) {
     // Reference to the model that contains that particles that will be moving through this channel.
     thisChannel.modelContainingParticles = modelContainingParticles;
     thisChannel.rotationalAngle = 0; // In radians.
-    // Size of channel only, i.e. where the atoms pass through.
+
+    // Size of channel interior, i.e. where the atoms pass through.
     thisChannel.channelSize = new Dimension2( channelWidth, channelHeight );
     thisChannel.overallSize = new Dimension2( channelWidth * 2.1, channelHeight * SIDE_HEIGHT_TO_CHANNEL_HEIGHT_RATIO );
 
@@ -66,31 +71,31 @@ define( function( require ) {
     // developer's responsibility to position the channel appropriately on the
     // cell membrane.
 
-    // Set the "capture zone", which is a shape that represents the space
-    // from which particles may be captured.  If null is returned, this
+    // Set the initial capture zone, which is a shape that represents the
+    // space from which particles may be captured.  If null is returned, this
     // channel has no capture zone.
     this.interiorCaptureZone = new NullCaptureZone();
-
     this.exteriorCaptureZone = new NullCaptureZone();
 
     // Time values that control how often this channel requests an ion to move
     // through it.  These are initialized here to values that will cause the
-    // channel to never request any ions and must be set by the base classes
-    // in order to make capture events occur.
+    // channel to never request any ions and must be set by the descendant
+    // classes in order to make capture events occur.
     this.captureCountdownTimer = Number.POSITIVE_INFINITY;
     this.minInterCaptureTime = Number.POSITIVE_INFINITY;
     this.maxInterCaptureTime = Number.POSITIVE_INFINITY;
 
     // Velocity for particles that move through this channel.
     this.particleVelocity = DEFAULT_PARTICLE_VELOCITY;
-    this.updateChannelRect();
 
+    // Perform the initial update the shape of the channel rectangle.
+    this.updateChannelRect();
   }
 
   return inherit( PropertySet, MembraneChannel, {
 
     /**
-     * Implements the time-dependent behavior of the gate.
+     * Implements the time-dependent behavior of the channel.
      * @param dt - Amount of time step, in milliseconds.
      */
     stepInTime: function( dt ) {
@@ -139,6 +144,7 @@ define( function( require ) {
     },
     // Determine whether the provided point is inside the channel.
     isPointInChannel: function( x, y ) {
+      //REVIEW - this comment seems obsolete.  Agreed?  If so, please remove.
       // Note: A rotational angle of zero is considered to be lying on the
       // side.  Hence the somewhat odd-looking use of height and width in
       // the determination of the channel Rect.
@@ -297,6 +303,7 @@ define( function( require ) {
       return new MembraneChannelState( this );
     },
 
+    //REVIEW - non-conventional header comment.
     /*
      The Membrane Channel Node observed centerLocation,openness and inactivation
      properties separately.This resulted in too many updates to node and degraded the performance.This method checks

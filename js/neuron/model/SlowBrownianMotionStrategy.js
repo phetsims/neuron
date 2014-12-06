@@ -3,7 +3,7 @@
 /**
  * A motion strategy for showing some slow Brownian motion, which is basically
  * just an occasional small jump from its initial location to a new nearby
- * location and then back.  This is intended to create noticable but
+ * location and then back.  This is intended to create noticeable but
  * non-distracting motion that doesn't consume much processor time.
  *
  * @author John Blanco

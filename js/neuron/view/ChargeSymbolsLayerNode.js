@@ -16,9 +16,9 @@ define( function( require ) {
   var ChargeSymbolNode = require( 'NEURON/neuron/view/ChargeSymbolNode' );
 
   // Max size of the charge symbols, tweak as needed.
-  var MAX_CHARGE_SYMBOL_SIZE = 5;// was 8
+  var MAX_CHARGE_SYMBOL_SIZE = 5;
+
   /**
-   *
    * @param {NeuronModel} neuronModel
    * @param {ModelViewTransform2} mvt
    * @constructor

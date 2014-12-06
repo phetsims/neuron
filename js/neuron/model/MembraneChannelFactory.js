@@ -1,6 +1,6 @@
 // Copyright 2002-2011, University of Colorado
 /**
- * Factory to create different types pf  MembraneChannels
+ * Factory to create different types of MembraneChannels
  *
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
@@ -17,8 +17,8 @@ define( function( require ) {
   var SodiumDualGatedChannel = require( 'NEURON/neuron/model/SodiumDualGatedChannel' );
 
   return{
-    //factory method for creating a MembraneChannel of the specified type.
     /**
+     * factory method for creating a MembraneChannel of the specified type.
      * @param {MembraneChannelTypes} channelType
      * @param {ParticleCapture} particleModel
      * @param {HodgkinHuxleyModel} hodgkinHuxleyModel

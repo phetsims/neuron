@@ -1,10 +1,10 @@
 // Copyright 2002-2011, University of Colorado
 
 /**
- * Abstract base class for a simulated particle.  It is intended that this be subclassed
- * for each specific particle type used in the simulation.
- * This class  serves as a Fadable  element  that can fade in or out of
- * existence in based on different  fade strategies.
+ * Abstract base class for a simulated particle.  It is intended that this be subclassed for each specific particle
+ * type used in the simulation.
+ *
+ * This class serves as a Fadable element that can fade in or out of existence in based on different fade strategies.
  * Also functions as a "Movable" element that can be move differently based on different motion strategies.
  *
  * @author John Blanco
@@ -45,11 +45,10 @@ define( function( require ) {
     this.positionX = xPos;
     this.positionY = yPos;
 
-    // Opaqueness value, ranges from 0 (completely transparent) to 1
-    // (completely opaque).
+    // Opaqueness value, ranges from 0 (completely transparent) to 1 (completely opaque).
     this.opaqueness = 1;
 
-    // Motion strategy for moving this particle around.StillnessMotionStrategy is stateless so use the singleton instance
+    // Motion strategy for moving this particle around. StillnessMotionStrategy is stateless so use the singleton instance.
     this.motionStrategy = StillnessMotionStrategy.getInstance();
 
     // Fade strategy for fading in and out.

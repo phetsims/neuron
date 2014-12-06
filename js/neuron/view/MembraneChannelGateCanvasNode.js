@@ -1,7 +1,8 @@
 // Copyright 2002-2011, University of Colorado
 /**
- * The Dynamic parts of the Membrane Channels namely Gate,Channel expansion,string are
- * rendered directly on a single canvas.
+ * The dynamic parts of the Membrane Channels, namely the Gate, Channel expansion, and string, are rendered directly on
+ * a single canvas for optimal performance.
+ *
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
  */

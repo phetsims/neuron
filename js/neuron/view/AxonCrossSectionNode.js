@@ -1,4 +1,4 @@
-//// Copyright 2002-2011, University of Colorado
+// Copyright 2002-2011, University of Colorado
 
 /**
  * Representation of the transverse cross section of the axon the view.

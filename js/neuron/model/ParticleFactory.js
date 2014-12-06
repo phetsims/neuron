@@ -2,6 +2,7 @@
 
 /**
  * Factory class for Particle
+ *
  * @Sharfudeen Ashraf (for Ghent University)
  */
 

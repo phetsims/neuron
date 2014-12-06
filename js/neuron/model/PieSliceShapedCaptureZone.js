@@ -1,8 +1,8 @@
 // Copyright 2002-2011, University of Colorado
 
 /**
- * A "capture zone" (which is a 2D space that defines where particles may be
- * captured by a gate) that is shaped like a pie slice.
+ * A "capture zone" (which is a 2D space that defines where particles may be captured by a gate) that is shaped like a
+ * pie slice.
  *
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)

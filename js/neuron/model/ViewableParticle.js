@@ -2,6 +2,7 @@
 
 /**
  * Interface for a particle that can be viewed, i.e. displayed to the user.
+ *
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
  */

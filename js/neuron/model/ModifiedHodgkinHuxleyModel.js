@@ -5,6 +5,8 @@
  * this) but that was modified significantly to fit the needs of this
  * simulation.  The main change is that the way that the conductance values
  * are calculated is different, and much simpler.
+ * <p/>
+ * This was used with permission from the original author of the example.
  *
  * @author Anthony Fodor
  * @author John Blanco
@@ -43,7 +45,7 @@ define( function( require ) {
 
     thisModel.resting_v = 65;// final doesn't change
 
-    // deltas of voltage-dependent gating paramaters
+    // deltas of voltage-dependent gating parameters
     thisModel.dn = 0;
     thisModel.dm = 0;
     thisModel.dh = 0;
@@ -82,7 +84,7 @@ define( function( require ) {
       this.vl = 0; // NOTE: Modified from -10.613 by jblanco on 3/12/2010 in order to make potential stay steady
       // at the desired resting potential.
 
-      //constant leak permeabilties
+      //constant leak permeabilities
       this.gna = this.perNaChannels * 120 / 100;
       this.gk = this.perKChannels * 36 / 100;
       this.gl = 0.3;

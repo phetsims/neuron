@@ -1,9 +1,7 @@
 //  Copyright 2002-2014, University of Colorado Boulder
 /**
- * Model for the 'Neuron' screen.
- * This class represents the main class for modeling the axon.  It acts as the
- * central location where the interaction between the membrane, the particles
- * (i.e. ions), and the gates is all governed.
+ * Model for the 'Neuron' screen. This class represents the main class for modeling the axon.  It acts as the central
+ * location where the interaction between the membrane, the particles (i.e. ions), and the gates is all governed.
  *
  * @author John Blanco
  * @author Sam Reid (PhET Interactive Simulations)
@@ -117,7 +115,7 @@ define( function( require ) {
 
 
   /**
-   * Main constructor for NeuronModel, which contains all of the model logic for the entire sim screen.
+   * Main constructor for NeuronModel, which contains much of the model logic for the sim.
    * @constructor
    */
   function NeuronModel() {
@@ -350,6 +348,7 @@ define( function( require ) {
       // Step the transient particles.  Since these particles may remove
       // themselves as a result of being stepped, we need to copy the list
       // in order to avoid concurrent modification exceptions.
+      //REVIEW - Good catch.  I think it's safe, and less confusing to future maintainers, to simply remove this comment.
       // (Not true in observableArray as ForEach already copies the array and iterates, kept the comment for ref - Ashraf)
 
       this.transientParticles.forEach( function( particle ) {
@@ -830,7 +829,7 @@ define( function( require ) {
       }
       else {
         // Currently NOT locked out, see if that should change.
-        var backwards = this.getTime() - this.getMaxRecordedTime() > 0 ? false : true;
+        var backwards = this.getTime() - this.getMaxRecordedTime() <= 0;
 
 
         if ( this.isActionPotentialInProgress() || (this.isPlayback() && backwards) ) {
@@ -948,6 +947,7 @@ define( function( require ) {
 
       newParticle.continueExistingProperty.lazyLink( function( newValue ) {
         if ( newValue === false ) {
+          //REVIEW: This probably won't work, should be a 'self' var set at top of function.
           this.backgroundParticles.remove( newParticle );
         }
       } );
@@ -1086,7 +1086,7 @@ define( function( require ) {
       // concentration changes.
       this.concentrationChanged = true;
 
-      //If any one channel's state is changed, trigger a channel representation changed event
+      // If any one channel's state is changed, trigger a channel representation changed event
       this.channelRepresentationChanged = false;
       this.channelRepresentationChanged = _.any( this.membraneChannels.getArray(), 'channelStateChanged' );
     }

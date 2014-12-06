@@ -1,11 +1,9 @@
 // Copyright 2002-2011, University of Colorado
 /**
- * Node that represents a membrane channel in the view, currently
- * used only for drawing Membrane channel legends
+ * Node that represents a membrane channel in the view, currently used only for drawing Membrane channel legends
+ *
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
- *
- *
  */
 define( function( require ) {
   'use strict';
@@ -33,9 +31,9 @@ define( function( require ) {
     thisNode.mvt = mvt;
 
     /**
-     *  private
-     *  @param{Dimension2D} size
-     *  @param{Color} color
+     *  @private
+     *  @param {Dimension2D} size
+     *  @param {Color} color
      */
     function createEdgeNode( size, color ) {
       var shape = new Shape();
@@ -48,8 +46,7 @@ define( function( require ) {
       shape.cubicCurveTo( width / 2, -height / 2, -width / 2, -height / 2, -width / 2, -height / 4 );
       shape.close();
 
-      var edgeNode = new Path( shape, {fill: color, stroke: color.colorUtilsDarker( 0.3 ), lineWidth: 0.4} );
-      return edgeNode;
+      return new Path( shape, {fill: color, stroke: color.colorUtilsDarker( 0.3 ), lineWidth: 0.4} );
     }
 
     var stringShape;
@@ -60,6 +57,7 @@ define( function( require ) {
 
     // Skip bounds computation to improve performance
     channel.computeShapeBounds = function() {return new Bounds2( 0, 0, 0, 0 );};
+
     // Create the edge representations.
     var edgeNodeWidth = (membraneChannelModel.overallSize.width - membraneChannelModel.channelSize.width) / 2;
     var edgeNodeHeight = membraneChannelModel.overallSize.height;
@@ -67,8 +65,8 @@ define( function( require ) {
     var leftEdgeNode = createEdgeNode( transformedEdgeNodeSize, membraneChannelModel.getEdgeColor() );
     var rightEdgeNode = createEdgeNode( transformedEdgeNodeSize, membraneChannelModel.getEdgeColor() );
 
-    // Create the layers for the channel the edges.  This makes offsets
-    // and rotations easier.see addToCanvas on why node layer is a instance member
+    // Create the layers for the channel the edges.  This makes offsets and rotations easier.  See addToCanvas on why
+    // node layer is a instance member.
     thisNode.channelLayer = new Node();
     thisNode.addChild( thisNode.channelLayer );
     thisNode.channelLayer.addChild( channel );
@@ -77,7 +75,7 @@ define( function( require ) {
     thisNode.edgeLayer.addChild( leftEdgeNode );
     thisNode.edgeLayer.addChild( rightEdgeNode );
 
-    //gets created and updated only if channel has InactivationGate
+    // gets created and updated only if channel has InactivationGate
     var inactivationGateBallNode;
     var inactivationGateString;
     var edgeColor = membraneChannelModel.getEdgeColor().colorUtilsDarker( 0.3 );
@@ -87,6 +85,7 @@ define( function( require ) {
 
       // Add the ball and string that make up the inactivation gate.
       inactivationGateString = new Path( new Shape(), {lineWidth: 0.5, stroke: Color.BLACK} );
+
       // Skip bounds computation to improve performance
       inactivationGateString.computeShapeBounds = function() {return new Bounds2( 0, 0, 0, 0 );};
       thisNode.channelLayer.addChild( inactivationGateString );
@@ -124,12 +123,13 @@ define( function( require ) {
       channel.setShape( channelPath );
 
       /*
-       The Java Version uses computed bounds which is bit expensive, the current x and y
-       coordinates of the channel is manually calculated. This allows for providing a customized computedBounds function.
+       The Java Version uses computed bounds which is a bit expensive, the current x and y coordinates of the channel
+       is manually calculated. This allows for providing a customized computedBounds function.
        Kept this code for reference. Ashraf
        var channelBounds = channel.getBounds();
        channel.x = -channelBounds.width / 2;
-       channel.y = -channelBounds.height / 2; */
+       channel.y = -channelBounds.height / 2;
+       */
 
       channel.x = -(width + edgeWidth) / 2;
       channel.y = -height / 2;
@@ -201,8 +201,7 @@ define( function( require ) {
      * canvas like any other PNode, it just won't have the layering.
      * @param channelLayer
      * @param edgeLayer
-     *
-     * */
+     */
     addToCanvas: function( channelLayer, edgeLayer ) {
       channelLayer.addChild( this.channelLayer );
       edgeLayer.addChild( this.edgeLayer );//Membrane channel maintains its own layer of 2 edge nodes
