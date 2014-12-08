@@ -1,7 +1,6 @@
 //  Copyright 2002-2014, University of Colorado Boulder
 /**
- * Motion strategy that does not do any motion, i.e. just leaves the model
- * element in the same location.
+ * Motion strategy that does not do any motion, i.e. just leaves the model element in the same location.
  *
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)

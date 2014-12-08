@@ -1,7 +1,7 @@
 // Copyright 2002-2011, University of Colorado
 
 /**
- * Class representing Record Mode
+ * Type representing the 'playback' mode within the RecordAndPlaybackModel.
  *
  * @author Sam Reid
  * @author Sharfudeen Ashraf (for Ghent University)

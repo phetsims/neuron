@@ -1,5 +1,7 @@
 // Copyright 2002-2011, University of Colorado
 /**
+ * Class that visually represents the action potential that travels down the membrane prior to reaching the cross
+ * section.  It is meant to look sort of 'electric' or 'energetic'.
  *
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)

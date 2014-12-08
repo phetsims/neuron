@@ -1,7 +1,8 @@
 //  Copyright 2002-2014, University of Colorado Boulder
-// This node is a container for AxonBody,cross section,
-// channels all of which needs to be zoomed in and out together
+
 /**
+ * This node is a container for the axon body, the cross section, and the membrane channels, all of which needs to be
+ * zoomed in and out together.
  *
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
@@ -29,9 +30,8 @@ define( function( require ) {
     Node.call( thisNode, { clipArea: clipArea } );
     zoomProperty.link( function( zoomFactor ) {
 
-      // Zoom toward the top so that when zoomed in the membrane
-      // is in a reasonable place and there is room for the chart below
-      // it.
+      // Zoom toward the top so that when zoomed in the membrane is in a reasonable place and there is room for the
+      // chart below it.
       var zoomTowardTopThreshold = 0.6;
       var scaleMatrix;
       var scaleAroundX = Math.round( viewPortPosition.x );

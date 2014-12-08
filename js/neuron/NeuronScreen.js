@@ -1,7 +1,8 @@
 //  Copyright 2002-2014, University of Colorado Boulder
 
 /**
- * The 'Neuron' screen, which shows everything in that screen.
+ * The main screen class for the 'Neuron' simulation.  This is where the main model and view instances are created and
+ * inserted into the framework.
  *
  * @author Sam Reid (PhET Interactive Simulations)
  */
@@ -25,8 +26,8 @@ define( function( require ) {
    */
   function NeuronScreen() {
     var neuronModel = new NeuronModel();
-    // NeuronModelAdapter intercepts the default Step function and provides
-    // "constant" clock and record Playback features to NeuronModel, see NeuronClockModelAdapter
+    // NeuronModelAdapter intercepts the default Step function and provides "constant" clock and record Playback
+    // features to NeuronModel, see NeuronClockModelAdapter
     var neuronClockModelAdapter = new NeuronClockModelAdapter( neuronModel, NeuronConstants.CLOCK_FRAME_RATE,
       NeuronConstants.DEFAULT_ACTION_POTENTIAL_CLOCK_DT );
 

@@ -1,4 +1,6 @@
 // Copyright 2002-2011, University of Colorado
+
+//REVIEW - Header comment needed.
 /**
  *
  * @author Sharfudeen Ashraf (for Ghent University)

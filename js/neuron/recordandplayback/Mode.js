@@ -1,8 +1,7 @@
 // Copyright 2002-2011, University of Colorado
 
 /**
- * Base class representing a Mode in Record and PlayBack Model
- * The mode can be either playback, record or live
+ * Base type representing a Mode in Record and PlayBack Model. The mode can be either playback, record or live.
  *
  * @author Sam Reid
  * @author Sharfudeen Ashraf (for Ghent University)

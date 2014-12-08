@@ -1,6 +1,7 @@
 //  Copyright 2002-2014, University of Colorado Boulder
+
 /**
- * A class to control the zoom factor.
+ * A Scenery node that can be used to control the zoom factor.
  *
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
@@ -19,6 +20,7 @@ define( function( require ) {
   var Util = require( 'DOT/Util' );
   var RectangularButtonView = require( 'SUN/buttons/RectangularButtonView' );
 
+  //REVIEW - neuronModel appears to be unused.  Can it be removed?
   /**
    * @param {NeuronModel} neuronModel - the main model for the simulation
    * @param {Property.<number>} zoomProperty - property that indicates how far zoomed in the simulation is, between
@@ -49,7 +51,7 @@ define( function( require ) {
       return ctrlButton;
     }
 
-    var sideLength = 24;// length of one side of the button
+    var sideLength = 24; // length of one side of the button, empirically determined
     var symbolLength = 0.5 * sideLength;
     var symbolLineWidth = 0.12 * sideLength;
 
@@ -69,6 +71,7 @@ define( function( require ) {
       centerX: sideLength / 2,
       centerY: sideLength / 2
     };
+
     var plusButton = createZoomControlButton( new Path( plusSymbolShape, symbolOptions ), {xMargin: 6, yMargin: 6}, function() {
       zoomProperty.set( Util.clamp( zoomProperty.value + 0.1, minZoom, maxZoom ) );
     } );

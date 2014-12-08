@@ -2,8 +2,8 @@
 /**
  * This is a very specialized motion strategy that is basically a linear
  * motion but that starts at one speed and then changes to another.  It was
- * created for a very specific application - getting particles to move quickly
- * away from the exit of a channel with an inactivation gate, and then slowing
+ * created for a specific application - getting particles to move quickly away
+ * from the exit of a channel with an inactivation gate, and then slowing
  * down.  It may have other applications.
  *
  * @author John Blanco

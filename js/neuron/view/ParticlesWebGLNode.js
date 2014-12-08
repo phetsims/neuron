@@ -1,5 +1,6 @@
 // Copyright 2002-2014, University of Colorado Boulder
 
+//REVIEW - Please clean up this comment using the 120 column guideline specified in the PhET Development Overview.
 /**
  * Particles Node, rendered in WebGL to improve performance
  * Particles are rendered by mapping their rectangular corners with a dynamically created SpriteSheet tiles.
@@ -84,6 +85,7 @@ define( function( require ) {
     this.tilePosVector = new Vector2();
     this.viewTransformationMatrix = thisNode.modelViewTransform.getMatrix();
     this.particleViewPosition = new Vector2();
+    //REVIEW - This variable appears to be unused.
     this.viewPortPosition = new Vector3();
 
     this.invalidatePaint();

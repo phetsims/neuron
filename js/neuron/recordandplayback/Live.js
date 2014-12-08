@@ -1,7 +1,9 @@
 // Copyright 2002-2011, University of Colorado
 
 
-/*
+/**
+ * Type representing the 'live' mode within the RecordAndPlaybackModel.
+ *
  * @author Sam Reid
  * @author Sharfudeen Ashraf (for Ghent University)
  */

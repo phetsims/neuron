@@ -1,6 +1,8 @@
 // Copyright 2002-2011, University of Colorado
 
-/*
+/**
+ * A strategy that controls fading in for a particle based on time.
+ *
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
  */

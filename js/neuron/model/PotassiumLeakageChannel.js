@@ -1,7 +1,8 @@
 // Copyright 2002-2011, University of Colorado
 
 /**
- * A gated channel through which potassium passes when the channel is open.
+ * Model representation of a membrane channel through which potassium 'leaks', meaning that it is always passing
+ * through and there is no gating action.
  *
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)

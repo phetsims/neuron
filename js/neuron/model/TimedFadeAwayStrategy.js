@@ -1,5 +1,10 @@
 // Copyright 2002-2011, University of Colorado
-/*
+
+/**
+ * A strategy that controls how a visible object fades out.  For this particular strategy, fading is based completely
+ * on time, as opposed to position or some other parameter.  Works in conjunction with model elements that have the
+ * appropriate API for fading.
+ *
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
  */

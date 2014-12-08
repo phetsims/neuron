@@ -1,5 +1,8 @@
 // Copyright 2002-2011, University of Colorado
+
 /**
+ * Model representation of a sodium ion.
+ *
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
  */

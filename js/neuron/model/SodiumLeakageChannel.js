@@ -1,5 +1,8 @@
 // Copyright 2002-2011, University of Colorado
+
 /**
+ * Model representation of a membrane channel through which sodium 'leaks', meaning that it is always passing through
+ * and there is no gating action.
  *
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)

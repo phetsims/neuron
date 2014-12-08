@@ -89,10 +89,11 @@ define( function( require ) {
      * Update the shape as a function of the current value of the lifetime
      * counter.
      *
-     * NOTE: An attempt was made to generalize this so that it would work
-     * for pretty much any shape of the axon body, but this turned out to
-     * be a lot of work.  As a result, if significant changes are made to
-     * the axon body shape, this routine will need to be updated.
+     * NOTE: An attempt was made to generalize this so that it would work for
+     * pretty much any shape of the axon body, but this turned out to be a lot
+     * of work, so ultimately we went with a simpler implementation that makes
+     * some assumptions about the axon body shape.  If significant changes are
+     * made to the axon body shape, this routine will need to be updated.
      */
     updateShape: function() {
       if ( this.travelTimeCountdownTimer > 0 ) {

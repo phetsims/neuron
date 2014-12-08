@@ -1,6 +1,9 @@
 //  Copyright 2002-2014, University of Colorado Boulder
 
 /**
+ * State of the action potential that is traveling down the axon.  This is used primarily to support record and
+ * playback.
+ *
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
  */

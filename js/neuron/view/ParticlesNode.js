@@ -1,6 +1,11 @@
 // Copyright 2002-2011, University of Colorado
+
+//REVIEW - The comment below says that this is replaced, yet I see references in a few places.  Is it still used?  If
+//so, the comment should be updated.  If not, it should be removed or the documentation should explain why it should be
+//kept around.
+
 /**
- * For performance  reason uses a single canvasNode  to render all the particles.
+ * For performance reasons this sim uses a single canvasNode to render all the particles.
  * This class is replaced by ParticlesWebGLNode which uses WebGL to render the particles
  *
  * @author Sharfudeen Ashraf (for Ghent University)
