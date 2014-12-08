@@ -17,9 +17,6 @@ define( function( require ) {
   var TimedFadeAwayStrategy = require( 'NEURON/neuron/model/TimedFadeAwayStrategy' );
   var MathUtils = require( 'NEURON/neuron/utils/MathUtils' );
 
-  var RAND = {nextDouble: function() {
-    return Math.random();
-  }};
 
   /**
    *
@@ -196,7 +193,7 @@ define( function( require ) {
       else {
         // All points have been traversed.  Change the direction a bit in
         // order to make things look a little more "Brownian".
-        this.velocityVector.rotate( ( RAND.nextDouble() - 0.5 ) * Math.PI * 0.9 );
+        this.velocityVector.rotate( ( Math.random() - 0.5 ) * Math.PI * 0.9 );
       }
     },
 

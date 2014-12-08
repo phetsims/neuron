@@ -36,11 +36,6 @@ define( function( require ) {
   } );
 
 
-  var RAND = {nextDouble: function() {
-    return Math.random();
-  }};
-
-
   // Values used for deciding on state transitions.  These were empirically
   // determined.
   var ACTIVATION_DECISION_THRESHOLD = 0.002;
@@ -217,7 +212,7 @@ define( function( require ) {
       return ParticleType.SODIUM_ION;
     },
     updateStaggerDelay: function() {
-      this.staggerDelay = RAND.nextDouble() * MAX_STAGGER_DELAY;
+      this.staggerDelay = Math.random() * MAX_STAGGER_DELAY;
     },
     //@Override
     chooseCrossingDirection: function() {

@@ -23,9 +23,7 @@ define( function( require ) {
   var MIN_VELOCITY = 500;  // In nanometers per second of sim time.
   var MAX_VELOCITY = 5000; // In nanometers per second of sim time.
 
-  var RAND = {nextDouble: function() {
-    return Math.random();
-  }, nextInt: function( bounds ) {
+  var RAND = {nextInt: function( bounds ) {
     return Math.floor( Math.random() * bounds );
   }};
 
@@ -88,8 +86,8 @@ define( function( require ) {
     updateVelocity: function( currentPositionX, currentPositionY ) {
       // Create a velocity vector that causes this to move away from the "away point".
       var awayAngle = Math.atan2( currentPositionY - this.awayPoint.y,
-          currentPositionX - this.awayPoint.x ) + ( RAND.nextDouble() - 0.5 ) * Math.PI;
-      var newScalerVelocity = MIN_VELOCITY + RAND.nextDouble() * ( MAX_VELOCITY - MIN_VELOCITY );
+          currentPositionX - this.awayPoint.x ) + ( Math.random() - 0.5 ) * Math.PI;
+      var newScalerVelocity = MIN_VELOCITY + Math.random() * ( MAX_VELOCITY - MIN_VELOCITY );
       this.velocityX = newScalerVelocity * Math.cos( awayAngle );
       this.velocityY = newScalerVelocity * Math.sin( awayAngle );
 

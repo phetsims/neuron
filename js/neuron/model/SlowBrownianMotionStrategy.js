@@ -23,10 +23,6 @@ define( function( require ) {
   var MIN_TIME_TO_NEXT_JUMP = 0.0009;  // In seconds of sim time, not wall time.
   var MAX_TIME_TO_NEXT_JUMP = 0.0015;  // In seconds of sim time, not wall time.
 
-  var RAND = {nextDouble: function() {
-    return Math.random();
-  }};
-
   /**
    *
    * @param {number} initialLocationX
@@ -66,13 +62,13 @@ define( function( require ) {
       }
     },
     generateNewJumpTime: function() {
-      return MIN_TIME_TO_NEXT_JUMP + RAND.nextDouble() * (MAX_TIME_TO_NEXT_JUMP - MIN_TIME_TO_NEXT_JUMP);
+      return MIN_TIME_TO_NEXT_JUMP + Math.random() * (MAX_TIME_TO_NEXT_JUMP - MIN_TIME_TO_NEXT_JUMP);
     },
     generateNewJumpDistance: function() {
-      return MIN_JUMP_DISTANCE + RAND.nextDouble() * (MAX_JUMP_DISTANCE - MIN_JUMP_DISTANCE);
+      return MIN_JUMP_DISTANCE + Math.random() * (MAX_JUMP_DISTANCE - MIN_JUMP_DISTANCE);
     },
     generateNewJumpAngle: function() {
-      return RAND.nextDouble() * Math.PI * 2;
+      return Math.random() * Math.PI * 2;
     }
   } );
 } );

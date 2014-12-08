@@ -109,10 +109,6 @@ define( function( require ) {
   var FOREGROUND_PARTICLE_DEFAULT_OPAQUENESS = 0.25;
   var BACKGROUND_PARTICLE_DEFAULT_OPAQUENESS = 0.10;// default alpha in Java was 0.05, which isn't visible in the canvas so slightly increasing to 0.10
 
-  var RAND = {nextDouble: function() {
-    return Math.random();
-  }};
-
 
   /**
    * Main constructor for NeuronModel, which contains much of the model logic for the sim.
@@ -741,13 +737,13 @@ define( function( require ) {
      */
     positionParticleInsideMembrane: function( particle ) {
       // Choose any angle.
-      var angle = RAND.nextDouble() * Math.PI * 2;
+      var angle = Math.random() * Math.PI * 2;
 
       // Choose a distance from the cell center that is within the membrane.
       // The multiplier value is created with the intention of weighting the
       // positions toward the outside in order to get an even distribution
       // per unit area.
-      var multiplier = Math.max( RAND.nextDouble(), RAND.nextDouble() );
+      var multiplier = Math.max( Math.random(), Math.random() );
       var distance = (this.crossSectionInnerRadius - particle.getRadius() * 2) * multiplier;
 
       particle.setPosition( distance * Math.cos( angle ), distance * Math.sin( angle ) );
@@ -773,13 +769,13 @@ define( function( require ) {
      */
     positionParticleOutsideMembrane: function( particle ) {
       // Choose any angle.
-      var angle = RAND.nextDouble() * Math.PI * 2;
+      var angle = Math.random() * Math.PI * 2;
 
       // Choose a distance from the cell center that is outside of the
       // membrane. The multiplier value is created with the intention of
       // weighting the positions toward the outside in order to get an even
       // distribution per unit area.
-      var multiplier = RAND.nextDouble();
+      var multiplier = Math.random();
       var distance = this.crossSectionOuterRadius + particle.getRadius() * 4 +
                      multiplier * this.crossSectionOuterRadius * 2.2;
 

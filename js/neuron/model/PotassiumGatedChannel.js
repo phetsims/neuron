@@ -39,9 +39,6 @@ define( function( require ) {
   // vary a little bit in terms of when they open and close.
   var MAX_STAGGER_DELAY = NeuronConstants.MIN_ACTION_POTENTIAL_CLOCK_DT * 10; // In seconds of sim time.
 
-  var RAND = {nextDouble: function() {
-    return Math.random();
-  }};
 
   /**
    * @param {ParticleCapture} modelContainingParticles
@@ -51,7 +48,7 @@ define( function( require ) {
   function PotassiumGatedChannel( modelContainingParticles, hodgkinHuxleyModel ) {
     var thisChannel = this;
     GatedChannel.call( thisChannel, CHANNEL_WIDTH, CHANNEL_HEIGHT, modelContainingParticles );
-    thisChannel.staggerDelay = RAND.nextDouble() * MAX_STAGGER_DELAY;
+    thisChannel.staggerDelay = Math.random() * MAX_STAGGER_DELAY;
     thisChannel.hodgkinHuxleyModel = hodgkinHuxleyModel;
     thisChannel.setInteriorCaptureZone( new PieSliceShapedCaptureZone( this.getCenterLocation(), CHANNEL_WIDTH * 5, Math.PI, Math.PI * 0.5 ) );
     thisChannel.channelColor = NeuronConstants.POTASSIUM_COLOR.colorUtilsDarker( 0.2 );

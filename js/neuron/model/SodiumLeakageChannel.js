@@ -34,9 +34,6 @@ define( function( require ) {
   // testing the Hodgkin-Huxley model.
   var PEAK_NEGATIVE_CURRENT = 3.44;
 
-  var RAND = {nextDouble: function() {
-    return Math.random();
-  }};
 
   /**
    * @param {number} channelWidth
@@ -108,7 +105,7 @@ define( function( require ) {
         // everyone once in a while a sodium atom should leak the opposite
         // direction.  This was requested by the IPHY people in the review
         // held mid-April 2010.
-        if ( RAND.nextDouble() < 0.2 ) {
+        if ( Math.random() < 0.2 ) {
           result = MembraneCrossingDirection.IN_TO_OUT;
         }
       }

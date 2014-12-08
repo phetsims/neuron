@@ -17,12 +17,6 @@ define( function( require ) {
   var Vector2 = require( 'DOT/Vector2' );
   var DotUtil = require( 'DOT/Util' );
 
-  var RAND = {
-    nextDouble: function() {
-      return Math.random();
-    }
-  };
-
   // isPointZone method of captureZone is refactored to use Vector components, this class wide
   // instance is used for intermediary vector calculations.  See isPointInZone method
   var pointZoneCheckPoint = new Vector2();
@@ -85,7 +79,7 @@ define( function( require ) {
 
     // assign a random point that is somewhere within the shape.
     assignNewParticleLocation: function( particle ) {
-      var placementAngle = this.rotationAngle + this.fixedRotationalOffset + (RAND.nextDouble() - 0.5) * this.angleOfExtent;
+      var placementAngle = this.rotationAngle + this.fixedRotationalOffset + (Math.random() - 0.5) * this.angleOfExtent;
       var distanceFromOrigin = this.radius * 0.9;
       var xPos = this.originPoint.x + distanceFromOrigin * Math.cos( placementAngle );
       var yPos = this.originPoint.y + distanceFromOrigin * Math.sin( placementAngle );

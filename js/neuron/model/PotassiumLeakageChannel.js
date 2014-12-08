@@ -30,10 +30,6 @@ define( function( require ) {
   var MIN_INTER_PARTICLE_CAPTURE_TIME = 0.002; // In seconds of sim time.
   var MAX_INTER_PARTICLE_CAPTURE_TIME = 0.004; // In seconds of sim time.
 
-  var RAND = {nextDouble: function() {
-    return Math.random();
-  }};
-
   /**
    * @param {ParticleCapture} modelContainingParticles
    * @param {ModifiedHodgkinHuxleyModel} hodgkinHuxleyModel
@@ -87,7 +83,7 @@ define( function( require ) {
       // be some leakage in the other direction for greater realism, hence
       // the random choice below.
       var direction = MembraneCrossingDirection.IN_TO_OUT;
-      if ( RAND.nextDouble() < 0.2 ) {
+      if ( Math.random() < 0.2 ) {
         direction = MembraneCrossingDirection.OUT_TO_IN;
       }
       return direction;

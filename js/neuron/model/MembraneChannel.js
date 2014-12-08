@@ -25,11 +25,7 @@ define( function( require ) {
   // constants
   var SIDE_HEIGHT_TO_CHANNEL_HEIGHT_RATIO = 1.3;
   var DEFAULT_PARTICLE_VELOCITY = 40000; // In nanometers per sec of sim time.
-  var RAND = {
-    nextDouble: function() {
-      return Math.random();
-    }
-  };
+
 
   /**
    * @param  {number} channelWidth
@@ -191,7 +187,7 @@ define( function( require ) {
     restartCaptureCountdownTimer: function( captureNow ) {
       if ( this.minInterCaptureTime !== Number.POSITIVE_INFINITY && this.maxInterCaptureTime !== Number.POSITIVE_INFINITY ) {
         assert && assert( this.maxInterCaptureTime >= this.minInterCaptureTime );
-        this.captureCountdownTimer = this.minInterCaptureTime + RAND.nextDouble() * (this.maxInterCaptureTime - this.minInterCaptureTime);
+        this.captureCountdownTimer = this.minInterCaptureTime + Math.random() * (this.maxInterCaptureTime - this.minInterCaptureTime);
       }
       else {
         this.captureCountdownTimer = Number.POSITIVE_INFINITY;
