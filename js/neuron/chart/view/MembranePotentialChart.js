@@ -25,7 +25,7 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var Node = require( 'SCENERY/nodes/Node' );
   var Bounds2 = require( 'DOT/Bounds2' );
-  var NeuronSharedConstants = require( 'NEURON/neuron/common/NeuronSharedConstants' );
+  var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
   var Line = require( 'SCENERY/nodes/Line' );
   var Panel = require( 'SUN/Panel' );
   var Path = require( 'SCENERY/nodes/Path' );
@@ -57,7 +57,7 @@ define( function( require ) {
 
   // This value sets the frequency of chart updates, which helps to reduce
   // the processor consumption.
-  var UPDATE_PERIOD = 1 * NeuronSharedConstants.DEFAULT_ACTION_POTENTIAL_CLOCK_DT; // In seconds
+  var UPDATE_PERIOD = 1 * NeuronConstants.DEFAULT_ACTION_POTENTIAL_CLOCK_DT; // In seconds
 
   var bounds2 = new Bounds2( 0, 0, 0, 0 );
 

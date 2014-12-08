@@ -16,7 +16,6 @@ define( function( require ) {
   var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
   var PieSliceShapedCaptureZone = require( 'NEURON/neuron/model/PieSliceShapedCaptureZone' );
   var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
-  var NeuronSharedConstants = require( 'NEURON/neuron/common/NeuronSharedConstants' );
   var MembraneCrossingDirection = require( 'NEURON/neuron/model/MembraneCrossingDirection' );
   var MathUtils = require( 'NEURON/neuron/utils/MathUtils' );
   var MembraneChannelTypes = require( 'NEURON/neuron/model/MembraneChannelTypes' );
@@ -38,7 +37,7 @@ define( function( require ) {
 
   // Delay range - used to make the timing of the instances of this gate
   // vary a little bit in terms of when they open and close.
-  var MAX_STAGGER_DELAY = NeuronSharedConstants.MIN_ACTION_POTENTIAL_CLOCK_DT * 10; // In seconds of sim time.
+  var MAX_STAGGER_DELAY = NeuronConstants.MIN_ACTION_POTENTIAL_CLOCK_DT * 10; // In seconds of sim time.
 
   var RAND = {nextDouble: function() {
     return Math.random();

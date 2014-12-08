@@ -13,6 +13,10 @@ define( function( require ) {
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
   var Color = require( 'SCENERY/util/Color' );
 
+  var clockFrameRate = 15;
+  var minActionPotentialClockDT = (1 / clockFrameRate) / 3000;
+  var maxActionPotentialClockDT = (1 / clockFrameRate) / 1000;
+
   return Object.freeze( {
     // Fonts
     CONTROL_PANEL_TITLE_FONT: new PhetFont( {weight: 'bold', size: 14} ),
@@ -25,7 +29,14 @@ define( function( require ) {
     PROJECT_NAME: "neuron",
     MEMBRANE_THICKNESS: 4, // In nanometers, obtained from web research.
     DEFAULT_DIAMETER: 150, // In nanometers.
-    SCREEN_BACKGROUND: '#ccfefa'
+    SCREEN_BACKGROUND: '#ccfefa',
+    CLOCK_FRAME_RATE: clockFrameRate, // fps, frames per second (wall time)
+    // Set up the clock ranges for the various modules.  Note that for this
+    // sim the clock rates are often several orders of magnitude slower than
+    // real time.
+    MIN_ACTION_POTENTIAL_CLOCK_DT: minActionPotentialClockDT,
+    MAX_ACTION_POTENTIAL_CLOCK_DT: maxActionPotentialClockDT,
+    DEFAULT_ACTION_POTENTIAL_CLOCK_DT: (minActionPotentialClockDT + maxActionPotentialClockDT) * 0.55,
+    TIME_SPAN: 25 // In seconds.
   } );
-
 } );

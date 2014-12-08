@@ -13,7 +13,7 @@ define( function( require ) {
   var NeuronModel = require( 'NEURON/neuron/model/NeuronModel' );
   var NeuronScreenView = require( 'NEURON/neuron/view/NeuronScreenView' );
   var NeuronClockModelAdapter = require( 'NEURON/neuron/model/NeuronClockModelAdapter' );
-  var NeuronSharedConstants = require( 'NEURON/neuron/common/NeuronSharedConstants' );
+  var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
   var Screen = require( 'JOIST/Screen' );
 
   // strings
@@ -27,8 +27,8 @@ define( function( require ) {
     var neuronModel = new NeuronModel();
     // NeuronModelAdapter intercepts the default Step function and provides
     // "constant" clock and record Playback features to NeuronModel, see NeuronClockModelAdapter
-    var neuronClockModelAdapter = new NeuronClockModelAdapter( neuronModel, NeuronSharedConstants.CLOCK_FRAME_RATE,
-      NeuronSharedConstants.DEFAULT_ACTION_POTENTIAL_CLOCK_DT );
+    var neuronClockModelAdapter = new NeuronClockModelAdapter( neuronModel, NeuronConstants.CLOCK_FRAME_RATE,
+      NeuronConstants.DEFAULT_ACTION_POTENTIAL_CLOCK_DT );
 
     Screen.call( this, neuronSimString, null /* no icon, single-screen sim */,
       function() { return neuronClockModelAdapter; },

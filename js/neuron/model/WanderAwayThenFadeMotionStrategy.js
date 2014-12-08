@@ -12,14 +12,14 @@ define( function( require ) {
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
   var MotionStrategy = require( 'NEURON/neuron/model/MotionStrategy' );
-  var NeuronSharedConstants = require( 'NEURON/neuron/common/NeuronSharedConstants' );
+  var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
   var TimedFadeAwayStrategy = require( 'NEURON/neuron/model/TimedFadeAwayStrategy' );
 
   // constants
   var CLOCK_TICKS_BEFORE_MOTION_UPDATE = 5;
   var CLOCK_TICKS_BEFORE_VELOCITY_UPDATE = CLOCK_TICKS_BEFORE_MOTION_UPDATE * 10;
-  var MOTION_UPDATE_PERIOD = NeuronSharedConstants.DEFAULT_ACTION_POTENTIAL_CLOCK_DT * CLOCK_TICKS_BEFORE_MOTION_UPDATE;
-  var VELOCITY_UPDATE_PERIOD = NeuronSharedConstants.DEFAULT_ACTION_POTENTIAL_CLOCK_DT * CLOCK_TICKS_BEFORE_VELOCITY_UPDATE;
+  var MOTION_UPDATE_PERIOD = NeuronConstants.DEFAULT_ACTION_POTENTIAL_CLOCK_DT * CLOCK_TICKS_BEFORE_MOTION_UPDATE;
+  var VELOCITY_UPDATE_PERIOD = NeuronConstants.DEFAULT_ACTION_POTENTIAL_CLOCK_DT * CLOCK_TICKS_BEFORE_VELOCITY_UPDATE;
   var MIN_VELOCITY = 500;  // In nanometers per second of sim time.
   var MAX_VELOCITY = 5000; // In nanometers per second of sim time.
 
@@ -46,8 +46,8 @@ define( function( require ) {
 
     // Set up random offsets so that all the particles using this motion
     // strategy don't all get updated at the same time.
-    this.motionUpdateCountdownTimer = RAND.nextInt( CLOCK_TICKS_BEFORE_MOTION_UPDATE ) * NeuronSharedConstants.DEFAULT_ACTION_POTENTIAL_CLOCK_DT;
-    this.velocityUpdateCountdownTimer = RAND.nextInt( CLOCK_TICKS_BEFORE_VELOCITY_UPDATE ) * NeuronSharedConstants.DEFAULT_ACTION_POTENTIAL_CLOCK_DT;
+    this.motionUpdateCountdownTimer = RAND.nextInt( CLOCK_TICKS_BEFORE_MOTION_UPDATE ) * NeuronConstants.DEFAULT_ACTION_POTENTIAL_CLOCK_DT;
+    this.velocityUpdateCountdownTimer = RAND.nextInt( CLOCK_TICKS_BEFORE_VELOCITY_UPDATE ) * NeuronConstants.DEFAULT_ACTION_POTENTIAL_CLOCK_DT;
 
     this.velocityX = 0;
     this.velocityY = 0;

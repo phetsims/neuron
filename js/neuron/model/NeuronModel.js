@@ -30,7 +30,7 @@ define( function( require ) {
   var MembraneCrossingDirection = require( 'NEURON/neuron/model/MembraneCrossingDirection' );
   var CaptureZoneScanResult = require( 'NEURON/neuron/model/CaptureZoneScanResult' );
   var TimedFadeInStrategy = require( 'NEURON/neuron/model/TimedFadeInStrategy' );
-  var NeuronSharedConstants = require( 'NEURON/neuron/common/NeuronSharedConstants' );
+  var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
   var MathUtils = require( 'NEURON/neuron/utils/MathUtils' );
 
   // Default configuration values.
@@ -120,7 +120,7 @@ define( function( require ) {
    */
   function NeuronModel() {
     var thisModel = this;
-    var maxRecordPoints = Math.ceil( NeuronSharedConstants.TIME_SPAN * 1000 / NeuronSharedConstants.MIN_ACTION_POTENTIAL_CLOCK_DT );
+    var maxRecordPoints = Math.ceil( NeuronConstants.TIME_SPAN * 1000 / NeuronConstants.MIN_ACTION_POTENTIAL_CLOCK_DT );
     thisModel.axonMembrane = new AxonMembrane();
 
     // List of the particles that come and go when the simulation is working in real time.

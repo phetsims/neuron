@@ -19,7 +19,7 @@ define( function( require ) {
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
   var DelayBuffer = require( 'NEURON/neuron/model/DelayBuffer' );
-  var NeuronSharedConstants = require( 'NEURON/neuron/common/NeuronSharedConstants' );
+  var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
 
   /**
    Amount of time used for each iteration of the model.  This is fixed,
@@ -40,8 +40,8 @@ define( function( require ) {
     thisModel.perKChannels = 100;
     thisModel.elapsedTime = 0;
     thisModel.timeSinceActionPotential = Number.POSITIVE_INFINITY;
-    thisModel.m3hDelayBuffer = new DelayBuffer( MAX_DELAY, NeuronSharedConstants.MIN_ACTION_POTENTIAL_CLOCK_DT );
-    thisModel.n4DelayBuffer = new DelayBuffer( MAX_DELAY, NeuronSharedConstants.MIN_ACTION_POTENTIAL_CLOCK_DT );
+    thisModel.m3hDelayBuffer = new DelayBuffer( MAX_DELAY, NeuronConstants.MIN_ACTION_POTENTIAL_CLOCK_DT );
+    thisModel.n4DelayBuffer = new DelayBuffer( MAX_DELAY, NeuronConstants.MIN_ACTION_POTENTIAL_CLOCK_DT );
 
     thisModel.resting_v = 65;// final doesn't change
 
