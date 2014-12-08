@@ -20,7 +20,7 @@ define( function( require ) {
   var Property = require( 'AXON/Property' );
   var StillnessMotionStrategy = require( 'NEURON/neuron/model/StillnessMotionStrategy' );
   var NullFadeStrategy = require( 'NEURON/neuron/model/NullFadeStrategy' );
-  var MembraneTraversalMotionStrategy = require( 'NEURON/neuron/model/MembraneTraversalMotionStrategy' );
+  var MotionStrategy = require( 'NEURON/neuron/model/MotionStrategy' );
   var ParticlePlaybackMemento = require( 'NEURON/neuron/model/ParticlePlaybackMemento' );
 
   // constants
@@ -115,7 +115,7 @@ define( function( require ) {
       // If the particle is not in the process of trying to traverse a
       // membrane channel, then it should be considered to be available for
       // capture.
-      return !(this.motionStrategy instanceof MembraneTraversalMotionStrategy);
+      return !(this.motionStrategy instanceof MotionStrategy);
     },
 
     /**

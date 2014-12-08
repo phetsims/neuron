@@ -13,13 +13,8 @@ define( function( require ) {
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
 
-  /**
-   * @constructor
-   */
-  function FadeStrategy() {
-  }
 
-  return inherit( Object, FadeStrategy, {
+  return inherit( Object, {}, {
     /**
      * Fade the associated model element according to the specified amount of
      * time and the nature of the strategy.

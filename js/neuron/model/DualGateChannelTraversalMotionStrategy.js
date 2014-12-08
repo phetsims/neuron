@@ -17,7 +17,8 @@ define( function( require ) {
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
   var Vector2 = require( 'DOT/Vector2' );
-  var MembraneTraversalMotionStrategy = require( 'NEURON/neuron/model/MembraneTraversalMotionStrategy' );
+  var MotionStrategy = require( 'NEURON/neuron/model/MotionStrategy' );
+  var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
   var WanderAwayThenFadeMotionStrategy = require( 'NEURON/neuron/model/WanderAwayThenFadeMotionStrategy' );
   var TimedFadeAwayStrategy = require( 'NEURON/neuron/model/TimedFadeAwayStrategy' );
   var SpeedChangeLinearMotionStrategy = require( 'NEURON/neuron/model/SpeedChangeLinearMotionStrategy' );
@@ -37,7 +38,7 @@ define( function( require ) {
    * @constructor
    */
   function DualGateChannelTraversalMotionStrategy( channel, startingLocationX, startingLocationY, maxVelocity ) {
-    maxVelocity = maxVelocity || MembraneTraversalMotionStrategy.DEFAULT_MAX_VELOCITY;
+    maxVelocity = maxVelocity || NeuronConstants.DEFAULT_MAX_VELOCITY;
     this.velocityVector = new Vector2();
     this.channel = channel;
     this.maxVelocity = maxVelocity;
@@ -50,7 +51,7 @@ define( function( require ) {
     this.setCourseForCurrentTraversalPoint( startingLocationX, startingLocationY );
   }
 
-  return inherit( MembraneTraversalMotionStrategy, DualGateChannelTraversalMotionStrategy, {
+  return inherit( MotionStrategy, DualGateChannelTraversalMotionStrategy, {
 
     //@Override
     move: function( movableModelElement, fadableModelElement, dt ) {
@@ -283,7 +284,7 @@ define( function( require ) {
           this.velocityVector.rotate( velocityRotationAngle );
         }
         else {
-          this.velocityVector.rotate( ( Math.random() - 0.5 ) * ( Math.PI * 0.9 ) * this.maxVelocity / MembraneTraversalMotionStrategy.DEFAULT_MAX_VELOCITY );
+          this.velocityVector.rotate( ( Math.random() - 0.5 ) * ( Math.PI * 0.9 ) * this.maxVelocity / NeuronConstants.DEFAULT_MAX_VELOCITY );
         }
       }
 

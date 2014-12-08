@@ -37,6 +37,8 @@ define( function( require ) {
     MIN_ACTION_POTENTIAL_CLOCK_DT: minActionPotentialClockDT,
     MAX_ACTION_POTENTIAL_CLOCK_DT: maxActionPotentialClockDT,
     DEFAULT_ACTION_POTENTIAL_CLOCK_DT: (minActionPotentialClockDT + maxActionPotentialClockDT) * 0.55,
-    TIME_SPAN: 25 // In seconds.
+    TIME_SPAN: 25, // In seconds.
+    DEFAULT_MAX_VELOCITY: 40000
   } );
-} );
+} )
+;
