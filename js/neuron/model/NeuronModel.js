@@ -28,7 +28,6 @@ define( function( require ) {
   var SodiumDualGatedChannel = require( 'NEURON/neuron/model/SodiumDualGatedChannel' );
   var SlowBrownianMotionStrategy = require( 'NEURON/neuron/model/SlowBrownianMotionStrategy' );
   var MembraneCrossingDirection = require( 'NEURON/neuron/model/MembraneCrossingDirection' );
-  var CaptureZoneScanResult = require( 'NEURON/neuron/model/CaptureZoneScanResult' );
   var TimedFadeInStrategy = require( 'NEURON/neuron/model/TimedFadeInStrategy' );
   var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
   var MathUtils = require( 'NEURON/neuron/utils/MathUtils' );
@@ -626,9 +625,8 @@ define( function( require ) {
       thisModel.membraneChannels.forEach( function( membraneChannel ) {
         if ( membraneChannel instanceof SodiumDualGatedChannel ) {
           var captureZone = membraneChannel.getExteriorCaptureZone();
-          //CaptureZoneScanResult
-          var czsr = thisModel.scanCaptureZoneForFreeParticles( captureZone, ParticleType.SODIUM_ION );
-          if ( czsr.numParticlesInZone === 0 ) {
+          var numParticlesInZone = thisModel.scanCaptureZoneForFreeParticles( captureZone, ParticleType.SODIUM_ION );
+          if ( numParticlesInZone === 0 ) {
             thisModel.addBackgroundParticlesToZone( ParticleType.SODIUM_ION, captureZone, Math.floor( Math.random() * 2 ) + 1 );
           }
         }
@@ -787,7 +785,7 @@ define( function( require ) {
      *
      * @param {CaptureZone} zone
      * @param {ParticleType} particleType
-     * @return
+     * @return {number}
      */
     scanCaptureZoneForFreeParticles: function( zone, particleType ) {
       var thisModel = this;
@@ -813,7 +811,7 @@ define( function( require ) {
       } );
 
 
-      return new CaptureZoneScanResult( closestFreeParticle, totalNumberOfParticles );
+      return totalNumberOfParticles;
     },
 
     updateStimulusLockoutState: function() {
