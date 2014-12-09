@@ -115,6 +115,7 @@ define( function( require ) {
 
       this.allParticles = [];
       this.allParticles = this.neuronModel.backgroundParticles.getArray().slice();
+      //REVIEW: slice() unnecessary, because concat just reads from its parameters.
       this.allParticles = this.allParticles.concat( this.neuronModel.transientParticles.getArray().slice() );
       this.allParticles = this.allParticles.concat( this.neuronModel.playbackParticles.getArray().slice() );
 
