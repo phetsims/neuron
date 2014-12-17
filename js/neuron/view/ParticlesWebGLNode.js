@@ -34,6 +34,11 @@ define( function( require ) {
   var Vector2 = require( 'DOT/Vector2' );
   var Vector3 = require( 'DOT/Vector3' );
 
+  //constants
+  // Used for pre-initializing the VertexData. at the most the number of particles are observed to be
+  // in the range of 1500-1600
+  var MAX_PARTICLES = 2000;
+
   /**
    * @param {NeuronModel} neuronModel
    * @param {ModelViewTransform2} modelViewTransform
@@ -55,6 +60,11 @@ define( function( require ) {
     this.visibleParticlesSize = 0; // Only Particles within the clipping region of Zoomable Node are considered visible
     this.allParticles = [];
     this.textureBound = false;
+
+    var noOfTriangleVerticesPerParticle = 12; // 6 corners(2 triangle) coordinates per corner
+    var noOfTextCoordinatesPerVertex = 2;
+    var totalNoOfVertices = MAX_PARTICLES * noOfTriangleVerticesPerParticle * noOfTextCoordinatesPerVertex;
+    this.vertexData = new Float32Array( totalNoOfVertices );
 
     // Get a reference to the ScaleMatrix every time when the User zooms in and out.This Scale matrix is used for
     // appropriately positioning the particle in a zoomed state.
@@ -98,6 +108,7 @@ define( function( require ) {
     initialize: function( gl ) {
       this.texture = null;
       this.gl = gl;
+
       this.updateTextureImage( gl );
       this.bindTextureImage( gl );
 
@@ -126,9 +137,9 @@ define( function( require ) {
       //each vertex is made up of 4 values 2  for x and y coordinates  and 2 for uv coordinates
       var vertexBuffer = gl.createBuffer();
       gl.bindBuffer( gl.ARRAY_BUFFER, vertexBuffer );
-      var floatArrayTextCoords = this.createVerticesTexCoords();
-      gl.bufferData( gl.ARRAY_BUFFER, floatArrayTextCoords, gl.DYNAMIC_DRAW );
-      var fSize = floatArrayTextCoords.BYTES_PER_ELEMENT;
+      this.populateVerticesTexCoords();
+      gl.bufferData( gl.ARRAY_BUFFER, this.vertexData, gl.DYNAMIC_DRAW );
+      var fSize = this.vertexData.BYTES_PER_ELEMENT;
 
       //  use 4 if UV in interleaved. 4 bytes for each vertex (ie 2 for xy coordinates and 2 for uv (interleaved))
       var stride = 4;
@@ -163,15 +174,11 @@ define( function( require ) {
     },
 
     /**
-     * creates Float32Array array filled with vertex and texture data for all particles
-     * @returns {Float32Array}
+     * populates vertexData (Float32Array array) with vertex and texture data for all particles
      */
-    createVerticesTexCoords: function() {
+    populateVerticesTexCoords: function() {
       var index = 0;
-      var noOfTriangleVerticesPerParticle = 12; // 6 corners(2 triangle) coordinates per corner
-      var noOfTextCoordinatesPerVertex = 2;
-      var totalNoOfVertices = this.allParticles.length * noOfTriangleVerticesPerParticle * noOfTextCoordinatesPerVertex;
-      var vertexData = new Float32Array( totalNoOfVertices );
+
       var thisNode = this;
       this.visibleParticlesSize = 0;
 
@@ -207,47 +214,44 @@ define( function( require ) {
         textCords = thisNode.particleTextureMap.getTexCords( particle.getType(), particle.getOpaqueness(), tilePosVector, textCords );
 
         //left bottom
-        vertexData[index++] = vertexCords.leftX;//x
-        vertexData[index++] = vertexCords.bottomY;//y
-        vertexData[index++] = textCords.leftX; //u
-        vertexData[index++] = textCords.bottomY; //v
+        thisNode.vertexData[index++] = vertexCords.leftX;//x
+        thisNode.vertexData[index++] = vertexCords.bottomY;//y
+        thisNode.vertexData[index++] = textCords.leftX; //u
+        thisNode.vertexData[index++] = textCords.bottomY; //v
 
         //left top
-        vertexData[index++] = vertexCords.leftX;
-        vertexData[index++] = vertexCords.topY;
-        vertexData[index++] = textCords.leftX;//u
-        vertexData[index++] = textCords.topY;//v
+        thisNode.vertexData[index++] = vertexCords.leftX;
+        thisNode.vertexData[index++] = vertexCords.topY;
+        thisNode.vertexData[index++] = textCords.leftX;//u
+        thisNode.vertexData[index++] = textCords.topY;//v
 
         //right top
-        vertexData[index++] = vertexCords.rightX;
-        vertexData[index++] = vertexCords.topY;
-        vertexData[index++] = textCords.rightX;//u
-        vertexData[index++] = textCords.topY;//v
+        thisNode.vertexData[index++] = vertexCords.rightX;
+        thisNode.vertexData[index++] = vertexCords.topY;
+        thisNode.vertexData[index++] = textCords.rightX;//u
+        thisNode.vertexData[index++] = textCords.topY;//v
 
         //---2nd triangle-----
 
         //right top
-        vertexData[index++] = vertexCords.rightX;
-        vertexData[index++] = vertexCords.topY;
-        vertexData[index++] = textCords.rightX;//u
-        vertexData[index++] = textCords.topY;//v
+        thisNode.vertexData[index++] = vertexCords.rightX;
+        thisNode.vertexData[index++] = vertexCords.topY;
+        thisNode.vertexData[index++] = textCords.rightX;//u
+        thisNode.vertexData[index++] = textCords.topY;//v
 
         //right bottom
-        vertexData[index++] = vertexCords.rightX;
-        vertexData[index++] = vertexCords.bottomY;
-        vertexData[index++] = textCords.rightX;//u
-        vertexData[index++] = textCords.bottomY;//v
+        thisNode.vertexData[index++] = vertexCords.rightX;
+        thisNode.vertexData[index++] = vertexCords.bottomY;
+        thisNode.vertexData[index++] = textCords.rightX;//u
+        thisNode.vertexData[index++] = textCords.bottomY;//v
 
         //left bottom
-        vertexData[index++] = vertexCords.leftX;
-        vertexData[index++] = vertexCords.bottomY;
-        vertexData[index++] = textCords.leftX;//u
-        vertexData[index++] = textCords.bottomY;//v
+        thisNode.vertexData[index++] = vertexCords.leftX;
+        thisNode.vertexData[index++] = vertexCords.bottomY;
+        thisNode.vertexData[index++] = textCords.leftX;//u
+        thisNode.vertexData[index++] = textCords.bottomY;//v
 
       } );
-
-      return vertexData;
-
     },
     updateTextureImage: function( gl ) {
 
