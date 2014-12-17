@@ -214,42 +214,42 @@ define( function( require ) {
         textCords = thisNode.particleTextureMap.getTexCords( particle.getType(), particle.getOpaqueness(), tilePosVector, textCords );
 
         //left bottom
-        thisNode.vertexData[index++] = vertexCords.leftX;//x
-        thisNode.vertexData[index++] = vertexCords.bottomY;//y
-        thisNode.vertexData[index++] = textCords.leftX; //u
-        thisNode.vertexData[index++] = textCords.bottomY; //v
+        thisNode.vertexData[index++] = vertexCords.left;//x
+        thisNode.vertexData[index++] = vertexCords.bottom;//y
+        thisNode.vertexData[index++] = textCords.left; //u
+        thisNode.vertexData[index++] = textCords.bottom; //v
 
         //left top
-        thisNode.vertexData[index++] = vertexCords.leftX;
-        thisNode.vertexData[index++] = vertexCords.topY;
-        thisNode.vertexData[index++] = textCords.leftX;//u
-        thisNode.vertexData[index++] = textCords.topY;//v
+        thisNode.vertexData[index++] = vertexCords.left;
+        thisNode.vertexData[index++] = vertexCords.top;
+        thisNode.vertexData[index++] = textCords.left;//u
+        thisNode.vertexData[index++] = textCords.top;//v
 
         //right top
-        thisNode.vertexData[index++] = vertexCords.rightX;
-        thisNode.vertexData[index++] = vertexCords.topY;
-        thisNode.vertexData[index++] = textCords.rightX;//u
-        thisNode.vertexData[index++] = textCords.topY;//v
+        thisNode.vertexData[index++] = vertexCords.right;
+        thisNode.vertexData[index++] = vertexCords.top;
+        thisNode.vertexData[index++] = textCords.right;//u
+        thisNode.vertexData[index++] = textCords.top;//v
 
         //---2nd triangle-----
 
         //right top
-        thisNode.vertexData[index++] = vertexCords.rightX;
-        thisNode.vertexData[index++] = vertexCords.topY;
-        thisNode.vertexData[index++] = textCords.rightX;//u
-        thisNode.vertexData[index++] = textCords.topY;//v
+        thisNode.vertexData[index++] = vertexCords.right;
+        thisNode.vertexData[index++] = vertexCords.top;
+        thisNode.vertexData[index++] = textCords.right;//u
+        thisNode.vertexData[index++] = textCords.top;//v
 
         //right bottom
-        thisNode.vertexData[index++] = vertexCords.rightX;
-        thisNode.vertexData[index++] = vertexCords.bottomY;
-        thisNode.vertexData[index++] = textCords.rightX;//u
-        thisNode.vertexData[index++] = textCords.bottomY;//v
+        thisNode.vertexData[index++] = vertexCords.right;
+        thisNode.vertexData[index++] = vertexCords.bottom;
+        thisNode.vertexData[index++] = textCords.right;//u
+        thisNode.vertexData[index++] = textCords.bottom;//v
 
         //left bottom
-        thisNode.vertexData[index++] = vertexCords.leftX;
-        thisNode.vertexData[index++] = vertexCords.bottomY;
-        thisNode.vertexData[index++] = textCords.leftX;//u
-        thisNode.vertexData[index++] = textCords.bottomY;//v
+        thisNode.vertexData[index++] = vertexCords.left;
+        thisNode.vertexData[index++] = vertexCords.bottom;
+        thisNode.vertexData[index++] = textCords.left;//u
+        thisNode.vertexData[index++] = textCords.bottom;//v
 
       } );
     },

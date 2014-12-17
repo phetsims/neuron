@@ -81,10 +81,10 @@ define( function( require ) {
         w = this.potassiumParticleSize;
       }
       var h = w;
-      coords.leftX = xPos - w;
-      coords.topY = yPos - h;
-      coords.rightX = xPos + w;
-      coords.bottomY = yPos + h;
+      coords.left = xPos - w;
+      coords.top = yPos - h;
+      coords.right = xPos + w;
+      coords.bottom = yPos + h;
 
       return coords;
     },
@@ -200,10 +200,10 @@ define( function( require ) {
       coords = coords || {};
       // Particle Pos is at center tp get the left corder, substrat the radius and normalize the value by
       // dividing it by canvasWidth, the Tex Coords needs to be on the range of 0..1
-      coords.leftX = (tilePost.x - tileRadius) / this.canvasWidth;
-      coords.topY = (tilePost.y - tileRadius) / this.canvasHeight;
-      coords.rightX = (tilePost.x + tileRadius) / this.canvasWidth;
-      coords.bottomY = (tilePost.y + tileRadius) / this.canvasHeight;
+      coords.left = (tilePost.x - tileRadius) / this.canvasWidth;
+      coords.top = (tilePost.y - tileRadius) / this.canvasHeight;
+      coords.right = (tilePost.x + tileRadius) / this.canvasWidth;
+      coords.bottom = (tilePost.y + tileRadius) / this.canvasHeight;
 
 
       return coords;
