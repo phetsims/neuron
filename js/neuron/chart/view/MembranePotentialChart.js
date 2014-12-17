@@ -103,25 +103,28 @@ define( function( require ) {
     // Example:- for the value of 3 it returns a value of -50 and for 5 it returns 0 (because range is -100 to 100)
     var rangeMap = new dot.LinearFunction( 0, numHorizontalGridLines, this.range[1], this.range[0] );
 
+    var gridShape = new Shape();
+    var plotGrid = new Path( gridShape, {stroke: 'gray', lineWidth: 0.6} );
 
-    var plotGrid = new Node();
-    var lineWidth = 0.3;
-    var line;
     //vertical grid lines
     for ( var i = 0; i < numVerticalGridLines + 1; i++ ) {
-      line = new Line( i * chartDimension.width / numVerticalGridLines, 0, i * chartDimension.width / numVerticalGridLines, chartDimension.height, {stroke: 'gray', lineWidth: lineWidth} );
-      line.computeShapeBounds = computeShapeBounds;
-      plotGrid.addChild( line );
-      plotGrid.addChild( new Text( domainMap( i ), {font: GRID_TICK_TEXT_FONT, centerX: line.centerX, top: line.bottom + 6} ) );
+      gridShape.moveTo( i * chartDimension.width / numVerticalGridLines, 0 );
+      gridShape.lineTo( i * chartDimension.width / numVerticalGridLines, chartDimension.height );
+      plotGrid.addChild( new Text( domainMap( i ), {
+        font: GRID_TICK_TEXT_FONT,
+        //Text controls need to aligned to each grid line based on the line's orientation.
+        centerX: i * chartDimension.width / numVerticalGridLines,
+        top: chartDimension.height + 6} ) );
     }
 
     //horizontal grid lines
     for ( i = 0; i < numHorizontalGridLines + 1; i++ ) {
-      line = new Line( 0, i * chartDimension.height / numHorizontalGridLines, chartDimension.width, i * chartDimension.height / numHorizontalGridLines, {stroke: 'gray', lineWidth: lineWidth} );
-      line.computeShapeBounds = computeShapeBounds;
-      plotGrid.addChild( line );
-      plotGrid.addChild( new Text( rangeMap( i ), {font: GRID_TICK_TEXT_FONT, centerY: line.centerY, right: line.left - 6} ) );
-
+      gridShape.moveTo( 0, i * chartDimension.height / numHorizontalGridLines );
+      gridShape.lineTo( chartDimension.width, i * chartDimension.height / numHorizontalGridLines );
+      plotGrid.addChild( new Text( rangeMap( i ), {
+        font: GRID_TICK_TEXT_FONT,
+        centerY: i * chartDimension.height / numHorizontalGridLines,
+        right: -6} ) );
     }
 
     plotNode.addChild( plotGrid );
