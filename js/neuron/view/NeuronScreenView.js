@@ -42,6 +42,8 @@ define( function( require ) {
   var SimSpeedControlPanel = require( 'NEURON/neuron/controlpanel/SimSpeedControlPanel' );
   var PlayPauseButton = require( 'SCENERY_PHET/buttons/PlayPauseButton' );
   var StepButton = require( 'SCENERY_PHET/buttons/StepButton' );
+  var Util = require( 'SCENERY/util/Util' );
+  var ParticlesNode = require( 'NEURON/neuron/view/ParticlesNode' );
 
   // strings
   var stimulateNeuronString = require( 'string!NEURON/stimulateNeuron' );
@@ -76,8 +78,8 @@ define( function( require ) {
     var zoomProperty = new Property( defaultZoom );
     var zoomableWorldNode = new ZoomableNode( thisView.neuronModel, zoomableRootNode, zoomProperty, worldNodeClipArea, viewPortPosition );
     thisView.addChild( zoomableWorldNode );
-    var particlesLayerNode = new Node();
-    thisView.addChild( particlesLayerNode );
+    var particlesWebGLParentNode = new Node();
+    thisView.addChild( particlesWebGLParentNode );
 
     // Particles WebGL layer doesn't support bounds clipping, so a border like shape is applied and added as a top node
     // with the same color as the screen background. Now particles appear to be properly clipped.
@@ -199,9 +201,20 @@ define( function( require ) {
     membranePotentialChartNode.bottom = thisView.layoutBounds.maxY - 105;
     thisView.addChild( membranePotentialChartNode );
 
+    // Check to see if WebGL was prevented by a query parameter
+    var allowWebGL = window.phetcommon.getQueryParameter( 'webgl' ) !== 'false';
+    var webGLSupported = Util.isWebGLSupported && allowWebGL;
 
-    var particlesWebGLNode = new ParticlesWebGLNode( thisView.neuronModel, thisView.mvt, zoomProperty, zoomableRootNode, worldNodeClipArea );
-    particlesLayerNode.addChild( particlesWebGLNode );
+    if ( webGLSupported ) {
+      var particlesWebGLNode = new ParticlesWebGLNode( thisView.neuronModel, thisView.mvt, zoomProperty, zoomableRootNode, worldNodeClipArea );
+      particlesWebGLParentNode.addChild( particlesWebGLNode );
+    }
+    else {
+      var particlesCanvasNode = new ParticlesNode( thisView.neuronModel, thisView.mvt, new Bounds2( 0, 10, 700, 600 ) );
+      //WebGL node uses its own scaling whereas Matrix canvas based Particles implementation uses Node's
+      //transform matrix for scaling so add it to the zoomableRootNode
+      zoomableRootNode.addChild( particlesCanvasNode );
+    }
 
 
     var simSpeedControlPanel = new SimSpeedControlPanel( neuronClockModelAdapter.speedProperty );
