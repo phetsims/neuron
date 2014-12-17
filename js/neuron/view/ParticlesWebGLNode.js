@@ -108,7 +108,8 @@ define( function( require ) {
     initialize: function( gl ) {
       this.texture = null;
       this.gl = gl;
-
+      var vertexBuffer = gl.createBuffer();
+      gl.bindBuffer( gl.ARRAY_BUFFER, vertexBuffer );
       this.updateTextureImage( gl );
       this.bindTextureImage( gl );
 
@@ -130,13 +131,10 @@ define( function( require ) {
       this.allParticles = this.allParticles.concat( this.neuronModel.transientParticles.getArray().slice() );
       this.allParticles = this.allParticles.concat( this.neuronModel.playbackParticles.getArray().slice() );
 
-
       var uMatrix = viewMatrix; // see TextureInterleavedShaderWebGLLayer for how uMatrix is calculated only once and cached
       gl.uniformMatrix4fv( shaderProgram.uniformLocations.uMatrix, false, uMatrix.entries );
 
       //each vertex is made up of 4 values 2  for x and y coordinates  and 2 for uv coordinates
-      var vertexBuffer = gl.createBuffer();
-      gl.bindBuffer( gl.ARRAY_BUFFER, vertexBuffer );
       this.populateVerticesTexCoords();
       gl.bufferData( gl.ARRAY_BUFFER, this.vertexData, gl.DYNAMIC_DRAW );
       var fSize = this.vertexData.BYTES_PER_ELEMENT;
@@ -151,9 +149,6 @@ define( function( require ) {
       //this.setColor(gl,shaderProgram,fSize,stride);
       gl.drawArrays( gl.TRIANGLES, 0, this.visibleParticlesSize * 6 );
       gl.bindTexture( gl.TEXTURE_2D, null );
-      gl.deleteBuffer( vertexBuffer );
-
-
     },
 
     setMaterial: function( gl, shaderProgram, fSize, stride, uvOffset ) {
