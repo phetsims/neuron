@@ -38,6 +38,7 @@ define( function( require ) {
   // Used for pre-initializing the VertexData. at the most the number of particles are observed to be
   // in the range of 1500-1600
   var MAX_PARTICLES = 2000;
+  var DEBUG_TILE_BOUNDS = false;
 
   /**
    * @param {NeuronModel} neuronModel
@@ -144,30 +145,27 @@ define( function( require ) {
       var uvOffset = fSize * 2; // (offset indicating how to retrive the UV in ur case after the first 2 values)
       gl.vertexAttribPointer( shaderProgram.attributeLocations.aVertex, 2, gl.FLOAT, false, fSize * stride, 0 );
       this.setMaterial( gl, shaderProgram, fSize, stride, uvOffset );
-
-      // To see how tiles are formed uncomment setting the color - useful for debugging
-      //this.setColor(gl,shaderProgram,fSize,stride);
       gl.drawArrays( gl.TRIANGLES, 0, this.visibleParticlesSize * 6 );
       gl.bindTexture( gl.TEXTURE_2D, null );
     },
 
     setMaterial: function( gl, shaderProgram, fSize, stride, uvOffset ) {
       gl.uniform1i( shaderProgram.uniformLocations.uTexture, 0 ); // TEXTURE0 slot
-
-      //Indicate the branch of logic to use in the ubershader.  In this case, a texture should be used for the image
-      gl.uniform1i( shaderProgram.uniformLocations.uFragmentType, WebGLLayer.fragmentTypeTexture );
       gl.vertexAttribPointer( shaderProgram.attributeLocations.aTexCoord, 2, gl.FLOAT, false, fSize * stride, uvOffset );
       gl.activeTexture( gl.TEXTURE0 );
       gl.bindTexture( gl.TEXTURE_2D, this.texture );
 
-    },
+      var fragmentType = WebGLLayer.fragmentTypeTexture;
+      if ( DEBUG_TILE_BOUNDS ) {  // To see how tiles are formed
+        fragmentType = WebGLLayer.fragmentTypeFill;
+        var color = Color.toColor( Color.ORANGE );
+        gl.uniform4f( shaderProgram.uniformLocations.uColor, color.r / 255, color.g / 255, color.b / 255, color.a );
+      }
 
-    setColor: function( gl, shaderProgram, fSize, stride ) {
-      var color = Color.toColor( Color.ORANGE );
-      gl.uniform1i( shaderProgram.uniformLocations.uFragmentType, WebGLLayer.fragmentTypeFill );
-      gl.uniform4f( shaderProgram.uniformLocations.uColor, color.r / 255, color.g / 255, color.b / 255, color.a );
-    },
+      //Indicate the branch of logic to use in the ubershader.  In this case, a texture should be used for the image
+      gl.uniform1i( shaderProgram.uniformLocations.uFragmentType, fragmentType );
 
+    },
     /**
      * populates vertexData (Float32Array array) with vertex and texture data for all particles
      */
@@ -268,13 +266,6 @@ define( function( require ) {
       gl.bindTexture( gl.TEXTURE_2D, texture );
       gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE );
       gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE );
-
-      /*
-       // useful debugging to know the size of the shape in case if the shape is not correctly matched with the Tetxture..
-       gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.MIRRORED_REPEAT );
-       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.MIRRORED_REPEAT );
-       gl.pixelStorei( gl.UNPACK_FLIP_Y_WEBGL, true );
-       */
 
       gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.canvas );
 
