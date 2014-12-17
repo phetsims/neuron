@@ -58,7 +58,7 @@ define( function( require ) {
 
     // Get a reference to the ScaleMatrix every time when the User zooms in and out.This Scale matrix is used for
     // appropriately positioning the particle in a zoomed state.
-    function updateScaleMatrix( zoomFactor ) {
+    function updateScaleMatrix() {
       thisNode.zoomTransformationMatrix = zoomableRootNode.getTransform().getMatrix();
       thisNode.updateTextureImage();
       //adjust the bounds based on Zoom factor
@@ -126,10 +126,8 @@ define( function( require ) {
       //each vertex is made up of 4 values 2  for x and y coordinates  and 2 for uv coordinates
       var vertexBuffer = gl.createBuffer();
       gl.bindBuffer( gl.ARRAY_BUFFER, vertexBuffer );
-      var verticesTexCoords = this.createVerticesTexCoords();
-      var floatArrayTextCoords = new Float32Array( verticesTexCoords );
+      var floatArrayTextCoords = this.createVerticesTexCoords();
       gl.bufferData( gl.ARRAY_BUFFER, floatArrayTextCoords, gl.DYNAMIC_DRAW );
-
       var fSize = floatArrayTextCoords.BYTES_PER_ELEMENT;
 
       //  use 4 if UV in interleaved. 4 bytes for each vertex (ie 2 for xy coordinates and 2 for uv (interleaved))
@@ -164,9 +162,16 @@ define( function( require ) {
       gl.uniform4f( shaderProgram.uniformLocations.uColor, color.r / 255, color.g / 255, color.b / 255, color.a );
     },
 
+    /**
+     * creates Float32Array array filled with vertex and texture data for all particles
+     * @returns {Float32Array}
+     */
     createVerticesTexCoords: function() {
       var index = 0;
-      var vertexData = [];
+      var noOfTriangleVerticesPerParticle = 12; // 6 corners(2 triangle) coordinates per corner
+      var noOfTextCoordinatesPerVertex = 2;
+      var totalNoOfVertices = this.allParticles.length * noOfTriangleVerticesPerParticle * noOfTextCoordinatesPerVertex;
+      var vertexData = new Float32Array( totalNoOfVertices );
       var thisNode = this;
       this.visibleParticlesSize = 0;
 
