@@ -19,15 +19,15 @@ define( function( require ) {
 
   /**
    * @param {ModelViewTransform2D} modelViewTransform
-   * @param {Property.<number>} scaleProperty
+   * @param {Property.<number>} zoomProperty
    * @constructor
    */
-  function ParticleSpriteSheetNode( modelViewTransform, scaleProperty ) {
+  function ParticleSpriteSheetNode( modelViewTransform, zoomProperty ) {
 
     var thisNode = this;
     CanvasNode.call( thisNode, {pickable: false, canvasBounds: new Bounds2( 0, 0, 300, 300 ) } );
     this.modelViewTransform = modelViewTransform;
-    this.particleTextureMap = new ParticleTextureMap( modelViewTransform, scaleProperty );
+    this.particleTextureMap = new ParticleTextureMap( modelViewTransform, zoomProperty );
     thisNode.invalidatePaint();
 
 

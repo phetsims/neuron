@@ -43,19 +43,19 @@ define( function( require ) {
   /**
    * @param {NeuronModel} neuronModel
    * @param {ModelViewTransform2} modelViewTransform
-   * @param {Property.<number>} scaleProperty
+   * @param {Property.<number>} zoomProperty
    * @param {Node} zoomableRootNode
    * @param {Shape} clipArea
    * @constructor
    */
-  function ParticlesWebGLNode( neuronModel, modelViewTransform, scaleProperty, zoomableRootNode, clipArea ) {
+  function ParticlesWebGLNode( neuronModel, modelViewTransform, zoomProperty, zoomableRootNode, clipArea ) {
     var thisNode = this;
     Renderer.WebGL = new Renderer( TextureInterleavedShaderWebGlLayer, 'webgl', scenery.bitmaskSupportsWebGL, {} );
     WebGLNode.call( this );
     this.neuronModel = neuronModel;
     this.modelViewTransform = modelViewTransform;
-    this.particleTextureMap = new ParticleTextureMap( modelViewTransform, scaleProperty );
-    this.scaleProperty = scaleProperty;
+    this.particleTextureMap = new ParticleTextureMap( modelViewTransform, zoomProperty );
+    this.zoomProperty = zoomProperty;
     this.zoomableRootNode = zoomableRootNode;
     this.particleBounds = clipArea.bounds;
     this.visibleParticlesSize = 0; // Only Particles within the clipping region of Zoomable Node are considered visible
@@ -86,7 +86,7 @@ define( function( require ) {
     thisNode.canvas = document.createElement( 'canvas' );
     thisNode.context = this.canvas.getContext( '2d' );
 
-    scaleProperty.link( function( zoomFactor ) {
+    zoomProperty.link( function( zoomFactor ) {
       updateScaleMatrix();
     } );
 
@@ -192,7 +192,7 @@ define( function( require ) {
           return;
         }
         thisNode.visibleParticlesSize++;
-        // Position according to the scaled and Translated Position of ZoomableRootNode. The ScaleProperty is
+        // Position according to the scaled and Translated Position of ZoomableRootNode. The zoomProperty is
         // Observed by this class and the scaleMatrix is updated from zoomableRootNode
         thisNode.zoomTransformationMatrix.multiplyVector2( particleViewPosition ); // (changes, the passed particleViewPosition)
 

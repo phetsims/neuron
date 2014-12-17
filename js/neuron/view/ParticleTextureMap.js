@@ -21,12 +21,12 @@ define( function( require ) {
 
   /**
    * @param {ModelViewTransform2} modelViewTransform
-   * @param {Property.<number>} scaleProperty
+   * @param {Property.<number>} zoomProperty
    * @constructor
    */
-  function ParticleTextureMap( modelViewTransform, scaleProperty ) {
+  function ParticleTextureMap( modelViewTransform, zoomProperty ) {
     this.modelViewTransform = modelViewTransform;
-    this.scaleProperty = scaleProperty;
+    this.zoomProperty = zoomProperty;
     //Sodium
     this.sodiumParticle = new SodiumIon();
     this.potassiumParticle = new PotassiumIon();
@@ -42,8 +42,8 @@ define( function( require ) {
 
     updateSpriteSheetDimensions: function() {
       var thisTextureMap = this;
-      thisTextureMap.sodiumParticleViewRadius = thisTextureMap.modelViewTransform.modelToViewDeltaX( thisTextureMap.sodiumParticle.getRadius() ) * thisTextureMap.scaleProperty.value * 1.2;
-      thisTextureMap.potassiumParticleSize = thisTextureMap.modelViewTransform.modelToViewDeltaX( thisTextureMap.potassiumParticle.getRadius() ) * thisTextureMap.scaleProperty.value * 1.35;
+      thisTextureMap.sodiumParticleViewRadius = thisTextureMap.modelViewTransform.modelToViewDeltaX( thisTextureMap.sodiumParticle.getRadius() ) * thisTextureMap.zoomProperty.value * 1.2;
+      thisTextureMap.potassiumParticleSize = thisTextureMap.modelViewTransform.modelToViewDeltaX( thisTextureMap.potassiumParticle.getRadius() ) * thisTextureMap.zoomProperty.value * 1.35;
 
       var totalParticlesPerColumn = 20;
 
