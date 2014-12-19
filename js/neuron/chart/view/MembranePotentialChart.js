@@ -26,7 +26,6 @@ define( function( require ) {
   var Node = require( 'SCENERY/nodes/Node' );
   var Bounds2 = require( 'DOT/Bounds2' );
   var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
-  var Line = require( 'SCENERY/nodes/Line' );
   var Panel = require( 'SUN/Panel' );
   var Path = require( 'SCENERY/nodes/Path' );
   var Shape = require( 'KITE/Shape' );
@@ -206,20 +205,29 @@ define( function( require ) {
     chartYAxisLabelNode.scale( yAxisLabelScaleFactor );
 
     // use domain(0,25) and range(-100,100) as Model View Map
-    thisChart.chartMvt = ModelViewTransform2.createRectangleInvertedYMapping( new Bounds2( this.domain[0], this.range[0], this.domain[1], this.range[1] ), new Bounds2( 0, 0, chartDimension.width, chartDimension.height ), 1, 1 );
+    thisChart.chartMvt = ModelViewTransform2.createRectangleInvertedYMapping( new Bounds2( this.domain[0], this.range[0],
+      this.domain[1], this.range[1] ), new Bounds2( 0, 0, chartDimension.width, chartDimension.height ), 1, 1 );
 
+    var graphLinesShape = new Shape();
+    var graphNode = new Path( graphLinesShape, {
+      stroke: thisChart.dataSeries.color
+    } );
+    graphNode.computeShapeBounds = computeShapeBounds;
+    chartContentNode.addChild( graphNode );
 
     thisChart.dataSeries.addDataSeriesListener( function( x, y, xPrevious, yPrevious ) {
       if ( xPrevious && yPrevious && (xPrevious !== 0 || yPrevious !== 0 ) ) {
-        var line = new Line( thisChart.chartMvt.modelToViewX( xPrevious ), thisChart.chartMvt.modelToViewY( yPrevious ), thisChart.chartMvt.modelToViewX( x ), thisChart.chartMvt.modelToViewY( y ), {
-            stroke: thisChart.dataSeries.color}
-        );
-        line.computeShapeBounds = computeShapeBounds;
-        chartContentNode.addChild( line );
-      }
+        graphLinesShape.moveTo( thisChart.chartMvt.modelToViewX( xPrevious ), thisChart.chartMvt.modelToViewY( yPrevious ) );
+        graphLinesShape.lineTo( thisChart.chartMvt.modelToViewX( x ), thisChart.chartMvt.modelToViewY( y ) );
 
+        //The Path assumes that the shape is immutable once supplied,so set the path.shape to null
+        //and reset the shape again to make the update work
+        graphNode.shape = null;
+        graphNode.shape = graphLinesShape;
+      }
       thisChart.dataSeries.on( 'cleared', function() {
-        chartContentNode.removeAllChildren();
+        graphLinesShape = new Shape();
+        graphNode.shape = graphLinesShape;
       } );
 
     } );
@@ -253,11 +261,9 @@ define( function( require ) {
       ), {fill: 'white', xMargin: xMargin + adjustMargin, yMargin: 6, lineWidth: 1, cornerRadius: 2 }
     );
 
-
     thisChart.neuronModel.potentialChartVisibleProperty.link( function( chartVisible ) {
       thisChart.visible = chartVisible;
     } );
-
 
   }
 
