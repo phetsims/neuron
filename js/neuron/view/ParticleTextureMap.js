@@ -1,6 +1,6 @@
 // Copyright 2002-2011, University of Colorado
 /**
- * Creates tiles for particles of  different opacity
+ * Creates tiles for particles of different opacity
  * A opacity of .34 will be on the 3rd row and 4th column
  * The Texture contains group of 400 tiles (200 for Sodium and 200 for potassium)
  *
@@ -14,6 +14,7 @@ define( function( require ) {
   var PotassiumIon = require( 'NEURON/neuron/model/PotassiumIon' );
   var SodiumIon = require( 'NEURON/neuron/model/SodiumIon' );
   var Vector2 = require( 'DOT/Vector2' );
+  var Bounds2 = require( 'DOT/Bounds2' );
   var Color = require( 'SCENERY/util/Color' );
   var Util = require( 'SCENERY/util/Util' );
   var DOTUtil = require( 'DOT/Util' );
@@ -32,18 +33,22 @@ define( function( require ) {
     this.potassiumParticle = new PotassiumIon();
     this.canvasStrokeStyle = Color.BLACK.getCanvasStyle();
     this.strokeGapBetweenParticles = 4;
-    //Start building the tiles after a gap
+
+    //Start building the tiles after a gap so the strokes dont overlap
     this.xMargin = this.strokeGapBetweenParticles;
     this.yMargin = this.strokeGapBetweenParticles;
-
   }
 
   return inherit( Object, ParticleTextureMap, {
-
+    /**
+     * The dimensions of of Particle Tile needs to be re-calculated  based on the zoom factor
+     */
     updateSpriteSheetDimensions: function() {
       var thisTextureMap = this;
-      thisTextureMap.sodiumParticleViewRadius = thisTextureMap.modelViewTransform.modelToViewDeltaX( thisTextureMap.sodiumParticle.getRadius() ) * thisTextureMap.zoomProperty.value * 1.2;
-      thisTextureMap.potassiumParticleSize = thisTextureMap.modelViewTransform.modelToViewDeltaX( thisTextureMap.potassiumParticle.getRadius() ) * thisTextureMap.zoomProperty.value * 1.35;
+      thisTextureMap.sodiumParticleViewRadius = thisTextureMap.modelViewTransform.modelToViewDeltaX(
+        thisTextureMap.sodiumParticle.getRadius() ) * thisTextureMap.zoomProperty.value * 1.2;
+      thisTextureMap.potassiumParticleSize = thisTextureMap.modelViewTransform.modelToViewDeltaX(
+        thisTextureMap.potassiumParticle.getRadius() ) * thisTextureMap.zoomProperty.value * 1.35;
 
       var totalParticlesPerColumn = 20;
 
@@ -51,7 +56,6 @@ define( function( require ) {
       thisTextureMap.potasiumTileHeightOffset = thisTextureMap.yMargin;
       thisTextureMap.potasiumTileHeightOffset += (totalParticlesPerColumn * thisTextureMap.sodiumParticleViewRadius);
       thisTextureMap.potasiumTileHeightOffset += 10 * thisTextureMap.strokeGapBetweenParticles;
-
 
       thisTextureMap.tileTotalHeght = thisTextureMap.potasiumTileHeightOffset;
       thisTextureMap.tileTotalHeght += totalParticlesPerColumn * thisTextureMap.potassiumParticleSize;
@@ -66,13 +70,24 @@ define( function( require ) {
       thisTextureMap.canvasWidth = 0;
       thisTextureMap.canvasHeight = 0;
     },
+
     calculateAndAssignCanvasDimensions: function( canvas ) {
       this.canvasWidth = canvas.width = Util.toPowerOf2( this.tileTotalWidth );
       this.canvasHeight = canvas.height = Util.toPowerOf2( this.tileTotalHeght );
     },
-    getParticleCoords: function( particleType, xPos, yPos, coords ) {
 
-      coords = coords || {};
+    /**
+     * For a given particle type and position the method gives
+     * the bounding rectangle of that particle
+     *
+     * @param {ParticleType.String} particleType
+     * @param {number} xPos
+     * @param {number} yPos
+     * @param {Bounds2} coords
+     * @returns {Bounds2}
+     */
+    getParticleCoords: function( particleType, xPos, yPos, coords ) {
+      coords = coords || new Bounds2( 0, 0, 0, 0 );
       var w = this.sodiumParticleViewRadius;
       if ( particleType === ParticleType.SODIUM_ION ) {
         w = this.sodiumParticleViewRadius;
@@ -81,16 +96,20 @@ define( function( require ) {
         w = this.potassiumParticleSize;
       }
       var h = w;
-      coords.left = xPos - w;
-      coords.top = yPos - h;
-      coords.right = xPos + w;
-      coords.bottom = yPos + h;
+      coords.setMinX( xPos - w );
+      coords.setMinY( yPos - h );
+      coords.setMaxX( xPos + w );
+      coords.setMaxY( yPos + h );
 
       return coords;
     },
+
+    /**
+     * Creates tiles for particles of different opacity
+     * A opacity of .34 will be on the 3rd row and 4th column
+     * @param {Canvas.context} context
+     */
     createTiles: function( context ) {
-
-
       context.strokeStyle = Color.BLACK.getCanvasStyle();
       context.lineWidth = 1;
 
@@ -118,8 +137,6 @@ define( function( require ) {
           context.arc( particlePos.x, particlePos.y, this.sodiumParticleViewRadius, 0, 2 * Math.PI, false );
           context.fill();
           context.stroke();
-
-
         }
       }
 
@@ -146,13 +163,18 @@ define( function( require ) {
           context.closePath();
           context.stroke();
           context.fill();
-
-
         }
       }
-
     },
-    //returns or sets the center pos of the tile
+
+    /**
+     * returns or sets the center pos of the tile on the given posVector
+     * @param {ParticleType.String} particleType
+     * @param {number} row
+     * @param {number} column
+     * @param {Vector2} posVector
+     * @returns {Vector2}
+     */
     tilePostAt: function( particleType, row, column, posVector ) {
       posVector = posVector || new Vector2();
       if ( particleType === ParticleType.SODIUM_ION ) {
@@ -171,11 +193,17 @@ define( function( require ) {
       posVector.x += column * this.strokeGapBetweenParticles; // account for gap between particles
       posVector.y += row * this.strokeGapBetweenParticles;
 
-
       return posVector;
-
     },
-    //Get the Tile's  normalized coordinates based on particle's opacity
+
+    /**
+     * Get the Tile's  normalized texture coordinates based on particle's opacity
+     * @param {ParticleType.String} particleType
+     * @param {number} opacity
+     * @param {Vector2}posVector
+     * @param {Bounds2} coords
+     * @returns {*|Bounds2}
+     */
     getTexCords: function( particleType, opacity, posVector, coords ) {
       if ( opacity >= 1 ) {
         opacity = 0.99; // The Max is 0.99 but mapped to 1 , see createTiles method
@@ -184,7 +212,6 @@ define( function( require ) {
       var parts = opacityStr.split( "." );
       var row = parts[1].charAt( 0 );
       var column = parts[1].charAt( 1 );
-
 
       var tileRadius = 0;
       if ( particleType === ParticleType.SODIUM_ION ) {
@@ -197,14 +224,14 @@ define( function( require ) {
       var tilePost = this.tilePostAt( particleType, row, column, posVector );
 
       tileRadius += this.strokeGapBetweenParticles / 2;
-      coords = coords || {};
-      // Particle Pos is at center tp get the left corder, substrat the radius and normalize the value by
-      // dividing it by canvasWidth, the Tex Coords needs to be on the range of 0..1
-      coords.left = (tilePost.x - tileRadius) / this.canvasWidth;
-      coords.top = (tilePost.y - tileRadius) / this.canvasHeight;
-      coords.right = (tilePost.x + tileRadius) / this.canvasWidth;
-      coords.bottom = (tilePost.y + tileRadius) / this.canvasHeight;
+      coords = coords || new Bounds2( 0, 0, 0, 0 );
 
+      // Particle Pos is at center tp get the left corder, substract the radius and normalize the value by
+      // dividing it by canvasWidth, the Tex Coords needs to be on the range of 0..1
+      coords.setMinX( (tilePost.x - tileRadius) / this.canvasWidth );
+      coords.setMinY( (tilePost.y - tileRadius) / this.canvasHeight );
+      coords.setMaxX( (tilePost.x + tileRadius) / this.canvasWidth );
+      coords.setMaxY( (tilePost.y + tileRadius) / this.canvasHeight );
 
       return coords;
     }

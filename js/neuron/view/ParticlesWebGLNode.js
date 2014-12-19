@@ -33,6 +33,7 @@ define( function( require ) {
   var scenery = require( 'SCENERY/scenery' );
   var Vector2 = require( 'DOT/Vector2' );
   var Vector3 = require( 'DOT/Vector3' );
+  var Bounds2 = require( 'DOT/Bounds2' );
 
   //constants
   // Used for pre-initializing the VertexData. at the most the number of particles are observed to be
@@ -101,7 +102,9 @@ define( function( require ) {
 
     this.invalidatePaint();
 
-
+    //To reduce GC re-use the same textCords and vertexCords
+    this.textCords = new Bounds2( 0, 0, 0, 0 ); // The normalized texture coordinates that corresponds to the vertex corners
+    this.vertexCords = new Bounds2( 0, 0, 0, 0 );// the rectangle bounds of a particle (used to create 2 triangles)
   }
 
   return inherit( WebGLNode, ParticlesWebGLNode, {
@@ -113,14 +116,10 @@ define( function( require ) {
       gl.bindBuffer( gl.ARRAY_BUFFER, vertexBuffer );
       this.updateTextureImage( gl );
       this.bindTextureImage( gl );
-
-
     },
 
     render: function( gl, shaderProgram, viewMatrix ) {
-
       this.gl = gl;
-
       if ( !this.textureBound ) {
         this.bindTextureImage( gl );
         this.textureBound = true;
@@ -180,9 +179,6 @@ define( function( require ) {
       var viewTransformationMatrix = this.viewTransformationMatrix;
       var particleViewPosition = this.particleViewPosition;
 
-      var textCords = {};
-      var vertexCords = {};
-
       this.allParticles.forEach( function( particle ) {
 
         particleViewPosition.x = particle.getPositionX();
@@ -201,48 +197,48 @@ define( function( require ) {
         var yPos = particleViewPosition.y;
 
         //for performance reasons this method updates vertexCords (and returns the same)   instead of creating a new one
-        vertexCords = thisNode.particleTextureMap.getParticleCoords( particle.getType(), xPos, yPos, vertexCords );
+        thisNode.particleTextureMap.getParticleCoords( particle.getType(), xPos, yPos, thisNode.vertexCords );
 
         //for performance reasons this method updates the texCords (and returns the same)  instead of creating a new one
-        textCords = thisNode.particleTextureMap.getTexCords( particle.getType(), particle.getOpaqueness(), tilePosVector, textCords );
+        thisNode.particleTextureMap.getTexCords( particle.getType(), particle.getOpaqueness(), tilePosVector, thisNode.textCords );
 
         //left bottom
-        thisNode.vertexData[index++] = vertexCords.left;//x
-        thisNode.vertexData[index++] = vertexCords.bottom;//y
-        thisNode.vertexData[index++] = textCords.left; //u
-        thisNode.vertexData[index++] = textCords.bottom; //v
+        thisNode.vertexData[index++] = thisNode.vertexCords.getMinX();//x
+        thisNode.vertexData[index++] = thisNode.vertexCords.getMaxY();//y
+        thisNode.vertexData[index++] = thisNode.textCords.getMinX(); //u
+        thisNode.vertexData[index++] = thisNode.textCords.getMaxY(); //v
 
         //left top
-        thisNode.vertexData[index++] = vertexCords.left;
-        thisNode.vertexData[index++] = vertexCords.top;
-        thisNode.vertexData[index++] = textCords.left;//u
-        thisNode.vertexData[index++] = textCords.top;//v
+        thisNode.vertexData[index++] = thisNode.vertexCords.getMinX();
+        thisNode.vertexData[index++] = thisNode.vertexCords.getMinY();
+        thisNode.vertexData[index++] = thisNode.textCords.getMinX();//u
+        thisNode.vertexData[index++] = thisNode.textCords.getMinY();//v
 
         //right top
-        thisNode.vertexData[index++] = vertexCords.right;
-        thisNode.vertexData[index++] = vertexCords.top;
-        thisNode.vertexData[index++] = textCords.right;//u
-        thisNode.vertexData[index++] = textCords.top;//v
+        thisNode.vertexData[index++] = thisNode.vertexCords.getMaxX();
+        thisNode.vertexData[index++] = thisNode.vertexCords.getMinY();
+        thisNode.vertexData[index++] = thisNode.textCords.getMaxX();//u
+        thisNode.vertexData[index++] = thisNode.textCords.getMinY();//v
 
         //---2nd triangle-----
 
         //right top
-        thisNode.vertexData[index++] = vertexCords.right;
-        thisNode.vertexData[index++] = vertexCords.top;
-        thisNode.vertexData[index++] = textCords.right;//u
-        thisNode.vertexData[index++] = textCords.top;//v
+        thisNode.vertexData[index++] = thisNode.vertexCords.getMaxX();
+        thisNode.vertexData[index++] = thisNode.vertexCords.getMinY();
+        thisNode.vertexData[index++] = thisNode.textCords.getMaxX();//u
+        thisNode.vertexData[index++] = thisNode.textCords.getMinY();//v
 
         //right bottom
-        thisNode.vertexData[index++] = vertexCords.right;
-        thisNode.vertexData[index++] = vertexCords.bottom;
-        thisNode.vertexData[index++] = textCords.right;//u
-        thisNode.vertexData[index++] = textCords.bottom;//v
+        thisNode.vertexData[index++] = thisNode.vertexCords.getMaxX();
+        thisNode.vertexData[index++] = thisNode.vertexCords.getMaxY();
+        thisNode.vertexData[index++] = thisNode.textCords.getMaxX();//u
+        thisNode.vertexData[index++] = thisNode.textCords.getMaxY();//v
 
         //left bottom
-        thisNode.vertexData[index++] = vertexCords.left;
-        thisNode.vertexData[index++] = vertexCords.bottom;
-        thisNode.vertexData[index++] = textCords.left;//u
-        thisNode.vertexData[index++] = textCords.bottom;//v
+        thisNode.vertexData[index++] = thisNode.vertexCords.getMinX();
+        thisNode.vertexData[index++] = thisNode.vertexCords.getMaxY();
+        thisNode.vertexData[index++] = thisNode.textCords.getMinX();//u
+        thisNode.vertexData[index++] = thisNode.textCords.getMaxY();//v
 
       } );
     },
