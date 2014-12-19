@@ -1,6 +1,5 @@
 // Copyright 2002-2011, University of Colorado
 
-
 /**
  * Type representing the 'live' mode within the RecordAndPlaybackModel.
  *
@@ -19,7 +18,6 @@ define( function( require ) {
    * @constructor
    */
   function Live( recordAndPlaybackModel ) {
-    Mode.call( this, {} );
     this.recordAndPlaybackModel = recordAndPlaybackModel;
   }
 

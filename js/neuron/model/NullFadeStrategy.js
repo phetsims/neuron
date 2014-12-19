@@ -14,7 +14,6 @@ define( function( require ) {
   var FadeStrategy = require( 'NEURON/neuron/model/FadeStrategy' );
 
   /**
-   *
    * @constructor
    */
   function NullFadeStrategy() {
@@ -29,12 +28,12 @@ define( function( require ) {
     //static.
     {
       getInstance: function() {
-        if ( !this.instance ) {
+        if ( !NullFadeStrategy.instance ) {
           // No need to create new instance of NullFadeStrategy , it is stateless
           // Using a single strategy instance to avoid allocation
-          this.instance = new NullFadeStrategy();
+          NullFadeStrategy.instance = new NullFadeStrategy();
         }
-        return this.instance;
+        return NullFadeStrategy.instance;
       }
     }
   );

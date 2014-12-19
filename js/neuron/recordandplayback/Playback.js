@@ -21,7 +21,6 @@ define( function( require ) {
    */
   function Playback( recordAndPlaybackModel ) {
     var thisPlayBack = this;
-    Mode.call( thisPlayBack, {} );
     thisPlayBack.speedProperty = new Property( 0 );//1 is full speed; i.e. the time between the original samples
     thisPlayBack.recordAndPlaybackModel = recordAndPlaybackModel;
     thisPlayBack.speedProperty.lazyLink( function() {

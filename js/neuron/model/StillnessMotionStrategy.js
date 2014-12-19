@@ -13,7 +13,6 @@ define( function( require ) {
   var MotionStrategy = require( 'NEURON/neuron/model/MotionStrategy' );
 
   /**
-   *
    * @constructor
    */
   function StillnessMotionStrategy() {
@@ -28,12 +27,12 @@ define( function( require ) {
     //static.
     {
       getInstance: function() {
-        if ( !this.instance ) {
+        if ( !StillnessMotionStrategy.instance ) {
           // No need to create new instance of StillnessMotionStrategy , it is stateless
           // Using a single strategy instance to avoid allocation
-          this.instance = new StillnessMotionStrategy();
+          StillnessMotionStrategy.instance = new StillnessMotionStrategy();
         }
-        return this.instance;
+        return StillnessMotionStrategy.instance;
       }
     } );
 } );
