@@ -32,14 +32,8 @@ define( function( require ) {
   function ChartCursor( membranePotentialChart ) {
 
     var thisChartCursor = this;
-    //REVIEW - The following comment appears to be in the wrong place.
-    // Add a handler to the chart cursor that will track when it is moved
-    // by the user and will set the model time accordingly.
-
-    //REVIEW - Don't understand the following comment, and it doesn't seem to appear in the original Java code.
-    // Chart Cursor
-    var topOfPlotArea = membranePotentialChart.chartMvt.modelToViewPosition( new Vector2( 0, membranePotentialChart.range[1] ) ); // UpperBound
-    var bottomOfPlotArea = membranePotentialChart.chartMvt.modelToViewPosition( new Vector2( 0, membranePotentialChart.range[0] ) );//lowerBound
+    var topOfPlotArea = membranePotentialChart.chartMvt.modelToViewPosition( new Vector2( 0, membranePotentialChart.range[1] ) );
+    var bottomOfPlotArea = membranePotentialChart.chartMvt.modelToViewPosition( new Vector2( 0, membranePotentialChart.range[0] ) );
 
     // Set the shape.  The shape is created so that it is centered
     // around an offset of 0 in the x direction and the top edge is
@@ -88,6 +82,7 @@ define( function( require ) {
         var compensatedRecordingTimeIndex = recordingTimeIndex / 1000 + membranePotentialChart.neuronModel.getMinRecordedTime();
         membranePotentialChart.neuronModel.setTime( compensatedRecordingTimeIndex );
       },
+
       end: function() {
         if ( !membranePotentialChart.pausedWhenDragStarted ) {
           // The clock wasn't paused when the user grabbed this
@@ -98,9 +93,7 @@ define( function( require ) {
       }
     } );
 
-
     thisChartCursor.addInputListener( chartCursorDragHandler );
-
 
     // Add the indentations that are intended to convey the idea of
     // "gripability".
@@ -114,8 +107,6 @@ define( function( require ) {
     var grippyIndent3 = new GrippyIndentNode( width / 2, CURSOR_FILL_COLOR );
     grippyIndent3.translate( 0, height / 2 + indentSpacing );
     thisChartCursor.addChild( grippyIndent3 );
-
-
   }
 
   return inherit( Path, ChartCursor, {
