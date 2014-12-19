@@ -22,13 +22,12 @@ define( function( require ) {
 
   //REVIEW - neuronModel appears to be unused.  Can it be removed?
   /**
-   * @param {NeuronModel} neuronModel - the main model for the simulation
    * @param {Property.<number>} zoomProperty - property that indicates how far zoomed in the simulation is, between
    * @param {number} minZoom - the furthest out the sim can be zoomed (1)
    * @param {number} maxZoom - the furthest in the sim can be zoomed
    * @constructor
    */
-  function ZoomControl( neuronModel, zoomProperty, minZoom, maxZoom ) {
+  function ZoomControl( zoomProperty, minZoom, maxZoom ) {
 
     var zoomSliderOptions = {
       thumbSize: new Dimension2( 18, 22 ),

@@ -216,17 +216,15 @@ define( function( require ) {
       zoomableRootNode.addChild( particlesCanvasNode );
     }
 
-
     var simSpeedControlPanel = new SimSpeedControlPanel( neuronClockModelAdapter.speedProperty );
     simSpeedControlPanel.left = thisView.layoutBounds.minX + leftPadding;
     simSpeedControlPanel.bottom = thisView.layoutBounds.maxY - 10;
     thisView.addChild( simSpeedControlPanel );
 
-    var zoomControl = new ZoomControl( thisView.neuronModel, zoomProperty, minZoom, maxZoom );
+    var zoomControl = new ZoomControl( zoomProperty, minZoom, maxZoom );
     this.addChild( zoomControl );
     zoomControl.top = this.layoutBounds.minY + 70;
     zoomControl.left = this.layoutBounds.minX + leftPadding;
-
 
   }
 
