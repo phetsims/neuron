@@ -15,9 +15,7 @@ define( function( require ) {
   /**
    * @constructor
    */
-  function StillnessMotionStrategy() {
-
-  }
+  function StillnessMotionStrategy() {}
 
   return inherit( MotionStrategy, StillnessMotionStrategy, {
       move: function( movableModelElement, fadableModelElement, dt ) {

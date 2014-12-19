@@ -16,8 +16,7 @@ define( function( require ) {
   /**
    * @constructor
    */
-  function NullFadeStrategy() {
-  }
+  function NullFadeStrategy() {}
 
   return inherit( FadeStrategy, NullFadeStrategy, {
       //@Override

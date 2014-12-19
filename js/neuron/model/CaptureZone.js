@@ -15,8 +15,7 @@ define( function( require ) {
   /**
    * @constructor
    */
-  function CaptureZone() {
-  }
+  function CaptureZone() {}
 
   return inherit( Object, CaptureZone, {
 
