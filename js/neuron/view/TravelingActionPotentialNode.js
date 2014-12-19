@@ -32,8 +32,7 @@ define( function( require ) {
   function TravelingActionPotentialNode( travelingActionPotential, mvt ) {
 
     var thisNode = this;
-    Node.call( thisNode, {} );
-
+    Node.call( thisNode );
 
     var background = new Path( new Shape(), BACKGROUND_STROKE );
     var foreground = new Path( new Shape(), FOREGROUND_STROKE );
@@ -53,7 +52,6 @@ define( function( require ) {
 
     function updateShape() {
       var transformedShape = mvt.modelToViewShape( travelingActionPotential.getShape() );
-      transformedShape.computeShapeBounds = computeShapeBounds;
       foreground.setShape( transformedShape );
       background.setShape( transformedShape );
     }
