@@ -31,10 +31,16 @@ define( function( require ) {
   var M3H_WHEN_FULLY_OPEN = 0.25;
 
   // Possible values for internal state.
-  var GateState = Object.freeze( {
-    IDLE: 'IDLE', OPENING: 'OPENING', BECOMING_INACTIVE: 'BECOMING_INACTIVE', INACTIVATED: 'INACTIVATED', RESETTING: 'RESETTING'
-  } );
+  var GateState = {
+    IDLE: 'IDLE',
+    OPENING: 'OPENING',
+    BECOMING_INACTIVE: 'BECOMING_INACTIVE',
+    INACTIVATED: 'INACTIVATED',
+    RESETTING: 'RESETTING'
+  };
 
+  // verify that enum is immutable, without the runtime penalty in production code
+  if ( assert ) { Object.freeze( GateState ); }
 
   // Values used for deciding on state transitions.  These were empirically
   // determined.

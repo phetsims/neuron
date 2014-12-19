@@ -10,8 +10,13 @@
 define( function() {
   'use strict';
 
-  return Object.freeze( {
+  var BehaviourModeType = {
     pauseAtEndOfPlayback: true,
     recordAtEndOfPlayback: false
-  } );
+  };
+
+  // verify that enum is immutable, without the runtime penalty in production code
+  if ( assert ) { Object.freeze( BehaviourModeType ); }
+
+  return BehaviourModeType;
 } );

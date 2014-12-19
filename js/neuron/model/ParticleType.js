@@ -8,8 +8,13 @@
 define( function() {
   'use strict';
 
-  return Object.freeze( {
+  var ParticleType = {
     'SODIUM_ION': 'SODIUM_ION',
     'POTASSIUM_ION': 'POTASSIUM_ION'
-  } );
+  };
+
+  // verify that enum is immutable, without the runtime penalty in production code
+  if ( assert ) { Object.freeze( ParticleType ); }
+
+  return ParticleType;
 } );

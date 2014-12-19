@@ -2,8 +2,13 @@
 define( function() {
   'use strict';
 
-  return Object.freeze( {
+  var ParticlePosition = {
     'INSIDE_MEMBRANE': 'INSIDE_MEMBRANE',
     'OUTSIDE_MEMBRANE': 'OUTSIDE_MEMBRANE'
-  } );
+  };
+
+  // verify that enum is immutable, without the runtime penalty in production code
+  if ( assert ) { Object.freeze( ParticlePosition ); }
+
+  return ParticlePosition;
 } );

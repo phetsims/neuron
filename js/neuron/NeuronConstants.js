@@ -17,7 +17,7 @@ define( function( require ) {
   var minActionPotentialClockDT = (1 / clockFrameRate) / 3000;
   var maxActionPotentialClockDT = (1 / clockFrameRate) / 1000;
 
-  return Object.freeze( {
+  var NeuronConstants = {
     // Fonts
     CONTROL_PANEL_TITLE_FONT: new PhetFont( {weight: 'bold', size: 14} ),
     CONTROL_PANEL_CONTROL_FONT: new PhetFont( { size: 14} ),
@@ -39,6 +39,11 @@ define( function( require ) {
     DEFAULT_ACTION_POTENTIAL_CLOCK_DT: (minActionPotentialClockDT + maxActionPotentialClockDT) * 0.55,
     TIME_SPAN: 25, // In seconds.
     DEFAULT_MAX_VELOCITY: 40000
-  } );
+  };
+
+  // verify that enum is immutable, without the runtime penalty in production code
+  if ( assert ) { Object.freeze( NeuronConstants ); }
+
+  return NeuronConstants;
 } )
 ;
