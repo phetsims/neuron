@@ -13,8 +13,9 @@ define( function( require ) {
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
 
+  function FadeStrategy() {}
 
-  return inherit( Object, {}, {
+  return inherit( Object, FadeStrategy, {
     /**
      * Fade the associated model element according to the specified amount of
      * time and the nature of the strategy.

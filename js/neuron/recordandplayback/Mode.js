@@ -13,7 +13,12 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var PropertySet = require( 'AXON/PropertySet' );
 
-  return inherit( PropertySet, {}, {
+  /**
+   * @constructor
+   */
+  function Mode() {}
+
+  return inherit( PropertySet, Mode, {
     step: function( simulationTimeChange ) {
       throw new Error( 'step should be implemented in descendant classes.' );
     },

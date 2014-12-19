@@ -12,7 +12,9 @@ define( function( require ) {
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
 
-  return inherit( Object, {}, {
+  function MotionStrategy() { }
+
+  return inherit( Object, MotionStrategy, {
 
     /**
      * Move the associated model element according to the specified amount of
