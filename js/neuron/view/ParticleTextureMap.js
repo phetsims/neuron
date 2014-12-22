@@ -226,7 +226,7 @@ define( function( require ) {
       tileRadius += this.strokeGapBetweenParticles / 2;
       coords = coords || new Bounds2( 0, 0, 0, 0 );
 
-      // Particle Pos is at center tp get the left corder, substract the radius and normalize the value by
+      // Particle Pos is at center. get the left corder, substract the radius and normalize the value by
       // dividing it by canvasWidth, the Tex Coords needs to be on the range of 0..1
       coords.setMinX( (tilePost.x - tileRadius) / this.canvasWidth );
       coords.setMinY( (tilePost.y - tileRadius) / this.canvasHeight );
