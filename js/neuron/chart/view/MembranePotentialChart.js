@@ -35,7 +35,6 @@ define( function( require ) {
   var Text = require( 'SCENERY/nodes/Text' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
   var TextPushButton = require( 'SUN/buttons/TextPushButton' );
-  var RectangularButtonView = require( 'SUN/buttons/RectangularButtonView' );
   var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   var RectangularPushButton = require( 'SUN/buttons/RectangularPushButton' );
   var dot = require( 'DOT/dot' );
@@ -57,12 +56,6 @@ define( function( require ) {
   // This value sets the frequency of chart updates, which helps to reduce
   // the processor consumption.
   var UPDATE_PERIOD = 1 * NeuronConstants.DEFAULT_ACTION_POTENTIAL_CLOCK_DT; // In seconds
-
-  var bounds2 = new Bounds2( 0, 0, 0, 0 );
-
-  //REVIEW - This seems odd - why is there a function called computeShapeBounds that does no computing and always
-  // returns a zero bounds?
-  function computeShapeBounds() { return bounds2; }
 
   /**
    *
@@ -151,10 +144,9 @@ define( function( require ) {
 
     var chartTitleNode = new Text( chartTitleString, {font: new PhetFont( {size: 16, weight: 'bold'} )} );
     var clearChartButton = new TextPushButton( chartClearString, {
-      font: new PhetFont( {size: 12} ),
+      font: new PhetFont( {size: 12} )
       //REVIEW - FYI: I deleted the color so that the default would be used.  The gray looked disabled.
-      //REVIEW - Why is the flat strategy used?  I tried removing this to use the default strategy, and thought it looked good.  Any reason?
-      buttonAppearanceStrategy: RectangularButtonView.flatAppearanceStrategy
+
     } );
     //REVIEW - the listener can be added as an option during the construction step above, for slightly cleaner code.
     clearChartButton.addListener( function() {thisChart.clearChart();} );
@@ -170,9 +162,7 @@ define( function( require ) {
     var closeButton = new RectangularPushButton( {
       baseColor: 'red',
       content: xIcon,
-      //REVIEW - Why is the flat strategy used?  I tried removing this to use the default strategy, and thought it looked good.  Any reason?
-      buttonAppearanceStrategy: RectangularButtonView.flatAppearanceStrategy,
-      // click to toggle
+     // click to toggle
       listener: function() {
         thisChart.neuronModel.potentialChartVisible = false;
       }
@@ -212,7 +202,6 @@ define( function( require ) {
     var graphNode = new Path( graphLinesShape, {
       stroke: thisChart.dataSeries.color
     } );
-    graphNode.computeShapeBounds = computeShapeBounds;
     chartContentNode.addChild( graphNode );
 
     thisChart.dataSeries.addDataSeriesListener( function( x, y, xPrevious, yPrevious ) {
