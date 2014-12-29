@@ -1,23 +1,27 @@
 // Copyright 2002-2014, University of Colorado Boulder
 
-//REVIEW - Please clean up this comment using the 120 column guideline specified in the PhET Development Overview.
 /**
  * Particles Node, rendered in WebGL to improve performance
  * Particles are rendered by mapping their rectangular corners with a dynamically created SpriteSheet tiles.
  *
- * The Tile shapes (Circle or Rhombus) are arranged by Opacity value ranging from 0.00 to 0.99 (A total of 100 tiles for each particle, 10 rows and 10 columns)
- * The Tiles doesn't get created on every  webgl render call  but only when the user zooms in and out.
- * Having a fixed Sprite sheet results in  pixelation thats  why we have to scale and draw  the Sprite Sheet dynamically whenever  changes the Zoom property.
+ * The Tile shapes (Circle or Rhombus) are arranged by Opacity value ranging from 0.00 to 0.99 (A total of 100 tiles
+ * for each particle, 10 rows and 10 columns).The Tiles doesn't get created on every  webgl render call  but only when the
+ * user zooms in and out.Having a fixed Sprite sheet results in  pixelation thats  why we have to scale and draw the
+ * SpriteSheet dynamically whenever  changes the Zoom property.
  *
- * The code makes use of a different vertex shader, the Default WebglLayer's Vertex shader assumes the TextureCoordinates to be Vertex
- * Coordinates itself.(thats why  Vertex coordinates  are given in normalized coordinates ).
- * In case of Base WebGLNode, the transformation of shapes are handled by manipulating the viewMatrix during rendering.This is not applicable in our case as  we have to display 1000s triangles each mapped to a different tile position.
- * So each Vertex is interleaved with the appropriate Texture coordinates and sent to Webgl subsystem. The shaderProgram.attributeLocations.aTexCoord in the
- * SetMaterial method informs the shader how to retrieve the Texture coordinates for each vertex.
+ * The code makes use of a different vertex shader, the Default WebglLayer's Vertex shader assumes the TextureCoordinates to
+ * be Vertex Coordinates itself.(that's why  Vertex are given in normalized coordinates ).
  *
- * The Particles position is also transformed using the Zoomable Node's transform matrix to take care of the particle's position when scaled.
+ * In case of Base WebGLNode, the transformation of shapes are handled by manipulating the viewMatrix during rendering.However
+ * this is not applicable in our case as we have to display 1000s triangles each mapped to a different tile position.
+ * So each Vertex is interleaved with the appropriate Texture coordinates and sent to Webgl subsystem.
+ * The shaderProgram.attributeLocations.aTexCoord in theSetMaterial method informs the shader how to retrieve the
+ * Texture coordinates for each vertex.
  *
- * * @author Sharfudeen Ashraf (for Ghent University)
+ * The Particles position is also transformed using the Zoomable Node's transform matrix to take care of the particle's
+ * position when scaled.
+ *
+ ** @author Sharfudeen Ashraf (for Ghent University)
  */
 define( function( require ) {
   'use strict';
@@ -32,10 +36,9 @@ define( function( require ) {
   var Renderer = require( 'SCENERY/layers/Renderer' );
   var scenery = require( 'SCENERY/scenery' );
   var Vector2 = require( 'DOT/Vector2' );
-  var Vector3 = require( 'DOT/Vector3' );
   var Bounds2 = require( 'DOT/Bounds2' );
 
-  //constants
+  // constants
   // Used for pre-initializing the VertexData. at the most the number of particles are observed to be
   // in the range of 1500-1600
   var MAX_PARTICLES = 2000;
@@ -80,9 +83,6 @@ define( function( require ) {
     this.tilePosVector = new Vector2();
     this.viewTransformationMatrix = thisNode.modelViewTransform.getMatrix();
     this.particleViewPosition = new Vector2();
-    //REVIEW - This variable appears to be unused.
-    this.viewPortPosition = new Vector3();
-
     this.invalidatePaint();
 
     //To reduce GC re-use the same textCords and vertexCords
@@ -128,9 +128,8 @@ define( function( require ) {
       this.gl = gl;
       this.allParticles = [];
       this.allParticles = this.neuronModel.backgroundParticles.getArray().slice();
-      //REVIEW: slice() unnecessary, because concat just reads from its parameters.
-      this.allParticles = this.allParticles.concat( this.neuronModel.transientParticles.getArray().slice() );
-      this.allParticles = this.allParticles.concat( this.neuronModel.playbackParticles.getArray().slice() );
+      this.allParticles = this.allParticles.concat( this.neuronModel.transientParticles.getArray() );
+      this.allParticles = this.allParticles.concat( this.neuronModel.playbackParticles.getArray() );
 
       var uMatrix = viewMatrix; // see TextureInterleavedShaderWebGLLayer for how uMatrix is calculated only once and cached
       gl.uniformMatrix4fv( shaderProgram.uniformLocations.uMatrix, false, uMatrix.entries );
