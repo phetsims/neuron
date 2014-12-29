@@ -162,7 +162,7 @@ define( function( require ) {
     var closeButton = new RectangularPushButton( {
       baseColor: 'red',
       content: xIcon,
-     // click to toggle
+      // click to toggle
       listener: function() {
         thisChart.neuronModel.potentialChartVisible = false;
       }
@@ -265,9 +265,7 @@ define( function( require ) {
      * @param voltage - Voltage in volts.
      * @param update  - Controls if graph should be refreshed on the screen.
      */
-    //REVIEW - the update param appears to be unused, can it be removed?
-    addDataPoint: function( time, voltage, update ) {
-
+    addDataPoint: function( time, voltage ) {
       if ( this.dataSeries.length === 0 ) {
         // This is the first data point added since the last time the
         // chart was cleared or since it was created.  Record the time
@@ -311,9 +309,8 @@ define( function( require ) {
      * Update the chart based on the current time and the model that is being
      * monitored.
      *
-     * @param dt
+     * @param {number} simulationTimeChange
      */
-    //REVIEW - Parameter docs don't match.
     step: function( simulationTimeChange ) {
 
       if ( this.neuronModel.isRecord() ) {
@@ -338,12 +335,14 @@ define( function( require ) {
       }
 
     },
+
     clearChart: function() {
       this.dataSeries.clear();
       this.chartIsFull = false;
       this.neuronModel.clearHistory();
       this.updateChartCursorVisibility();
     },
+
     updateChartCursorVisibility: function() {
 
       // Deciding whether or not the chart cursor should be visible is a
@@ -373,6 +372,7 @@ define( function( require ) {
       var recordingCurrentTime = this.neuronModel.getTime();
       this.moveChartCursorToTime( ( recordingCurrentTime - recordingStartTime ) * 1000 );
     },
+
     moveChartCursorToTime: function( time ) {
       this.chartCursor.x = Util.clamp( this.chartMvt.transformX( time ), 0, this.chartDimension.width );
       this.chartCursor.y = this.chartMvt.transformY( this.range[1] );
@@ -383,6 +383,7 @@ define( function( require ) {
       this.clearChart();
       this.updateChartCursorVisibility();
     },
+
     updateOnClockPaused: function() {
       this.updateChartCursorPos();
       this.updateChartCursorVisibility();
@@ -390,12 +391,11 @@ define( function( require ) {
     /**
      * Used to control the paused state of Neuron clock
      * Example : Clock is paused on/off when user drags the MembranePotential chart cursor
-     * @param paused
+     * @param {boolean} paused
      */
     setPaused: function( paused ) {
       this.clock.setPaused( paused );
     }
-
   } );
 
 } );
