@@ -22,6 +22,7 @@ define( function( require ) {
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
   var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   var MembraneChannelNode = require( 'NEURON/neuron/view/MembraneChannelNode' );
+  var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
   var ParticleNode = require( 'NEURON/neuron/view/ParticleNode' );
   var PotassiumGatedChannel = require( 'NEURON/neuron/model/PotassiumGatedChannel' );
   var SodiumLeakageChannel = require( 'NEURON/neuron/model/SodiumLeakageChannel' );
@@ -104,10 +105,10 @@ define( function( require ) {
       spacing: 5
     } ), {
       // panel options
-      fill: 'rgb(238,238,238)',
-      xMargin: 4,
-      yMargin: 6,
-      lineWidth: 0
+      fill: NeuronConstants.CONTROL_PANEL_BACKGROUND,
+      stroke: NeuronConstants.CONTROL_PANEL_STROKE,
+      xMargin: 8,
+      yMargin: 10
     } );
   }
 

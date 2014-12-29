@@ -21,8 +21,10 @@ define( function( require ) {
     // Fonts
     CONTROL_PANEL_TITLE_FONT: new PhetFont( {weight: 'bold', size: 14} ),
     CONTROL_PANEL_CONTROL_FONT: new PhetFont( { size: 14} ),
-    // Color of the play area
+    // Fill and stroke colors
     CANVAS_BACKGROUND: new Color( 204, 255, 249 ),
+    CONTROL_PANEL_BACKGROUND: new Color( 238, 238, 238 ),
+    CONTROL_PANEL_STROKE: new Color( 100, 100, 100 ),
     // Colors to use when representing various atoms.
     SODIUM_COLOR: new Color( 240, 0, 0 ),
     POTASSIUM_COLOR: new Color( 0, 240, 100 ),

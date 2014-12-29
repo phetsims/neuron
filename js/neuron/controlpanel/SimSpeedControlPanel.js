@@ -11,6 +11,7 @@ define( function( require ) {
 
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
+  var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
   var Panel = require( 'SUN/Panel' );
   var VerticalAquaRadioButtonGroup = require( 'SUN/VerticalAquaRadioButtonGroup' );
   var Text = require( 'SCENERY/nodes/Text' );
@@ -27,7 +28,7 @@ define( function( require ) {
    */
   function SimSpeedControlPanel( speedProperty ) {
 
-    var radioButtonFont = new PhetFont( { size: 12, weight: 'bold' } );
+    var radioButtonFont = NeuronConstants.CONTROL_PANEL_CONTROL_FONT;
     var speedRadioButtonGroup = new VerticalAquaRadioButtonGroup( [
       { node: new Text( fastForwardString, {font: radioButtonFont} ), property: speedProperty, value: 2 },
       { node: new Text( normalString, {font: radioButtonFont} ), property: speedProperty, value: 1 },
@@ -37,10 +38,10 @@ define( function( require ) {
 
     Panel.call( this, speedRadioButtonGroup, {
       // panel options
-      fill: 'rgb(238,238,238)',
-      xMargin: 2,
-      yMargin: 2,
-      lineWidth: 0
+      fill: NeuronConstants.CONTROL_PANEL_BACKGROUND,
+      stroke: NeuronConstants.CONTROL_PANEL_STROKE,
+      xMargin: 8,
+      yMargin: 6
     } );
 
   }

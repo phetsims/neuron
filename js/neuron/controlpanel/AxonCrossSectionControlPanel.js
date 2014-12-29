@@ -10,12 +10,13 @@ define( function( require ) {
   'use strict';
 
   // modules
-  var inherit = require( 'PHET_CORE/inherit' );
-  var Panel = require( 'SUN/Panel' );
   var CheckBox = require( 'SUN/CheckBox' );
+  var inherit = require( 'PHET_CORE/inherit' );
+  var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
+  var Panel = require( 'SUN/Panel' );
+  var PhetFont = require( 'SCENERY_PHET/PhetFont' );
   var Text = require( 'SCENERY/nodes/Text' );
   var VBox = require( 'SCENERY/nodes/VBox' );
-  var PhetFont = require( 'SCENERY_PHET/PhetFont' );
 
   // strings - labels for control panel check boxes
   var showLegendString = require( 'string!NEURON/showLegend' );
@@ -75,10 +76,10 @@ define( function( require ) {
       spacing: 5
     } ), {
       // panel options
-      fill: 'rgb(238,238,238)',
-      xMargin: 5,
-      yMargin: 6,
-      lineWidth: 0
+      fill: NeuronConstants.CONTROL_PANEL_BACKGROUND,
+      stroke: NeuronConstants.CONTROL_PANEL_STROKE,
+      xMargin: 8,
+      yMargin: 10
     } );
 
     neuronModel.stimulusLockoutProperty.link( function( stimulusLockout ) {
