@@ -23,7 +23,7 @@ define( function( require ) {
     CONTROL_PANEL_CONTROL_FONT: new PhetFont( { size: 14} ),
     // Fill and stroke colors
     CANVAS_BACKGROUND: new Color( 204, 255, 249 ),
-    CONTROL_PANEL_BACKGROUND: new Color( 238, 238, 238 ),
+    CONTROL_PANEL_BACKGROUND: new Color( 239, 239, 195 ),
     CONTROL_PANEL_STROKE: new Color( 100, 100, 100 ),
     // Colors to use when representing various atoms.
     SODIUM_COLOR: new Color( 240, 0, 0 ),

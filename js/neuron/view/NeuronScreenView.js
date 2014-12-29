@@ -145,7 +145,7 @@ define( function( require ) {
     var stimulateNeuronButton = new RectangularPushButton( {
       content: new MultiLineText( stimulateNeuronString, { font: BUTTON_FONT } ),
       listener: function() { thisView.neuronModel.initiateStimulusPulse(); },
-      baseColor: '#c28a43',
+      baseColor: '#CEA269',
       right: worldNodeClipArea.bounds.maxX,
       top: recordPlayButtonBox.top - 10,
       minWidth: 50,
@@ -168,7 +168,7 @@ define( function( require ) {
     var ionsAndChannelsLegendPanel = new IonsAndChannelsLegendPanel();
     this.addChild( ionsAndChannelsLegendPanel );
     ionsAndChannelsLegendPanel.right = panelLeftPos;
-    ionsAndChannelsLegendPanel.top = 40;
+    ionsAndChannelsLegendPanel.top = 30;
 
     var axonCrossSectionControlPanel = new AxonCrossSectionControlPanel( thisView.neuronModel );
     this.addChild( axonCrossSectionControlPanel );

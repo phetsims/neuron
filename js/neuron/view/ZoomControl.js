@@ -37,17 +37,14 @@ define( function( require ) {
     zoomSlider.rotation = -Math.PI / 2;
 
     function createZoomControlButton( contentNode, marginOptions, listener ) {
-      var ctrlButton = new RectangularPushButton( {
+      return new RectangularPushButton( {
         content: contentNode,
-        buttonAppearanceStrategy: RectangularButtonView.flatAppearanceStrategy,
         cornerRadius: 2,
         xMargin: marginOptions.xMargin,
         yMargin: marginOptions.yMargin,
-        baseColor: 'rgb( 240,240,240 )',
+        baseColor: 'white',
         listener: listener
       } );
-
-      return ctrlButton;
     }
 
     var sideLength = 24; // length of one side of the button, empirically determined
