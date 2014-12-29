@@ -61,37 +61,20 @@ define( function( require ) {
     this.particleBounds = clipArea.bounds;
     this.visibleParticlesSize = 0; // Only Particles within the clipping region of Zoomable Node are considered visible
     this.allParticles = [];
-    this.textureBound = false;
+
 
     var noOfTriangleVerticesPerParticle = 12; // 6 corners(2 triangle) coordinates per corner
     var noOfTextCoordinatesPerVertex = 2;
     var totalNoOfVertices = MAX_PARTICLES * noOfTriangleVerticesPerParticle * noOfTextCoordinatesPerVertex;
     this.vertexData = new Float32Array( totalNoOfVertices );
 
-    // Get a reference to the ScaleMatrix every time when the User zooms in and out.This Scale matrix is used for
-    // appropriately positioning the particle in a zoomed state.
-    function updateScaleMatrix() {
-      thisNode.zoomTransformationMatrix = zoomableRootNode.getTransform().getMatrix();
-      thisNode.updateTextureImage();
-      //adjust the bounds based on Zoom factor
-      thisNode.particleViewBounds = thisNode.particleBounds.copy();
-
-      // Particle View bounds is used to manually clip particles, because of Zoom functionality
-      // once scaled up/down the actual bounds gets minimized or maximized
-      thisNode.particleViewBounds = thisNode.particleViewBounds.transformed( thisNode.zoomTransformationMatrix.copy().invert() );
-      if ( thisNode.gl ) {
-        thisNode.bindTextureImage( thisNode.gl );
-      }
-    }
-
+    //The canvas on which particle tiles are drawn and used as a texture
     thisNode.canvas = document.createElement( 'canvas' );
     thisNode.context = this.canvas.getContext( '2d' );
 
     zoomProperty.link( function( zoomFactor ) {
-      updateScaleMatrix();
+      thisNode.updateTexture();
     } );
-
-    updateScaleMatrix();
 
     // For performance reasons and to avoid new vector creation use a single instance
     this.tilePosVector = new Vector2();
@@ -114,17 +97,35 @@ define( function( require ) {
       this.gl = gl;
       var vertexBuffer = gl.createBuffer();
       gl.bindBuffer( gl.ARRAY_BUFFER, vertexBuffer );
-      this.updateTextureImage( gl );
-      this.bindTextureImage( gl );
+      this.updateTexture();
+    },
+
+    /**
+     * This method does the following on initialization (also context restore) and on every zooms in and out action
+     * 1)Draws the Particle Tiles based on new scaled dimension on to the canvas
+     * 2)Binds the canvas Texture
+     * 3)Get a reference to the scaleMatrix to appropriately position the particle in a zoomed state.
+     */
+    updateTexture: function() {
+      //if gl not initialized don't proceed
+      if ( !this.gl ) {
+        return;
+      }
+      var thisNode = this;
+      thisNode.zoomTransformationMatrix = thisNode.zoomableRootNode.getTransform().getMatrix();
+      thisNode.updateTextureImage();
+      //adjust the bounds based on Zoom factor
+      thisNode.particleViewBounds = thisNode.particleBounds.copy();
+
+      // Particle View bounds is used to manually clip particles, because of Zoom functionality
+      // once scaled up/down the actual bounds gets minimized or maximized
+      thisNode.particleViewBounds = thisNode.particleViewBounds.transformed( thisNode.zoomTransformationMatrix.copy().invert() );
+      thisNode.bindTextureImage( thisNode.gl );
+
     },
 
     render: function( gl, shaderProgram, viewMatrix ) {
       this.gl = gl;
-      if ( !this.textureBound ) {
-        this.bindTextureImage( gl );
-        this.textureBound = true;
-      }
-
       this.allParticles = [];
       this.allParticles = this.neuronModel.backgroundParticles.getArray().slice();
       //REVIEW: slice() unnecessary, because concat just reads from its parameters.
@@ -165,6 +166,7 @@ define( function( require ) {
       gl.uniform1i( shaderProgram.uniformLocations.uFragmentType, fragmentType );
 
     },
+
     /**
      * populates vertexData (Float32Array array) with vertex and texture data for all particles
      */
@@ -242,7 +244,11 @@ define( function( require ) {
 
       } );
     },
-    updateTextureImage: function( gl ) {
+
+    /**
+     * draw tiles based on new dimension on to the canvas
+     */
+    updateTextureImage: function() {
 
       var thisNode = this;
       thisNode.context.clearRect( 0, 0, thisNode.canvas.width, thisNode.canvas.height );
@@ -251,6 +257,10 @@ define( function( require ) {
       thisNode.particleTextureMap.createTiles( thisNode.context );
     },
 
+    /**
+     * bind the tiles canvas as a texture
+     * @param gl
+     */
     bindTextureImage: function( gl ) {
 
       if ( this.texture !== null ) {
@@ -273,12 +283,11 @@ define( function( require ) {
       gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR );
       gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR );
       gl.generateMipmap( gl.TEXTURE_2D );
-
-
     },
 
     dispose: function( gl ) {
       gl.deleteTexture( this.texture );
+      this.texture = null;
     }
 
   } );
