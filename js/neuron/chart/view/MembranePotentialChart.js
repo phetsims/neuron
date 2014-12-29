@@ -129,7 +129,6 @@ define( function( require ) {
       thisChart.updateOnSimulationReset();
     } );
 
-
     thisChart.neuronModel.stimulusPulseInitiatedProperty.link( function( stimulusPulseInitiated ) {
       if ( stimulusPulseInitiated ) {
         if ( !thisChart.neuronModel.isPotentialChartVisible() ) {
@@ -139,25 +138,21 @@ define( function( require ) {
         // Start recording, if it isn't already happening.
         thisChart.neuronModel.startRecording();
       }
-
     } );
 
     var chartTitleNode = new Text( chartTitleString, {font: new PhetFont( {size: 16, weight: 'bold'} )} );
     var clearChartButton = new TextPushButton( chartClearString, {
-      font: new PhetFont( {size: 12} )
-      //REVIEW - FYI: I deleted the color so that the default would be used.  The gray looked disabled.
-
+      font: new PhetFont( {size: 12} ),
+      listener: function() {thisChart.clearChart();}
     } );
-    //REVIEW - the listener can be added as an option during the construction step above, for slightly cleaner code.
-    clearChartButton.addListener( function() {thisChart.clearChart();} );
 
     var closeIconRadius = 4;
-
     var xIcon = new Path( new Shape()
       .moveTo( -closeIconRadius, -closeIconRadius )
       .lineTo( closeIconRadius, closeIconRadius )
       .moveTo( closeIconRadius, -closeIconRadius )
       .lineTo( -closeIconRadius, closeIconRadius ), {stroke: 'white', lineWidth: 2} );
+
     //close button
     var closeButton = new RectangularPushButton( {
       baseColor: 'red',
@@ -253,11 +248,9 @@ define( function( require ) {
     thisChart.neuronModel.potentialChartVisibleProperty.link( function( chartVisible ) {
       thisChart.visible = chartVisible;
     } );
-
   }
 
   return inherit( Panel, MembranePotentialChart, {
-
     /**
      * Add a data point to the graph.
      *
