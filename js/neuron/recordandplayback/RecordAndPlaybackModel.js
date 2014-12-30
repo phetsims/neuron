@@ -30,11 +30,11 @@ define( function( require ) {
    */
   function RecordAndPlaybackModel( maxRecordPoints, props ) {
     props = _.extend( props, {
-      paused: false,//True if the current mode is paused
-      time: 0,//Current time of recording or playback
+      paused: false, // True if the current mode is paused
+      time: 0, // Current time of recording or playback
       historyRemainderCleared: false,
       historyCleared: false,
-      mode: null // Mode mode; the current mode, one of playback, record or live
+      mode: null // The current operational mode, valid values are playback, record or live
 
     } );
     var thisModel = this;
@@ -42,7 +42,7 @@ define( function( require ) {
 
     thisModel.maxRecordPoints = maxRecordPoints;
 
-    //The history of data points that have been recorded from the model.
+    // The history of data points that have been recorded from the model.
     thisModel.recordHistory = new ObservableArray();
 
     thisModel.recordMode = new Record( this ); //samples data from the mode and stores it
@@ -69,6 +69,7 @@ define( function( require ) {
     stepInTime: function() {
       throw new Error( 'stepInTime should be implemented in descendant classes.' );
     },
+
     /**
      * Called by the Animation Loop
      * @param simulationTimeChange
@@ -78,6 +79,7 @@ define( function( require ) {
         this.stepMode( simulationTimeChange );
       }
     },
+
     /**
      * Steps the currently active mode by the specified amount of time.
      *

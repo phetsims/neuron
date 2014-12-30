@@ -164,25 +164,14 @@ define( function( require ) {
     var stimulateNeuronButton = new RectangularPushButton( {
       content: new MultiLineText( stimulateNeuronString, { font: BUTTON_FONT } ),
       listener: function() { thisView.neuronModel.initiateStimulusPulse(); },
-      baseColor: '#c28a43',
-      right: recordPlayButtonBox.right + 200,
+      baseColor: '#CEA269',
+      right: worldNodeClipArea.bounds.maxX,
       top: recordPlayButtonBox.top - 10,
       minWidth: 50,
       minHeight: 65
     } );
 
     this.addChild( stimulateNeuronButton );
-
-    // Create and add the Reset All Button in the bottom right
-    var resetAllButton = new ResetAllButton( {
-      listener: function() {
-        zoomProperty.value = defaultZoom;
-        neuronClockModelAdapter.reset();
-      },
-      right: recordPlayButtonBox.right + 300,
-      top: recordPlayButtonBox.top - 10
-    } );
-    this.addChild( resetAllButton );
 
     thisView.neuronModel.stimulusLockoutProperty.link( function( stimulusLockout ) {
       stimulateNeuronButton.enabled = !stimulusLockout;
@@ -195,16 +184,26 @@ define( function( require ) {
 
     var panelLeftPos = this.layoutBounds.maxX - leftPadding;
 
-    var iosAndChannelsLegendPanel = new IonsAndChannelsLegendPanel();
-    this.addChild( iosAndChannelsLegendPanel );
-    iosAndChannelsLegendPanel.right = panelLeftPos;
-    iosAndChannelsLegendPanel.top = 40;
+    var ionsAndChannelsLegendPanel = new IonsAndChannelsLegendPanel();
+    this.addChild( ionsAndChannelsLegendPanel );
+    ionsAndChannelsLegendPanel.right = panelLeftPos;
+    ionsAndChannelsLegendPanel.top = 30;
 
     var axonCrossSectionControlPanel = new AxonCrossSectionControlPanel( thisView.neuronModel );
     this.addChild( axonCrossSectionControlPanel );
-    axonCrossSectionControlPanel.right = panelLeftPos;
-    axonCrossSectionControlPanel.top = iosAndChannelsLegendPanel.bottom + 20;
+    axonCrossSectionControlPanel.centerX = ionsAndChannelsLegendPanel.centerX;
+    axonCrossSectionControlPanel.top = ionsAndChannelsLegendPanel.bottom + 20;
 
+    // Create and add the Reset All Button in the bottom right
+    var resetAllButton = new ResetAllButton( {
+      listener: function() {
+        zoomProperty.value = defaultZoom;
+        neuronClockModelAdapter.reset();
+      },
+      centerX: ionsAndChannelsLegendPanel.centerX,
+      centerY: stimulateNeuronButton.centerY
+    } );
+    this.addChild( resetAllButton );
 
     var concentrationReadoutLayerNode = new ConcentrationReadoutLayerNode( thisView.neuronModel, zoomProperty, zoomableRootNode, axonCrossSectionNode );
     this.addChild( concentrationReadoutLayerNode );
