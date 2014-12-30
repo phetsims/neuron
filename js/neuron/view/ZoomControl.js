@@ -18,9 +18,8 @@ define( function( require ) {
   var Shape = require( 'KITE/Shape' );
   var RectangularPushButton = require( 'SUN/buttons/RectangularPushButton' );
   var Util = require( 'DOT/Util' );
-  var RectangularButtonView = require( 'SUN/buttons/RectangularButtonView' );
 
-  //REVIEW - neuronModel appears to be unused.  Can it be removed?
+
   /**
    * @param {Property.<number>} zoomProperty - property that indicates how far zoomed in the simulation is, between
    * @param {number} minZoom - the furthest out the sim can be zoomed (1)

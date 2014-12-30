@@ -120,33 +120,36 @@ define( function( require ) {
     var recordPlayButtons = [];
     var playToggleProperty = new ToggleProperty( true, false, neuronClockModelAdapter.pausedProperty );
     var playPauseButton = new PlayPauseButton( playToggleProperty, { radius: 25 } );
-    var forwardStepButton = new StepButton( function() { neuronClockModelAdapter.stepClockWhilePaused(); }, playToggleProperty );
-    thisView.neuronModel.pausedProperty.linkAttribute( forwardStepButton, 'enabled' );
 
     // Allow Step Back only if the user has initiated a StimulusPulse atleast once. Stepping back
     // without initiating a stimulus results in the accumulation of negative delta time
     // values in DelayBuffer which causes undesired behaviour.
     // If the User pauses while Stimulus in progress, Step back and StepForward action still goes back
     // and forth ONLY  between stored snapshot states (see PlayBack mode class)
-    // The behaviour could reoccur after the User resets the Sim Status, so the allowStepback is also reset to false
+    // The behaviour could reoccur after the User resets the Sim Status, so the allowStepNavigation is also reset to false
 
-    var backwardStepButton = new StepBackButton( function() { neuronClockModelAdapter.stepClockBackWhilePaused(); },
-      DerivedProperty.multilink( [playToggleProperty, thisView.neuronModel.allowStepbackProperty],
-        function( playToggle, allowStepBack ) {
-          // Step and StepBack buttons are tied to PlayProperty and both enable themselves
-          // when their observing property (It is assumed to be PlayProperty) is false.In this case we also have to
-          // check allowStepBack
-          return playToggle || !allowStepBack;
-        } )
+    var stepToggleProperty = DerivedProperty.multilink( [playToggleProperty, thisView.neuronModel.allowStepNavigationProperty],
+      function( playToggle, allowStepNavigation ) {
+        // Step and StepBack buttons are tied to PlayProperty and both enable themselves
+        // when their observing property (It is assumed to be PlayProperty) is false.In this case we also have to
+        // check allowStepBack
+        return playToggle || !allowStepNavigation;
+      } );
+
+    var backwardStepButton = new StepBackButton(
+      function() {
+        neuronClockModelAdapter.stepClockBackWhilePaused();
+      }, stepToggleProperty
     );
 
-
-
+    //for consistency sake, enable the StepForward only when StepBack is enabled
+    var forwardStepButton = new StepButton(
+      function() { neuronClockModelAdapter.stepClockWhilePaused(); },
+      stepToggleProperty );
 
     recordPlayButtons.push( backwardStepButton );
     recordPlayButtons.push( playPauseButton );
     recordPlayButtons.push( forwardStepButton );
-
 
     var recordPlayButtonBox = new HBox( {
       children: recordPlayButtons,
@@ -159,7 +162,6 @@ define( function( require ) {
 
     //space between layout edge and controls like reset,zoom control,legend,speed panel etc
     var leftPadding = 20;
-
 
     var stimulateNeuronButton = new RectangularPushButton( {
       content: new MultiLineText( stimulateNeuronString, { font: BUTTON_FONT } ),
@@ -181,9 +183,7 @@ define( function( require ) {
     // The clock adapter calculates the appropriate dt and dispatches it to the interested model
     neuronClockModelAdapter.registerStepCallback( thisView.neuronModel.step.bind( thisView.neuronModel ) );
 
-
     var panelLeftPos = this.layoutBounds.maxX - leftPadding;
-
     var ionsAndChannelsLegendPanel = new IonsAndChannelsLegendPanel();
     this.addChild( ionsAndChannelsLegendPanel );
     ionsAndChannelsLegendPanel.right = panelLeftPos;
@@ -211,7 +211,6 @@ define( function( require ) {
     thisView.neuronModel.concentrationReadoutVisibleProperty.link( function( concentrationVisible ) {
       concentrationReadoutLayerNode.visible = concentrationVisible;
     } );
-
 
     var chartHeight = 100;
     var membranePotentialChartNode = new MembranePotentialChart( new Dimension2( worldNodeClipArea.bounds.width - 60, chartHeight ), neuronClockModelAdapter );
@@ -243,7 +242,6 @@ define( function( require ) {
     this.addChild( zoomControl );
     zoomControl.top = this.layoutBounds.minY + 70;
     zoomControl.left = this.layoutBounds.minX + leftPadding;
-
   }
 
   return inherit( ScreenView, NeuronView );

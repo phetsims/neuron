@@ -15,7 +15,7 @@ define( function( require ) {
   var Panel = require( 'SUN/Panel' );
   var VerticalAquaRadioButtonGroup = require( 'SUN/VerticalAquaRadioButtonGroup' );
   var Text = require( 'SCENERY/nodes/Text' );
-  var PhetFont = require( 'SCENERY_PHET/PhetFont' );
+
 
   // strings - labels for speed radio buttons
   var fastForwardString = require( 'string!NEURON/fastForward' );

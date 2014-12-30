@@ -169,11 +169,11 @@ define( function( require ) {
       particlesStateChanged: false, // to trigger canvas invalidation
       channelRepresentationChanged: false, // A change in any one of channel representation triggers a paint call
 
-      // Allow Step Back only if the user has initiated a StimulusPulse atleast once. Stepping back
+      // Allow Step Back/forward only if the user has initiated a StimulusPulse atleast once. Stepping back
       // without initiating a stimulus results in the accumulation of negative delta time
       // values in DelayBuffer which causes undesired behaviour.
       // see https://github.com/phetsims/neuron/issues/26
-      allowStepback: false
+      allowStepNavigation: false
     } );
 
 
@@ -278,7 +278,7 @@ define( function( require ) {
     thisModel.stimulusPulseInitiatedProperty.link( function( stimulusPulseInitiated ) {
       if ( stimulusPulseInitiated ) {
         thisModel.startRecording();
-        thisModel.allowStepback = true;
+        thisModel.allowStepNavigation = true;
       }
     } );
 
@@ -530,7 +530,7 @@ define( function( require ) {
       this.clearHistory();
       this.setModeLive();
       this.setPaused( false );
-      this.allowStepback = false;
+      this.allowStepNavigation = false;
     },
 
     /**
