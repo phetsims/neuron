@@ -167,8 +167,13 @@ define( function( require ) {
       stimulusPulseInitiated: false,// observed by Membrane potential chart
       neuronModelPlaybackState: null,
       particlesStateChanged: false, // to trigger canvas invalidation
-      backgroundParticlesRedefined: false,// Background particle canvas need to be redefined based on new set of particles
-      channelRepresentationChanged: false // A change in any one of channel representation triggers a paint call
+      channelRepresentationChanged: false, // A change in any one of channel representation triggers a paint call
+
+      // Allow Step Back only if the user has initiated a StimulusPulse atleast once. Stepping back
+      // without initiating a stimulus results in the accumulation of negative delta time
+      // values in DelayBuffer which causes undesired behaviour.
+      // see https://github.com/phetsims/neuron/issues/26
+      allowStepback: false
     } );
 
 
@@ -273,6 +278,7 @@ define( function( require ) {
     thisModel.stimulusPulseInitiatedProperty.link( function( stimulusPulseInitiated ) {
       if ( stimulusPulseInitiated ) {
         thisModel.startRecording();
+        thisModel.allowStepback = true;
       }
     } );
 
@@ -524,6 +530,7 @@ define( function( require ) {
       this.clearHistory();
       this.setModeLive();
       this.setPaused( false );
+      this.allowStepback = false;
     },
 
     /**
@@ -594,10 +601,8 @@ define( function( require ) {
           this.addInitialBulkParticles();
         }
         else {
-          this.backgroundParticlesRedefined = false;
           // Remove all particles.
           this.removeAllParticles();
-          this.backgroundParticlesRedefined = true;
         }
 
       }
@@ -609,7 +614,6 @@ define( function( require ) {
      * initially positioned.
      */
     addInitialBulkParticles: function() {
-      this.backgroundParticlesRedefined = false;
       var thisModel = this;
       // Make a list of pre-existing particles.
       var preExistingParticles = _.clone( thisModel.transientParticles.getArray() );
@@ -639,8 +643,6 @@ define( function( require ) {
         }
       } );
 
-
-      this.backgroundParticlesRedefined = true;
     },
 
     /**

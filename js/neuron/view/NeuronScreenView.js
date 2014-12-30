@@ -20,6 +20,7 @@ define( function( require ) {
   var Shape = require( 'KITE/Shape' );
   var Dimension2 = require( 'DOT/Dimension2' );
   var Property = require( 'AXON/Property' );
+  var DerivedProperty = require( 'AXON/DerivedProperty' );
   var ToggleProperty = require( 'AXON/ToggleProperty' );
   var RectangularPushButton = require( 'SUN/buttons/RectangularPushButton' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
@@ -121,8 +122,26 @@ define( function( require ) {
     var playPauseButton = new PlayPauseButton( playToggleProperty, { radius: 25 } );
     var forwardStepButton = new StepButton( function() { neuronClockModelAdapter.stepClockWhilePaused(); }, playToggleProperty );
     thisView.neuronModel.pausedProperty.linkAttribute( forwardStepButton, 'enabled' );
-    var backwardStepButton = new StepBackButton( function() { neuronClockModelAdapter.stepClockBackWhilePaused(); }, playToggleProperty );
-    thisView.neuronModel.pausedProperty.linkAttribute( backwardStepButton, 'enabled' );
+
+    // Allow Step Back only if the user has initiated a StimulusPulse atleast once. Stepping back
+    // without initiating a stimulus results in the accumulation of negative delta time
+    // values in DelayBuffer which causes undesired behaviour.
+    // If the User pauses while Stimulus in progress, Step back and StepForward action still goes back
+    // and forth ONLY  between stored snapshot states (see PlayBack mode class)
+    // The behaviour could reoccur after the User resets the Sim Status, so the allowStepback is also reset to false
+
+    var backwardStepButton = new StepBackButton( function() { neuronClockModelAdapter.stepClockBackWhilePaused(); },
+      DerivedProperty.multilink( [playToggleProperty, thisView.neuronModel.allowStepbackProperty],
+        function( playToggle, allowStepBack ) {
+          // Step and StepBack buttons are tied to PlayProperty and both enable themselves
+          // when their observing property (It is assumed to be PlayProperty) is false.In this case we also have to
+          // check allowStepBack
+          return playToggle || !allowStepBack;
+        } )
+    );
+
+
+
 
     recordPlayButtons.push( backwardStepButton );
     recordPlayButtons.push( playPauseButton );
