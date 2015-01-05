@@ -47,8 +47,7 @@ define( function( require ) {
   var MODEL_WIDTH = 180; // In nanometers.
   var PARTICLE_BOUNDS = new Shape.rect( -MODEL_WIDTH / 2, -MODEL_HEIGHT / 2, MODEL_WIDTH, MODEL_HEIGHT );
 
-  // Numbers of the various types of channels that are present on the
-  // membrane.
+  // Numbers of the various types of channels that are present on the  membrane.
   var NUM_GATED_SODIUM_CHANNELS = 20;
   var NUM_GATED_POTASSIUM_CHANNELS = 20;
   var NUM_SODIUM_LEAK_CHANNELS = 3;
@@ -68,10 +67,8 @@ define( function( require ) {
 
   // Delay between the values in the HH model to the concentration readouts.
   // This is needed to make sure that the concentration readouts don't
-  // change before visible potassium or sodium ions have crossed the
-  //membrane.
+  // change before visible potassium or sodium ions have crossed the membrane.
   var CONCENTRATION_READOUT_DELAY = 0.001;  // In seconds of sim time.
-
 
   // Thresholds for determining whether an action potential should be
   // considered to be in progress.  These values relate to the rate of flow
@@ -83,7 +80,6 @@ define( function( require ) {
   var POTASSIUM_CURRENT_THRESH_FOR_ACTION_POTENTIAL = 0.001;
   var SODIUM_CURRENT_THRESH_FOR_ACTION_POTENTIAL = 0.001;
   var LEAKAGE_CURRENT_THRESH_FOR_ACTION_POTENTIAL = 0.444;
-
 
   // Rates at which concentration changes during action potential.  These
   // values combined with the conductance at each time step are used to
@@ -133,7 +129,6 @@ define( function( require ) {
 
     thisModel.membraneChannels = new ObservableArray();
     thisModel.hodgkinHuxleyModel = new ModifiedHodgkinHuxleyModel();
-
     thisModel.crossSectionInnerRadius = (thisModel.axonMembrane.getCrossSectionDiameter() - thisModel.axonMembrane.getMembraneThickness()) / 2;
     thisModel.crossSectionOuterRadius = (thisModel.axonMembrane.getCrossSectionDiameter() + thisModel.axonMembrane.getMembraneThickness()) / 2;
 
@@ -143,7 +138,6 @@ define( function( require ) {
     thisModel.potassiumExteriorConcentration = NOMINAL_POTASSIUM_EXTERIOR_CONCENTRATION;
 
     RecordAndPlaybackModel.call( thisModel, maxRecordPoints, {
-
       // Notification Property that the setting for the visibility of the membrane
       //potential chart has changed.
       potentialChartVisible: DEFAULT_FOR_MEMBRANE_CHART_VISIBILITY,
@@ -173,18 +167,14 @@ define( function( require ) {
       allowStepNavigation: false
     } );
 
-
     // Listen to the membrane for events that indicate that a traveling
-    // action potential has arrived at the location of the transverse
-    // cross section.
+    // action potential has arrived at the location of the transverse cross section.
     thisModel.axonMembrane.travelingActionPotentialReachedCrossSectionProperty.lazyLink( function( reached ) {
       // The action potential has arrived, so stimulate the model
-      // the simulates the action potential voltages and current
-      // flows.
+      // the simulates the action potential voltages and current flows.
       if ( reached ) {
         thisModel.hodgkinHuxleyModel.stimulate();
       }
-
     } );
 
     function addInitialChannels() {
@@ -202,8 +192,7 @@ define( function( require ) {
       var sodiumLeakChansAdded = 0;
       var potassiumLeakChansAdded = 0;
 
-      // Add some of each type so that they are visible at the top portion
-      // of the membrane.
+      // Add some of each type so that they are visible at the top portion of the membrane.
       if ( NUM_SODIUM_LEAK_CHANNELS > 0 ) {
         thisModel.addChannel( MembraneChannelTypes.SODIUM_LEAKAGE_CHANNEL, angle );
         sodiumLeakChansAdded++;
@@ -234,12 +223,14 @@ define( function( require ) {
         var potassiumLeakUrgency = NUM_POTASSIUM_LEAK_CHANNELS / potassiumLeakChansAdded;
         var sodiumLeakUrgency = NUM_SODIUM_LEAK_CHANNELS / sodiumLeakChansAdded;
         var channelTypeToAdd = null;
-        if ( gatedSodiumUrgency >= gatedPotassiumUrgency && gatedSodiumUrgency >= potassiumLeakUrgency && gatedSodiumUrgency >= sodiumLeakUrgency ) {
+        if ( gatedSodiumUrgency >= gatedPotassiumUrgency && gatedSodiumUrgency >= potassiumLeakUrgency &&
+             gatedSodiumUrgency >= sodiumLeakUrgency ) {
           // Add a gated sodium channel.
           channelTypeToAdd = MembraneChannelTypes.SODIUM_GATED_CHANNEL;
           gatedSodiumChansAdded++;
         }
-        else if ( gatedPotassiumUrgency > gatedSodiumUrgency && gatedPotassiumUrgency >= potassiumLeakUrgency && gatedPotassiumUrgency >= sodiumLeakUrgency ) {
+        else if ( gatedPotassiumUrgency > gatedSodiumUrgency && gatedPotassiumUrgency >= potassiumLeakUrgency &&
+                  gatedPotassiumUrgency >= sodiumLeakUrgency ) {
           // Add a gated potassium channel.
           channelTypeToAdd = MembraneChannelTypes.POTASSIUM_GATED_CHANNEL;
           gatedPotassiumChansAdded++;
@@ -277,7 +268,6 @@ define( function( require ) {
         thisModel.allowStepNavigation = true;
       }
     } );
-
     this.reset(); // This does initialization
   }
 
@@ -333,7 +323,6 @@ define( function( require ) {
       // the model causes notifications to be sent out continuously.
       if ( Math.abs( this.membranePotential - this.hodgkinHuxleyModel.getMembraneVoltage() ) > MEMBRANE_POTENTIAL_CHANGE_THRESHOLD ) {
         this.membranePotential = this.hodgkinHuxleyModel.getMembraneVoltage();
-
       }
 
       // Update the stimulus lockout state.
@@ -493,7 +482,6 @@ define( function( require ) {
         concentrationChanged = true;
       }
       if ( concentrationChanged ) {
-
         this.concentrationChangedProperty.set( true ); // Trigger concentrationReadout change
       }
 
@@ -651,7 +639,6 @@ define( function( require ) {
           thisModel.transientParticles.remove( newParticle );
         }
       } );
-
       return newParticle;
     },
 
@@ -695,12 +682,10 @@ define( function( require ) {
         newParticle = this.createBackgroundParticle( particleType );
         newParticle.setOpaqueness( FOREGROUND_PARTICLE_DEFAULT_OPAQUENESS );
         captureZone.assignNewParticleLocation( newParticle );
-
       }
     },
 
     /**
-     *
      * @returns {Shape}
      */
     getParticleMotionBounds: function() {
@@ -729,7 +714,6 @@ define( function( require ) {
       // per unit area.
       var multiplier = Math.max( Math.random(), Math.random() );
       var distance = (this.crossSectionInnerRadius - particle.getRadius() * 2) * multiplier;
-
       particle.setPosition( distance * Math.cos( angle ), distance * Math.sin( angle ) );
     },
 
@@ -742,7 +726,6 @@ define( function( require ) {
      * @return {boolean}
      */
     isActionPotentialInProgress: function() {
-
       return this.axonMembrane.getTravelingActionPotential() ||
              Math.abs( this.hodgkinHuxleyModel.get_k_current() ) > POTASSIUM_CURRENT_THRESH_FOR_ACTION_POTENTIAL ||
              Math.abs( this.hodgkinHuxleyModel.get_na_current() ) > SODIUM_CURRENT_THRESH_FOR_ACTION_POTENTIAL ||
@@ -810,8 +793,6 @@ define( function( require ) {
       else {
         // Currently NOT locked out, see if that should change.
         var backwards = this.getTime() - this.getMaxRecordedTime() <= 0;
-
-
         if ( this.isActionPotentialInProgress() || (this.isPlayback() && backwards) ) {
           this.setStimulusLockout( true );
         }
@@ -945,7 +926,6 @@ define( function( require ) {
           self.backgroundParticles.remove( newParticle );
         }
       } );
-
       return newParticle;
     },
 
@@ -964,7 +944,6 @@ define( function( require ) {
      */
     addChannel: function( membraneChannelType, angle ) {
       var membraneChannel = MembraneChannelFactory.createMembraneChannel( membraneChannelType, this, this.hodgkinHuxleyModel );
-
       var radius = this.axonMembrane.getCrossSectionDiameter() / 2;
       var newLocation = new Vector2( radius * Math.cos( angle ), radius * Math.sin( angle ) );
 
@@ -981,7 +960,6 @@ define( function( require ) {
      * stimulus (i.e. action potential) is currently locked out.  This is done
      * to prevent the situation where multiple action potentials are moving
      * down the membrane at the same time.
-     *
      * @return {boolean}
      */
     isStimulusInitiationLockedOut: function() {
@@ -1041,7 +1019,6 @@ define( function( require ) {
     },
 
     /**
-     *
      * @returns {number}
      */
     getMembranePotential: function() {
@@ -1060,7 +1037,6 @@ define( function( require ) {
      * @param {NeuronModelState} state
      */
     setPlaybackState: function( state ) {
-
       this.concentrationChanged = false;
 
       // Set the membrane channel state.
