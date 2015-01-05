@@ -345,13 +345,6 @@ define( function( require ) {
         channel.stepInTime( dt );
       } );
 
-
-      // Step the transient particles.  Since these particles may remove
-      // themselves as a result of being stepped, we need to copy the list
-      // in order to avoid concurrent modification exceptions.
-      //REVIEW - Good catch.  I think it's safe, and less confusing to future maintainers, to simply remove this comment.
-      // (Not true in observableArray as ForEach already copies the array and iterates, kept the comment for ref - Ashraf)
-
       this.transientParticles.forEach( function( particle ) {
         particle.stepInTime( dt );
       } );
@@ -939,11 +932,10 @@ define( function( require ) {
 
       var newParticle = ParticleFactory.createParticle( particleType );
       this.backgroundParticles.add( newParticle );
-
+      var self = this;
       newParticle.continueExistingProperty.lazyLink( function( newValue ) {
         if ( newValue === false ) {
-          //REVIEW: This probably won't work, should be a 'self' var set at top of function.
-          this.backgroundParticles.remove( newParticle );
+          self.backgroundParticles.remove( newParticle );
         }
       } );
 
