@@ -108,7 +108,6 @@ define( function( require ) {
   var FOREGROUND_PARTICLE_DEFAULT_OPAQUENESS = 0.25;
   var BACKGROUND_PARTICLE_DEFAULT_OPAQUENESS = 0.10;// default alpha in Java was 0.05, which isn't visible in the canvas so slightly increasing to 0.10
 
-
   /**
    * Main constructor for NeuronModel, which contains much of the model logic for the sim.
    * @constructor
@@ -138,12 +137,10 @@ define( function( require ) {
     thisModel.crossSectionInnerRadius = (thisModel.axonMembrane.getCrossSectionDiameter() - thisModel.axonMembrane.getMembraneThickness()) / 2;
     thisModel.crossSectionOuterRadius = (thisModel.axonMembrane.getCrossSectionDiameter() + thisModel.axonMembrane.getMembraneThickness()) / 2;
 
-
     thisModel.sodiumInteriorConcentration = NOMINAL_SODIUM_INTERIOR_CONCENTRATION;
     thisModel.sodiumExteriorConcentration = NOMINAL_SODIUM_EXTERIOR_CONCENTRATION;
     thisModel.potassiumInteriorConcentration = NOMINAL_POTASSIUM_INTERIOR_CONCENTRATION;
     thisModel.potassiumExteriorConcentration = NOMINAL_POTASSIUM_EXTERIOR_CONCENTRATION;
-
 
     RecordAndPlaybackModel.call( thisModel, maxRecordPoints, {
 
@@ -274,7 +271,6 @@ define( function( require ) {
     thisModel.timeProperty.link( thisModel.updateRecordPlayBack.bind( this ) );
     thisModel.modeProperty.link( thisModel.updateRecordPlayBack.bind( this ) );
 
-
     thisModel.stimulusPulseInitiatedProperty.link( function( stimulusPulseInitiated ) {
       if ( stimulusPulseInitiated ) {
         thisModel.startRecording();
@@ -282,13 +278,14 @@ define( function( require ) {
       }
     } );
 
-
     this.reset(); // This does initialization
   }
 
   return inherit( RecordAndPlaybackModel, NeuronModel, {
-
-    // dispatched from NeuronClockModelAdapter's step function
+    /**
+     * dispatched from NeuronClockModelAdapter's step function
+     * @param {number} simulationTimeChange
+     */
     step: function( simulationTimeChange ) {
       if ( simulationTimeChange < 0 && this.getPlaybackSpeed() > 0 ) {
         // This is a step backwards in time but the record-and-playback
@@ -313,11 +310,13 @@ define( function( require ) {
         this.setModeRecord();
         this.setPaused( false );
       }
-
     },
 
-    // Called by the active RecordAndPlayback Model mode
-    // see the RecordAndPlayBackModel step function
+    /**
+     * Called by the active RecordAndPlayback Model mode,see the RecordAndPlayBackModel step function
+     * @param {number} dt
+     * @returns {NeuronModelState}
+     */
     stepInTime: function( dt ) {
       // Step the membrane in time.  This is done prior to stepping the
       // HH model because the traveling action potential is part of the
@@ -354,7 +353,6 @@ define( function( require ) {
       this.backgroundParticles.forEach( function( particle ) {
         particle.stepInTime( dt );
       } );
-
 
       if ( this.concentrationReadoutVisible ) {
         // Adjust the overall potassium and sodium concentration levels based
@@ -436,9 +434,7 @@ define( function( require ) {
         if ( concentrationChanged ) {
           this.concentrationChanged = true;
         }
-
       }
-
 
       //invert the value and trigger change event
       this.particlesStateChangedProperty.set( !this.particlesStateChangedProperty.get() );
@@ -449,10 +445,11 @@ define( function( require ) {
 
       // Return model state after each time step.
       return this.getState();
-
     },
-    // Listen to the record-and-playback model for events that affect the
-    // state of the sim model.
+
+    /**
+     * Listen to the record-and-playback model for events that affect the state of the sim model.
+     */
     updateRecordPlayBack: function() {
       this.updateStimulusLockoutState();
       this.updateSimAndPlaybackParticleVisibility();
@@ -468,7 +465,6 @@ define( function( require ) {
 
       // Remove all existing particles.
       this.removeAllParticles();
-
 
       // Reset all membrane channels.
       this.membraneChannels.forEach( function( membraneChannel ) {
@@ -539,11 +535,10 @@ define( function( require ) {
      * the channel, since it is possible that the channel could close before
      * the particle goes through it.
      *
-     * @param particleType
+     * @param {ParticleType.string}particleType
      * @param {MembraneChannel}channel
-     * @param maxVelocity
-     * @param direction
-     * @return
+     * @param {number} maxVelocity
+     * @param {MembraneCrossingDirection.string} direction
      */
     requestParticleThroughChannel: function( particleType, channel, maxVelocity, direction ) {
       var captureZone;
@@ -564,7 +559,6 @@ define( function( require ) {
       channel.moveParticleThroughNeuronMembrane( particleToCapture, maxVelocity );
     },
 
-
     /**
      * Return a value indicating whether simulation of all ions is currently
      * turned on in the simulation.  And yes, it would be more grammatically
@@ -574,11 +568,12 @@ define( function( require ) {
     isAllIonsSimulated: function() {
       return this.allIonsSimulated;
     },
+
     /**
      * Set the boolean value that indicates whether all ions are shown in the
      * simulation, or just those that are moving across the membrane.
      *
-     * @param allIonsSimulated
+     * @param {boolean} allIonsSimulated
      */
     setAllIonsSimulated: function( allIonsSimulated ) {
 
@@ -586,8 +581,6 @@ define( function( require ) {
       // out.  Otherwise, particles would come and go during an action
       // potential, which would be hard to handle and potentially confusing.
       if ( !this.isStimulusInitiationLockedOut() ) {
-
-
         if ( this.allIonsSimulated ) {
           // Add the bulk particles.
           this.addInitialBulkParticles();
@@ -596,9 +589,9 @@ define( function( require ) {
           // Remove all particles.
           this.removeAllParticles();
         }
-
       }
     },
+
     /**
      * Add the "bulk particles", which are particles that are inside and
      * outside of the membrane and, except in cases where they happen to end
@@ -634,7 +627,6 @@ define( function( require ) {
           backgroundParticle.setMotionStrategy( new SlowBrownianMotionStrategy( backgroundParticle.getPositionX(), backgroundParticle.getPositionY() ) );
         }
       } );
-
     },
 
     /**
@@ -642,18 +634,16 @@ define( function( require ) {
      * In general, this method will be used when a particle is or may soon be
      * needed to travel through a membrane channel.
      *
-     * @param particleType
-     * @param captureZone
-     * @return
+     * @param {ParticleType.string} particleType
+     * @param {CaptureZone} captureZone
+     * @return {Particle}
      */
     createTransientParticle: function( particleType, captureZone ) {
       var newParticle = ParticleFactory.createParticle( particleType );
       this.transientParticles.add( newParticle );
       if ( captureZone ) {
-
         //To avoid creation of new Vector instances the capture zone updates the particles position
         captureZone.assignNewParticleLocation( newParticle );
-
       }
       var thisModel = this;
       newParticle.continueExistingProperty.lazyLink( function( newValue ) {
@@ -667,10 +657,9 @@ define( function( require ) {
 
     /**
      * Add the specified particles to the model.
-     *
-     * @param {ParticleType}particleType
+     * @param {ParticleType.string}particleType
      * @param {ParticlePosition}position
-     * @param numberToAdd
+     * @param {number} numberToAdd
      */
     addBackgroundParticles: function( particleType, position, numberToAdd ) {
       var newParticle = null;
@@ -693,13 +682,12 @@ define( function( require ) {
       } );
     },
 
-
     /**
      * Add the specified particles to the given capture zone.
      *
-     * @param particleType
-     * @param captureZone
-     * @param numberToAdd
+     * @param {ParticleType.string} particleType
+     * @param {CaptureZone} captureZone
+     * @param {number} numberToAdd
      */
     addBackgroundParticlesToZone: function( particleType, captureZone, numberToAdd ) {
       var newParticle = null;
@@ -711,7 +699,10 @@ define( function( require ) {
       }
     },
 
-
+    /**
+     *
+     * @returns {Shape}
+     */
     getParticleMotionBounds: function() {
       return PARTICLE_BOUNDS;
     },
@@ -726,6 +717,7 @@ define( function( require ) {
 
     /**
      * Place a particle at a random location inside the axon membrane.
+     * @param {Particle} particle
      */
     positionParticleInsideMembrane: function( particle ) {
       // Choose any angle.
@@ -747,6 +739,7 @@ define( function( require ) {
      * is an AP traveling down the membrane or if the flow of ions through the
      * channels at the transverse cross section is enough to be considered
      * part of an AP.
+     * @return {boolean}
      */
     isActionPotentialInProgress: function() {
 
@@ -758,6 +751,7 @@ define( function( require ) {
 
     /**
      * Place a particle at a random location outside the axon membrane.
+     * @param {Particle} particle
      */
     positionParticleOutsideMembrane: function( particle ) {
       // Choose any angle.
@@ -778,7 +772,7 @@ define( function( require ) {
      * Scan the supplied capture zone for particles of the specified type.
      *
      * @param {CaptureZone} zone
-     * @param {ParticleType} particleType
+     * @param {ParticleType.string} particleType
      * @return {number}
      */
     scanCaptureZoneForFreeParticles: function( zone, particleType ) {
@@ -803,8 +797,6 @@ define( function( require ) {
           }
         }
       } );
-
-
       return totalNumberOfParticles;
     },
 
@@ -872,19 +864,27 @@ define( function( require ) {
         assert && assert( "Neuron Model updateSimAndPlaybackParticleVisibility Error: Unrecognized record-and-playback mode." );
       }
     },
+
     /**
      * Get the state of this model.  This is generally used in support of the
      * record-and-playback feature, and the return value contains just enough
      * state information to support this feature.
+     * @return {NeuronModelState}
      */
     getState: function() {
       return new NeuronModelState( this );
     },
 
+    /**
+     * @returns {AxonMembrane}
+     */
     getAxonMembrane: function() {
       return this.axonMembrane;
     },
 
+    /**
+     * @returns {number}
+     */
     getSodiumInteriorConcentration: function() {
       if ( this.isPlayback() ) {
         return this.neuronModelPlaybackState.getSodiumInteriorConcentration();
@@ -894,6 +894,9 @@ define( function( require ) {
       }
     },
 
+    /**
+     * @returns {number}
+     */
     getSodiumExteriorConcentration: function() {
       if ( this.isPlayback() ) {
         return this.neuronModelPlaybackState.getSodiumExteriorConcentration();
@@ -903,6 +906,9 @@ define( function( require ) {
       }
     },
 
+    /**
+     * @returns {number}
+     */
     getPotassiumInteriorConcentration: function() {
       if ( this.isPlayback() ) {
         return this.neuronModelPlaybackState.getPotassiumInteriorConcentration();
@@ -912,6 +918,9 @@ define( function( require ) {
       }
     },
 
+    /**
+     * @returns {number}
+     */
     getPotassiumExteriorConcentration: function() {
       if ( this.isPlayback() ) {
         return this.neuronModelPlaybackState.getPotassiumExteriorConcentration();
@@ -921,15 +930,13 @@ define( function( require ) {
       }
     },
 
-
     /**
      * Create a particle of the specified type and add it to the model.
      *
-     * @param particleType
-     * @return
+     * @param {ParticleType.string} particleType
+     * @return {Particle}
      */
     createBackgroundParticle: function( particleType ) {
-
       var newParticle = ParticleFactory.createParticle( particleType );
       this.backgroundParticles.add( newParticle );
       var self = this;
@@ -953,7 +960,7 @@ define( function( require ) {
      * they are, with a value of 0 being on the far right, PI/2 on the top,
      * PI on the far left, etc.
      * @param {MembraneChannelTypes}membraneChannelType
-     * @param angle
+     * @param {number} angle
      */
     addChannel: function( membraneChannelType, angle ) {
       var membraneChannel = MembraneChannelFactory.createMembraneChannel( membraneChannelType, this, this.hodgkinHuxleyModel );
@@ -967,44 +974,76 @@ define( function( require ) {
 
       // Add the channel and let everyone know it exists.
       this.membraneChannels.push( membraneChannel );
-
     },
+
     /**
      * Get a boolean value that indicates whether the initiation of a new
      * stimulus (i.e. action potential) is currently locked out.  This is done
      * to prevent the situation where multiple action potentials are moving
      * down the membrane at the same time.
      *
-     * @return
+     * @return {boolean}
      */
     isStimulusInitiationLockedOut: function() {
       return this.stimulusLockout;
     },
+
+    /**
+     * @param {boolean} isVisible
+     */
     setPotentialChartVisible: function( isVisible ) {
       this.potentialChartVisibleProperty.set( isVisible );
     },
+
+    /**
+     * @returns {boolean}
+     */
     isConcentrationReadoutVisible: function() {
       return this.concentrationReadoutVisible;
     },
 
+    /**
+     * @param {boolean} isVisible
+     */
     setConcentrationReadoutVisible: function( isVisible ) {
       this.concentrationReadoutVisibleProperty.set( isVisible );
     },
+
+    /**
+     * @returns {boolean}
+     */
     isChargesShown: function() {
       return this.chargesShown;
     },
+
+    /**
+     * @param {boolean} chargesShown
+     */
     setChargesShown: function( chargesShown ) {
       this.chargesShownProperty.set( chargesShown );
     },
+
+    /**
+     * @returns {boolean}
+     */
     isPotentialChartVisible: function() {
       return this.potentialChartVisible;
     },
+
+    /**
+     * @param {boolean} lockout
+     */
     setStimulusLockout: function( lockout ) {
       this.stimulusLockoutProperty.set( lockout );
       if ( !lockout ) {
         this.stimulusPulseInitiated = false;
       }
     },
+
+    /**
+     *
+     * @returns {number}
+     */
     getMembranePotential: function() {
       if ( this.isPlayback() ) {
         return this.neuronModelPlaybackState.getMembranePotential();
@@ -1018,7 +1057,7 @@ define( function( require ) {
      * Set the playback state, which is the state that is presented to the
      * user during playback.  The provided state variable defines the state
      * of the simulation that is being set.
-     * @param {NeuronModelState}state
+     * @param {NeuronModelState} state
      */
     setPlaybackState: function( state ) {
 
@@ -1037,7 +1076,6 @@ define( function( require ) {
         }
         // Restore the state.
         membraneChannel.setState( mcs );
-
       } );
 
       // Set the state of the playback particles.  This maps the particle
@@ -1050,7 +1088,6 @@ define( function( require ) {
           var newPlaybackParticle = new PlaybackParticle();
           thisModel.playbackParticles.push( newPlaybackParticle );
         } );
-
       }
       else if ( additionalPlaybackParticlesNeeded < 0 ) {
         _.times( Math.abs( additionalPlaybackParticlesNeeded ), function( idx ) {
@@ -1077,6 +1114,7 @@ define( function( require ) {
       this.channelRepresentationChanged = false;
       this.channelRepresentationChanged = _.any( this.membraneChannels.getArray(), 'channelStateChanged' );
     }
+
   } );
 } );
 
