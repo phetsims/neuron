@@ -33,7 +33,7 @@ define( function( require ) {
       { node: new Text( fastForwardString, {font: radioButtonFont} ), property: speedProperty, value: 2 },
       { node: new Text( normalString, {font: radioButtonFont} ), property: speedProperty, value: 1 },
       { node: new Text( slowMotionString, {font: radioButtonFont} ), property: speedProperty, value: 0.5 }
-    ] );
+    ], { radius: 8, spacing: 8 } );
 
 
     Panel.call( this, speedRadioButtonGroup, {

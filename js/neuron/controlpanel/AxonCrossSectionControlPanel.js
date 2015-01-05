@@ -26,7 +26,7 @@ define( function( require ) {
   var concentrationsString = require( 'string!NEURON/concentrations' );
 
   // constants
-  var CHECK_BOX_OPTIONS = { boxWidth: 20 };
+  var CHECK_BOX_OPTIONS = { boxWidth: 15 };
   var TEXT_OPTIONS = { font: new PhetFont( 14 ) };
   var TOUCH_AREA_EXPAND_X = 10;
   var TOUCH_AREA_EXPAND_Y = 3;
@@ -73,7 +73,7 @@ define( function( require ) {
     Panel.call( this, new VBox( {
       children: crossSectionControlContents,
       align: 'left',
-      spacing: 5
+      spacing: 7
     } ), {
       // panel options
       fill: NeuronConstants.CONTROL_PANEL_BACKGROUND,
