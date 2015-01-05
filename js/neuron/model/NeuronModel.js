@@ -17,8 +17,8 @@ define( function( require ) {
   var AxonMembrane = require( 'NEURON/neuron/model/AxonMembrane' );
   var Shape = require( 'KITE/Shape' );
   var ModifiedHodgkinHuxleyModel = require( 'NEURON/neuron/model/ModifiedHodgkinHuxleyModel' );
+  var RecordAndPlaybackModel = require( 'NEURON/neuron/recordandplayback/RecordAndPlaybackModel' );
   var MembraneChannelTypes = require( 'NEURON/neuron/model/MembraneChannelTypes' );
-  var ParticleCapture = require( 'NEURON/neuron/model/ParticleCapture' );
   var NeuronModelState = require( 'NEURON/neuron/model/NeuronModelState' );
   var ParticlePosition = require( 'NEURON/neuron/model/ParticlePosition' );
   var ParticleFactory = require( 'NEURON/neuron/model/ParticleFactory' );
@@ -144,8 +144,8 @@ define( function( require ) {
     thisModel.potassiumInteriorConcentration = NOMINAL_POTASSIUM_INTERIOR_CONCENTRATION;
     thisModel.potassiumExteriorConcentration = NOMINAL_POTASSIUM_EXTERIOR_CONCENTRATION;
 
-    //Particle Capture is a PropertySet
-    ParticleCapture.call( thisModel, maxRecordPoints, {
+
+    RecordAndPlaybackModel.call( thisModel, maxRecordPoints, {
 
       // Notification Property that the setting for the visibility of the membrane
       //potential chart has changed.
@@ -286,7 +286,7 @@ define( function( require ) {
     this.reset(); // This does initialization
   }
 
-  return inherit( ParticleCapture, NeuronModel, {
+  return inherit( RecordAndPlaybackModel, NeuronModel, {
 
     // dispatched from NeuronClockModelAdapter's step function
     step: function( simulationTimeChange ) {
@@ -305,7 +305,7 @@ define( function( require ) {
         this.setPlayback( 1 );
       }
 
-      ParticleCapture.prototype.step.call( this, simulationTimeChange );
+      RecordAndPlaybackModel.prototype.step.call( this, simulationTimeChange );
 
       // If we are currently in playback mode and we have reached the end of
       // the recorded data, we should automatically switch to record mode.
@@ -468,8 +468,7 @@ define( function( require ) {
     reset: function() {
 
       // Reset the superclass, which contains the recording state & data.
-      // ParticleCapture is PropertySet
-      ParticleCapture.prototype.resetAll.call( this );
+      RecordAndPlaybackModel.prototype.resetAll.call( this );
 
       // Reset the axon membrane.
       this.axonMembrane.reset();

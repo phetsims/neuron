@@ -3,7 +3,8 @@
  *
  * The vertex Shader of this webGL layer uses interleaved TextureCoordinates and passes it to
  * fragment shader.This is required as different particles (which are made up of 2 triangles, 6 vertices) need to map themselves to
- * texture coordinates of different tiles. refer ParticlesWebGLNode class and ParticleTextureMap to see how these classes work together.
+ * texture coordinates of different tiles. refer ParticlesWebGLNode class and ParticleTextureMap to see how these
+ * classes work together.
  * @author Sharfudeen Ashraf (for Ghent University)
  *
  */
