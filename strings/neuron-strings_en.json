@@ -15,7 +15,7 @@
   "chartTitle": "Membrane Potential vs. Time",
   "chartYAxisLabel": "Membrane Potential (mV)",
   "chartXAxisLabel": "Time (ms)",
-  "chartClear": "Clear Chart",
+  "chartClear": "Clear",
   "showLegend": "Show",
   "units.mM": "mM",
   "concentrationReadoutPattern.0label.1value.2units": "{0} [{1} {2}]",
