@@ -32,7 +32,7 @@ define( function( require ) {
   var MAX_INTER_PARTICLE_CAPTURE_TIME = 0.004; // In seconds of sim time.
 
   /**
-   * @param {ParticleCapture} modelContainingParticles
+   * @param {NeuronModel} modelContainingParticles
    * @param {ModifiedHodgkinHuxleyModel} hodgkinHuxleyModel
    * @constructor
    */

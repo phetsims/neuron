@@ -20,7 +20,7 @@ define( function( require ) {
     /**
      * factory method for creating a MembraneChannel of the specified type.
      * @param {MembraneChannelTypes} channelType
-     * @param {ParticleCapture} particleModel
+     * @param {NeuronModel} particleModel
      * @param {HodgkinHuxleyModel} hodgkinHuxleyModel
      * @returns {MembraneChannel}
      */

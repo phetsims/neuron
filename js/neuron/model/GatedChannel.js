@@ -16,7 +16,7 @@ define( function( require ) {
   /**
    * @param  {number} channelWidth
    * @param  {number} channelHeight
-   * @param {ParticleCapture} modelContainingParticles
+   * @param {NeuronModel} modelContainingParticles
    * @constructor
    */
   function GatedChannel( channelWidth, channelHeight, modelContainingParticles ) {

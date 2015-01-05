@@ -41,7 +41,7 @@ define( function( require ) {
 
 
   /**
-   * @param {ParticleCapture} modelContainingParticles
+   * @param {NeuronModel} modelContainingParticles
    * @param {ModifiedHodgkinHuxleyModel} hodgkinHuxleyModel
    * @constructor
    */
