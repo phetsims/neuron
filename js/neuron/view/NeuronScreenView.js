@@ -84,17 +84,14 @@ define( function( require ) {
     var particlesWebGLParentNode = new Node();
     thisView.addChild( particlesWebGLParentNode );
 
-    // Particles WebGL layer doesn't support bounds clipping, so a border like shape is applied and added as a top node
-    // with the same color as the screen background. Now particles appear to be properly clipped.
-    // ref https://github.com/phetsims/neuron/issues/7
+    // The particle WebGL layer doesn't support bounds clipping, so a border-like shape is applied and added as a top
+    // node with the same color as the screen background to make particles appear to be properly clipped. For more
+    // detail, see https://github.com/phetsims/neuron/issues/7.
+    var maskLineWidth = 14; // empirically determined
     var clipAreaBounds = worldNodeClipArea.bounds;
-    var maskingShape = new Shape();
-    var maskLineWidth = 14;
-    maskingShape.moveTo( clipAreaBounds.x - (maskLineWidth / 2) - 1, -maskLineWidth / 2 );
-    maskingShape.lineTo( clipAreaBounds.x - (maskLineWidth / 2) - 1, clipAreaBounds.maxY + 4 );
-    maskingShape.lineTo( clipAreaBounds.maxX + (maskLineWidth / 2) + 1, clipAreaBounds.maxY + 4 );
-    maskingShape.lineTo( clipAreaBounds.maxX + (maskLineWidth / 2 ) + 1, -maskLineWidth / 2 );
-    var maskNode = new Path( maskingShape, {stroke: NeuronConstants.SCREEN_BACKGROUND, lineWidth: maskLineWidth} );
+    var maskingShape = Shape.rect( clipAreaBounds.x - ( maskLineWidth / 2 ), clipAreaBounds.y - ( maskLineWidth / 2 ),
+        clipAreaBounds.width + maskLineWidth, clipAreaBounds.height + maskLineWidth );
+    var maskNode = new Path( maskingShape, { stroke: NeuronConstants.SCREEN_BACKGROUND, lineWidth: maskLineWidth } );
     thisView.addChild( maskNode );
 
     // Add a subtle outline to the zoomable area.
@@ -138,7 +135,7 @@ define( function( require ) {
     // behavior. If the User pauses while Stimulus in progress, Step back and StepForward action still goes back and
     // forth ONLY  between stored snapshot states (see PlayBack mode class) The behaviour could reoccur after the User
     // resets the Sim Status, so the allowStepNavigation is also reset to false
-    var stepToggleProperty = DerivedProperty.multilink( [playToggleProperty, thisView.neuronModel.allowStepNavigationProperty],
+    var stepBackEnabledProperty = DerivedProperty.multilink( [playToggleProperty, thisView.neuronModel.allowStepNavigationProperty],
       function( playToggle, allowStepNavigation ) {
         // Step and StepBack buttons are tied to PlayProperty and both enable themselves
         // when their observing property (It is assumed to be PlayProperty) is false.In this case we also have to
@@ -149,13 +146,13 @@ define( function( require ) {
     var backwardStepButton = new StepBackButton(
       function() {
         neuronClockModelAdapter.stepClockBackWhilePaused();
-      }, stepToggleProperty
+      }, stepBackEnabledProperty
     );
 
-    //for consistency sake, enable the StepForward only when StepBack is enabled
+    // Step forward is enabled whenever paused.
     var forwardStepButton = new StepButton(
       function() { neuronClockModelAdapter.stepClockWhilePaused(); },
-      stepToggleProperty );
+      playToggleProperty );
 
     recordPlayButtons.push( backwardStepButton );
     recordPlayButtons.push( playPauseButton );
