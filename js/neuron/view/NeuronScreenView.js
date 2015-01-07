@@ -69,7 +69,7 @@ define( function( require ) {
     // Set up the model-canvas transform.
     thisView.mvt = ModelViewTransform2.createSinglePointScaleInvertedYMapping(
       Vector2.ZERO, viewPortPosition,
-      2.45 ); // 3.9 Scale factor - smaller numbers "zoom out", bigger ones "zoom in".
+      2.45 ); // Scale factor - smaller numbers "zoom out", bigger ones "zoom in".
 
     var worldNodeClipArea = Shape.rect( 70, 10, this.layoutBounds.maxX - 280, this.layoutBounds.maxY - 110 );
     var zoomableRootNode = new Node();
