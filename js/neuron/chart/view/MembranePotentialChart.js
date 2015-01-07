@@ -55,7 +55,7 @@ define( function( require ) {
 
   // This value sets the frequency of chart updates, which helps to reduce
   // the processor consumption.
-  var UPDATE_PERIOD = 1 * NeuronConstants.DEFAULT_ACTION_POTENTIAL_CLOCK_DT; // In seconds
+  var UPDATE_PERIOD = NeuronConstants.DEFAULT_ACTION_POTENTIAL_CLOCK_DT; // In seconds
 
   /**
    *
@@ -67,21 +67,19 @@ define( function( require ) {
 
     var thisChart = this;
     Node.call( thisChart );
+
     thisChart.chartDimension = chartDimension;
     thisChart.clock = neuronClockModelAdapter;
     thisChart.neuronModel = neuronClockModelAdapter.model;
-
     thisChart.updateCountdownTimer = 0; // Init to zero so that an update occurs right away.
     thisChart.timeIndexOfFirstDataPt = 0;
     thisChart.pausedWhenDragStarted = false;
     thisChart.dataSeries = new XYDataSeries( {color: 'red'} );
+    thisChart.domain = [0, TIME_SPAN];
+    thisChart.range = [ -100, 100 ];
 
+    // Create the root node for the plot.
     var plotNode = new Node();
-    thisChart.addChild( plotNode );
-
-    this.domain = [0, TIME_SPAN];
-    this.range = [ -100, 100 ];
-
 
     var numVerticalGridLines = 25;
     var numHorizontalGridLines = 8;
@@ -140,44 +138,41 @@ define( function( require ) {
       }
     } );
 
-    var chartTitleNode = new Text( chartTitleString, {font: new PhetFont( {size: 16, weight: 'bold'} )} );
+    // title
+    var chartTitleNode = new Text( chartTitleString, {
+      font: new PhetFont( { size: 16, weight: 'bold'} ),
+      top: 0
+    } );
+
+    // clear button
     var clearChartButton = new TextPushButton( chartClearString, {
       font: new PhetFont( {size: 12} ),
       listener: function() {thisChart.clearChart();}
     } );
 
-    var closeIconRadius = 4;
+    // close button
+    var closeIconLength = 5;
     var xIcon = new Path( new Shape()
-      .moveTo( -closeIconRadius, -closeIconRadius )
-      .lineTo( closeIconRadius, closeIconRadius )
-      .moveTo( closeIconRadius, -closeIconRadius )
-      .lineTo( -closeIconRadius, closeIconRadius ), {stroke: 'white', lineWidth: 2} );
-
-    //close button
+        .moveTo( -closeIconLength, -closeIconLength )
+        .lineTo( closeIconLength, closeIconLength )
+        .moveTo( closeIconLength, -closeIconLength )
+        .lineTo( -closeIconLength, closeIconLength ),
+      { stroke: 'white', lineWidth: 2.5 }
+    );
     var closeButton = new RectangularPushButton( {
       baseColor: 'red',
       content: xIcon,
-      // click to toggle
+      xMargin: 4,
+      yMargin: 4,
       listener: function() {
         thisChart.neuronModel.potentialChartVisible = false;
       }
     } );
 
-
-    var buttonGroupBox = new LayoutBox( {orientation: 'horizontal',
-      children: [clearChartButton, closeButton],
-      spacing: 20
-    } );
-
-    // Scale to fit the Title Node within Chart's bounds
-    var maxTitleWidth = 250;
+    // Scale to fit the Title Node within Chart's bounds.
+    var maxTitleWidth = chartDimension.width * 0.67;
     var titleNodeScaleFactor = Math.min( 1, maxTitleWidth / chartTitleNode.width );
     chartTitleNode.scale( titleNodeScaleFactor );
-
-    var panelTopContentBox = new HBox( {children: [chartTitleNode, buttonGroupBox],
-      spacing: 120 * titleNodeScaleFactor
-    } );
-
 
     var axisLabelFont = {font: new PhetFont( {size: 12} )};
     var chartXAxisLabelNode = new Text( chartXAxisLabelString, axisLabelFont );
@@ -236,13 +231,32 @@ define( function( require ) {
     var contentWidth = chartYAxisLabelNode.width + plotNode.width + (2 * xMargin) + xSpace;
     var adjustMargin = (MAX_PANEL_WIDTH - contentWidth) / 2;
 
-    // vertical panel
-    Panel.call( this, new VBox( {
-          children: [panelTopContentBox, new HBox( {
-            children: [chartYAxisLabelNode, plotNode],
-            spacing: xSpace
-          } ), chartXAxisLabelNode], align: 'center', spacing: 4 }
-      ), {fill: 'white', xMargin: xMargin + adjustMargin, yMargin: 6, lineWidth: 1, cornerRadius: 2 }
+    // Put the chart, title, and controls in a node together and lay them out.
+    var plotAndYLabel = new HBox( {
+      children: [ chartYAxisLabelNode, plotNode ],
+      spacing: xSpace,
+      top: Math.max( chartContentNode.height, clearChartButton.height ) + 5
+    } );
+    var panelContents = new Node();
+    chartTitleNode.centerX = plotAndYLabel.width / 2;
+    panelContents.addChild( chartTitleNode );
+    panelContents.addChild( plotAndYLabel );
+    closeButton.right = plotAndYLabel.width;
+    panelContents.addChild( closeButton );
+    clearChartButton.right = closeButton.left - 10;
+    panelContents.addChild( clearChartButton );
+    chartXAxisLabelNode.centerX = plotAndYLabel.width / 2;
+    chartXAxisLabelNode.top = plotAndYLabel.bottom;
+    panelContents.addChild( chartXAxisLabelNode );
+
+    // put everything in a panel
+    Panel.call( this, panelContents, {
+        fill: 'white',
+        xMargin: xMargin + adjustMargin,
+        yMargin: 6,
+        lineWidth: 1,
+        cornerRadius: 2
+      }
     );
 
     thisChart.neuronModel.potentialChartVisibleProperty.link( function( chartVisible ) {
