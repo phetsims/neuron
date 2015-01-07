@@ -29,9 +29,7 @@ define( function( require ) {
   var Panel = require( 'SUN/Panel' );
   var Path = require( 'SCENERY/nodes/Path' );
   var Shape = require( 'KITE/Shape' );
-  var VBox = require( 'SCENERY/nodes/VBox' );
   var HBox = require( 'SCENERY/nodes/HBox' );
-  var LayoutBox = require( 'SCENERY/nodes/LayoutBox' );
   var Text = require( 'SCENERY/nodes/Text' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
   var TextPushButton = require( 'SUN/buttons/TextPushButton' );
