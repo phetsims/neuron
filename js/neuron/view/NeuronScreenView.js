@@ -3,6 +3,7 @@
 /**
  * View for the 'Neuron' screen.
  *
+ * @author John Blanco (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
  * @author Sharfudeen Ashraf (for Ghent University)
  */
@@ -22,6 +23,7 @@ define( function( require ) {
   var Property = require( 'AXON/Property' );
   var DerivedProperty = require( 'AXON/DerivedProperty' );
   var ToggleProperty = require( 'AXON/ToggleProperty' );
+  var Rectangle = require( 'SCENERY/nodes/Rectangle' );
   var RectangularPushButton = require( 'SUN/buttons/RectangularPushButton' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
   var MultiLineText = require( 'SCENERY_PHET/MultiLineText' );
@@ -69,13 +71,13 @@ define( function( require ) {
       Vector2.ZERO, viewPortPosition,
       2.45 ); // 3.9 Scale factor - smaller numbers "zoom out", bigger ones "zoom in".
 
-    var worldNodeClipArea = Shape.rect( 70, 0, this.layoutBounds.maxX - 280, this.layoutBounds.maxY - 110 );
+    var worldNodeClipArea = Shape.rect( 70, 10, this.layoutBounds.maxX - 280, this.layoutBounds.maxY - 110 );
     var zoomableRootNode = new Node();
     var minZoom = 0.7;
     var maxZoom = 6;
     var defaultZoom = 0.7;
 
-    //Zommable Node zooms in and out the zoomableRootNode contents
+    // Zommable Node zooms in and out the zoomableRootNode contents
     var zoomProperty = new Property( defaultZoom );
     var zoomableWorldNode = new ZoomableNode( thisView.neuronModel, zoomableRootNode, zoomProperty, worldNodeClipArea, viewPortPosition );
     thisView.addChild( zoomableWorldNode );
@@ -95,6 +97,16 @@ define( function( require ) {
     var maskNode = new Path( maskingShape, {stroke: NeuronConstants.SCREEN_BACKGROUND, lineWidth: maskLineWidth} );
     thisView.addChild( maskNode );
 
+    // Add a subtle outline to the zoomable area.
+    thisView.addChild( new Rectangle(
+      clipAreaBounds.x,
+      clipAreaBounds.y,
+      clipAreaBounds.width,
+      clipAreaBounds.height,
+      0,
+      0,
+      { stroke: '#cccccc', lineWidth: 0.5 }
+    ) );
 
     // Create and add the layers in the desired order.
     var axonBodyLayer = new Node();
@@ -112,7 +124,7 @@ define( function( require ) {
     var axonCrossSectionNode = new AxonCrossSectionNode( thisView.neuronModel.axonMembrane, thisView.mvt );
     axonCrossSectionLayer.addChild( axonCrossSectionNode );
 
-    //Channel Gate node renders both channels and edges on the same canvas
+    // Channel Gate node renders both channels and edges on the same canvas
     var channelGateBounds = new Bounds2( 220, 50, 450, 250 );
     var membraneChannelGateCanvasNode = new MembraneChannelGateCanvasNode( thisView.neuronModel, thisView.mvt, channelGateBounds );
     channelLayer.addChild( membraneChannelGateCanvasNode );
@@ -121,13 +133,11 @@ define( function( require ) {
     var playToggleProperty = new ToggleProperty( true, false, neuronClockModelAdapter.pausedProperty );
     var playPauseButton = new PlayPauseButton( playToggleProperty, { radius: 25 } );
 
-    // Allow Step Back only if the user has initiated a StimulusPulse atleast once. Stepping back
-    // without initiating a stimulus results in the accumulation of negative delta time
-    // values in DelayBuffer which causes undesired behaviour.
-    // If the User pauses while Stimulus in progress, Step back and StepForward action still goes back
-    // and forth ONLY  between stored snapshot states (see PlayBack mode class)
-    // The behaviour could reoccur after the User resets the Sim Status, so the allowStepNavigation is also reset to false
-
+    // Allow Step Back only if the user has initiated a StimulusPulse at least once. Stepping back without initiating a
+    // stimulus results in the accumulation of negative delta time values in DelayBuffer which causes undesired
+    // behavior. If the User pauses while Stimulus in progress, Step back and StepForward action still goes back and
+    // forth ONLY  between stored snapshot states (see PlayBack mode class) The behaviour could reoccur after the User
+    // resets the Sim Status, so the allowStepNavigation is also reset to false
     var stepToggleProperty = DerivedProperty.multilink( [playToggleProperty, thisView.neuronModel.allowStepNavigationProperty],
       function( playToggle, allowStepNavigation ) {
         // Step and StepBack buttons are tied to PlayProperty and both enable themselves
@@ -151,11 +161,14 @@ define( function( require ) {
     recordPlayButtons.push( playPauseButton );
     recordPlayButtons.push( forwardStepButton );
 
+    // Figure out the center Y location for all lower controls
+    var centerYForLowerControls = ( clipAreaBounds.maxY + thisView.layoutBounds.height ) / 2;
+
     var recordPlayButtonBox = new HBox( {
       children: recordPlayButtons,
       spacing: 5,
       right: thisView.layoutBounds.maxX / 2,
-      bottom: thisView.layoutBounds.maxY - 30
+      centerY: centerYForLowerControls
     } );
 
     this.addChild( recordPlayButtonBox );
@@ -168,7 +181,7 @@ define( function( require ) {
       listener: function() { thisView.neuronModel.initiateStimulusPulse(); },
       baseColor: '#CEA269',
       right: worldNodeClipArea.bounds.maxX,
-      top: recordPlayButtonBox.top - 10,
+      centerY: centerYForLowerControls,
       minWidth: 50,
       minHeight: 65
     } );
@@ -201,7 +214,7 @@ define( function( require ) {
         neuronClockModelAdapter.reset();
       },
       centerX: ionsAndChannelsLegendPanel.centerX,
-      centerY: stimulateNeuronButton.centerY
+      centerY: centerYForLowerControls
     } );
     this.addChild( resetAllButton );
 
@@ -235,7 +248,7 @@ define( function( require ) {
 
     var simSpeedControlPanel = new SimSpeedControlPanel( neuronClockModelAdapter.speedProperty );
     simSpeedControlPanel.left = thisView.layoutBounds.minX + leftPadding;
-    simSpeedControlPanel.bottom = thisView.layoutBounds.maxY - 10;
+    simSpeedControlPanel.centerY = centerYForLowerControls;
     thisView.addChild( simSpeedControlPanel );
 
     var zoomControl = new ZoomControl( zoomProperty, minZoom, maxZoom );
