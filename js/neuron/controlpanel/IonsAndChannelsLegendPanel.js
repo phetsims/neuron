@@ -13,6 +13,7 @@ define( function( require ) {
 
   // modules
   var HBox = require( 'SCENERY/nodes/HBox' );
+  var HStrut = require( 'SUN/HStrut' );
   var inherit = require( 'PHET_CORE/inherit' );
   var Panel = require( 'SUN/Panel' );
   var Text = require( 'SCENERY/nodes/Text' );
@@ -40,6 +41,31 @@ define( function( require ) {
   var sodiumLeakChannelString = require( 'string!NEURON/sodiumLeakChannel' );
   var potassiumLeakChannelString = require( 'string!NEURON/potassiumLeakChannel' );
 
+  // constants
+  var LEGEND_TEXT_OPTIONS = { font: new PhetFont( { size: 12 } )};
+  var MAX_TEXT_WIDTH = 140; // empirically determined
+
+  // Utility function to scale and fit the text nodes within the panel's bounds
+  function scaleAndFitTextItem( textItemNode ) {
+    var textNodeScaleFactor = Math.min( 1, MAX_TEXT_WIDTH / textItemNode.width );
+    textItemNode.scale( textNodeScaleFactor );
+    return textItemNode;
+  }
+
+  // Utility function to create an icon/caption node for inclusion in the legend.
+  function createIconAndCaptionNode( icon, maxIconWidth, captionText ) {
+    assert && assert( icon.width <= maxIconWidth, 'maxIconWidth cannot be larger than ' );
+    var centeringSpacerWidth = ( maxIconWidth - icon.width ) / 2 + 0.1; // Spacing can't be zero, hence the adder at the end.
+    return new HBox( {
+      spacing: 0,
+      children: [
+        new HStrut( centeringSpacerWidth ),
+        icon,
+        new HStrut( centeringSpacerWidth + 8 ), // adder empirically determined
+        scaleAndFitTextItem( new Text( captionText, LEGEND_TEXT_OPTIONS ) )
+      ] } );
+  }
+
   /**
    *
    * @constructor
@@ -54,51 +80,44 @@ define( function( require ) {
 
     var CHANNEL_MVT = ModelViewTransform2.createSinglePointScaleInvertedYMapping( Vector2.ZERO, Vector2.ZERO, 4 );
 
-    var maxLegendTitleWidth = 140;
-
-    // Scale and fit the legendItemTextNode within panel's bounds
-    function scaleAndFitTextItem( textItemNode ) {
-      var textNodeScaleFactor = Math.min( 1, maxLegendTitleWidth / textItemNode.width );
-      textItemNode.scale( textNodeScaleFactor );
-      return textItemNode;
-    }
-
-    // Add the images and labels for the ions.
-    var legendTextOptions = {font: new PhetFont( { size: 12 } )};
+    // Add the title to the list of children.
     var imageAndLabelChildren = [];
     imageAndLabelChildren.push( scaleAndFitTextItem( new Text( legendString, {font: new PhetFont( { size: 16, weight: 'bold' } )} ) ) );
 
-    var imageNode = new ParticleNode( new SodiumIon(), PARTICLE_MVT );
-    var nodeLabelBox = new HBox( { spacing: 8, children: [ imageNode, scaleAndFitTextItem( new Text( sodiumIonString, legendTextOptions ) ) ] } );
-    imageAndLabelChildren.push( nodeLabelBox );
+    // Create all of the image icons, since we need to do some layout calculations before adding them to the panel.
+    var iconList = [];
+    var sodiumIonImageNode = new ParticleNode( new SodiumIon(), PARTICLE_MVT );
+    iconList.push( sodiumIonImageNode );
+    var potassiumIonImageNode = new ParticleNode( new PotassiumIon(), PARTICLE_MVT );
+    iconList.push( potassiumIonImageNode );
+    var sodiumDualGatedChannelNode = new MembraneChannelNode( new SodiumDualGatedChannel(), CHANNEL_MVT );
+    sodiumDualGatedChannelNode.rotate( -Math.PI / 2 );
+    iconList.push( sodiumDualGatedChannelNode );
+    var potassiumGatedChannelNode = new MembraneChannelNode( new PotassiumGatedChannel(), CHANNEL_MVT );
+    potassiumGatedChannelNode.rotate( -Math.PI / 2 );
+    iconList.push( potassiumGatedChannelNode );
+    var sodiumLeakageChannelNode = new MembraneChannelNode( new SodiumLeakageChannel(), CHANNEL_MVT );
+    sodiumLeakageChannelNode.rotate( -Math.PI / 2 );
+    iconList.push( sodiumLeakageChannelNode );
+    var potassiumLeakageChannelNode = new MembraneChannelNode( new PotassiumLeakageChannel(), CHANNEL_MVT );
+    potassiumLeakageChannelNode.rotate( -Math.PI / 2 );
+    iconList.push( potassiumLeakageChannelNode );
 
-    imageNode = new ParticleNode( new PotassiumIon(), PARTICLE_MVT );
-    nodeLabelBox = new HBox( { spacing: 8, children: [  imageNode, scaleAndFitTextItem( new Text( potassiumIonString, legendTextOptions ) ) ] } );
-    imageAndLabelChildren.push( nodeLabelBox );
+    // Figure out the maximum icon width.
+    var maxIconWidth = 0;
+    iconList.forEach( function( icon ) {
+      maxIconWidth = icon.width > maxIconWidth ? icon.width : maxIconWidth;
+    } );
 
-    imageNode = new MembraneChannelNode( new SodiumDualGatedChannel(), CHANNEL_MVT );
-    imageNode.rotate( -Math.PI / 2 );
-    nodeLabelBox = new HBox( { spacing: 8, children: [  imageNode, scaleAndFitTextItem( new Text( sodiumGatedChannelString, legendTextOptions ) )] } );
-    imageAndLabelChildren.push( nodeLabelBox );
+    // Add the icon+caption nodes.
+    imageAndLabelChildren.push( createIconAndCaptionNode( sodiumIonImageNode, maxIconWidth, sodiumIonString ) );
+    imageAndLabelChildren.push( createIconAndCaptionNode( potassiumIonImageNode, maxIconWidth, potassiumIonString ) );
+    imageAndLabelChildren.push( createIconAndCaptionNode( sodiumDualGatedChannelNode, maxIconWidth, sodiumGatedChannelString ) );
+    imageAndLabelChildren.push( createIconAndCaptionNode( potassiumGatedChannelNode, maxIconWidth, potassiumGatedChannelString ) );
+    imageAndLabelChildren.push( createIconAndCaptionNode( sodiumLeakageChannelNode, maxIconWidth, sodiumLeakChannelString ) );
+    imageAndLabelChildren.push( createIconAndCaptionNode( potassiumLeakageChannelNode, maxIconWidth, potassiumLeakChannelString ) );
 
-    imageNode = new MembraneChannelNode( new PotassiumGatedChannel(), CHANNEL_MVT );
-    imageNode.rotate( -Math.PI / 2 );
-    nodeLabelBox = new HBox( { spacing: 8, children: [  imageNode, scaleAndFitTextItem( new Text( potassiumGatedChannelString, legendTextOptions ) ) ] } );
-    imageAndLabelChildren.push( nodeLabelBox );
-
-    imageNode = new MembraneChannelNode( new SodiumLeakageChannel(), CHANNEL_MVT );
-    imageNode.rotate( -Math.PI / 2 );
-    nodeLabelBox = new HBox( { spacing: 8, children: [  imageNode, scaleAndFitTextItem( new Text( sodiumLeakChannelString, legendTextOptions ) ) ] } );
-    imageAndLabelChildren.push( nodeLabelBox );
-
-
-    imageNode = new MembraneChannelNode( new PotassiumLeakageChannel(), CHANNEL_MVT );
-    imageNode.rotate( -Math.PI / 2 );
-    nodeLabelBox = new HBox( { spacing: 8, children: [ imageNode, scaleAndFitTextItem( new Text( potassiumLeakChannelString, legendTextOptions ) ) ] } );
-    imageAndLabelChildren.push( nodeLabelBox );
-
-
-    // vertical panel
+    // add the children to a VBox and put that on the panel
     Panel.call( this, new VBox( {
       children: imageAndLabelChildren,
       align: 'left',
