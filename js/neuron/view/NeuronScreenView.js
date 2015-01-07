@@ -176,7 +176,7 @@ define( function( require ) {
     var stimulateNeuronButton = new RectangularPushButton( {
       content: new MultiLineText( stimulateNeuronString, { font: BUTTON_FONT } ),
       listener: function() { thisView.neuronModel.initiateStimulusPulse(); },
-      baseColor: '#CEA269',
+      baseColor: 'rgb( 242, 233, 22 )',
       right: worldNodeClipArea.bounds.maxX,
       centerY: centerYForLowerControls,
       minWidth: 50,
