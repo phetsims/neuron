@@ -213,7 +213,7 @@ define( function( require ) {
         zoomProperty.value = defaultZoom;
         neuronClockModelAdapter.reset();
       },
-      centerX: ionsAndChannelsLegendPanel.centerX,
+      right: ionsAndChannelsLegendPanel.right,
       centerY: centerYForLowerControls
     } );
     this.addChild( resetAllButton );
