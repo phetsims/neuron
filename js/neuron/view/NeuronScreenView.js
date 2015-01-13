@@ -197,7 +197,7 @@ define( function( require ) {
     var ionsAndChannelsLegendPanel = new IonsAndChannelsLegendPanel();
     this.addChild( ionsAndChannelsLegendPanel );
     ionsAndChannelsLegendPanel.right = panelLeftPos;
-    ionsAndChannelsLegendPanel.top = 30;
+    ionsAndChannelsLegendPanel.top = clipAreaBounds.y;
 
     var axonCrossSectionControlPanel = new AxonCrossSectionControlPanel( thisView.neuronModel );
     this.addChild( axonCrossSectionControlPanel );
@@ -250,7 +250,7 @@ define( function( require ) {
 
     var zoomControl = new ZoomControl( zoomProperty, minZoom, maxZoom );
     this.addChild( zoomControl );
-    zoomControl.top = this.layoutBounds.minY + 70;
+    zoomControl.top = clipAreaBounds.y;
     zoomControl.left = this.layoutBounds.minX + leftPadding;
   }
 
