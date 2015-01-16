@@ -220,7 +220,7 @@ define( function( require ) {
         return 0;
       }
 
-      return sortedHistory[0];
+      return sortedHistory[ 0 ];
 
     },
     //Estimates what DT should be by the spacing of the data points.
@@ -256,7 +256,7 @@ define( function( require ) {
      * @param {Number} point index of the item to be removed
      */
     removeHistoryPoint: function( point ) {
-      this.recordHistory.remove( this.recordHistory[point] );
+      this.recordHistory.remove( this.recordHistory[ point ] );
 
     },
 

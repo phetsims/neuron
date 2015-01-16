@@ -19,8 +19,8 @@ define( function( require ) {
 
   var NeuronConstants = {
     // Fonts
-    CONTROL_PANEL_TITLE_FONT: new PhetFont( {weight: 'bold', size: 14} ),
-    CONTROL_PANEL_CONTROL_FONT: new PhetFont( { size: 14} ),
+    CONTROL_PANEL_TITLE_FONT: new PhetFont( { weight: 'bold', size: 14 } ),
+    CONTROL_PANEL_CONTROL_FONT: new PhetFont( { size: 14 } ),
     // Fill and stroke colors
     CANVAS_BACKGROUND: new Color( 204, 255, 249 ),
     CONTROL_PANEL_BACKGROUND: new Color( 239, 239, 195 ),

@@ -121,7 +121,7 @@ define( function( require ) {
      */
     updateChannelRect: function() {
       var channelRect = new Rectangle( this.centerLocation.x - this.channelSize.height / 2,
-          this.centerLocation.y - this.channelSize.width / 2, this.channelSize.height, this.channelSize.width );
+        this.centerLocation.y - this.channelSize.width / 2, this.channelSize.height, this.channelSize.width );
       var rotationTransform = Matrix3.rotationAround( this.rotationalAngle, this.centerLocation.x, this.centerLocation.y );
       this.rotatedChannelRect = channelRect.transformed( rotationTransform );
     },
@@ -148,7 +148,7 @@ define( function( require ) {
     },
 
     getChannelSize: function() {
-      return  this.channelSize;
+      return this.channelSize;
     },
     /**
      * Get the overall 2D size of the channel, which includes both the part

@@ -72,8 +72,8 @@ define( function( require ) {
     thisChart.updateCountdownTimer = 0; // Init to zero so that an update occurs right away.
     thisChart.timeIndexOfFirstDataPt = 0;
     thisChart.pausedWhenDragStarted = false;
-    thisChart.dataSeries = new XYDataSeries( {color: 'red'} );
-    thisChart.domain = [0, TIME_SPAN];
+    thisChart.dataSeries = new XYDataSeries( { color: 'red' } );
+    thisChart.domain = [ 0, TIME_SPAN ];
     thisChart.range = [ -100, 100 ];
 
     // Create the root node for the plot.
@@ -85,14 +85,14 @@ define( function( require ) {
     // create a function to generate Horizontal Labels (The dot.LinearFunction returns a map function which can be used
     // to get the appropriate Label value based on the index of Vertical Line)
 
-    var domainMap = new dot.LinearFunction( 0, numVerticalGridLines, this.domain[0], this.domain[1] );
+    var domainMap = new dot.LinearFunction( 0, numVerticalGridLines, this.domain[ 0 ], this.domain[ 1 ] );
 
     //To create Vertical Labels
     // Example:- for the value of 3 it returns a value of -50 and for 5 it returns 0 (because range is -100 to 100)
-    var rangeMap = new dot.LinearFunction( 0, numHorizontalGridLines, this.range[1], this.range[0] );
+    var rangeMap = new dot.LinearFunction( 0, numHorizontalGridLines, this.range[ 1 ], this.range[ 0 ] );
 
     var gridShape = new Shape();
-    var plotGrid = new Path( gridShape, {stroke: 'gray', lineWidth: 0.6} );
+    var plotGrid = new Path( gridShape, { stroke: 'gray', lineWidth: 0.6 } );
 
     //vertical grid lines
     for ( var i = 0; i < numVerticalGridLines + 1; i++ ) {
@@ -102,7 +102,8 @@ define( function( require ) {
         font: GRID_TICK_TEXT_FONT,
         //Text controls need to aligned to each grid line based on the line's orientation.
         centerX: i * chartDimension.width / numVerticalGridLines,
-        top: chartDimension.height + 6} ) );
+        top: chartDimension.height + 6
+      } ) );
     }
 
     //horizontal grid lines
@@ -112,7 +113,8 @@ define( function( require ) {
       plotGrid.addChild( new Text( rangeMap( i ), {
         font: GRID_TICK_TEXT_FONT,
         centerY: i * chartDimension.height / numHorizontalGridLines,
-        right: -6} ) );
+        right: -6
+      } ) );
     }
 
     plotNode.addChild( plotGrid );
@@ -138,13 +140,13 @@ define( function( require ) {
 
     // title
     var chartTitleNode = new Text( chartTitleString, {
-      font: new PhetFont( { size: 16, weight: 'bold'} ),
+      font: new PhetFont( { size: 16, weight: 'bold' } ),
       top: 0
     } );
 
     // clear button
     var clearChartButton = new TextPushButton( chartClearString, {
-      font: new PhetFont( {size: 12} ),
+      font: new PhetFont( { size: 12 } ),
       listener: function() {thisChart.clearChart();}
     } );
 
@@ -172,7 +174,7 @@ define( function( require ) {
     var titleNodeScaleFactor = Math.min( 1, maxTitleWidth / chartTitleNode.width );
     chartTitleNode.scale( titleNodeScaleFactor );
 
-    var axisLabelFont = {font: new PhetFont( {size: 12} )};
+    var axisLabelFont = { font: new PhetFont( { size: 12 } ) };
     var chartXAxisLabelNode = new Text( chartXAxisLabelString, axisLabelFont );
     var chartYAxisLabelNode = new Text( chartYAxisLabelString, axisLabelFont );
     chartYAxisLabelNode.rotation = -Math.PI / 2;
@@ -183,8 +185,8 @@ define( function( require ) {
     chartYAxisLabelNode.scale( yAxisLabelScaleFactor );
 
     // use domain(0,25) and range(-100,100) as Model View Map
-    thisChart.chartMvt = ModelViewTransform2.createRectangleInvertedYMapping( new Bounds2( this.domain[0], this.range[0],
-      this.domain[1], this.range[1] ), new Bounds2( 0, 0, chartDimension.width, chartDimension.height ), 1, 1 );
+    thisChart.chartMvt = ModelViewTransform2.createRectangleInvertedYMapping( new Bounds2( this.domain[ 0 ], this.range[ 0 ],
+      this.domain[ 1 ], this.range[ 1 ] ), new Bounds2( 0, 0, chartDimension.width, chartDimension.height ), 1, 1 );
 
     var graphLinesShape = new Shape();
     var graphNode = new Path( graphLinesShape, {
@@ -380,7 +382,7 @@ define( function( require ) {
 
     moveChartCursorToTime: function( time ) {
       this.chartCursor.x = Util.clamp( this.chartMvt.transformX( time ), 0, this.chartDimension.width );
-      this.chartCursor.y = this.chartMvt.transformY( this.range[1] );
+      this.chartCursor.y = this.chartMvt.transformY( this.range[ 1 ] );
     },
 
     updateOnSimulationReset: function() {

@@ -32,8 +32,8 @@ define( function( require ) {
   function ChartCursor( membranePotentialChart ) {
 
     var thisChartCursor = this;
-    var topOfPlotArea = membranePotentialChart.chartMvt.modelToViewPosition( new Vector2( 0, membranePotentialChart.range[1] ) );
-    var bottomOfPlotArea = membranePotentialChart.chartMvt.modelToViewPosition( new Vector2( 0, membranePotentialChart.range[0] ) );
+    var topOfPlotArea = membranePotentialChart.chartMvt.modelToViewPosition( new Vector2( 0, membranePotentialChart.range[ 1 ] ) );
+    var bottomOfPlotArea = membranePotentialChart.chartMvt.modelToViewPosition( new Vector2( 0, membranePotentialChart.range[ 0 ] ) );
 
     // Set the shape.  The shape is created so that it is centered
     // around an offset of 0 in the x direction and the top edge is
@@ -47,7 +47,7 @@ define( function( require ) {
       fill: CURSOR_FILL_COLOR,
       stroke: CURSOR_STROKE_COLOR,
       lineWidth: 0.4,
-      lineDash: [4, 4]
+      lineDash: [ 4, 4 ]
     } );
 
     var chartCursorDragHandler = new SimpleDragHandler( {
@@ -109,9 +109,7 @@ define( function( require ) {
     thisChartCursor.addChild( grippyIndent3 );
   }
 
-  return inherit( Path, ChartCursor, {
-
-  } );
+  return inherit( Path, ChartCursor, {} );
 
 
 } );

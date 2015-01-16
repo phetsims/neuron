@@ -30,11 +30,11 @@ define( function( require ) {
           values.push( value );
         }
         else {
-          values[index] = value;
+          values[ index ] = value;
         }
       },
       get: function( key ) {
-        return values[keys.indexOf( key )];
+        return values[ keys.indexOf( key ) ];
       }
     };
   }

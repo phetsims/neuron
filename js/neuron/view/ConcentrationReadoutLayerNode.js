@@ -46,10 +46,22 @@ define( function( require ) {
     Node.call( thisNode );
 
     // Concentration readouts.
-    var sodiumExteriorConcentrationReadout = new Text( "", { font: new PhetFont( { size: READ_OUT_FONT_SIZE } ), fill: new SodiumIon().getRepresentationColor()} );
-    var sodiumInteriorConcentrationReadout = new Text( "", { font: new PhetFont( { size: READ_OUT_FONT_SIZE } ), fill: new SodiumIon().getRepresentationColor()} );
-    var potassiumExteriorConcentrationReadout = new Text( "", { font: new PhetFont( { size: READ_OUT_FONT_SIZE } ), fill: new PotassiumIon().getRepresentationColor().darkerColor( 0.5 )} );
-    var potassiumInteriorConcentrationReadout = new Text( "", { font: new PhetFont( { size: READ_OUT_FONT_SIZE } ), fill: new PotassiumIon().getRepresentationColor().darkerColor( 0.5 ) } );
+    var sodiumExteriorConcentrationReadout = new Text( "", {
+      font: new PhetFont( { size: READ_OUT_FONT_SIZE } ),
+      fill: new SodiumIon().getRepresentationColor()
+    } );
+    var sodiumInteriorConcentrationReadout = new Text( "", {
+      font: new PhetFont( { size: READ_OUT_FONT_SIZE } ),
+      fill: new SodiumIon().getRepresentationColor()
+    } );
+    var potassiumExteriorConcentrationReadout = new Text( "", {
+      font: new PhetFont( { size: READ_OUT_FONT_SIZE } ),
+      fill: new PotassiumIon().getRepresentationColor().darkerColor( 0.5 )
+    } );
+    var potassiumInteriorConcentrationReadout = new Text( "", {
+      font: new PhetFont( { size: READ_OUT_FONT_SIZE } ),
+      fill: new PotassiumIon().getRepresentationColor().darkerColor( 0.5 )
+    } );
 
     // Add the concentration readouts.
     thisNode.addChild( sodiumExteriorConcentrationReadout );
@@ -77,7 +89,7 @@ define( function( require ) {
     function createConcentrationReadoutText( label, value ) {
       var valueText = Util.toFixed( value, CONCENTRATION_READOUT_NUM_PLACES );
       //  var valueText = CONCENTRATION_READOUT_FORMATTER.format( Math.round( value,  ) );
-      return  StringUtils.format( concentrationReadoutPattern0label1value2unitsString, label, valueText, unitsmMString );
+      return StringUtils.format( concentrationReadoutPattern0label1value2unitsString, label, valueText, unitsmMString );
 
     }
 

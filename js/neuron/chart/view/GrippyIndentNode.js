@@ -36,10 +36,10 @@ define( function( require ) {
     var translucentBrighterColor = new Color( baseLighterColor.getRed(), baseLighterColor.getGreen(),
       baseLighterColor.getBlue(), baseColor.getAlpha() );
     var radius = diameter / 2;
-    thisNode.addChild( new Path( new Shape().circle( 0, 0, radius, radius ), {fill: translucentBrighterColor} ) );
+    thisNode.addChild( new Path( new Shape().circle( 0, 0, radius, radius ), { fill: translucentBrighterColor } ) );
     var offsetFactor = 0.8;
     thisNode.addChild( new Path( new Shape().circle( 0, 0,
-        radius * offsetFactor, radius * offsetFactor ), {fill: translucentDarkerColor} ) );
+      radius * offsetFactor, radius * offsetFactor ), { fill: translucentDarkerColor } ) );
 
   }
 

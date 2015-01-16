@@ -42,7 +42,8 @@ define( function( require ) {
 
         // Notify the listener that this has finished traveling down the
         //membrane and lingering at the cross section.
-        lingeringCompleted: false}
+        lingeringCompleted: false
+      }
     );
 
     this.travelTimeCountdownTimer = TRAVELING_TIME;
@@ -111,11 +112,11 @@ define( function( require ) {
         var ctrlPoint2Distance = endPoint.distance( startPoint ) * 0.7 * Math.pow( (travelAmtFactor), 0.8 );
         var perpendicularAngle = Math.atan2( endPoint.y - startPoint.y, endPoint.x - startPoint.x ) + Math.PI / 2;
         var ctrlPoint1 = new Vector2(
-            midPoint.x + ctrlPoint1Distance * Math.cos( perpendicularAngle + Math.PI / 6 ),
-            midPoint.y + ctrlPoint1Distance * Math.sin( perpendicularAngle + Math.PI / 6 ) );
+          midPoint.x + ctrlPoint1Distance * Math.cos( perpendicularAngle + Math.PI / 6 ),
+          midPoint.y + ctrlPoint1Distance * Math.sin( perpendicularAngle + Math.PI / 6 ) );
         var ctrlPoint2 = new Vector2(
-            midPoint.x + ctrlPoint2Distance * Math.cos( perpendicularAngle - Math.PI / 6 ),
-            midPoint.y + ctrlPoint2Distance * Math.sin( perpendicularAngle - Math.PI / 6 ) );
+          midPoint.x + ctrlPoint2Distance * Math.cos( perpendicularAngle - Math.PI / 6 ),
+          midPoint.y + ctrlPoint2Distance * Math.sin( perpendicularAngle - Math.PI / 6 ) );
         this.shape = new Shape();
         this.shape.moveTo( startPoint.x, startPoint.y );
         this.shape.cubicCurveTo( ctrlPoint1.x, ctrlPoint1.y, ctrlPoint2.x, ctrlPoint2.y, endPoint.x, endPoint.y );

@@ -67,18 +67,18 @@ define( function( require ) {
       centerY: sideLength / 2
     };
 
-    var plusButton = createZoomControlButton( new Path( plusSymbolShape, symbolOptions ), {xMargin: 6, yMargin: 6}, function() {
+    var plusButton = createZoomControlButton( new Path( plusSymbolShape, symbolOptions ), { xMargin: 6, yMargin: 6 }, function() {
       zoomProperty.set( Util.clamp( zoomProperty.value + 0.1, minZoom, maxZoom ) );
     } );
 
-    var minusButton = createZoomControlButton( new Path( minusSymbolShape, symbolOptions ), {xMargin: 6, yMargin: 10}, function() {
+    var minusButton = createZoomControlButton( new Path( minusSymbolShape, symbolOptions ), { xMargin: 6, yMargin: 10 }, function() {
       zoomProperty.set( Util.clamp( zoomProperty.value - 0.1, minZoom, maxZoom ) );
     } );
 
 
     // vertical panel
     VBox.call( this, {
-      children: [plusButton, zoomSlider, minusButton],
+      children: [ plusButton, zoomSlider, minusButton ],
       align: 'center',
       resize: false,
       spacing: 12

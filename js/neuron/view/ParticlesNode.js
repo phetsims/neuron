@@ -25,7 +25,7 @@ define( function( require ) {
   function ParticlesNode( neuronModel, modelViewTransform, bounds ) {
     var thisNode = this;
     var clipArea = Shape.rect( bounds.minX, bounds.minY, bounds.width, bounds.maxY );
-    CanvasNode.call( thisNode, {pickable: false, canvasBounds: bounds, layerSplit: true, clipArea: clipArea } );
+    CanvasNode.call( thisNode, { pickable: false, canvasBounds: bounds, layerSplit: true, clipArea: clipArea } );
     thisNode.modelViewTransform = modelViewTransform;
     thisNode.neuronModel = neuronModel;
     // if during a step we change, then trigger a repaint
@@ -65,8 +65,8 @@ define( function( require ) {
         } );
 
         function renderSodiumParticles( particles ) {
-          context.fillStyle = particles[0].getRepresentationColor().getCanvasStyle();// All sodium ions are of the same color,
-          var transformedRadius = thisNode.modelViewTransform.modelToViewDeltaX( particles[0].getRadius() );
+          context.fillStyle = particles[ 0 ].getRepresentationColor().getCanvasStyle();// All sodium ions are of the same color,
+          var transformedRadius = thisNode.modelViewTransform.modelToViewDeltaX( particles[ 0 ].getRadius() );
           context.lineWidth = 0.2;
           context.strokeStyle = canvasStrokeStyle;
           particles.forEach( function( particle ) {
@@ -84,8 +84,8 @@ define( function( require ) {
 
 
         function renderPotassiumParticles( particles ) {
-          context.fillStyle = particles[0].getRepresentationColor().getCanvasStyle();
-          var size = thisNode.modelViewTransform.modelToViewDeltaX( particles[0].getRadius() * 2 ) * 0.75;//was 0.85
+          context.fillStyle = particles[ 0 ].getRepresentationColor().getCanvasStyle();
+          var size = thisNode.modelViewTransform.modelToViewDeltaX( particles[ 0 ].getRadius() * 2 ) * 0.75;//was 0.85
           context.lineWidth = 0.2;
           context.strokeStyle = canvasStrokeStyle;
           particles.forEach( function( particle ) {

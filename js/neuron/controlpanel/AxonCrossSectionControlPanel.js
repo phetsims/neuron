@@ -63,7 +63,8 @@ define( function( require ) {
 
     var crossSectionControlContents = [];
     crossSectionControlContents.push( new Text( showLegendString, {
-      font: new PhetFont( { size: 16, weight: 'bold' } )} ) );
+      font: new PhetFont( { size: 16, weight: 'bold' } )
+    } ) );
     crossSectionControlContents.push( allIonsSimulatedCheckBox );
     crossSectionControlContents.push( showChargesCheckBox );
     crossSectionControlContents.push( showConcentrationsCheckBox );

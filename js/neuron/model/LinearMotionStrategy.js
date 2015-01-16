@@ -28,7 +28,7 @@ define( function( require ) {
       var currentPositionRefX = movableModelElement.getPositionX();
       var currentPositionRefY = movableModelElement.getPositionY();
       movableModelElement.setPosition( currentPositionRefX + this.velocity.x * dt,
-          currentPositionRefY + this.velocity.y * dt );
+        currentPositionRefY + this.velocity.y * dt );
     }
   } );
 } );

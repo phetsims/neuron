@@ -42,7 +42,7 @@ define( function( require ) {
   var potassiumLeakChannelString = require( 'string!NEURON/potassiumLeakChannel' );
 
   // constants
-  var LEGEND_TEXT_OPTIONS = { font: new PhetFont( { size: 12 } )};
+  var LEGEND_TEXT_OPTIONS = { font: new PhetFont( { size: 12 } ) };
   var MAX_TEXT_WIDTH = 140; // empirically determined
 
   // Utility function to scale and fit the text nodes within the panel's bounds
@@ -63,7 +63,8 @@ define( function( require ) {
         icon,
         new HStrut( centeringSpacerWidth + 8 ), // adder empirically determined
         scaleAndFitTextItem( new Text( captionText, LEGEND_TEXT_OPTIONS ) )
-      ] } );
+      ]
+    } );
   }
 
   /**
@@ -82,7 +83,7 @@ define( function( require ) {
 
     // Add the title to the list of children.
     var imageAndLabelChildren = [];
-    imageAndLabelChildren.push( scaleAndFitTextItem( new Text( legendString, {font: new PhetFont( { size: 16, weight: 'bold' } )} ) ) );
+    imageAndLabelChildren.push( scaleAndFitTextItem( new Text( legendString, { font: new PhetFont( { size: 16, weight: 'bold' } ) } ) ) );
 
     // Create all of the image icons, since we need to do some layout calculations before adding them to the panel.
     var iconList = [];

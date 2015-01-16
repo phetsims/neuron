@@ -23,9 +23,11 @@ define( function( require ) {
   var MIN_VELOCITY = 500;  // In nanometers per second of sim time.
   var MAX_VELOCITY = 5000; // In nanometers per second of sim time.
 
-  var RAND = {nextInt: function( bounds ) {
-    return Math.floor( Math.random() * bounds );
-  }};
+  var RAND = {
+    nextInt: function( bounds ) {
+      return Math.floor( Math.random() * bounds );
+    }
+  };
 
   /**
    * Constructor.
@@ -62,8 +64,8 @@ define( function( require ) {
       if ( this.motionUpdateCountdownTimer <= 0 ) {
         // Time to update the motion.
         movableModelElement.setPosition(
-            movableModelElement.getPositionX() + this.velocityX * MOTION_UPDATE_PERIOD,
-            movableModelElement.getPositionY() + this.velocityY * MOTION_UPDATE_PERIOD );
+          movableModelElement.getPositionX() + this.velocityX * MOTION_UPDATE_PERIOD,
+          movableModelElement.getPositionY() + this.velocityY * MOTION_UPDATE_PERIOD );
 
         this.motionUpdateCountdownTimer = MOTION_UPDATE_PERIOD;
       }

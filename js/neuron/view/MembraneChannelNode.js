@@ -46,14 +46,14 @@ define( function( require ) {
       shape.cubicCurveTo( width / 2, -height / 2, -width / 2, -height / 2, -width / 2, -height / 4 );
       shape.close();
 
-      return new Path( shape, {fill: color, stroke: color.colorUtilsDarker( 0.3 ), lineWidth: 0.4} );
+      return new Path( shape, { fill: color, stroke: color.colorUtilsDarker( 0.3 ), lineWidth: 0.4 } );
     }
 
     var stringShape;
     var channelPath;
 
     // Create the channel representation.
-    var channel = new Path( new Shape(), {fill: membraneChannelModel.getChannelColor(), lineWidth: 0} );
+    var channel = new Path( new Shape(), { fill: membraneChannelModel.getChannelColor(), lineWidth: 0 } );
 
     // Skip bounds computation to improve performance
     channel.computeShapeBounds = function() {return new Bounds2( 0, 0, 0, 0 );};
@@ -84,7 +84,7 @@ define( function( require ) {
     if ( membraneChannelModel.getHasInactivationGate() ) {
 
       // Add the ball and string that make up the inactivation gate.
-      inactivationGateString = new Path( new Shape(), {lineWidth: 0.5, stroke: Color.BLACK} );
+      inactivationGateString = new Path( new Shape(), { lineWidth: 0.5, stroke: Color.BLACK } );
 
       // Skip bounds computation to improve performance
       inactivationGateString.computeShapeBounds = function() {return new Bounds2( 0, 0, 0, 0 );};
@@ -93,7 +93,7 @@ define( function( require ) {
       var ballDiameter = mvt.modelToViewDeltaX( membraneChannelModel.getChannelSize().width );
 
       // inactivationBallShape is always a circle, so use the optimized version.
-      inactivationGateBallNode = new Circle( ballDiameter / 2, {fill: edgeColor, lineWidth: 0.5, stroke: edgeColor} );
+      inactivationGateBallNode = new Circle( ballDiameter / 2, { fill: edgeColor, lineWidth: 0.5, stroke: edgeColor } );
       thisNode.edgeLayer.addChild( inactivationGateBallNode );
     }
 
@@ -154,7 +154,7 @@ define( function( require ) {
         var radius = (1 - membraneChannelModel.getInactivationAmt()) * transformedOverallSize.width / 2 + membraneChannelModel.getInactivationAmt() * channelEdgeConnectionPoint.distance( channelCenterBottomPoint );
 
         var ballPosition = new Vector2( channelEdgeConnectionPoint.x + Math.cos( angle ) * radius,
-            channelEdgeConnectionPoint.y - Math.sin( angle ) * radius );
+          channelEdgeConnectionPoint.y - Math.sin( angle ) * radius );
         inactivationGateBallNode.x = ballPosition.x;
         inactivationGateBallNode.y = ballPosition.y;
 
@@ -165,8 +165,8 @@ define( function( require ) {
         var connectorLength = channelCenterBottomPoint.distance( ballConnectionPoint );
         stringShape = new Shape().moveTo( channelEdgeConnectionPoint.x, channelEdgeConnectionPoint.y )
           .cubicCurveTo( channelEdgeConnectionPoint.x + connectorLength * 0.25,
-            channelEdgeConnectionPoint.y + connectorLength * 0.5, ballConnectionPoint.x - connectorLength * 0.75,
-            ballConnectionPoint.y - connectorLength * 0.5, ballConnectionPoint.x, ballConnectionPoint.y );
+          channelEdgeConnectionPoint.y + connectorLength * 0.5, ballConnectionPoint.x - connectorLength * 0.75,
+          ballConnectionPoint.y - connectorLength * 0.5, ballConnectionPoint.x, ballConnectionPoint.y );
         inactivationGateString.setShape( stringShape );
       }
 

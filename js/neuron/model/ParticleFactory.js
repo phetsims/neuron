@@ -14,7 +14,7 @@ define( function( require ) {
   var SodiumIon = require( 'NEURON/neuron/model/SodiumIon' );
   var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
 
-  return{
+  return {
     /**
      * factory method for creating a particle of the specified type
      *

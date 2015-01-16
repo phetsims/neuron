@@ -239,7 +239,7 @@ define( function( require ) {
       return 1 - Math.pow( normalizedConductance - 1, 20 );
     },
     calculateNormalizedConductance: function() {
-      return  Math.min( Math.abs( this.hodgkinHuxleyModel.get_delayed_m3h( this.staggerDelay ) ) / M3H_WHEN_FULLY_OPEN, 1 );
+      return Math.min( Math.abs( this.hodgkinHuxleyModel.get_delayed_m3h( this.staggerDelay ) ) / M3H_WHEN_FULLY_OPEN, 1 );
 
     },
     getChannelType: function() {

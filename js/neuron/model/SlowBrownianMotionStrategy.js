@@ -51,7 +51,7 @@ define( function( require ) {
           var currentPosRefX = movableModelElement.getPositionX();
           var currentPosRefY = movableModelElement.getPositionY();
           movableModelElement.setPosition( currentPosRefX + jumpDistance * Math.cos( jumpAngle ),
-              currentPosRefY + jumpDistance * Math.sin( jumpAngle ) );
+            currentPosRefY + jumpDistance * Math.sin( jumpAngle ) );
         }
         else {
           // Jump back to initial location.

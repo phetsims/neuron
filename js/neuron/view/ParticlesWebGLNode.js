@@ -204,42 +204,42 @@ define( function( require ) {
         thisNode.particleTextureMap.getTexCords( particle.getType(), particle.getOpaqueness(), tilePosVector, thisNode.textCords );
 
         //left bottom
-        thisNode.vertexData[index++] = thisNode.vertexCords.getMinX();//x
-        thisNode.vertexData[index++] = thisNode.vertexCords.getMaxY();//y
-        thisNode.vertexData[index++] = thisNode.textCords.getMinX(); //u
-        thisNode.vertexData[index++] = thisNode.textCords.getMaxY(); //v
+        thisNode.vertexData[ index++ ] = thisNode.vertexCords.getMinX();//x
+        thisNode.vertexData[ index++ ] = thisNode.vertexCords.getMaxY();//y
+        thisNode.vertexData[ index++ ] = thisNode.textCords.getMinX(); //u
+        thisNode.vertexData[ index++ ] = thisNode.textCords.getMaxY(); //v
 
         //left top
-        thisNode.vertexData[index++] = thisNode.vertexCords.getMinX();
-        thisNode.vertexData[index++] = thisNode.vertexCords.getMinY();
-        thisNode.vertexData[index++] = thisNode.textCords.getMinX();//u
-        thisNode.vertexData[index++] = thisNode.textCords.getMinY();//v
+        thisNode.vertexData[ index++ ] = thisNode.vertexCords.getMinX();
+        thisNode.vertexData[ index++ ] = thisNode.vertexCords.getMinY();
+        thisNode.vertexData[ index++ ] = thisNode.textCords.getMinX();//u
+        thisNode.vertexData[ index++ ] = thisNode.textCords.getMinY();//v
 
         //right top
-        thisNode.vertexData[index++] = thisNode.vertexCords.getMaxX();
-        thisNode.vertexData[index++] = thisNode.vertexCords.getMinY();
-        thisNode.vertexData[index++] = thisNode.textCords.getMaxX();//u
-        thisNode.vertexData[index++] = thisNode.textCords.getMinY();//v
+        thisNode.vertexData[ index++ ] = thisNode.vertexCords.getMaxX();
+        thisNode.vertexData[ index++ ] = thisNode.vertexCords.getMinY();
+        thisNode.vertexData[ index++ ] = thisNode.textCords.getMaxX();//u
+        thisNode.vertexData[ index++ ] = thisNode.textCords.getMinY();//v
 
         //---2nd triangle-----
 
         //right top
-        thisNode.vertexData[index++] = thisNode.vertexCords.getMaxX();
-        thisNode.vertexData[index++] = thisNode.vertexCords.getMinY();
-        thisNode.vertexData[index++] = thisNode.textCords.getMaxX();//u
-        thisNode.vertexData[index++] = thisNode.textCords.getMinY();//v
+        thisNode.vertexData[ index++ ] = thisNode.vertexCords.getMaxX();
+        thisNode.vertexData[ index++ ] = thisNode.vertexCords.getMinY();
+        thisNode.vertexData[ index++ ] = thisNode.textCords.getMaxX();//u
+        thisNode.vertexData[ index++ ] = thisNode.textCords.getMinY();//v
 
         //right bottom
-        thisNode.vertexData[index++] = thisNode.vertexCords.getMaxX();
-        thisNode.vertexData[index++] = thisNode.vertexCords.getMaxY();
-        thisNode.vertexData[index++] = thisNode.textCords.getMaxX();//u
-        thisNode.vertexData[index++] = thisNode.textCords.getMaxY();//v
+        thisNode.vertexData[ index++ ] = thisNode.vertexCords.getMaxX();
+        thisNode.vertexData[ index++ ] = thisNode.vertexCords.getMaxY();
+        thisNode.vertexData[ index++ ] = thisNode.textCords.getMaxX();//u
+        thisNode.vertexData[ index++ ] = thisNode.textCords.getMaxY();//v
 
         //left bottom
-        thisNode.vertexData[index++] = thisNode.vertexCords.getMinX();
-        thisNode.vertexData[index++] = thisNode.vertexCords.getMaxY();
-        thisNode.vertexData[index++] = thisNode.textCords.getMinX();//u
-        thisNode.vertexData[index++] = thisNode.textCords.getMaxY();//v
+        thisNode.vertexData[ index++ ] = thisNode.vertexCords.getMinX();
+        thisNode.vertexData[ index++ ] = thisNode.vertexCords.getMaxY();
+        thisNode.vertexData[ index++ ] = thisNode.textCords.getMinX();//u
+        thisNode.vertexData[ index++ ] = thisNode.textCords.getMaxY();//v
 
       } );
     },

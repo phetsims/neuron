@@ -233,7 +233,7 @@ define( function( require ) {
     },
 
     getEk: function() {
-      return  (-1 * (this.vk + this.resting_v));
+      return (-1 * (this.vk + this.resting_v));
     },
 
     setEna: function( Ena ) {
@@ -353,7 +353,7 @@ define( function( require ) {
      * Converts a voltage from the modern convention to the convention used by the program
      */
     convertV: function( voltage ) {
-      return  (-1 * voltage - this.resting_v);
+      return (-1 * voltage - this.resting_v);
     },
 
     getVClampOn: function() {

@@ -29,7 +29,7 @@ define( function( require ) {
    */
   function MembraneChannelGateCanvasNode( neuronModel, modelViewTransform, bounds ) {
     var thisNode = this;
-    CanvasNode.call( thisNode, {pickable: false, canvasBounds: bounds } );
+    CanvasNode.call( thisNode, { pickable: false, canvasBounds: bounds } );
     thisNode.neuronModel = neuronModel;
     thisNode.membraneChannels = neuronModel.membraneChannels;
     thisNode.mvt = modelViewTransform;
@@ -54,7 +54,7 @@ define( function( require ) {
       edgeShape.cubicCurveTo( width / 2, -height / 2, -width / 2, -height / 2, -width / 2, -height / 4 );
       edgeShape.close();
 
-      return  edgeShape.computeBounds( new kite.LineStyles( {lineWidth: 0.4} ) );
+      return edgeShape.computeBounds( new kite.LineStyles( { lineWidth: 0.4 } ) );
 
     }
 
@@ -62,25 +62,25 @@ define( function( require ) {
 
     //Profiler found too many color instance being created during rendering, so cache it
     this.channelColors = {};
-    this.channelColors[MembraneChannelTypes.SODIUM_GATED_CHANNEL] = NeuronConstants.SODIUM_COLOR.colorUtilsDarker( 0.2 ).getCanvasStyle();
-    this.channelColors[MembraneChannelTypes.SODIUM_LEAKAGE_CHANNEL] = Color.interpolateRGBA( NeuronConstants.SODIUM_COLOR, Color.YELLOW, 0.5 ).colorUtilsDarker( 0.15 ).getCanvasStyle();
-    this.channelColors[MembraneChannelTypes.POTASSIUM_GATED_CHANNEL] = NeuronConstants.POTASSIUM_COLOR.colorUtilsDarker( 0.2 ).getCanvasStyle();
-    this.channelColors[MembraneChannelTypes.POTASSIUM_LEAKAGE_CHANNEL] = Color.interpolateRGBA( NeuronConstants.POTASSIUM_COLOR, new Color( 0, 200, 255 ), 0.6 ).colorUtilsDarker( 0.2 ).getCanvasStyle();
+    this.channelColors[ MembraneChannelTypes.SODIUM_GATED_CHANNEL ] = NeuronConstants.SODIUM_COLOR.colorUtilsDarker( 0.2 ).getCanvasStyle();
+    this.channelColors[ MembraneChannelTypes.SODIUM_LEAKAGE_CHANNEL ] = Color.interpolateRGBA( NeuronConstants.SODIUM_COLOR, Color.YELLOW, 0.5 ).colorUtilsDarker( 0.15 ).getCanvasStyle();
+    this.channelColors[ MembraneChannelTypes.POTASSIUM_GATED_CHANNEL ] = NeuronConstants.POTASSIUM_COLOR.colorUtilsDarker( 0.2 ).getCanvasStyle();
+    this.channelColors[ MembraneChannelTypes.POTASSIUM_LEAKAGE_CHANNEL ] = Color.interpolateRGBA( NeuronConstants.POTASSIUM_COLOR, new Color( 0, 200, 255 ), 0.6 ).colorUtilsDarker( 0.2 ).getCanvasStyle();
 
     this.edgeFillColors = {};
-    this.edgeFillColors[MembraneChannelTypes.SODIUM_GATED_CHANNEL] = NeuronConstants.SODIUM_COLOR.getCanvasStyle();
-    this.edgeFillColors[MembraneChannelTypes.SODIUM_LEAKAGE_CHANNEL] = Color.interpolateRGBA( NeuronConstants.SODIUM_COLOR, Color.YELLOW, 0.5 ).getCanvasStyle();
-    this.edgeFillColors[MembraneChannelTypes.POTASSIUM_GATED_CHANNEL] = NeuronConstants.POTASSIUM_COLOR.getCanvasStyle();
-    this.edgeFillColors[MembraneChannelTypes.POTASSIUM_LEAKAGE_CHANNEL] = Color.interpolateRGBA( NeuronConstants.POTASSIUM_COLOR, new Color( 0, 200, 255 ), 0.6 ).getCanvasStyle();
+    this.edgeFillColors[ MembraneChannelTypes.SODIUM_GATED_CHANNEL ] = NeuronConstants.SODIUM_COLOR.getCanvasStyle();
+    this.edgeFillColors[ MembraneChannelTypes.SODIUM_LEAKAGE_CHANNEL ] = Color.interpolateRGBA( NeuronConstants.SODIUM_COLOR, Color.YELLOW, 0.5 ).getCanvasStyle();
+    this.edgeFillColors[ MembraneChannelTypes.POTASSIUM_GATED_CHANNEL ] = NeuronConstants.POTASSIUM_COLOR.getCanvasStyle();
+    this.edgeFillColors[ MembraneChannelTypes.POTASSIUM_LEAKAGE_CHANNEL ] = Color.interpolateRGBA( NeuronConstants.POTASSIUM_COLOR, new Color( 0, 200, 255 ), 0.6 ).getCanvasStyle();
 
     this.edgeStrokeColors = {};
-    this.edgeStrokeColors[MembraneChannelTypes.SODIUM_GATED_CHANNEL] = NeuronConstants.SODIUM_COLOR.colorUtilsDarker( 0.3 ).getCanvasStyle();
-    this.edgeStrokeColors[MembraneChannelTypes.SODIUM_LEAKAGE_CHANNEL] = Color.interpolateRGBA( NeuronConstants.SODIUM_COLOR, Color.YELLOW, 0.5 ).colorUtilsDarker( 0.3 ).getCanvasStyle();
-    this.edgeStrokeColors[MembraneChannelTypes.POTASSIUM_GATED_CHANNEL] = NeuronConstants.POTASSIUM_COLOR.colorUtilsDarker( 0.3 ).getCanvasStyle();
-    this.edgeStrokeColors[MembraneChannelTypes.POTASSIUM_LEAKAGE_CHANNEL] = Color.interpolateRGBA( NeuronConstants.POTASSIUM_COLOR, new Color( 0, 200, 255 ), 0.6 ).colorUtilsDarker( 0.3 ).getCanvasStyle();
+    this.edgeStrokeColors[ MembraneChannelTypes.SODIUM_GATED_CHANNEL ] = NeuronConstants.SODIUM_COLOR.colorUtilsDarker( 0.3 ).getCanvasStyle();
+    this.edgeStrokeColors[ MembraneChannelTypes.SODIUM_LEAKAGE_CHANNEL ] = Color.interpolateRGBA( NeuronConstants.SODIUM_COLOR, Color.YELLOW, 0.5 ).colorUtilsDarker( 0.3 ).getCanvasStyle();
+    this.edgeStrokeColors[ MembraneChannelTypes.POTASSIUM_GATED_CHANNEL ] = NeuronConstants.POTASSIUM_COLOR.colorUtilsDarker( 0.3 ).getCanvasStyle();
+    this.edgeStrokeColors[ MembraneChannelTypes.POTASSIUM_LEAKAGE_CHANNEL ] = Color.interpolateRGBA( NeuronConstants.POTASSIUM_COLOR, new Color( 0, 200, 255 ), 0.6 ).colorUtilsDarker( 0.3 ).getCanvasStyle();
 
     this.edgeGateBallColors = {};
-    this.edgeGateBallColors[MembraneChannelTypes.SODIUM_GATED_CHANNEL] = NeuronConstants.SODIUM_COLOR.colorUtilsDarker( 0.3 ).getCanvasStyle();
+    this.edgeGateBallColors[ MembraneChannelTypes.SODIUM_GATED_CHANNEL ] = NeuronConstants.SODIUM_COLOR.colorUtilsDarker( 0.3 ).getCanvasStyle();
     this.edgeGateStringColor = Color.BLACK.getCanvasStyle();
 
     //Each iteration during Channel rendering updates the same local variable,This is done to avoid new vector creation
@@ -157,8 +157,8 @@ define( function( require ) {
         transformedEdgeNodeSize.height = Math.abs( thisNode.mvt.modelToViewDeltaY( edgeNodeHeight ) );
 
         var rotation = -membraneChannelModel.rotationalAngle + Math.PI / 2;
-        context.fillStyle = thisNode.edgeFillColors[membraneChannelModel.getChannelType()];
-        context.strokeStyle = thisNode.edgeStrokeColors[membraneChannelModel.getChannelType()];
+        context.fillStyle = thisNode.edgeFillColors[ membraneChannelModel.getChannelType() ];
+        context.strokeStyle = thisNode.edgeStrokeColors[ membraneChannelModel.getChannelType() ];
         context.lineWidth = 0.9;
 
         //left Edge
@@ -207,7 +207,7 @@ define( function( require ) {
         context.translate( transformedChannelLocation.x, transformedChannelLocation.y );
         context.rotate( rotation );
         context.translate( -(width + edgeWidth) / 2, -height / 2 );
-        context.fillStyle = thisNode.channelColors[membraneChannelModel.getChannelType()];
+        context.fillStyle = thisNode.channelColors[ membraneChannelModel.getChannelType() ];
         context.beginPath();
         context.moveTo( 0, 0 );
         context.quadraticCurveTo( (width + edgeWidth) / 2, height / 8, width + edgeWidth, 0 );
@@ -251,11 +251,11 @@ define( function( require ) {
           context.beginPath();
           context.moveTo( channelEdgeConnectionPoint.x, channelEdgeConnectionPoint.y );
           context.bezierCurveTo( channelEdgeConnectionPoint.x + connectorLength * 0.25,
-              channelEdgeConnectionPoint.y + connectorLength * 0.5, ballConnectionPoint.x - connectorLength * 0.75,
-              ballConnectionPoint.y - connectorLength * 0.5, ballConnectionPoint.x, ballConnectionPoint.y );
+            channelEdgeConnectionPoint.y + connectorLength * 0.5, ballConnectionPoint.x - connectorLength * 0.75,
+            ballConnectionPoint.y - connectorLength * 0.5, ballConnectionPoint.x, ballConnectionPoint.y );
           context.stroke();
           context.beginPath();
-          context.fillStyle = thisNode.edgeGateBallColors[membraneChannelModel.getChannelType()];
+          context.fillStyle = thisNode.edgeGateBallColors[ membraneChannelModel.getChannelType() ];
           context.arc( ballConnectionPoint.x, ballConnectionPoint.y, ballDiameter / 2, 0, 2 * Math.PI, false );
           context.closePath();
           context.fill();

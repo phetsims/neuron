@@ -37,7 +37,7 @@ define( function( require ) {
     thisBuffer.delayElements = new Array( this.numEntries );
 
     _.times( this.numEntries, function( idx ) {
-      thisBuffer.delayElements[idx] = new DelayElement();
+      thisBuffer.delayElements[ idx ] = new DelayElement();
     } );
 
     // Head and tail pointers for FIFO-type behavior.
@@ -49,7 +49,7 @@ define( function( require ) {
 
   return inherit( Object, DelayBuffer, {
     addValue: function( value, deltaTime ) {
-      this.delayElements[this.head].setValueAndTime( value, deltaTime );
+      this.delayElements[ this.head ].setValueAndTime( value, deltaTime );
       this.head = (this.head + 1) % this.numEntries;
       if ( this.head === this.tail ) {
         // The addition of this element has overwritten what was the tail
@@ -108,7 +108,7 @@ define( function( require ) {
         if ( (this.filling && offset > this.head) || offset > this.numEntries ) {
           // The caller is asking for data that we don't have yet, so
           // give them the oldest data available.
-          delayedValue = this.delayElements[this.tail].value;
+          delayedValue = this.delayElements[ this.tail ].value;
         }
         else {
           index = this.head - offset;
@@ -116,7 +116,7 @@ define( function( require ) {
             // Handle wraparound.
             index = this.numEntries + index;
           }
-          delayedValue = this.delayElements[index].value;
+          delayedValue = this.delayElements[ index ].value;
         }
       }
       else {
@@ -127,7 +127,7 @@ define( function( require ) {
         index = this.head > 0 ? this.head - 1 : this.numEntries - 1;
         var accumulatedDelay = 0;
         while ( !delayReached ) {
-          accumulatedDelay += this.delayElements[index].deltaTime;
+          accumulatedDelay += this.delayElements[ index ].deltaTime;
           if ( accumulatedDelay >= delayAmount ) {
             // We've found the data.  Note that it may not be the
             // exact time requested - we're assuming it is close
@@ -148,7 +148,7 @@ define( function( require ) {
 
 
         }
-        delayedValue = this.delayElements[index].value;
+        delayedValue = this.delayElements[ index ].value;
       }
 
       return delayedValue;

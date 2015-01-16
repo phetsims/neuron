@@ -33,7 +33,7 @@ define( function( require ) {
 
 
     // Create the initial representation with the aspects that don't change.
-    var representation = new Path( new Shape(), {lineWidth: PARTICLE_EDGE_STROKE, stroke: Color.BLACK} );
+    var representation = new Path( new Shape(), { lineWidth: PARTICLE_EDGE_STROKE, stroke: Color.BLACK } );
     thisNode.addChild( representation );
 
     function updateOffset( x, y ) {
@@ -74,8 +74,6 @@ define( function( require ) {
     updateRepresentation( particle.getOpaqueness() );
   }
 
-  return inherit( Node, ParticleNode, {
-
-  } );
+  return inherit( Node, ParticleNode, {} );
 } );
 

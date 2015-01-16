@@ -19,9 +19,9 @@ define( function( require ) {
 
   // constants
   var BACKGROUND_COLOR = new Color( 204, 102, 255 );
-  var BACKGROUND_STROKE = {stroke: BACKGROUND_COLOR, lineWidth: 10, lineCap: 'round', lineJoin: 'round'};
+  var BACKGROUND_STROKE = { stroke: BACKGROUND_COLOR, lineWidth: 10, lineCap: 'round', lineJoin: 'round' };
   var FOREGROUND_COLOR = Color.YELLOW;
-  var FOREGROUND_STROKE = {stroke: FOREGROUND_COLOR, lineWidth: 5, lineCap: 'round', lineJoin: 'round'};
+  var FOREGROUND_STROKE = { stroke: FOREGROUND_COLOR, lineWidth: 5, lineCap: 'round', lineJoin: 'round' };
 
   /**
    * The node that will represent the traveling action potential.

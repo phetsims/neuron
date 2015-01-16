@@ -55,7 +55,7 @@ define( function( require ) {
 
 
       if ( dt < 0 ) {
-        return  this.moveBack( movableModelElement, fadableModelElement, dt );
+        return this.moveBack( movableModelElement, fadableModelElement, dt );
       }
 
       if ( !this.channelHasBeenEntered ) {
@@ -67,16 +67,16 @@ define( function( require ) {
       if ( this.channel.isOpen() || this.channelHasBeenEntered ) {
         // The channel is open, or we are inside it or have gone all the
         // way through, so keep executing this motion strategy.
-        if ( this.currentDestinationIndex >= this.traversalPoints.length || this.maxVelocity * dt < this.distanceBetweenPosAndTraversalPoint( currentPositionRefX, currentPositionRefY, this.traversalPoints[ this.currentDestinationIndex] ) ) {
+        if ( this.currentDestinationIndex >= this.traversalPoints.length || this.maxVelocity * dt < this.distanceBetweenPosAndTraversalPoint( currentPositionRefX, currentPositionRefY, this.traversalPoints[ this.currentDestinationIndex ] ) ) {
           // Move according to the current velocity.
           movableModelElement.setPosition( currentPositionRefX + this.velocityVector.x * dt,
-              currentPositionRefY + this.velocityVector.y * dt );
+            currentPositionRefY + this.velocityVector.y * dt );
         }
         else {
 
           // We are close enough to the destination that we should just
           // position ourself there and update to the next traversal point.
-          movableModelElement.setPosition( this.traversalPoints[ this.currentDestinationIndex].x, this.traversalPoints[ this.currentDestinationIndex].y );
+          movableModelElement.setPosition( this.traversalPoints[ this.currentDestinationIndex ].x, this.traversalPoints[ this.currentDestinationIndex ].y );
           this.currentDestinationIndex++;
           this.setCourseForCurrentTraversalPoint( movableModelElement.getPositionX(), movableModelElement.getPositionY() );
           if ( this.currentDestinationIndex === this.traversalPoints.length ) {
@@ -127,17 +127,17 @@ define( function( require ) {
 
       //check if it should change direction
       if ( this.currentDestinationIndex >= this.traversalPoints.length - 1 ) {
-        var distBetweenPosAndCurrentTraversePoint = this.distanceBetweenPosAndTraversalPoint( currentPositionRefX, currentPositionRefY, this.traversalPoints[ this.currentDestinationIndex - 1] );
+        var distBetweenPosAndCurrentTraversePoint = this.distanceBetweenPosAndTraversalPoint( currentPositionRefX, currentPositionRefY, this.traversalPoints[ this.currentDestinationIndex - 1 ] );
         if ( traveledDistance >= distBetweenPosAndCurrentTraversePoint ) {
 
           // The particle is near a traversal point, find the previous traversal point and set the particle's direction towards it.
           this.currentDestinationIndex = this.currentDestinationIndex - 1;
           if ( this.currentDestinationIndex >= 1 ) {
-            movableModelElement.setPosition( this.traversalPoints[ this.currentDestinationIndex - 1].x, this.traversalPoints[ this.currentDestinationIndex - 1].y );
+            movableModelElement.setPosition( this.traversalPoints[ this.currentDestinationIndex - 1 ].x, this.traversalPoints[ this.currentDestinationIndex - 1 ].y );
             this.setCourseForCurrentTraversalPoint( movableModelElement.getPositionX(), movableModelElement.getPositionY() );
           }
           else {
-            movableModelElement.setPosition( this.traversalPoints[ 0].x, this.traversalPoints[ 0].y );
+            movableModelElement.setPosition( this.traversalPoints[ 0 ].x, this.traversalPoints[ 0 ].y );
             this.setCourseForCurrentTraversalPoint( this.startingLocationX, this.startingLocationY );
             this.channelHasBeenEntered = !this.channelHasBeenEntered;
           }
@@ -155,7 +155,7 @@ define( function( require ) {
       }
 
       movableModelElement.setPosition( currentPositionRefX + this.velocityVector.x * dt,
-          currentPositionRefY + this.velocityVector.y * dt );
+        currentPositionRefY + this.velocityVector.y * dt );
 
     },
     /**
@@ -170,8 +170,8 @@ define( function( require ) {
       var points = [];
       var ctr = channel.getCenterLocation();
       var r = channel.getChannelSize().height * 0.65; // Make the point a little outside the channel.
-      var outerOpeningLocation = {x: ctr.x + Math.cos( channel.getRotationalAngle() ) * r, y: ctr.y + Math.sin( channel.getRotationalAngle() ) * r };
-      var innerOpeningLocation = {x: ctr.x - Math.cos( channel.getRotationalAngle() ) * r, y: ctr.y - Math.sin( channel.getRotationalAngle() ) * r };
+      var outerOpeningLocation = { x: ctr.x + Math.cos( channel.getRotationalAngle() ) * r, y: ctr.y + Math.sin( channel.getRotationalAngle() ) * r };
+      var innerOpeningLocation = { x: ctr.x - Math.cos( channel.getRotationalAngle() ) * r, y: ctr.y - Math.sin( channel.getRotationalAngle() ) * r };
 
       if ( this.distanceBetweenPosAndTraversalPoint( startingLocationX, startingLocationY, innerOpeningLocation ) < this.distanceBetweenPosAndTraversalPoint( startingLocationX, startingLocationY, outerOpeningLocation ) ) {
         points.push( innerOpeningLocation );
@@ -186,7 +186,7 @@ define( function( require ) {
     },
     setCourseForCurrentTraversalPoint: function( currentLocationX, currentLocationY ) {
       if ( this.currentDestinationIndex < this.traversalPoints.length ) {
-        var dest = this.traversalPoints[this.currentDestinationIndex];
+        var dest = this.traversalPoints[ this.currentDestinationIndex ];
         this.velocityVector.setXY( dest.x - currentLocationX, dest.y - currentLocationY );
         var scaleFactor = this.maxVelocity / this.velocityVector.magnitude();
         this.velocityVector.multiplyScalar( scaleFactor );
@@ -204,7 +204,7 @@ define( function( require ) {
      * @param traversalPoint (object literal with x and y properties)
      */
     distanceBetweenPosAndTraversalPoint: function( posX, posY, traversalPoint ) {
-      return  MathUtils.distanceBetween( posX, posY, traversalPoint.x, traversalPoint.y );
+      return MathUtils.distanceBetween( posX, posY, traversalPoint.x, traversalPoint.y );
     }
 
   } );

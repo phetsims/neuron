@@ -16,7 +16,7 @@ define( function( require ) {
   var PotassiumLeakageChannel = require( 'NEURON/neuron/model/PotassiumLeakageChannel' );
   var SodiumDualGatedChannel = require( 'NEURON/neuron/model/SodiumDualGatedChannel' );
 
-  return{
+  return {
     /**
      * factory method for creating a MembraneChannel of the specified type.
      * @param {MembraneChannelTypes} channelType

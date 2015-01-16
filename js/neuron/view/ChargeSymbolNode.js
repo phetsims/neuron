@@ -43,7 +43,7 @@ define( function( require ) {
     this.maxPotential = maxPotential;
 
     // Create the shape that represents this particle.
-    var representation = new Path( new Shape(), {fill: FILL_COLOR, lineWidth: EDGE_STROKE, stroke: EDGE_COLOR} );
+    var representation = new Path( new Shape(), { fill: FILL_COLOR, lineWidth: EDGE_STROKE, stroke: EDGE_COLOR } );
     // Skip bounds computation to improve performance
     var bounds = new Bounds2( 0, 0, 0, 0 );
 

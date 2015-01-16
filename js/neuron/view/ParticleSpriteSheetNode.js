@@ -25,7 +25,7 @@ define( function( require ) {
   function ParticleSpriteSheetNode( modelViewTransform, zoomProperty ) {
 
     var thisNode = this;
-    CanvasNode.call( thisNode, {pickable: false, canvasBounds: new Bounds2( 0, 0, 300, 300 ) } );
+    CanvasNode.call( thisNode, { pickable: false, canvasBounds: new Bounds2( 0, 0, 300, 300 ) } );
     this.modelViewTransform = modelViewTransform;
     this.particleTextureMap = new ParticleTextureMap( modelViewTransform, zoomProperty );
     thisNode.invalidatePaint();

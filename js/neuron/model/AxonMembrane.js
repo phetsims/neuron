@@ -62,26 +62,26 @@ define( function( require ) {
     // the vanishing point.
 
     var angleToVanishingPt = Math.atan2( thisAxonMembrane.vanishingPoint.y - thisAxonMembrane.intersectionPointA.y,
-        thisAxonMembrane.vanishingPoint.x - thisAxonMembrane.intersectionPointA.x );
+      thisAxonMembrane.vanishingPoint.x - thisAxonMembrane.intersectionPointA.x );
     var ctrlPtRadius = thisAxonMembrane.intersectionPointA.distance( thisAxonMembrane.vanishingPoint ) * 0.33;
     thisAxonMembrane.cntrlPtA1 = new Vector2(
-        thisAxonMembrane.intersectionPointA.x + ctrlPtRadius * Math.cos( angleToVanishingPt + 0.15 ),
-        thisAxonMembrane.intersectionPointA.y + ctrlPtRadius * Math.sin( angleToVanishingPt + 0.15 ) );
+      thisAxonMembrane.intersectionPointA.x + ctrlPtRadius * Math.cos( angleToVanishingPt + 0.15 ),
+      thisAxonMembrane.intersectionPointA.y + ctrlPtRadius * Math.sin( angleToVanishingPt + 0.15 ) );
     ctrlPtRadius = thisAxonMembrane.intersectionPointA.distance( thisAxonMembrane.vanishingPoint ) * 0.67;
     thisAxonMembrane.cntrlPtA2 = new Vector2(
-        thisAxonMembrane.intersectionPointA.x + ctrlPtRadius * Math.cos( angleToVanishingPt - 0.5 ),
-        thisAxonMembrane.intersectionPointA.y + ctrlPtRadius * Math.sin( angleToVanishingPt - 0.5 ) );
+      thisAxonMembrane.intersectionPointA.x + ctrlPtRadius * Math.cos( angleToVanishingPt - 0.5 ),
+      thisAxonMembrane.intersectionPointA.y + ctrlPtRadius * Math.sin( angleToVanishingPt - 0.5 ) );
 
     var angleToIntersectionPt = Math.atan2( thisAxonMembrane.intersectionPointB.y - thisAxonMembrane.vanishingPoint.y,
-        thisAxonMembrane.intersectionPointB.x - thisAxonMembrane.intersectionPointB.x );
+      thisAxonMembrane.intersectionPointB.x - thisAxonMembrane.intersectionPointB.x );
     ctrlPtRadius = thisAxonMembrane.intersectionPointB.distance( thisAxonMembrane.vanishingPoint ) * 0.33;
     thisAxonMembrane.cntrlPtB1 = new Vector2(
-        thisAxonMembrane.vanishingPoint.x + ctrlPtRadius * Math.cos( angleToIntersectionPt + 0.1 ),
-        thisAxonMembrane.vanishingPoint.y + ctrlPtRadius * Math.sin( angleToIntersectionPt + 0.1 ) );
+      thisAxonMembrane.vanishingPoint.x + ctrlPtRadius * Math.cos( angleToIntersectionPt + 0.1 ),
+      thisAxonMembrane.vanishingPoint.y + ctrlPtRadius * Math.sin( angleToIntersectionPt + 0.1 ) );
     ctrlPtRadius = thisAxonMembrane.intersectionPointB.distance( thisAxonMembrane.vanishingPoint ) * 0.67;
     thisAxonMembrane.cntrlPtB2 = new Vector2(
-        thisAxonMembrane.vanishingPoint.x + ctrlPtRadius * Math.cos( angleToIntersectionPt - 0.25 ),
-        thisAxonMembrane.vanishingPoint.y + ctrlPtRadius * Math.sin( angleToIntersectionPt - 0.25 ) );
+      thisAxonMembrane.vanishingPoint.x + ctrlPtRadius * Math.cos( angleToIntersectionPt - 0.25 ),
+      thisAxonMembrane.vanishingPoint.y + ctrlPtRadius * Math.sin( angleToIntersectionPt - 0.25 ) );
 
     // Create the curves that define the boundaries of the body.
     thisAxonMembrane.curveA = new Cubic( thisAxonMembrane.vanishingPoint, thisAxonMembrane.cntrlPtA2, thisAxonMembrane.cntrlPtA1, thisAxonMembrane.intersectionPointA );
@@ -102,7 +102,7 @@ define( function( require ) {
 
     var ellipseShape = new Shape().ellipse( 0, 0, NeuronConstants.DEFAULT_DIAMETER / 2, NeuronConstants.DEFAULT_DIAMETER / 2 );
     thisAxonMembrane.crossSectionEllipseShape = new Shape().ellipse( ellipseShape.x, ellipseShape.y,
-        ellipseShape.bounds.getWidth() / 2, ellipseShape.bounds.getHeight() / 2 );
+      ellipseShape.bounds.getWidth() / 2, ellipseShape.bounds.getHeight() / 2 );
 
     // To avoid creating new Vector2 instances during animation, the instances are declared and reused in the
     // evaluateCurve method.

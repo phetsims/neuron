@@ -86,7 +86,7 @@ define( function( require ) {
 
       //fire reset event callback
       for ( var i = 0; i < this.resetCallBacks.length; i++ ) {
-        this.resetCallBacks[i]();
+        this.resetCallBacks[ i ]();
       }
       this.model.reset();
     },
@@ -119,7 +119,7 @@ define( function( require ) {
       this.setSimulationTimeNoUpdate( this.simulationTime + simulationTimeChange );
       //fire step event callback
       for ( var i = 0; i < this.stepCallbacks.length; i++ ) {
-        this.stepCallbacks[i]( this.getSimulationTimeChange() );
+        this.stepCallbacks[ i ]( this.getSimulationTimeChange() );
       }
 
 
@@ -130,7 +130,7 @@ define( function( require ) {
     fireChanged: function() {
       var changedCallbacks = this.changedCallbacks.slice( 0 ); // copy to prevent concurrent modification
       for ( var i = 0; i < changedCallbacks.length; i++ ) {
-        changedCallbacks[i]( this );
+        changedCallbacks[ i ]( this );
       }
     },
     /**

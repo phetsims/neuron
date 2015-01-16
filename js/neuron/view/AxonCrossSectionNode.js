@@ -38,9 +38,9 @@ define( function( require ) {
     // the axon.
     var outerDiameterCircle = mvt.modelToViewShape( new Shape().ellipse( 0, 0, outerDiameter / 2, outerDiameter / 2 ) );
     var innerDiameterCircle = mvt.modelToViewShape( new Shape().ellipse( 0, 0, innerDiameter / 2, innerDiameter / 2 ) );
-    var outerMembrane = new Path( outerDiameterCircle, {fill: MEMBRANE_COLOR, stroke: Color.BLACK, lineWidth: LINE_WIDTH} );
+    var outerMembrane = new Path( outerDiameterCircle, { fill: MEMBRANE_COLOR, stroke: Color.BLACK, lineWidth: LINE_WIDTH } );
     thisNode.addChild( outerMembrane );
-    var innerMembrane = new Path( innerDiameterCircle, {fill: new Color( 73, 210, 242 ), stroke: Color.BLACK, lineWidth: LINE_WIDTH} );
+    var innerMembrane = new Path( innerDiameterCircle, { fill: new Color( 73, 210, 242 ), stroke: Color.BLACK, lineWidth: LINE_WIDTH } );
     thisNode.addChild( innerMembrane );
 
 

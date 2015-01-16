@@ -108,9 +108,9 @@ define( function( require ) {
           var a2 = Math.atan2( p2.y, p2.x );
           if ( a1 > a2 ) {
             // These two need to be swapped.
-            var tempChannel = membraneChannels[i ];
-            membraneChannels[ i] = membraneChannels[ i + 1 ];
-            membraneChannels[ i + 1] = tempChannel;
+            var tempChannel = membraneChannels[ i ];
+            membraneChannels[ i ] = membraneChannels[ i + 1 ];
+            membraneChannels[ i + 1 ] = tempChannel;
             orderChanged = true;
           }
         }

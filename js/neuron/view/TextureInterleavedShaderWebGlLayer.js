@@ -57,50 +57,50 @@ define( function( require ) {
 
         /********** Vertex Shader **********/
 
-          'precision mediump float;\n' +
-          //The vertex to be transformed
-          'attribute vec3 aVertex;\n' +
-          'attribute vec2 aTexCoord;\n' +
+        'precision mediump float;\n' +
+        //The vertex to be transformed
+        'attribute vec3 aVertex;\n' +
+        'attribute vec2 aTexCoord;\n' +
 
-          // The transformation matrix
-          'uniform mat4 uMatrix;\n' +
+        // The transformation matrix
+        'uniform mat4 uMatrix;\n' +
 
-          // The texture coordinates (if any)
-          'varying vec2 texCoord;\n' +
+        // The texture coordinates (if any)
+        'varying vec2 texCoord;\n' +
 
-          // The color to render (if any)
-          'uniform vec4 uColor;\n' +
-          'void main() {\n' +
-          '  texCoord = aTexCoord;\n' +
-          '  gl_Position = uMatrix * vec4( aVertex, 1 );\n' +
-          '}',
+        // The color to render (if any)
+        'uniform vec4 uColor;\n' +
+        'void main() {\n' +
+        '  texCoord = aTexCoord;\n' +
+        '  gl_Position = uMatrix * vec4( aVertex, 1 );\n' +
+        '}',
 
         /********** Fragment Shader **********/
 
         //Directive to indicate high precision
-          'precision mediump float;\n' +
+        'precision mediump float;\n' +
 
-          //Texture coordinates (for images)
-          'varying vec2 texCoord;\n' +
+        //Texture coordinates (for images)
+        'varying vec2 texCoord;\n' +
 
-          //Color (rgba) for filled items
-          'uniform vec4 uColor;\n' +
+        //Color (rgba) for filled items
+        'uniform vec4 uColor;\n' +
 
-          //Fragment type such as fragmentTypeFill or fragmentTypeTexture
-          'uniform int uFragmentType;\n' +
+        //Fragment type such as fragmentTypeFill or fragmentTypeTexture
+        'uniform int uFragmentType;\n' +
 
-          //Texture (if any)
-          'uniform sampler2D uTexture;\n' +
-          'void main() {\n' +
-          '  if (uFragmentType==' + WebGLLayer.fragmentTypeFill + '){\n' +
-          '    gl_FragColor = uColor;\n' +
-          '  }else if (uFragmentType==' + WebGLLayer.fragmentTypeTexture + '){\n' +
-          '    gl_FragColor = texture2D( uTexture, texCoord );\n' +
-          '  }\n' +
-          '}',
+        //Texture (if any)
+        'uniform sampler2D uTexture;\n' +
+        'void main() {\n' +
+        '  if (uFragmentType==' + WebGLLayer.fragmentTypeFill + '){\n' +
+        '    gl_FragColor = uColor;\n' +
+        '  }else if (uFragmentType==' + WebGLLayer.fragmentTypeTexture + '){\n' +
+        '    gl_FragColor = texture2D( uTexture, texCoord );\n' +
+        '  }\n' +
+        '}',
 
-        ['aVertex', 'aTexCoord'], // attribute names
-        ['uTexture', 'uMatrix', 'uColor', 'uFragmentType'] // uniform names
+        [ 'aVertex', 'aTexCoord' ], // attribute names
+        [ 'uTexture', 'uMatrix', 'uColor', 'uFragmentType' ] // uniform names
       );
 
       this.setSize( this.canvas.width, this.canvas.height );
@@ -125,7 +125,7 @@ define( function( require ) {
         // So this layer can cache the uniformViewMatrix.
         // This is not a generic solution but rather works only for ParticlesWebGLNode
 
-        var instance = this.instances[0];
+        var instance = this.instances[ 0 ];
         if ( !this.uniformViewMatrix ) {
           var modelViewMatrix = matrix3To4( instance.trail.getMatrix() );
           var projectionMatrix = Matrix4.translation( -1, 1, 0 ).timesMatrix( Matrix4.scaling( 2 / this.logicalWidth, -2 / this.logicalHeight, 1 ) );

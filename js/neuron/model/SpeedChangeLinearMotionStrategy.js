@@ -33,7 +33,7 @@ define( function( require ) {
   return inherit( MotionStrategy, SpeedChangeLinearMotionStrategy, {
     move: function( movable, fadableModelElement, dt ) {
       movable.setPosition( movable.getPositionX() + this.velocityVectorX * dt,
-          movable.getPositionY() + this.velocityVectorY * dt );
+        movable.getPositionY() + this.velocityVectorY * dt );
       if ( this.firstSpeedCountdownTimer > 0 ) {
         this.firstSpeedCountdownTimer -= dt;
         if ( this.firstSpeedCountdownTimer <= 0 ) {

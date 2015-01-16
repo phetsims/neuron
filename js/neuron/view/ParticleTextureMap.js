@@ -210,8 +210,8 @@ define( function( require ) {
       }
       var opacityStr = DOTUtil.toFixed( opacity, 4 );
       var parts = opacityStr.split( "." );
-      var row = parts[1].charAt( 0 );
-      var column = parts[1].charAt( 1 );
+      var row = parts[ 1 ].charAt( 0 );
+      var column = parts[ 1 ].charAt( 1 );
 
       var tileRadius = 0;
       if ( particleType === ParticleType.SODIUM_ION ) {

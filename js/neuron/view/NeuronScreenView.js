@@ -64,7 +64,7 @@ define( function( require ) {
 
     var thisView = this;
     thisView.neuronModel = neuronClockModelAdapter.model; // model is neuronmodel
-    ScreenView.call( thisView, {renderer: 'svg', layoutBounds: new Bounds2( 0, 0, 834, 504 )} );
+    ScreenView.call( thisView, { renderer: 'svg', layoutBounds: new Bounds2( 0, 0, 834, 504 ) } );
     var viewPortPosition = new Vector2( thisView.layoutBounds.width * 0.40, thisView.layoutBounds.height - 255 );
     // Set up the model-canvas transform.
     thisView.mvt = ModelViewTransform2.createSinglePointScaleInvertedYMapping(
@@ -90,7 +90,7 @@ define( function( require ) {
     var maskLineWidth = 14; // empirically determined
     var clipAreaBounds = worldNodeClipArea.bounds;
     var maskingShape = Shape.rect( clipAreaBounds.x - ( maskLineWidth / 2 ), clipAreaBounds.y - ( maskLineWidth / 2 ),
-        clipAreaBounds.width + maskLineWidth, clipAreaBounds.height + maskLineWidth );
+      clipAreaBounds.width + maskLineWidth, clipAreaBounds.height + maskLineWidth );
     var maskNode = new Path( maskingShape, { stroke: NeuronConstants.SCREEN_BACKGROUND, lineWidth: maskLineWidth } );
     thisView.addChild( maskNode );
 
@@ -135,7 +135,7 @@ define( function( require ) {
     // behavior. If the User pauses while Stimulus in progress, Step back and StepForward action still goes back and
     // forth ONLY  between stored snapshot states (see PlayBack mode class) The behaviour could reoccur after the User
     // resets the Sim Status, so the allowStepNavigation is also reset to false
-    var stepBackEnabledProperty = DerivedProperty.multilink( [playToggleProperty, thisView.neuronModel.allowStepNavigationProperty],
+    var stepBackEnabledProperty = DerivedProperty.multilink( [ playToggleProperty, thisView.neuronModel.allowStepNavigationProperty ],
       function( playToggle, allowStepNavigation ) {
         // Step and StepBack buttons are tied to PlayProperty and both enable themselves
         // when their observing property (It is assumed to be PlayProperty) is false.In this case we also have to

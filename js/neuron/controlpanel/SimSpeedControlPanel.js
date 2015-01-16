@@ -30,9 +30,9 @@ define( function( require ) {
 
     var radioButtonFont = NeuronConstants.CONTROL_PANEL_CONTROL_FONT;
     var speedRadioButtonGroup = new VerticalAquaRadioButtonGroup( [
-      { node: new Text( fastForwardString, {font: radioButtonFont} ), property: speedProperty, value: 2 },
-      { node: new Text( normalString, {font: radioButtonFont} ), property: speedProperty, value: 1 },
-      { node: new Text( slowMotionString, {font: radioButtonFont} ), property: speedProperty, value: 0.5 }
+      { node: new Text( fastForwardString, { font: radioButtonFont } ), property: speedProperty, value: 2 },
+      { node: new Text( normalString, { font: radioButtonFont } ), property: speedProperty, value: 1 },
+      { node: new Text( slowMotionString, { font: radioButtonFont } ), property: speedProperty, value: 0.5 }
     ], { radius: 8, spacing: 8 } );
 
 
