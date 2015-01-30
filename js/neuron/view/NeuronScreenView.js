@@ -229,7 +229,7 @@ define( function( require ) {
     thisView.addChild( membranePotentialChartNode );
 
     // Check to see if WebGL was prevented by a query parameter
-    var allowWebGL = window.phetcommon.getQueryParameter( 'webgl' ) !== 'false';
+    var allowWebGL = phet.phetcommon.getQueryParameter( 'webgl' ) !== 'false';
     var webGLSupported = Util.isWebGLSupported && allowWebGL;
 
     if ( webGLSupported ) {
