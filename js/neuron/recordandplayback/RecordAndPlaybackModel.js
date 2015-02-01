@@ -1,16 +1,14 @@
 //  Copyright 2002-2014, University of Colorado Boulder
-
-//REVIEW - This header comment is quite different from the one in the Java version of this class.  If this is
-// basically a port of the Java version, please incorporate the original comment so that we can more easily pull
-// this out into a separate library if desired.  If significant deviations from the original version of
-// RecordAndPlaybackModel have occurred, we should discuss.
 /**
- * The Neuron Model delegates all the animations through RecordAndPlaybackModel.
- * This class as of now acts only as a stub and  simply dispatches the step animation back to the Neuron Model
- * This stub is created in order keep NeuronModel's code intact as it makes multiple references to this class
+ * 
+ * This is the main model class for sims that support recording and playing back.  This is done by recording discrete states,
+ * then being able to set re-apply them to the model.  This library does not currently provide support for interpolation between states.
+ * <p/>
+ * This mixture of side-effects and state capturing seems to simplify graphics updating of normal model updating,
+ * though it can create additional complexity during playback.
  *
- * @author Sam Reid
  * @author Sharfudeen Ashraf
+ * @author Sam Reid
  */
 define( function( require ) {
   'use strict';
