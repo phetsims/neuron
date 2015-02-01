@@ -35,11 +35,9 @@ define( function( require ) {
    */
   function MembraneChannel( channelWidth, channelHeight, modelContainingParticles ) {
     var thisChannel = this;
-
     PropertySet.call( thisChannel, {
-      //REVIEW - I was able to figure out what the following two props were all about by looking through the code, but
-      // they could use a bit more documentation to make it clear why they're here.
-      channelStateChanged: false,
+      channelStateChanged: false, // if the channel's Openness and ActivationAmt is different from its previous values flag the
+      // channel's state as changed. The canvas implementation of the Membrane channel node will repaint if any one of the channel's state is found to be have been changed
       representationChanged: false // All the channel states are  updated at once at the end stepInTime.This was done for performance reasons.
     } );
 
@@ -95,8 +93,6 @@ define( function( require ) {
      * @param dt - Amount of time step, in milliseconds.
      */
     stepInTime: function( dt ) {
-
-
       if ( this.captureCountdownTimer !== Number.POSITIVE_INFINITY ) {
         if ( this.isOpen() ) {
           this.captureCountdownTimer -= dt;
@@ -140,17 +136,15 @@ define( function( require ) {
     },
     // Determine whether the provided point is inside the channel.
     isPointInChannel: function( x, y ) {
-      //REVIEW - this comment seems obsolete.  Agreed?  If so, please remove.
-      // Note: A rotational angle of zero is considered to be lying on the
-      // side.  Hence the somewhat odd-looking use of height and width in
-      // the determination of the channel Rect.
       return this.rotatedChannelRect.containsCoordinates( x, y );
     },
 
     getChannelSize: function() {
       return this.channelSize;
     },
+
     /**
+     *
      * Get the overall 2D size of the channel, which includes both the part
      * that the particles travel through as well as the edges.
      *
@@ -299,12 +293,10 @@ define( function( require ) {
       return new MembraneChannelState( this );
     },
 
-    //REVIEW - non-conventional header comment.
-    /*
-     The Membrane Channel Node observed centerLocation,openness and inactivation
-     properties separately.This resulted in too many updates to node and degraded the performance.This method checks
-     notifies a change in state if one of these properties change.
-     */
+
+    // The Membrane Channel Node observed centerLocation,openness and inactivation
+    // properties separately.This resulted in too many updates to node and degraded the performance.This method checks
+    // notifies a change in state if one of these properties change.
     notifyIfMembraneStateChanged: function( prevOpenness, prevInActivationAmt ) {
       this.channelStateChanged = false;
       if ( prevOpenness !== this.openness || prevInActivationAmt !== this.inactivationAmt ) {
