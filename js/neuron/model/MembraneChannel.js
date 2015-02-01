@@ -36,7 +36,7 @@ define( function( require ) {
   function MembraneChannel( channelWidth, channelHeight, modelContainingParticles ) {
     var thisChannel = this;
     PropertySet.call( thisChannel, {
-      channelStateChanged: false, // if the channel's Openness and ActivationAmt is different from its previous values flag the
+      channelStateChanged: false, // if the channel's Openness and ActivationAmt is different from its previous values, flag the
       // channel's state as changed. The canvas implementation of the Membrane channel node will repaint if any one of the channel's state is found to be have been changed
       representationChanged: false // All the channel states are  updated at once at the end stepInTime.This was done for performance reasons.
     } );

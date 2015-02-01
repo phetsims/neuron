@@ -27,8 +27,7 @@ define( function( require ) {
      * @param dt
      */
     move: function( movableModelElement, fadableModelElement, dt ) {
-      //REVIEW: Should throw exception if called in base class, otherwise it's kind of pointless to have.
-
+      throw new Error( 'move should be implemented in descendant classes of MotionStrategy.' );
     }
 
   } );
