@@ -35,40 +35,30 @@ define( function( require ) {
   function ChargeSymbolNode( axonModel, maxWidth, maxPotential, polarityReversed ) {
     var thisNode = this;
     Node.call( thisNode );
-    //REVIEW - Looks like usage for several of the vars below was moved into the constructor (very nice!) so they don't
-    // need to be retained as properties.
-    this.axonModel = axonModel;
-    this.maxWidth = maxWidth;
-    this.polarityReversed = polarityReversed;
-    this.maxPotential = maxPotential;
 
     // Create the shape that represents this particle.
     var representation = new Path( new Shape(), { fill: FILL_COLOR, lineWidth: EDGE_STROKE, stroke: EDGE_COLOR } );
+
     // Skip bounds computation to improve performance
     var bounds = new Bounds2( 0, 0, 0, 0 );
 
     function computeShapeBounds() {
       return bounds;
-
     }
 
     representation.computeShapeBounds = computeShapeBounds;
     thisNode.addChild( representation );
 
-
     function updateRepresentation() {
       var width = maxWidth * Math.abs( (axonModel.getMembranePotential() / maxPotential) );
-
       var drawPlusSymbol = (axonModel.getMembranePotential() > 0 && !polarityReversed) ||
                            (axonModel.getMembranePotential() < 0 && polarityReversed);
-
       if ( drawPlusSymbol ) {
         representation.setShape( drawPlusSign( width ) );
       }
       else {
         representation.setShape( drawMinusSign( width ) );
       }
-
     }
 
     function drawPlusSign( width ) {
@@ -110,12 +100,8 @@ define( function( require ) {
       thisNode.visible = chargesShown;
       updateRepresentation();
     } );
-
-
   }
 
   return inherit( Node, ChargeSymbolNode );
-
-} )
-;
+} );
 
