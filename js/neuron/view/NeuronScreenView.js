@@ -21,6 +21,7 @@ define( function( require ) {
   var Shape = require( 'KITE/Shape' );
   var Dimension2 = require( 'DOT/Dimension2' );
   var Property = require( 'AXON/Property' );
+  var DerivedProperty = require( 'AXON/DerivedProperty' );
   var ToggleProperty = require( 'AXON/ToggleProperty' );
   var Rectangle = require( 'SCENERY/nodes/Rectangle' );
   var RectangularPushButton = require( 'SUN/buttons/RectangularPushButton' );
@@ -134,7 +135,7 @@ define( function( require ) {
     // behavior. If the User pauses while Stimulus in progress, Step back and StepForward action still goes back and
     // forth ONLY  between stored snapshot states (see PlayBack mode class) The behaviour could reoccur after the User
     // resets the Sim Status, so the allowStepNavigation is also reset to false
-    var stepBackEnabledProperty = Property.multilink( [ playToggleProperty, thisView.neuronModel.allowStepNavigationProperty ],
+    var stepBackEnabledProperty = new DerivedProperty( [ playToggleProperty, thisView.neuronModel.allowStepNavigationProperty ],
       function( playToggle, allowStepNavigation ) {
         // Step and StepBack buttons are tied to PlayProperty and both enable themselves
         // when their observing property (It is assumed to be PlayProperty) is false.In this case we also have to
@@ -228,7 +229,7 @@ define( function( require ) {
     thisView.addChild( membranePotentialChartNode );
 
     // Check to see if WebGL was prevented by a query parameter
-    var allowWebGL = phet.phetcommon.getQueryParameter( 'webgl' ) !== 'false';
+    var allowWebGL = window.phetcommon.getQueryParameter( 'webgl' ) !== 'false';
     var webGLSupported = Util.isWebGLSupported && allowWebGL;
 
     if ( webGLSupported ) {
