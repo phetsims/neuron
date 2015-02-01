@@ -101,7 +101,7 @@ define( function( require ) {
     /**
      * Registers a callback that will be notified when the clock is reset
      */
-    registerRestCallback: function( callback ) {
+    registerResetCallback: function( callback ) {
       this.resetCallBacks.push( callback );
     },
 

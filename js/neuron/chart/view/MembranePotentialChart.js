@@ -123,7 +123,7 @@ define( function( require ) {
 
     neuronClockModelAdapter.registerStepCallback( thisChart.step.bind( thisChart ) );
 
-    neuronClockModelAdapter.registerRestCallback( function() {
+    neuronClockModelAdapter.registerResetCallback( function() {
       thisChart.updateOnSimulationReset();
     } );
 
