@@ -41,7 +41,6 @@ define( function( require ) {
    * @constructor
    */
   function AxonCrossSectionControlPanel( neuronModel ) {
-
     var maxButtonTextWidth = 100; // empirically determined
 
     // Scale and fit the ButtonText within panel's bounds
@@ -59,7 +58,6 @@ define( function( require ) {
     expandTouchArea( showConcentrationsCheckBox );
     var showPotentialChartCheckBox = new CheckBox( scaleAndFitTextItem( new Text( potentialChartString, TEXT_OPTIONS ) ), neuronModel.potentialChartVisibleProperty, CHECK_BOX_OPTIONS );
     expandTouchArea( showPotentialChartCheckBox );
-
 
     var crossSectionControlContents = [];
     crossSectionControlContents.push( new Text( showLegendString, {
@@ -89,17 +87,13 @@ define( function( require ) {
       // otherwise ions would have to disappear during an action potential,
       // which would be tricky.
       allIonsSimulatedCheckBox.enabled = !neuronModel.isStimulusInitiationLockedOut();
-
     } );
 
-    //REVIEW - This looks odd.  It looks like it is essentially linking a property to itself.  Why is it here?
+    //listen to allIonsSimulatedProperty through allIonsSimulatedCheckBox and invoke  setAllIonsSimulated method on NeuronModel
     neuronModel.allIonsSimulatedProperty.lazyLink( function( allIonsSimulated ) {
       neuronModel.setAllIonsSimulated( allIonsSimulated );
     } );
-
-
   }
 
   return inherit( Panel, AxonCrossSectionControlPanel );
 } );
-
