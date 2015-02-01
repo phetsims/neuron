@@ -1,8 +1,6 @@
 //  Copyright 2002-2014, University of Colorado Boulder
-
-//REVIEW - header comment is missing
 /**
- *
+ * This node acts as a layer to which all Concentration readouts are added
  *
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
