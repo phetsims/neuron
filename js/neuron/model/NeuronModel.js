@@ -343,87 +343,87 @@ define( function( require ) {
         particle.stepInTime( dt );
       } );
 
-      if ( this.concentrationReadoutVisible ) {
-        // Adjust the overall potassium and sodium concentration levels based
-        // parameters of the HH model.  This is done solely to provide values
-        // that can be displayed to the user, and are not used for anything
-        // else in the model.
-        var concentrationChanged = this.concentrationChanged = false;
-        var difference;
-        var potassiumConductance = this.hodgkinHuxleyModel.get_delayed_n4( CONCENTRATION_READOUT_DELAY );
-        if ( potassiumConductance !== 0 ) {
-          // Potassium is moving out of the cell as part of the process of
-          // an action potential, so adjust the interior and exterior
-          // concentration values.
-          this.potassiumExteriorConcentration += potassiumConductance * dt * EXTERIOR_CONCENTRATION_CHANGE_RATE_POTASSIUM;
-          this.potassiumInteriorConcentration -= potassiumConductance * dt * INTERIOR_CONCENTRATION_CHANGE_RATE_POTASSIUM;
+
+      // Adjust the overall potassium and sodium concentration levels based
+      // parameters of the HH model.  This is done solely to provide values
+      // that can be displayed to the user, and are not used for anything
+      // else in the model.
+      var concentrationChanged = this.concentrationChanged = false;
+      var difference;
+      var potassiumConductance = this.hodgkinHuxleyModel.get_delayed_n4( CONCENTRATION_READOUT_DELAY );
+      if ( potassiumConductance !== 0 ) {
+        // Potassium is moving out of the cell as part of the process of
+        // an action potential, so adjust the interior and exterior
+        // concentration values.
+        this.potassiumExteriorConcentration += potassiumConductance * dt * EXTERIOR_CONCENTRATION_CHANGE_RATE_POTASSIUM;
+        this.potassiumInteriorConcentration -= potassiumConductance * dt * INTERIOR_CONCENTRATION_CHANGE_RATE_POTASSIUM;
+        concentrationChanged = true;
+      }
+      else {
+        if ( this.potassiumExteriorConcentration !== NOMINAL_POTASSIUM_EXTERIOR_CONCENTRATION ) {
+          difference = Math.abs( this.potassiumExteriorConcentration - NOMINAL_POTASSIUM_EXTERIOR_CONCENTRATION );
+          if ( difference < CONCENTRATION_DIFF_THRESHOLD ) {
+            // Close enough to consider it fully restored.
+            this.potassiumExteriorConcentration = NOMINAL_POTASSIUM_EXTERIOR_CONCENTRATION;
+          }
+          else {
+            // Move closer to the nominal value.
+            this.potassiumExteriorConcentration -= difference * CONCENTRATION_RESTORATION_FACTOR * dt;
+          }
           concentrationChanged = true;
         }
-        else {
-          if ( this.potassiumExteriorConcentration !== NOMINAL_POTASSIUM_EXTERIOR_CONCENTRATION ) {
-            difference = Math.abs( this.potassiumExteriorConcentration - NOMINAL_POTASSIUM_EXTERIOR_CONCENTRATION );
-            if ( difference < CONCENTRATION_DIFF_THRESHOLD ) {
-              // Close enough to consider it fully restored.
-              this.potassiumExteriorConcentration = NOMINAL_POTASSIUM_EXTERIOR_CONCENTRATION;
-            }
-            else {
-              // Move closer to the nominal value.
-              this.potassiumExteriorConcentration -= difference * CONCENTRATION_RESTORATION_FACTOR * dt;
-            }
-            concentrationChanged = true;
+        if ( this.potassiumInteriorConcentration !== NOMINAL_POTASSIUM_INTERIOR_CONCENTRATION ) {
+          difference = Math.abs( this.potassiumInteriorConcentration - NOMINAL_POTASSIUM_INTERIOR_CONCENTRATION );
+          if ( difference < CONCENTRATION_DIFF_THRESHOLD ) {
+            // Close enough to consider it fully restored.
+            this.potassiumInteriorConcentration = NOMINAL_POTASSIUM_INTERIOR_CONCENTRATION;
           }
-          if ( this.potassiumInteriorConcentration !== NOMINAL_POTASSIUM_INTERIOR_CONCENTRATION ) {
-            difference = Math.abs( this.potassiumInteriorConcentration - NOMINAL_POTASSIUM_INTERIOR_CONCENTRATION );
-            if ( difference < CONCENTRATION_DIFF_THRESHOLD ) {
-              // Close enough to consider it fully restored.
-              this.potassiumInteriorConcentration = NOMINAL_POTASSIUM_INTERIOR_CONCENTRATION;
-            }
-            else {
-              // Move closer to the nominal value.
-              this.potassiumInteriorConcentration += difference * CONCENTRATION_RESTORATION_FACTOR * dt;
-            }
-            concentrationChanged = true;
+          else {
+            // Move closer to the nominal value.
+            this.potassiumInteriorConcentration += difference * CONCENTRATION_RESTORATION_FACTOR * dt;
           }
-        }
-        var sodiumConductance = this.hodgkinHuxleyModel.get_delayed_m3h( CONCENTRATION_READOUT_DELAY );
-        if ( this.hodgkinHuxleyModel.get_m3h() !== 0 ) {
-          // Sodium is moving in to the cell as part of the process of an
-          // action potential, so adjust the interior and exterior
-          // concentration values.
-          this.sodiumExteriorConcentration -= sodiumConductance * dt * EXTERIOR_CONCENTRATION_CHANGE_RATE_SODIUM;
-          this.sodiumInteriorConcentration += sodiumConductance * dt * INTERIOR_CONCENTRATION_CHANGE_RATE_SODIUM;
           concentrationChanged = true;
-        }
-        else {
-          if ( this.sodiumExteriorConcentration !== NOMINAL_SODIUM_EXTERIOR_CONCENTRATION ) {
-            difference = Math.abs( this.sodiumExteriorConcentration - NOMINAL_SODIUM_EXTERIOR_CONCENTRATION );
-            if ( difference < CONCENTRATION_DIFF_THRESHOLD ) {
-              // Close enough to consider it fully restored.
-              this.sodiumExteriorConcentration = NOMINAL_SODIUM_EXTERIOR_CONCENTRATION;
-            }
-            else {
-              // Move closer to the nominal value.
-              this.sodiumExteriorConcentration += difference * CONCENTRATION_RESTORATION_FACTOR * dt;
-            }
-            concentrationChanged = true;
-          }
-          if ( this.sodiumInteriorConcentration !== NOMINAL_SODIUM_INTERIOR_CONCENTRATION ) {
-            difference = Math.abs( this.sodiumInteriorConcentration - NOMINAL_SODIUM_INTERIOR_CONCENTRATION );
-            if ( difference < CONCENTRATION_DIFF_THRESHOLD ) {
-              // Close enough to consider it fully restored.
-              this.sodiumInteriorConcentration = NOMINAL_SODIUM_INTERIOR_CONCENTRATION;
-            }
-            else {
-              // Move closer to the nominal value.
-              this.sodiumInteriorConcentration -= difference * CONCENTRATION_RESTORATION_FACTOR * dt;
-            }
-            concentrationChanged = true;
-          }
-        }
-        if ( concentrationChanged ) {
-          this.concentrationChanged = true;
         }
       }
+      var sodiumConductance = this.hodgkinHuxleyModel.get_delayed_m3h( CONCENTRATION_READOUT_DELAY );
+      if ( this.hodgkinHuxleyModel.get_m3h() !== 0 ) {
+        // Sodium is moving in to the cell as part of the process of an
+        // action potential, so adjust the interior and exterior
+        // concentration values.
+        this.sodiumExteriorConcentration -= sodiumConductance * dt * EXTERIOR_CONCENTRATION_CHANGE_RATE_SODIUM;
+        this.sodiumInteriorConcentration += sodiumConductance * dt * INTERIOR_CONCENTRATION_CHANGE_RATE_SODIUM;
+        concentrationChanged = true;
+      }
+      else {
+        if ( this.sodiumExteriorConcentration !== NOMINAL_SODIUM_EXTERIOR_CONCENTRATION ) {
+          difference = Math.abs( this.sodiumExteriorConcentration - NOMINAL_SODIUM_EXTERIOR_CONCENTRATION );
+          if ( difference < CONCENTRATION_DIFF_THRESHOLD ) {
+            // Close enough to consider it fully restored.
+            this.sodiumExteriorConcentration = NOMINAL_SODIUM_EXTERIOR_CONCENTRATION;
+          }
+          else {
+            // Move closer to the nominal value.
+            this.sodiumExteriorConcentration += difference * CONCENTRATION_RESTORATION_FACTOR * dt;
+          }
+          concentrationChanged = true;
+        }
+        if ( this.sodiumInteriorConcentration !== NOMINAL_SODIUM_INTERIOR_CONCENTRATION ) {
+          difference = Math.abs( this.sodiumInteriorConcentration - NOMINAL_SODIUM_INTERIOR_CONCENTRATION );
+          if ( difference < CONCENTRATION_DIFF_THRESHOLD ) {
+            // Close enough to consider it fully restored.
+            this.sodiumInteriorConcentration = NOMINAL_SODIUM_INTERIOR_CONCENTRATION;
+          }
+          else {
+            // Move closer to the nominal value.
+            this.sodiumInteriorConcentration -= difference * CONCENTRATION_RESTORATION_FACTOR * dt;
+          }
+          concentrationChanged = true;
+        }
+      }
+      if ( concentrationChanged ) {
+        this.concentrationChanged = true;
+      }
+
 
       //invert the value and trigger change event
       this.particlesStateChangedProperty.set( !this.particlesStateChangedProperty.get() );
