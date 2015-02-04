@@ -1,5 +1,5 @@
 // Copyright 2002-2011, University of Colorado
-/**
+
  /**
  * This class represents the cursor that the user can grab and move around
  * in order to move the sim back and forth in time.
@@ -49,6 +49,10 @@ define( function( require ) {
       lineWidth: 0.4,
       lineDash: [ 4, 4 ]
     } );
+
+    // Make it easier to grab this cursor by giving it expanded mouse and touch areas.
+    this.mouseArea = this.localBounds.dilatedX( 12 );
+    this.touchArea = this.localBounds.dilatedX( 12 );
 
     var chartCursorDragHandler = new SimpleDragHandler( {
 
