@@ -1,56 +1,59 @@
 {
-  "chipper": {
-    "sha": "b10d944a06245dda50e8c08b0e51aac5d1c674b1",
-    "branch": "master"
-  },
-  "sherpa": {
-    "sha": "883cbc33dac82a7146c8bd4f66633097d9b62c4c",
-    "branch": "master"
-  },
-  "axon": {
-    "sha": "5ee82d888ca4639a7b4d59e5e83843e8e09c6425",
-    "branch": "master"
-  },
-  "sun": {
-    "sha": "8793fb36bae6e2388a54d1c8b15f1ec0e7044ae5",
-    "branch": "master"
-  },
-  "scenery-phet": {
-    "sha": "836ea64dea3255dd6f7ad6bd1c17646822a079e6",
-    "branch": "master"
-  },
-  "scenery": {
-    "sha": "2f51d2e4595199aaae3fc3a8ab18f9d4630cf19a",
-    "branch": "0.1"
-  },
-  "phetcommon": {
-    "sha": "de3467a58a7eb28c0fc5a68ded14c79f828529e5",
-    "branch": "master"
-  },
-  "phet-core": {
-    "sha": "c626ec561fde53ce4f49df5b93ef3efca7cf1f08",
-    "branch": "master"
-  },
-  "kite": {
-    "sha": "29e2af5a6cbcf47c8bf29ef1715c8ed48765fb8a",
-    "branch": "master"
-  },
-  "joist": {
-    "sha": "ba9557d0cbc19b5aa2c2a768a8780b0765a9b073",
-    "branch": "0.1"
-  },
-  "dot": {
-    "sha": "d3c50ae7f4e6c17ac096eaab9c6fda5dd9d6722b",
-    "branch": "master"
-  },
-  "brand": {
-    "sha": "4cb9a321bed065c983a5203f26fd5898bd775b7e",
-    "branch": "master"
-  },
-  "assert": {
-    "sha": "386e00157abe609741d3095120e0e425d10e7b51",
-    "branch": "master"
-  },
-
-  "comment": ""
+    "chipper": {
+        "sha": "ed44007e2e437eef2bb262205f1cb4f84b66f2cc",
+        "branch": "master"
+    },
+    "sherpa": {
+        "sha": "163d03e746c25ba704050897c9564ef408d0a0ae",
+        "branch": "master"
+    },
+    "sun": {
+        "sha": "8793fb36bae6e2388a54d1c8b15f1ec0e7044ae5",
+        "branch": "master"
+    },
+    "scenery-phet": {
+        "sha": "cd23ecc2f16731f6d6400b19d30315aed1b991f2",
+        "branch": "master"
+    },
+    "scenery": {
+        "sha": "2f51d2e4595199aaae3fc3a8ab18f9d4630cf19a",
+        "branch": "0.1"
+    },
+    "phetcommon": {
+        "sha": "de3467a58a7eb28c0fc5a68ded14c79f828529e5",
+        "branch": "master"
+    },
+    "phet-core": {
+        "sha": "c626ec561fde53ce4f49df5b93ef3efca7cf1f08",
+        "branch": "master"
+    },
+    "kite": {
+        "sha": "7f5c74a847f95d7fad6b8e0535befcddde058ff2",
+        "branch": "master"
+    },
+    "joist": {
+        "sha": "ba9557d0cbc19b5aa2c2a768a8780b0765a9b073",
+        "branch": "0.1"
+    },
+    "dot": {
+        "sha": "04e416b78d65429f0270c5b180099f5ffcc48d9c",
+        "branch": "master"
+    },
+    "brand": {
+        "sha": "c7a2cb73871b7f9cbec2b8ea9ee766070a51d466",
+        "branch": "master"
+    },
+    "axon": {
+        "sha": "84d7fc9d321562ac0b9cf096a4ae138c8d32d100",
+        "branch": "master"
+    },
+    "assert": {
+        "sha": "991ef593b18d3fafb9719bc50c73205e9ac6f07c",
+        "branch": "master"
+    },
+    "neuron": {
+        "sha": "2c98e3ef781aad880fb081b5c4354ac013131591",
+        "branch": "master"
+    },
+    "comment": "# neuron 1.0.0-dev.8 Wed Jan 28 2015 15:05:26 GMT-0700 (Mountain Standard Time)"
 }
