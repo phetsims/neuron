@@ -39,10 +39,6 @@
         "sha": "04e416b78d65429f0270c5b180099f5ffcc48d9c",
         "branch": "master"
     },
-    "brand": {
-        "sha": "c7a2cb73871b7f9cbec2b8ea9ee766070a51d466",
-        "branch": "master"
-    },
     "axon": {
         "sha": "84d7fc9d321562ac0b9cf096a4ae138c8d32d100",
         "branch": "master"
