@@ -139,7 +139,7 @@ define( function( require ) {
 
     RecordAndPlaybackModel.call( thisModel, maxRecordPoints, {
       // Notification Property that the setting for the visibility of the membrane
-      //potential chart has changed.
+      // potential chart has changed.
       potentialChartVisible: DEFAULT_FOR_MEMBRANE_CHART_VISIBILITY,
       // Controls whether all ions, or just those near membrane, are simulated.
       // the boolean value that indicates whether all ions are shown in the
