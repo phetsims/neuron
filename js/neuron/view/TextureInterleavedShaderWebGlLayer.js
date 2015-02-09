@@ -99,8 +99,10 @@ define( function( require ) {
         '  }\n' +
         '}',
 
-        [ 'aVertex', 'aTexCoord' ], // attribute names
-        [ 'uTexture', 'uMatrix', 'uColor', 'uFragmentType' ] // uniform names
+        {
+          attributes: [ 'aVertex', 'aTexCoord' ], // attribute names
+          uniforms: [ 'uTexture', 'uMatrix', 'uColor', 'uFragmentType' ] // uniform names
+        }
       );
 
       this.setSize( this.canvas.width, this.canvas.height );
