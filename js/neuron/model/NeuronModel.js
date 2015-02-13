@@ -836,7 +836,8 @@ define( function( require ) {
           this.playbackParticlesVisible = true;
         }
 
-        //Particles are rendered using Canvas, invert the state change  and trigger the paint event
+        //REVIEW - This comment should be clarified.  What exactly is going on here?
+        //Particles are rendered using Canvas, invert the state change and trigger the paint event
         // see ParticlesNode
         this.particlesStateChangedProperty.set( !this.particlesStateChangedProperty.get() );
       }

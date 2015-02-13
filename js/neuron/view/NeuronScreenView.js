@@ -46,7 +46,7 @@ define( function( require ) {
   var PlayPauseButton = require( 'SCENERY_PHET/buttons/PlayPauseButton' );
   var StepButton = require( 'SCENERY_PHET/buttons/StepButton' );
   var Util = require( 'SCENERY/util/Util' );
-  var ParticlesNode = require( 'NEURON/neuron/view/ParticlesNode' );
+  var ParticlesCanvasNode = require( 'NEURON/neuron/view/ParticlesCanvasNode' );
 
   // strings
   var stimulateNeuronString = require( 'string!NEURON/stimulateNeuron' );
@@ -237,7 +237,7 @@ define( function( require ) {
       particlesWebGLParentNode.addChild( particlesWebGLNode );
     }
     else {
-      var particlesCanvasNode = new ParticlesNode( thisView.neuronModel, thisView.mvt, new Bounds2( 0, 10, 700, 600 ) );
+      var particlesCanvasNode = new ParticlesCanvasNode( thisView.neuronModel, thisView.mvt, new Bounds2( 0, 10, 700, 600 ) );
       //WebGL node uses its own scaling whereas Matrix canvas based Particles implementation uses Node's
       //transform matrix for scaling so add it to the zoomableRootNode
       zoomableRootNode.addChild( particlesCanvasNode );
