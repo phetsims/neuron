@@ -25,7 +25,9 @@ define( function( require ) {
   function ParticlesCanvasNode( neuronModel, modelViewTransform, bounds ) {
     var thisNode = this;
     var clipArea = Shape.rect( bounds.minX, bounds.minY, bounds.width, bounds.maxY );
+    //TODO: Why was Ashraf setting a clip area on this?
     CanvasNode.call( thisNode, { pickable: false, canvasBounds: bounds, layerSplit: true, clipArea: clipArea } );
+    //CanvasNode.call( thisNode, { pickable: false, canvasBounds: bounds, layerSplit: true } );
     thisNode.modelViewTransform = modelViewTransform;
     thisNode.neuronModel = neuronModel;
     // if during a step we change, then trigger a repaint
