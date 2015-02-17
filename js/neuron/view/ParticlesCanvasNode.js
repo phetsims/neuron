@@ -49,12 +49,12 @@ define( function( require ) {
 
       function renderParticles( particleTypes ) {
 
-        // group by particle Type,this way no need to set the fillStyle for every particle instance
+        // group by particle type, this way no need to set the fillStyle for every particle instance
         var particlesGroupedByType = _.groupBy( particleTypes, function( particle ) {
           return particle.getType();
         } );
 
-        _.forIn( particlesGroupedByType, function( particlesOfSameType, particleType ) {
+        _.forOwn( particlesGroupedByType, function( particlesOfSameType, particleType ) {
           switch( particleType ) {
             case ParticleType.SODIUM_ION:
               renderSodiumParticles( particlesOfSameType );
@@ -63,7 +63,6 @@ define( function( require ) {
               renderPotassiumParticles( particlesOfSameType );
               break;
           }
-
         } );
 
         function renderSodiumParticles( particles ) {
@@ -81,9 +80,7 @@ define( function( require ) {
             context.stroke();
             context.fill();
           } );
-
         }
-
 
         function renderPotassiumParticles( particles ) {
           context.fillStyle = particles[ 0 ].getRepresentationColor().getCanvasStyle();
@@ -103,17 +100,12 @@ define( function( require ) {
             context.stroke();
             context.fill();
           } );
-
         }
       }
 
       renderParticles( this.neuronModel.backgroundParticles.getArray() );
       renderParticles( this.neuronModel.transientParticles.getArray() );
       renderParticles( this.neuronModel.playbackParticles.getArray() );
-
     }
-
   } );
-
-} )
-;
+} );
