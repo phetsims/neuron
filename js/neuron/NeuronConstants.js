@@ -18,13 +18,16 @@ define( function( require ) {
   var maxActionPotentialClockDT = (1 / clockFrameRate) / 1000;
 
   var NeuronConstants = {
+
     // Fonts
     CONTROL_PANEL_TITLE_FONT: new PhetFont( { weight: 'bold', size: 14 } ),
     CONTROL_PANEL_CONTROL_FONT: new PhetFont( { size: 14 } ),
+
     // Fill and stroke colors
     CANVAS_BACKGROUND: new Color( 204, 255, 249 ),
     CONTROL_PANEL_BACKGROUND: new Color( 239, 239, 195 ),
     CONTROL_PANEL_STROKE: new Color( 100, 100, 100 ),
+
     // Colors to use when representing various atoms.
     SODIUM_COLOR: new Color( 240, 0, 0 ),
     POTASSIUM_COLOR: new Color( 0, 240, 100 ),
@@ -33,6 +36,7 @@ define( function( require ) {
     DEFAULT_DIAMETER: 150, // In nanometers.
     SCREEN_BACKGROUND: '#ccfefa',
     CLOCK_FRAME_RATE: clockFrameRate, // fps, frames per second (wall time)
+
     // Set up the clock ranges for the various modules.  Note that for this
     // sim the clock rates are often several orders of magnitude slower than
     // real time.
@@ -40,7 +44,10 @@ define( function( require ) {
     MAX_ACTION_POTENTIAL_CLOCK_DT: maxActionPotentialClockDT,
     DEFAULT_ACTION_POTENTIAL_CLOCK_DT: (minActionPotentialClockDT + maxActionPotentialClockDT) * 0.55,
     TIME_SPAN: 25, // In seconds.
-    DEFAULT_MAX_VELOCITY: 40000
+    DEFAULT_MAX_VELOCITY: 40000,
+
+    // Event that is used by the neuron model to signal that particles have moved.
+    PARTICLES_MOVED_EVENT: 'particlesMovedEvent'
   };
 
   // verify that enum is immutable, without the runtime penalty in production code

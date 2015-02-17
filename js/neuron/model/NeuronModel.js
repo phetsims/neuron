@@ -102,7 +102,7 @@ define( function( require ) {
 
   // Default values of opaqueness for newly created particles.
   var FOREGROUND_PARTICLE_DEFAULT_OPAQUENESS = 0.25;
-  var BACKGROUND_PARTICLE_DEFAULT_OPAQUENESS = 0.10;// default alpha in Java was 0.05, which isn't visible in the canvas so slightly increasing to 0.10
+  var BACKGROUND_PARTICLE_DEFAULT_OPAQUENESS = 0.10; // default alpha in Java was 0.05, which isn't visible in the canvas so slightly increasing to 0.10
 
   /**
    * Main constructor for NeuronModel, which contains much of the model logic for the sim.
@@ -157,7 +157,6 @@ define( function( require ) {
       concentrationChanged: false,
       stimulusPulseInitiated: false,// observed by Membrane potential chart
       neuronModelPlaybackState: null,
-      particlesStateChanged: false, // to trigger canvas invalidation
       channelRepresentationChanged: false, // A change in any one of channel representation triggers a paint call
 
       // Allow Step Back/forward only if the user has initiated a StimulusPulse atleast once. Stepping back
@@ -303,7 +302,7 @@ define( function( require ) {
     },
 
     /**
-     * Called by the active RecordAndPlayback Model mode,see the RecordAndPlayBackModel step function
+     * Called by the active RecordAndPlayback Model mode, see the RecordAndPlayBackModel step function.
      * @param {number} dt
      * @returns {NeuronModelState}
      */
@@ -342,7 +341,6 @@ define( function( require ) {
       this.backgroundParticles.forEach( function( particle ) {
         particle.stepInTime( dt );
       } );
-
 
       // Adjust the overall potassium and sodium concentration levels based
       // parameters of the HH model.  This is done solely to provide values
@@ -425,8 +423,8 @@ define( function( require ) {
       }
 
 
-      //invert the value and trigger change event
-      this.particlesStateChangedProperty.set( !this.particlesStateChangedProperty.get() );
+      // Trigger the event that lets the view know that the particles should be redrawn.
+      this.trigger( NeuronConstants.PARTICLES_MOVED_EVENT );
 
       //If any one channel's state is changed, trigger a channel representation changed event
       this.channelRepresentationChanged = false;
@@ -836,10 +834,8 @@ define( function( require ) {
           this.playbackParticlesVisible = true;
         }
 
-        //REVIEW - This comment should be clarified.  What exactly is going on here?
-        //Particles are rendered using Canvas, invert the state change and trigger the paint event
-        // see ParticlesNode
-        this.particlesStateChangedProperty.set( !this.particlesStateChangedProperty.get() );
+        // Trigger the event that lets the view know that the particles should be redrawn.
+        this.trigger( NeuronConstants.PARTICLES_MOVED_EVENT );
       }
       else {
         // Should never happen, debug if it does.

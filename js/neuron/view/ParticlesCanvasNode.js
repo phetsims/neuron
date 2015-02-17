@@ -1,19 +1,22 @@
 // Copyright 2002-2011, University of Colorado
 
 /**
- * For performance reasons this sim uses a single canvasNode to render all the particles.
- * This class is used as a fallback when WebGL support is not available in the device.
+ * For performance reasons, this sim uses a single canvasNode to render all the particles instead of having nodes that
+ * represent each particle. This canvas node class is actually a fallback for when WebGL support is not available on
+ * the device.
  *
  * @author Sharfudeen Ashraf (for Ghent University)
+ * @author John Blanco
  */
 define( function( require ) {
   'use strict';
 
   // modules
-  var inherit = require( 'PHET_CORE/inherit' );
   var CanvasNode = require( 'SCENERY/nodes/CanvasNode' );
-  var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
   var Color = require( 'SCENERY/util/Color' );
+  var inherit = require( 'PHET_CORE/inherit' );
+  var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
+  var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
   var Shape = require( 'KITE/Shape' );
 
   /**
@@ -27,9 +30,9 @@ define( function( require ) {
     CanvasNode.call( thisNode, { pickable: false, canvasBounds: bounds, layerSplit: true } );
     thisNode.modelViewTransform = modelViewTransform;
     thisNode.neuronModel = neuronModel;
-    // if during a step we change, then trigger a repaint
-    //Use Particles Canvas Node to render all the particles directly
-    neuronModel.particlesStateChangedProperty.link( function( newValue ) {
+
+    // Monitor a property that indicates when a particle state has changed and initiate a redraw.
+    neuronModel.on( NeuronConstants.PARTICLES_MOVED_EVENT, function( newValue ) {
       thisNode.invalidatePaint();
     } );
   }
