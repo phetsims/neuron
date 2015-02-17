@@ -31,7 +31,7 @@ define( function( require ) {
   var Path = require( 'SCENERY/nodes/Path' );
   var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   var AxonBodyNode = require( 'NEURON/neuron/view/AxonBodyNode' );
-  //var ParticlesWebGLNode = require( 'NEURON/neuron/view/ParticlesWebGLNode' );
+  var ParticlesWebGLNode = require( 'NEURON/neuron/view/ParticlesWebGLNode2' );
   var AxonCrossSectionNode = require( 'NEURON/neuron/view/AxonCrossSectionNode' );
   var ConcentrationReadoutLayerNode = require( 'NEURON/neuron/view/ConcentrationReadoutLayerNode' );
   var MembraneChannelGateCanvasNode = require( 'NEURON/neuron/view/MembraneChannelGateCanvasNode' );
@@ -121,8 +121,9 @@ define( function( require ) {
     var axonCrossSectionNode = new AxonCrossSectionNode( thisView.neuronModel.axonMembrane, thisView.mvt );
     axonCrossSectionLayer.addChild( axonCrossSectionNode );
 
-    // Channel Gate node renders both channels and edges on the same canvas
-    var channelGateBounds = new Bounds2( 220, 50, 450, 250 );
+    // Create the node that will render the membrane channels and gates.  This is done on a canvas node for better
+    // performance.
+    var channelGateBounds = new Bounds2( 100, 50, 600, 500 ); // empirically determined
     var membraneChannelGateCanvasNode = new MembraneChannelGateCanvasNode( thisView.neuronModel, thisView.mvt, channelGateBounds );
     channelLayer.addChild( membraneChannelGateCanvasNode );
 
@@ -229,19 +230,21 @@ define( function( require ) {
     thisView.addChild( membranePotentialChartNode );
 
     // Check to see if WebGL was prevented by a query parameter
-    //var allowWebGL = phet.chipper.getQueryParameter( 'webgl' ) !== 'false';
-    //var webGLSupported = Util.isWebGLSupported && allowWebGL;
+    var allowWebGL = phet.chipper.getQueryParameter( 'webgl' ) !== 'false';
+    var webGLSupported = Util.isWebGLSupported && allowWebGL;
 
-    //if ( webGLSupported ) {
-    //  var particlesWebGLNode = new ParticlesWebGLNode( thisView.neuronModel, thisView.mvt, zoomProperty, zoomableRootNode, worldNodeClipArea );
-    //  particlesWebGLParentNode.addChild( particlesWebGLNode );
-    //}
-    //else {
+    if ( webGLSupported ) {
+      var particlesWebGLNode = new ParticlesWebGLNode( thisView.neuronModel, thisView.mvt, zoomProperty, zoomableRootNode, worldNodeClipArea );
+      particlesWebGLNode.left = 200;
+      particlesWebGLParentNode.addChild( particlesWebGLNode );
+    }
+    else {
       var particlesCanvasNode = new ParticlesCanvasNode( thisView.neuronModel, thisView.mvt, new Bounds2( 0, 10, 700, 600 ) );
+      // TODO: Clarify this comment.
       //WebGL node uses its own scaling whereas Matrix canvas based Particles implementation uses Node's
       //transform matrix for scaling so add it to the zoomableRootNode
       zoomableRootNode.addChild( particlesCanvasNode );
-    //}
+    }
 
     var simSpeedControlPanel = new SimSpeedControlPanel( neuronClockModelAdapter.speedProperty );
     simSpeedControlPanel.left = thisView.layoutBounds.minX + leftPadding;
