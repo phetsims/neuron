@@ -43,7 +43,7 @@ define( function( require ) {
   var Vector2 = require( 'DOT/Vector2' );
 
   // constants
-  var TRIANGLE_RADIUS = 10; // empirically determined
+  var TRIANGLE_RADIUS = 7; // empirically determined
   var NUM_TRIANGLES = 30; // empirically determined
   var RED_COLOR_BUFFER_DATA = [ 0.7, 0, 0 ];
   var GREEN_COLOR_BUFFER_DATA = [ 0, 0.7, 0 ];
@@ -51,6 +51,20 @@ define( function( require ) {
   // utility function
   function chooseRandomLocation( bounds ) {
     return new Vector2( bounds.minX + Math.random() * bounds.width, bounds.minY + Math.random() * bounds.height );
+  }
+
+  // utility function
+  function createRandomTriangle( originBounds ) {
+
+    var triangle = new Shape.regularPolygon( 3, TRIANGLE_RADIUS );
+
+    // rotate
+    triangle = triangle.transformed( Matrix3.rotationZ( Math.random() * Math.PI * 2 ) );
+
+    // translate
+    triangle = triangle.transformed( Matrix3.translationFromVector( chooseRandomLocation( originBounds ) ) );
+
+    return triangle;
   }
 
   /**
@@ -73,11 +87,8 @@ define( function( require ) {
     // generate a set of triangles at random locations
     this.triangleShapes = [];
     _.times( NUM_TRIANGLES, function() {
-      self.triangleShapes.push( new Shape.regularPolygon( 3, TRIANGLE_RADIUS ).transformed( Matrix3.translationFromVector( chooseRandomLocation( constrainedBounds ) ) ) );
+      self.triangleShapes.push( createRandomTriangle( constrainedBounds ) );
     } );
-
-    this.triangle1shape = this.triangleShapes[ 0 ];
-    this.triangle2shape = this.triangleShapes[ 1 ];
   }
 
   return inherit( WebGLNode, ParticlesWebGLNode, {
