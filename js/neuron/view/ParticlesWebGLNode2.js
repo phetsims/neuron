@@ -40,9 +40,18 @@ define( function( require ) {
   var Shape = require( 'KITE/Shape' );
   var Timer = require( 'JOIST/Timer' );
   var WebGLNode = require( 'SCENERY/nodes/WebGLNode' );
+  var Vector2 = require( 'DOT/Vector2' );
 
   // constants
-  var TRIANGLE_RADIUS = 20; // empirically determined
+  var TRIANGLE_RADIUS = 10; // empirically determined
+  var NUM_TRIANGLES = 30; // empirically determined
+  var RED_COLOR_BUFFER_DATA = [ 0.7, 0, 0 ];
+  var GREEN_COLOR_BUFFER_DATA = [ 0, 0.7, 0 ];
+
+  // utility function
+  function chooseRandomLocation( bounds ) {
+    return new Vector2( bounds.minX + Math.random() * bounds.width, bounds.minY + Math.random() * bounds.height );
+  }
 
   /**
    * @param {NeuronModel} neuronModel
@@ -58,8 +67,17 @@ define( function( require ) {
       canvasBounds: bounds
     } );
 
-    this.triangle1shape = new Shape.regularPolygon( 3, TRIANGLE_RADIUS ).transformed( Matrix3.translation( 300, 300 ) );
-    this.triangle2shape = new Shape.regularPolygon( 3, TRIANGLE_RADIUS ).transformed( Matrix3.translation( 350, 150 ) );
+    // constrain the bounds so that the generate shapes aren't on the edge
+    var constrainedBounds = bounds.dilated( -TRIANGLE_RADIUS );
+
+    // generate a set of triangles at random locations
+    this.triangleShapes = [];
+    _.times( NUM_TRIANGLES, function() {
+      self.triangleShapes.push( new Shape.regularPolygon( 3, TRIANGLE_RADIUS ).transformed( Matrix3.translationFromVector( chooseRandomLocation( constrainedBounds ) ) ) );
+    } );
+
+    this.triangle1shape = this.triangleShapes[ 0 ];
+    this.triangle2shape = this.triangleShapes[ 1 ];
   }
 
   return inherit( WebGLNode, ParticlesWebGLNode, {
@@ -110,29 +128,32 @@ define( function( require ) {
 
       drawable.vertexBuffer = gl.createBuffer();
 
-      var triangle1points = this.triangle1shape.subpaths[ 0 ].points;
-      var triangle2points = this.triangle2shape.subpaths[ 0 ].points;
+      // convert triangle shapes into vertices
+      var vertexData = [];
+      this.triangleShapes.forEach( function( triangleShape ) {
+        var trianglePoints = triangleShape.subpaths[ 0 ].points;
+        trianglePoints.forEach( function( point ) {
+          vertexData.push( point.x );
+          vertexData.push( point.y );
+          vertexData.push( 0.2 ); // z position
+        } );
+      } );
       gl.bindBuffer( gl.ARRAY_BUFFER, drawable.vertexBuffer );
-      gl.bufferData( gl.ARRAY_BUFFER, new Float32Array( [
-        triangle1points[ 0 ].x, triangle1points[ 0 ].y, 0.2,
-        triangle1points[ 1 ].x, triangle1points[ 1 ].y, 0.2,
-        triangle1points[ 2 ].x, triangle1points[ 2 ].y, 0.2,
-        triangle2points[ 0 ].x, triangle2points[ 0 ].y, 0.2,
-        triangle2points[ 1 ].x, triangle2points[ 1 ].y, 0.2,
-        triangle2points[ 2 ].x, triangle2points[ 2 ].y, 0.2
-      ] ), gl.STATIC_DRAW );
+      gl.bufferData( gl.ARRAY_BUFFER, new Float32Array( vertexData ), gl.STATIC_DRAW );
 
       drawable.colorBuffer = gl.createBuffer();
 
+      var colorBufferData = [];
+      this.triangleShapes.forEach( function() {
+        // randomly choose a color for each triangle, and add it once for each vertex
+        var colorData = Math.random() > 0.5 ? RED_COLOR_BUFFER_DATA : GREEN_COLOR_BUFFER_DATA;
+        colorBufferData = colorBufferData.concat( colorData );
+        colorBufferData = colorBufferData.concat( colorData );
+        colorBufferData = colorBufferData.concat( colorData );
+      } );
+
       gl.bindBuffer( gl.ARRAY_BUFFER, drawable.colorBuffer );
-      gl.bufferData( gl.ARRAY_BUFFER, new Float32Array( [
-        0, 0.7, 0,
-        0, 0.7, 0,
-        0, 0.7, 0,
-        0, 0.7, 0,
-        0, 0.7, 0,
-        0, 0.7, 0
-      ] ), gl.STATIC_DRAW );
+      gl.bufferData( gl.ARRAY_BUFFER, new Float32Array( colorBufferData ), gl.STATIC_DRAW );
     },
 
     /**
@@ -155,7 +176,7 @@ define( function( require ) {
       gl.bindBuffer( gl.ARRAY_BUFFER, drawable.colorBuffer );
       gl.vertexAttribPointer( shaderProgram.attributeLocations.aColor, 3, gl.FLOAT, false, 0, 0 );
 
-      gl.drawArrays( gl.TRIANGLES, 0, 6 );
+      gl.drawArrays( gl.TRIANGLES, 0, this.triangleShapes.length * 3 );
 
       shaderProgram.unuse();
     },
