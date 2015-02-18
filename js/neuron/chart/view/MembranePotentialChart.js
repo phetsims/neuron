@@ -36,7 +36,7 @@ define( function( require ) {
   var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   var RectangularPushButton = require( 'SUN/buttons/RectangularPushButton' );
   var dot = require( 'DOT/dot' );
-  var XYDataSeries = require( 'LIGHTBULB/XYDataSeries' );
+  var XYDataSeries = require( 'GRIDDLE/XYDataSeries' );
   var ChartCursor = require( 'NEURON/neuron/chart/view/ChartCursor' );
   var Util = require( 'DOT/Util' );
 

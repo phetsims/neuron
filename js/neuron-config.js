@@ -32,7 +32,7 @@ require.config( {
     SCENERY: '../../scenery/js',
     SCENERY_PHET: '../../scenery-phet/js',
     SUN: '../../sun/js',
-    LIGHTBULB: '../../lightbulb/js',
+    GRIDDLE: '../../griddle/js',
 
     // this sim
     NEURON: '.'
