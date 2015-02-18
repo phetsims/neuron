@@ -35,10 +35,14 @@ define( function( require ) {
   // modules
   var Bounds2 = require( 'DOT/Bounds2' );
   var inherit = require( 'PHET_CORE/inherit' );
+  var Matrix3 = require( 'DOT/Matrix3' );
   var ShaderProgram = require( 'SCENERY/util/ShaderProgram' );
-  var WebGLNode = require( 'SCENERY/nodes/WebGLNode' );
   var Shape = require( 'KITE/Shape' );
   var Timer = require( 'JOIST/Timer' );
+  var WebGLNode = require( 'SCENERY/nodes/WebGLNode' );
+
+  // constants
+  var TRIANGLE_RADIUS = 20; // empirically determined
 
   /**
    * @param {NeuronModel} neuronModel
@@ -54,11 +58,7 @@ define( function( require ) {
       canvasBounds: bounds
     } );
 
-    this.shape = new Shape.regularPolygon( 3, 100 * Math.sqrt( 2 ) );
-
-    Timer.setInterval( function() {
-      self.rotate( 0.02 );
-    }, ( 33 + 1 / 3 ) );
+    this.triangle1shape = new Shape.regularPolygon( 3, TRIANGLE_RADIUS ).transformed( Matrix3.translation( 300, 300 ) );
   }
 
   return inherit( WebGLNode, ParticlesWebGLNode, {
@@ -109,7 +109,7 @@ define( function( require ) {
 
       drawable.vertexBuffer = gl.createBuffer();
 
-      var points = this.shape.subpaths[ 0 ].points;
+      var points = this.triangle1shape.subpaths[ 0 ].points;
       gl.bindBuffer( gl.ARRAY_BUFFER, drawable.vertexBuffer );
       gl.bufferData( gl.ARRAY_BUFFER, new Float32Array( [
         points[ 0 ].x, points[ 0 ].y, 0.2,
@@ -121,9 +121,9 @@ define( function( require ) {
 
       gl.bindBuffer( gl.ARRAY_BUFFER, drawable.colorBuffer );
       gl.bufferData( gl.ARRAY_BUFFER, new Float32Array( [
-        1, 0, 0,
-        0, 1, 0,
-        0, 0, 1
+        0, 0.7, 0,
+        0, 0.7, 0,
+        0, 0.7, 0
       ] ), gl.STATIC_DRAW );
     },
 
