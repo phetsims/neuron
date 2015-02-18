@@ -59,6 +59,7 @@ define( function( require ) {
     } );
 
     this.triangle1shape = new Shape.regularPolygon( 3, TRIANGLE_RADIUS ).transformed( Matrix3.translation( 300, 300 ) );
+    this.triangle2shape = new Shape.regularPolygon( 3, TRIANGLE_RADIUS ).transformed( Matrix3.translation( 350, 150 ) );
   }
 
   return inherit( WebGLNode, ParticlesWebGLNode, {
@@ -109,18 +110,25 @@ define( function( require ) {
 
       drawable.vertexBuffer = gl.createBuffer();
 
-      var points = this.triangle1shape.subpaths[ 0 ].points;
+      var triangle1points = this.triangle1shape.subpaths[ 0 ].points;
+      var triangle2points = this.triangle2shape.subpaths[ 0 ].points;
       gl.bindBuffer( gl.ARRAY_BUFFER, drawable.vertexBuffer );
       gl.bufferData( gl.ARRAY_BUFFER, new Float32Array( [
-        points[ 0 ].x, points[ 0 ].y, 0.2,
-        points[ 1 ].x, points[ 1 ].y, 0.2,
-        points[ 2 ].x, points[ 2 ].y, 0.2
+        triangle1points[ 0 ].x, triangle1points[ 0 ].y, 0.2,
+        triangle1points[ 1 ].x, triangle1points[ 1 ].y, 0.2,
+        triangle1points[ 2 ].x, triangle1points[ 2 ].y, 0.2,
+        triangle2points[ 0 ].x, triangle2points[ 0 ].y, 0.2,
+        triangle2points[ 1 ].x, triangle2points[ 1 ].y, 0.2,
+        triangle2points[ 2 ].x, triangle2points[ 2 ].y, 0.2
       ] ), gl.STATIC_DRAW );
 
       drawable.colorBuffer = gl.createBuffer();
 
       gl.bindBuffer( gl.ARRAY_BUFFER, drawable.colorBuffer );
       gl.bufferData( gl.ARRAY_BUFFER, new Float32Array( [
+        0, 0.7, 0,
+        0, 0.7, 0,
+        0, 0.7, 0,
         0, 0.7, 0,
         0, 0.7, 0,
         0, 0.7, 0
@@ -147,7 +155,7 @@ define( function( require ) {
       gl.bindBuffer( gl.ARRAY_BUFFER, drawable.colorBuffer );
       gl.vertexAttribPointer( shaderProgram.attributeLocations.aColor, 3, gl.FLOAT, false, 0, 0 );
 
-      gl.drawArrays( gl.TRIANGLES, 0, 3 );
+      gl.drawArrays( gl.TRIANGLES, 0, 6 );
 
       shaderProgram.unuse();
     },
