@@ -45,13 +45,13 @@ define( function( require ) {
    * @param {ModelViewTransform2} modelViewTransform
    * @param {Property.<number>} zoomProperty
    * @param {Node} zoomableRootNode
-   * @param {Shape} clipArea
+   * @param {Shape} bounds
    * @constructor
    */
-  function ParticlesWebGLNode( neuronModel, modelViewTransform, zoomProperty, zoomableRootNode, clipArea ) {
+  function ParticlesWebGLNode( neuronModel, modelViewTransform, zoomProperty, zoomableRootNode, bounds ) {
     var self = this;
     WebGLNode.call( this, {
-      canvasBounds: new Bounds2( 100, 100, 1000, 1000 )
+      canvasBounds: bounds
     } );
 
     this.shape = new Shape.regularPolygon( 3, 100 * Math.sqrt( 2 ) );

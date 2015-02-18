@@ -53,6 +53,7 @@ define( function( require ) {
 
   // constants
   var BUTTON_FONT = new PhetFont( 18 );
+  var SHOW_PARTICLE_CANVAS_BOUNDS = false; // for debugging
 
   /**
    * Constructor for the NeuronView
@@ -71,7 +72,10 @@ define( function( require ) {
       Vector2.ZERO, viewPortPosition,
       2.45 ); // Scale factor - smaller numbers "zoom out", bigger ones "zoom in".
 
+    // Define the area where the axon and particles will be depicted.
     var worldNodeClipArea = Shape.rect( 70, 10, this.layoutBounds.maxX - 280, this.layoutBounds.maxY - 110 );
+
+    // Define the root for the part that can be zoomed.
     var zoomableRootNode = new Node();
     var minZoom = 0.7;
     var maxZoom = 6;
@@ -234,15 +238,21 @@ define( function( require ) {
     var webGLSupported = Util.isWebGLSupported && allowWebGL;
 
     if ( webGLSupported ) {
-      var particlesWebGLNode = new ParticlesWebGLNode( thisView.neuronModel, thisView.mvt, zoomProperty, zoomableRootNode, worldNodeClipArea );
-      particlesWebGLNode.left = 200;
+      var particlesWebGLNode = new ParticlesWebGLNode( thisView.neuronModel, thisView.mvt, zoomProperty, zoomableRootNode, worldNodeClipArea.bounds );
+      if ( SHOW_PARTICLE_CANVAS_BOUNDS ) {
+        this.addChild( Rectangle.bounds( particlesWebGLNode.bounds, { stroke: 'purple' } ) );
+      }
       particlesWebGLParentNode.addChild( particlesWebGLNode );
     }
     else {
-      var particlesCanvasNode = new ParticlesCanvasNode( thisView.neuronModel, thisView.mvt, new Bounds2( 0, 10, 700, 600 ) );
+      //var particlesCanvasNode = new ParticlesCanvasNode( thisView.neuronModel, thisView.mvt, new Bounds2( 0, 10, 700, 600 ) );
+      var particlesCanvasNode = new ParticlesCanvasNode( thisView.neuronModel, thisView.mvt, worldNodeClipArea.bounds );
       // TODO: Clarify this comment.
       //WebGL node uses its own scaling whereas Matrix canvas based Particles implementation uses Node's
       //transform matrix for scaling so add it to the zoomableRootNode
+      if ( SHOW_PARTICLE_CANVAS_BOUNDS ) {
+        this.addChild( Rectangle.bounds( particlesCanvasNode.bounds, { stroke: 'green' } ) );
+      }
       zoomableRootNode.addChild( particlesCanvasNode );
     }
 
