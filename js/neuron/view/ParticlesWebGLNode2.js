@@ -81,7 +81,7 @@ define( function( require ) {
       canvasBounds: bounds
     } );
 
-    // constrain the bounds so that the generate shapes aren't on the edge
+    // constrain the bounds so that the generated shapes aren't off the edge of the canvas
     var constrainedBounds = bounds.dilated( -TRIANGLE_RADIUS );
 
     // generate a set of triangles at random locations
