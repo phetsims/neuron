@@ -112,7 +112,7 @@ define( function( require ) {
         return;
       }
       var thisNode = this;
-      thisNode.zoomTransformationMatrix = thisNode.zoomableRootNode.getTransform().getMatrix();
+      thisNode.zoomTransformationMatrix = thisNode.zoomableRootNode.getMatrix();
       thisNode.updateTextureImage();
       //adjust the bounds based on Zoom factor
       thisNode.particleViewBounds = thisNode.particleBounds.copy();
