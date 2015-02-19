@@ -46,8 +46,7 @@ define( function( require ) {
 
       }
 
-      var scaleTransform = new Transform3( scaleMatrix );
-      zoomableRootNode.setTransform( scaleTransform );
+      zoomableRootNode.matrix = scaleMatrix;
 
     } );
 
