@@ -33,12 +33,10 @@ define( function( require ) {
   'use strict';
 
   // modules
-  var Bounds2 = require( 'DOT/Bounds2' );
   var inherit = require( 'PHET_CORE/inherit' );
   var Matrix3 = require( 'DOT/Matrix3' );
   var ShaderProgram = require( 'SCENERY/util/ShaderProgram' );
   var Shape = require( 'KITE/Shape' );
-  var Timer = require( 'JOIST/Timer' );
   var WebGLNode = require( 'SCENERY/nodes/WebGLNode' );
   var Vector2 = require( 'DOT/Vector2' );
 
