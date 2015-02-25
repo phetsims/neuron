@@ -35,6 +35,7 @@ define( function( require ) {
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
   var Matrix3 = require( 'DOT/Matrix3' );
+  var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
   var ShaderProgram = require( 'SCENERY/util/ShaderProgram' );
   var Shape = require( 'KITE/Shape' );
   var WebGLNode = require( 'SCENERY/nodes/WebGLNode' );
@@ -45,18 +46,10 @@ define( function( require ) {
   var RED_COLOR_BUFFER_DATA = [ 0.7, 0, 0 ];
   var GREEN_COLOR_BUFFER_DATA = [ 0, 0.7, 0 ];
 
-  // utility function
-  function chooseRandomLocation( bounds ) {
-    return new Vector2( bounds.minX + Math.random() * bounds.width, bounds.minY + Math.random() * bounds.height );
-  }
-
   // function to create a triangle shape from a single point
   function createTriangleAroundPoint( x, y ) {
 
     var triangle = new Shape.regularPolygon( 3, TRIANGLE_RADIUS );
-
-    // rotate
-    triangle = triangle.transformed( Matrix3.rotationZ( Math.random() * Math.PI * 2 ) );
 
     // translate
     triangle = triangle.transformed( Matrix3.translation( x, y ) );
@@ -78,18 +71,20 @@ define( function( require ) {
       canvasBounds: bounds
     } );
 
-    // constrain the bounds so that the generated shapes aren't off the edge of the canvas
-    var constrainedBounds = bounds.dilated( -TRIANGLE_RADIUS );
+    // keep references to the things that needed in order to render the particles
+    this.neuronModel = neuronModel;
+    this.modelViewTransform = modelViewTransform;
 
-    // generate a set of triangles at random locations
+    // constrain the bounds so that the generated shapes aren't off the edge of the canvas
+    this.constrainedBounds = bounds.dilated( -TRIANGLE_RADIUS );
+
     this.triangleShapes = [];
-    var xPos, yPos;
-    neuronModel.backgroundParticles.forEach( function( backgroundParticle ) {
-      xPos = modelViewTransform.modelToViewX( backgroundParticle.positionX );
-      yPos = modelViewTransform.modelToViewY( backgroundParticle.positionY );
-      if ( constrainedBounds.containsCoordinates( xPos, yPos ) ) {
-        self.triangleShapes.push( createTriangleAroundPoint( xPos, yPos ) );
-      }
+
+    self.update();
+
+    // Monitor a property that indicates when a particle state has changed and initiate a redraw.
+    neuronModel.on( NeuronConstants.PARTICLES_MOVED_EVENT, function() {
+      self.update();
     } );
   }
 
@@ -139,7 +134,21 @@ define( function( require ) {
         uniforms: [ 'uModelViewMatrix', 'uProjectionMatrix' ]
       } );
 
+      //TODO: I'm assuming that these are created once and then reused on each paint.  True?
       drawable.vertexBuffer = gl.createBuffer();
+      drawable.colorBuffer = gl.createBuffer();
+    },
+
+    /**
+     * TODO: Document this once finalized (and when I understand it better).
+     * @param drawable
+     * @param matrix
+     */
+    paintWebGLDrawable: function( drawable, matrix ) {
+      var gl = drawable.gl;
+      var shaderProgram = drawable.shaderProgram;
+
+      //----------------------
 
       // convert triangle shapes into vertices
       var vertexData = [];
@@ -154,12 +163,10 @@ define( function( require ) {
       gl.bindBuffer( gl.ARRAY_BUFFER, drawable.vertexBuffer );
       gl.bufferData( gl.ARRAY_BUFFER, new Float32Array( vertexData ), gl.STATIC_DRAW );
 
-      drawable.colorBuffer = gl.createBuffer();
-
       var colorBufferData = [];
       this.triangleShapes.forEach( function() {
-        // randomly choose a color for each triangle, and add it once for each vertex
-        var colorData = Math.random() > 0.5 ? RED_COLOR_BUFFER_DATA : GREEN_COLOR_BUFFER_DATA;
+        // for now, all triangles are the same color, but this will evolve soon
+        var colorData = RED_COLOR_BUFFER_DATA;
         colorBufferData = colorBufferData.concat( colorData );
         colorBufferData = colorBufferData.concat( colorData );
         colorBufferData = colorBufferData.concat( colorData );
@@ -167,16 +174,8 @@ define( function( require ) {
 
       gl.bindBuffer( gl.ARRAY_BUFFER, drawable.colorBuffer );
       gl.bufferData( gl.ARRAY_BUFFER, new Float32Array( colorBufferData ), gl.STATIC_DRAW );
-    },
 
-    /**
-     * TODO: Document this once finalized (and when I understand it better).
-     * @param drawable
-     * @param matrix
-     */
-    paintWebGLDrawable: function( drawable, matrix ) {
-      var gl = drawable.gl;
-      var shaderProgram = drawable.shaderProgram;
+      //----------------------
 
       shaderProgram.use();
 
@@ -203,6 +202,26 @@ define( function( require ) {
       drawable.gl.deleteBuffer( drawable.vertexBuffer );
 
       drawable.shaderProgram = null;
+    },
+
+    /**
+     * Update the representation show in the canvas based on the model state.  This is intended to be called any time
+     * particles move in a given time step, which should be once per frame or less.
+     */
+    update: function() {
+      var self = this;
+      // generate a set of triangles located where the particles are
+      this.triangleShapes = [];
+      var xPos, yPos;
+      this.neuronModel.backgroundParticles.forEach( function( backgroundParticle ) {
+        xPos = self.modelViewTransform.modelToViewX( backgroundParticle.positionX );
+        yPos = self.modelViewTransform.modelToViewY( backgroundParticle.positionY );
+        if ( self.constrainedBounds.containsCoordinates( xPos, yPos ) ) {
+          self.triangleShapes.push( createTriangleAroundPoint( xPos, yPos ) );
+        }
+      } );
+
+      self.invalidatePaint();
     }
   } );
 } );
