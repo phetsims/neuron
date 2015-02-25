@@ -41,8 +41,7 @@ define( function( require ) {
   var Vector2 = require( 'DOT/Vector2' );
 
   // constants
-  var TRIANGLE_RADIUS = 7; // empirically determined
-  var NUM_TRIANGLES = 30; // empirically determined
+  var TRIANGLE_RADIUS = 3; // empirically determined
   var RED_COLOR_BUFFER_DATA = [ 0.7, 0, 0 ];
   var GREEN_COLOR_BUFFER_DATA = [ 0, 0.7, 0 ];
 
@@ -51,8 +50,8 @@ define( function( require ) {
     return new Vector2( bounds.minX + Math.random() * bounds.width, bounds.minY + Math.random() * bounds.height );
   }
 
-  // utility function
-  function createRandomTriangle( originBounds ) {
+  // function to create a triangle shape from a single point
+  function createTriangleAroundPoint( x, y ) {
 
     var triangle = new Shape.regularPolygon( 3, TRIANGLE_RADIUS );
 
@@ -60,7 +59,7 @@ define( function( require ) {
     triangle = triangle.transformed( Matrix3.rotationZ( Math.random() * Math.PI * 2 ) );
 
     // translate
-    triangle = triangle.transformed( Matrix3.translationFromVector( chooseRandomLocation( originBounds ) ) );
+    triangle = triangle.transformed( Matrix3.translation( x, y ) );
 
     return triangle;
   }
@@ -84,8 +83,13 @@ define( function( require ) {
 
     // generate a set of triangles at random locations
     this.triangleShapes = [];
-    _.times( NUM_TRIANGLES, function() {
-      self.triangleShapes.push( createRandomTriangle( constrainedBounds ) );
+    var xPos, yPos;
+    neuronModel.backgroundParticles.forEach( function( backgroundParticle ) {
+      xPos = modelViewTransform.modelToViewX( backgroundParticle.positionX );
+      yPos = modelViewTransform.modelToViewY( backgroundParticle.positionY );
+      if ( constrainedBounds.containsCoordinates( xPos, yPos ) ) {
+        self.triangleShapes.push( createTriangleAroundPoint( xPos, yPos ) );
+      }
     } );
   }
 
