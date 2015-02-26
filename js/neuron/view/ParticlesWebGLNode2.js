@@ -52,20 +52,6 @@ define( function( require ) {
     new Vector2( 0, TRIANGLE_RADIUS ).rotated( -( 2 / 3 ) * Math.PI )
   ];
 
-  // a type that is used as an intermediate step in the conversion of particle data to vertex data
-  var ParticleData = function( modelParticle, modelViewTransform ) {
-    this.xPos = modelViewTransform.modelToViewX( modelParticle.positionX );
-    this.yPos = modelViewTransform.modelToViewY( modelParticle.positionY );
-    if ( self.constrainedBounds.containsCoordinates( xPos, yPos ) ) {
-      self.particleData.push( {
-        xPos: self.modelViewTransform.modelToViewX( transientParticle.positionX ),
-        yPos: self.modelViewTransform.modelToViewY( transientParticle.positionY ),
-        color: transientParticle.getType() === ParticleType.SODIUM_ION ? RED_COLOR_BUFFER_DATA : GREEN_COLOR_BUFFER_DATA
-      } );
-    }
-
-  };
-
   /**
    * @param {NeuronModel} neuronModel
    * @param {ModelViewTransform2} modelViewTransform
