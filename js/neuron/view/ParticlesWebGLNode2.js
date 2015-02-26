@@ -2,7 +2,7 @@
 
 /**
  * A WebGL Scenery node that is used to render particles.  This is done as an optimization, since representing every
- * particle as an individual Scenery node is too computationally intensive.
+ * particle as an individual Scenery node proved to be too computationally intensive.
  *
  * !!!!!!!!!!!!!!!!! TODO: Fix this header doc up, it's copied from the original version Scenery 0.1 version !!!!!!!!!
  *
@@ -36,6 +36,7 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var Matrix3 = require( 'DOT/Matrix3' );
   var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
+  var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
   var ShaderProgram = require( 'SCENERY/util/ShaderProgram' );
   var Shape = require( 'KITE/Shape' );
   var WebGLNode = require( 'SCENERY/nodes/WebGLNode' );
@@ -45,17 +46,25 @@ define( function( require ) {
   var TRIANGLE_RADIUS = 3; // empirically determined
   var RED_COLOR_BUFFER_DATA = [ 0.7, 0, 0 ];
   var GREEN_COLOR_BUFFER_DATA = [ 0, 0.7, 0 ];
+  var TRIANGLE_VERTEX_OFFSETS = [
+    new Vector2( 0, TRIANGLE_RADIUS ),
+    new Vector2( 0, TRIANGLE_RADIUS ).rotated( ( 2 / 3 ) * Math.PI ),
+    new Vector2( 0, TRIANGLE_RADIUS ).rotated( -( 2 / 3 ) * Math.PI )
+  ];
 
-  // function to create a triangle shape from a single point
-  function createTriangleAroundPoint( x, y ) {
+  // a type that is used as an intermediate step in the conversion of particle data to vertex data
+  var ParticleData = function( modelParticle, modelViewTransform ) {
+    this.xPos = modelViewTransform.modelToViewX( modelParticle.positionX );
+    this.yPos = modelViewTransform.modelToViewY( modelParticle.positionY );
+    if ( self.constrainedBounds.containsCoordinates( xPos, yPos ) ) {
+      self.particleData.push( {
+        xPos: self.modelViewTransform.modelToViewX( transientParticle.positionX ),
+        yPos: self.modelViewTransform.modelToViewY( transientParticle.positionY ),
+        color: transientParticle.getType() === ParticleType.SODIUM_ION ? RED_COLOR_BUFFER_DATA : GREEN_COLOR_BUFFER_DATA
+      } );
+    }
 
-    var triangle = new Shape.regularPolygon( 3, TRIANGLE_RADIUS );
-
-    // translate
-    triangle = triangle.transformed( Matrix3.translation( x, y ) );
-
-    return triangle;
-  }
+  };
 
   /**
    * @param {NeuronModel} neuronModel
@@ -77,8 +86,6 @@ define( function( require ) {
 
     // constrain the bounds so that the generated shapes aren't off the edge of the canvas
     this.constrainedBounds = bounds.dilated( -TRIANGLE_RADIUS );
-
-    this.triangleShapes = [];
 
     self.update();
 
@@ -152,11 +159,11 @@ define( function( require ) {
 
       // convert triangle shapes into vertices
       var vertexData = [];
-      this.triangleShapes.forEach( function( triangleShape ) {
-        var trianglePoints = triangleShape.subpaths[ 0 ].points;
-        trianglePoints.forEach( function( point ) {
-          vertexData.push( point.x );
-          vertexData.push( point.y );
+      this.particleData.forEach( function( particleDatum ) {
+        // create a triangle that encloses this data point TODO: Faster to use C-style?
+        _.times( 3, function( index ) {
+          vertexData.push( particleDatum.xPos + TRIANGLE_VERTEX_OFFSETS[ index ].x );
+          vertexData.push( particleDatum.yPos + TRIANGLE_VERTEX_OFFSETS[ index ].y );
           vertexData.push( 0.2 ); // z position
         } );
       } );
@@ -164,9 +171,9 @@ define( function( require ) {
       gl.bufferData( gl.ARRAY_BUFFER, new Float32Array( vertexData ), gl.STATIC_DRAW );
 
       var colorBufferData = [];
-      this.triangleShapes.forEach( function() {
-        // for now, all triangles are the same color, but this will evolve soon
-        var colorData = RED_COLOR_BUFFER_DATA;
+      this.particleData.forEach( function( particleDatum ) {
+        // set up the color data
+        var colorData = particleDatum.color;
         colorBufferData = colorBufferData.concat( colorData );
         colorBufferData = colorBufferData.concat( colorData );
         colorBufferData = colorBufferData.concat( colorData );
@@ -188,7 +195,7 @@ define( function( require ) {
       gl.bindBuffer( gl.ARRAY_BUFFER, drawable.colorBuffer );
       gl.vertexAttribPointer( shaderProgram.attributeLocations.aColor, 3, gl.FLOAT, false, 0, 0 );
 
-      gl.drawArrays( gl.TRIANGLES, 0, this.triangleShapes.length * 3 );
+      gl.drawArrays( gl.TRIANGLES, 0, this.particleData.length * 3 );
 
       shaderProgram.unuse();
     },
@@ -204,21 +211,43 @@ define( function( require ) {
       drawable.shaderProgram = null;
     },
 
+    clearParticleData: function() {
+      this.particleData = [];
+    },
+
     /**
-     * Update the representation show in the canvas based on the model state.  This is intended to be called any time
-     * particles move in a given time step, which should be once per frame or less.
+     * Check if the provided particle is in the current rendering bounds and, if so, create a particle data object and
+     * add it to the list that will be converted into vertex data in a subsequent step.
+     * @param particle
+     */
+    addDataForParticle: function( particle ) {
+      var xPos = this.modelViewTransform.modelToViewX( particle.positionX );
+      var yPos = this.modelViewTransform.modelToViewY( particle.positionY );
+      if ( this.constrainedBounds.containsCoordinates( xPos, yPos ) ) {
+        this.particleData.push( {
+          xPos: this.modelViewTransform.modelToViewX( particle.positionX ),
+          yPos: this.modelViewTransform.modelToViewY( particle.positionY ),
+          color: particle.getType() === ParticleType.SODIUM_ION ? RED_COLOR_BUFFER_DATA : GREEN_COLOR_BUFFER_DATA
+        } );
+      }
+    },
+
+    /**
+     * Update the representation shown in the canvas based on the model state.  This is intended to be called any time
+     * one or more particles move in a given time step, which means once per frame or less.
      */
     update: function() {
       var self = this;
-      // generate a set of triangles located where the particles are
-      this.triangleShapes = [];
-      var xPos, yPos;
+      this.clearParticleData();
+
+      // TODO: Would it be substantially more efficient to do a C-style loop here?
       this.neuronModel.backgroundParticles.forEach( function( backgroundParticle ) {
-        xPos = self.modelViewTransform.modelToViewX( backgroundParticle.positionX );
-        yPos = self.modelViewTransform.modelToViewY( backgroundParticle.positionY );
-        if ( self.constrainedBounds.containsCoordinates( xPos, yPos ) ) {
-          self.triangleShapes.push( createTriangleAroundPoint( xPos, yPos ) );
-        }
+        self.addDataForParticle( backgroundParticle );
+      } );
+
+      // TODO: Would it be substantially more efficient to do a C-style loop here?
+      this.neuronModel.transientParticles.forEach( function( transientParticle ) {
+        self.addDataForParticle( transientParticle );
       } );
 
       self.invalidatePaint();
