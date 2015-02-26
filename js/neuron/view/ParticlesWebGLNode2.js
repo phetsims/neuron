@@ -141,9 +141,7 @@ define( function( require ) {
       var gl = drawable.gl;
       var shaderProgram = drawable.shaderProgram;
 
-      //----------------------
-
-      // convert triangle shapes into vertices
+      // convert particle data to simple triangles
       var vertexData = [];
       this.particleData.forEach( function( particleDatum ) {
         // create a triangle that encloses this data point TODO: Faster to use C-style?
@@ -167,8 +165,6 @@ define( function( require ) {
 
       gl.bindBuffer( gl.ARRAY_BUFFER, drawable.colorBuffer );
       gl.bufferData( gl.ARRAY_BUFFER, new Float32Array( colorBufferData ), gl.STATIC_DRAW );
-
-      //----------------------
 
       shaderProgram.use();
 
@@ -213,7 +209,8 @@ define( function( require ) {
         this.particleData.push( {
           xPos: this.modelViewTransform.modelToViewX( particle.positionX ),
           yPos: this.modelViewTransform.modelToViewY( particle.positionY ),
-          color: particle.getType() === ParticleType.SODIUM_ION ? RED_COLOR_BUFFER_DATA : GREEN_COLOR_BUFFER_DATA
+          color: particle.getType() === ParticleType.SODIUM_ION ? RED_COLOR_BUFFER_DATA : GREEN_COLOR_BUFFER_DATA,
+          opacity: particle.opaqueness
         } );
       }
     },
