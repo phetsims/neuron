@@ -95,8 +95,8 @@ define( function( require ) {
       var vertexShaderSource = [
         // Position
         'attribute vec3 aPosition;',
-        'attribute vec3 aColor;',
-        'varying vec3 vColor;',
+        'attribute vec4 aColor;',
+        'varying vec4 vColor;',
         'uniform mat3 uModelViewMatrix;',
         'uniform mat3 uProjectionMatrix;',
 
@@ -114,11 +114,11 @@ define( function( require ) {
       // Simple demo for custom shader
       var fragmentShaderSource = [
         'precision mediump float;',
-        'varying vec3 vColor;',
+        'varying vec4 vColor;',
 
         // Returns the color from the vertex shader
         'void main( void ) {',
-        '  gl_FragColor = vec4( vColor, 1.0 );',
+        '  gl_FragColor = vColor;',
         '}'
       ].join( '\n' );
 
@@ -154,10 +154,15 @@ define( function( require ) {
       gl.bindBuffer( gl.ARRAY_BUFFER, drawable.vertexBuffer );
       gl.bufferData( gl.ARRAY_BUFFER, new Float32Array( vertexData ), gl.STATIC_DRAW );
 
+      // add in the color data
       var colorBufferData = [];
+      var colorData = [ 0, 0, 0, 0 ];
       this.particleData.forEach( function( particleDatum ) {
         // set up the color data
-        var colorData = particleDatum.color;
+        colorData[ 0 ] = particleDatum.color[ 0 ];
+        colorData[ 1 ] = particleDatum.color[ 1 ];
+        colorData[ 2 ] = particleDatum.color[ 2 ];
+        colorData[ 3 ] = particleDatum.opacity;
         colorBufferData = colorBufferData.concat( colorData );
         colorBufferData = colorBufferData.concat( colorData );
         colorBufferData = colorBufferData.concat( colorData );
@@ -175,7 +180,7 @@ define( function( require ) {
       gl.vertexAttribPointer( shaderProgram.attributeLocations.aPosition, 3, gl.FLOAT, false, 0, 0 );
 
       gl.bindBuffer( gl.ARRAY_BUFFER, drawable.colorBuffer );
-      gl.vertexAttribPointer( shaderProgram.attributeLocations.aColor, 3, gl.FLOAT, false, 0, 0 );
+      gl.vertexAttribPointer( shaderProgram.attributeLocations.aColor, 4, gl.FLOAT, false, 0, 0 );
 
       gl.drawArrays( gl.TRIANGLES, 0, this.particleData.length * 3 );
 
@@ -210,7 +215,7 @@ define( function( require ) {
           xPos: this.modelViewTransform.modelToViewX( particle.positionX ),
           yPos: this.modelViewTransform.modelToViewY( particle.positionY ),
           color: particle.getType() === ParticleType.SODIUM_ION ? RED_COLOR_BUFFER_DATA : GREEN_COLOR_BUFFER_DATA,
-          opacity: particle.opaqueness
+          opacity: Math.sqrt( particle.opaqueness ) // for demo purposes, opacity is pushed toward higher end - TODO: Change model opacity values if this behavior is permanently desired.
         } );
       }
     },
