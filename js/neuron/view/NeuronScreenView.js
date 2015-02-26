@@ -79,7 +79,8 @@ define( function( require ) {
     var zoomableRootNode = new Node();
     var minZoom = 0.7;
     var maxZoom = 6;
-    var defaultZoom = 0.7;
+    //var defaultZoom = 0.7;
+    var defaultZoom = 1.0; // The zoom has temporarily been changed to default to 1, since this works better for WebGL testing.  Change back when WebGL is working.
 
     // Zommable Node zooms in and out the zoomableRootNode contents
     var zoomProperty = new Property( defaultZoom );
