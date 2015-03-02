@@ -34,11 +34,9 @@ define( function( require ) {
 
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
-  var Matrix3 = require( 'DOT/Matrix3' );
   var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
   var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
   var ShaderProgram = require( 'SCENERY/util/ShaderProgram' );
-  var Shape = require( 'KITE/Shape' );
   var WebGLNode = require( 'SCENERY/nodes/WebGLNode' );
   var Vector2 = require( 'DOT/Vector2' );
 
