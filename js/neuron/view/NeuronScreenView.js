@@ -65,7 +65,7 @@ define( function( require ) {
 
     var thisView = this;
     thisView.neuronModel = neuronClockModelAdapter.model; // model is neuronmodel
-    ScreenView.call( thisView, { renderer: 'svg', layoutBounds: new Bounds2( 0, 0, 834, 504 ) } );
+    ScreenView.call( thisView, { layoutBounds: new Bounds2( 0, 0, 834, 504 ) } );
     var viewPortPosition = new Vector2( thisView.layoutBounds.width * 0.40, thisView.layoutBounds.height - 255 );
     // Set up the model-canvas transform.
     thisView.mvt = ModelViewTransform2.createSinglePointScaleInvertedYMapping(
