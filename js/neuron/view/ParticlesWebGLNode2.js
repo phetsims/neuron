@@ -156,11 +156,14 @@ define( function( require ) {
       var colorBufferData = [];
       var colorData = [ 0, 0, 0, 0 ];
       this.particleData.forEach( function( particleDatum ) {
+
         // set up the color data
         colorData[ 0 ] = particleDatum.color[ 0 ];
         colorData[ 1 ] = particleDatum.color[ 1 ];
         colorData[ 2 ] = particleDatum.color[ 2 ];
         colorData[ 3 ] = particleDatum.opacity;
+
+        // The color and opacity must be specified for each vertex
         colorBufferData = colorBufferData.concat( colorData );
         colorBufferData = colorBufferData.concat( colorData );
         colorBufferData = colorBufferData.concat( colorData );
