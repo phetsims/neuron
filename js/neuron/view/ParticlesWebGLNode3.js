@@ -74,6 +74,7 @@ define( function( require ) {
 
     self.update();
 
+    // TODO: Instead of doing what's shown below, consider just redrawing at every time step.  Seems like that would be simpler.
     // Monitor a property that indicates when a particle state has changed and initiate a redraw.
     neuronModel.on( NeuronConstants.PARTICLES_MOVED_EVENT, function() {
       self.update();
@@ -116,7 +117,8 @@ define( function( require ) {
         'varying vec2 vTexCoord;',
         'uniform sampler2D uSampler;',
         'void main( void ) {',
-        '  gl_FragColor = texture2D(uSampler, vec2(0, 0));',
+        //'  gl_FragColor = texture2D(uSampler, vec2(0.5, 0.5));',
+        '  gl_FragColor = texture2D(uSampler, vTexCoord);',
         '}'
       ].join( '\n' );
       //var fragmentShaderSource = [
@@ -152,7 +154,6 @@ define( function( require ) {
       gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR );
       gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.MIRRORED_REPEAT );
       gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.MIRRORED_REPEAT );
-      gl.bindTexture( gl.TEXTURE_2D, null );
 
       // TODO: I'm totally guessing on the following, based on some examples I've been looking at (jblanco).  Should
       // the uniform go into the ShaderProgram abstraction?
@@ -188,7 +189,6 @@ define( function( require ) {
 
       // TODO: Following line is a guess based on things seen elsewhere.  Should this uniform be in shaderProgram.uniformLocations?
       gl.uniform1i( drawable.uniformSamplerLoc, 0 );
-
 
       gl.bindBuffer( gl.ARRAY_BUFFER, drawable.vertexBuffer );
       gl.vertexAttribPointer( shaderProgram.attributeLocations.aPosition, 3, gl.FLOAT, false, 0, 0 );
