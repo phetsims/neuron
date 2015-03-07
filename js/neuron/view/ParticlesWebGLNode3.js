@@ -41,14 +41,16 @@ define( function( require ) {
   var Vector2 = require( 'DOT/Vector2' );
 
   // images
-  var woodImage = require( 'image!NEURON/wood_128x128.jpg' );
+  var particlesTextureImage = require( 'image!NEURON/neuron-particles.png' );
 
   // constants
-  var TRIANGLE_RADIUS = 10; // empirically determined
-  var TRIANGLE_VERTEX_OFFSETS = [
-    new Vector2( 0, TRIANGLE_RADIUS ),
-    new Vector2( 0, TRIANGLE_RADIUS ).rotated( ( 2 / 3 ) * Math.PI ),
-    new Vector2( 0, TRIANGLE_RADIUS ).rotated( -( 2 / 3 ) * Math.PI )
+  var SQUARE_SIDE_LENGTH = 4; // empirically determined
+  var SQUARE_HALF_DIAGONAL_LENGTH = ( SQUARE_SIDE_LENGTH * Math.sqrt( 2 ) ) / 2;
+  var SQUARE_VERTEX_OFFSETS = [
+    new Vector2( -SQUARE_HALF_DIAGONAL_LENGTH, SQUARE_HALF_DIAGONAL_LENGTH ),
+    new Vector2( -SQUARE_HALF_DIAGONAL_LENGTH, -SQUARE_HALF_DIAGONAL_LENGTH ),
+    new Vector2( SQUARE_HALF_DIAGONAL_LENGTH, SQUARE_HALF_DIAGONAL_LENGTH ),
+    new Vector2( SQUARE_HALF_DIAGONAL_LENGTH, -SQUARE_HALF_DIAGONAL_LENGTH )
   ];
 
   /**
@@ -70,7 +72,7 @@ define( function( require ) {
     this.modelViewTransform = modelViewTransform;
 
     // constrain the bounds so that the generated shapes aren't off the edge of the canvas
-    this.constrainedBounds = bounds.dilated( -TRIANGLE_RADIUS );
+    this.constrainedBounds = bounds.dilated( -SQUARE_SIDE_LENGTH / 2 );
 
     self.update();
 
@@ -94,6 +96,7 @@ define( function( require ) {
       // vertex shader
       var vertexShaderSource = [
         'attribute vec3 aPosition;',
+        'attribute vec2 aTextureCoordinate;',
         'varying vec2 vTexCoord;',
         'uniform mat3 uModelViewMatrix;',
         'uniform mat3 uProjectionMatrix;',
@@ -104,8 +107,7 @@ define( function( require ) {
         // homogeneous map to to normalized device coordinates
         '  vec3 ndc = uProjectionMatrix * vec3( view.xy, 1 );',
         // texture coordinate
-        //'  vTexCoord = vec2( aPosition.x, aPosition.y );',
-        '  vTexCoord = vec2( ndc.y, ndc.y );',
+        '  vTexCoord = aTextureCoordinate;',
         // combine with the z coordinate specified
         '  gl_Position = vec4( ndc.xy, aPosition.z, 1.0 );',
         '}'
@@ -118,6 +120,7 @@ define( function( require ) {
         'uniform sampler2D uSampler;',
         'void main( void ) {',
         //'  gl_FragColor = texture2D(uSampler, vec2(0.5, 0.5));',
+        //'  gl_FragColor = vec4( 0, 0, 0, 1 );',
         '  gl_FragColor = texture2D(uSampler, vTexCoord);',
         '}'
       ].join( '\n' );
@@ -137,18 +140,19 @@ define( function( require ) {
       //].join( '\n' );
 
       drawable.shaderProgram = new ShaderProgram( gl, vertexShaderSource, fragmentShaderSource, {
-        attributes: [ 'aPosition' ],
+        attributes: [ 'aPosition', 'aTextureCoordinate' ],
         uniforms: [ 'uModelViewMatrix', 'uProjectionMatrix' ]
       } );
 
       drawable.vertexBuffer = gl.createBuffer();
+      drawable.elementBuffer = gl.createBuffer();
 
       // set up the texture
-      console.log( 'woodImage.complete = ' + woodImage.complete );
+      console.log( 'woodImage.complete = ' + particlesTextureImage.complete );
       drawable.texture = gl.createTexture();
       gl.bindTexture( gl.TEXTURE_2D, drawable.texture );
       gl.pixelStorei( gl.UNPACK_FLIP_Y_WEBGL, true );
-      gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, woodImage );
+      gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, particlesTextureImage );
       gl.generateMipmap( gl.TEXTURE_2D );
       gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR );
       gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR );
@@ -166,34 +170,71 @@ define( function( require ) {
      * @param matrix
      */
     paintWebGLDrawable: function( drawable, matrix ) {
+      var self = this;
       var gl = drawable.gl;
       var shaderProgram = drawable.shaderProgram;
 
-      // convert particle data to simple triangles
+      // Convert particle data to vertices that represent a rectangle plus texture coordinates.
       var vertexData = [];
       this.particleData.forEach( function( particleDatum ) {
-        // create a triangle that encloses this data point TODO: Faster to use C-style?
-        _.times( 3, function( index ) {
-          vertexData.push( particleDatum.xPos + TRIANGLE_VERTEX_OFFSETS[ index ].x );
-          vertexData.push( particleDatum.yPos + TRIANGLE_VERTEX_OFFSETS[ index ].y );
+        // create a square that encloses this data point TODO: Faster to use C-style?
+        _.times( 4, function( index ) {
+
+          // position, which is a 3-component vector
+          vertexData.push( particleDatum.xPos + SQUARE_VERTEX_OFFSETS[ index ].x );
+          vertexData.push( particleDatum.yPos + SQUARE_VERTEX_OFFSETS[ index ].y );
           vertexData.push( 0.2 ); // z position
+
+          // texture coordinate, which is a 2-component vector
+          vertexData.push( index < 2 ? 0 : 0.5 ); // x texture coordinate
+          var yBase = particleDatum.type === ParticleType.SODIUM_ION ? 0.5 : 0;
+          vertexData.push( yBase + ( index % 2 === 0 ? 0.5 : 0 ) ); // y texture coordinate
         } );
       } );
+
+      // Load the vertex data into the GPU.
+      var elementSize = Float32Array.BYTES_PER_ELEMENT;
+      var elementsPerVertex = 3 + 2; // vertex + texture coordinate
+      var stride = elementSize * elementsPerVertex;
       gl.bindBuffer( gl.ARRAY_BUFFER, drawable.vertexBuffer );
       gl.bufferData( gl.ARRAY_BUFFER, new Float32Array( vertexData ), gl.STATIC_DRAW );
+
+      // Set up the attributes that will be passed into the vertex shader.
+      gl.vertexAttribPointer( shaderProgram.attributeLocations.aPosition, 3, gl.FLOAT, false, stride, 0 );
+      gl.vertexAttribPointer( shaderProgram.attributeLocations.aTextureCoordinate, 2, gl.FLOAT, false, stride, elementSize * 3 );
+
+      // Set up the element indices.  This is done so that we can create 'degenerate triangles' and thus have
+      // discontinuities in the triangle strip, thus creating separate rectangles.
+      var elementData = [];
+      var count = 0;
+      _.times( this.particleData.length, function( index ) {
+        elementData.push( count++ );
+        elementData.push( count++ );
+        elementData.push( count++ );
+        elementData.push( count );
+        //debugger;
+        if ( index + 1 < self.particleData.length ) {
+          // Add the 'degenerate triangle' that will force a discontinuity in the triangle strip.
+          elementData.push( count++ );
+          elementData.push( count );
+        }
+      } );
+      //if ( elementData.length > 2 ) {
+      //  debugger;
+      //}
+      gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, drawable.elementBuffer );
+      gl.bufferData( gl.ELEMENT_ARRAY_BUFFER, new Uint16Array( elementData ), gl.STATIC_DRAW );
 
       shaderProgram.use();
 
       gl.uniformMatrix3fv( shaderProgram.uniformLocations.uModelViewMatrix, false, matrix.entries );
       gl.uniformMatrix3fv( shaderProgram.uniformLocations.uProjectionMatrix, false, drawable.webGLBlock.projectionMatrixArray );
 
-      // TODO: Following line is a guess based on things seen elsewhere.  Should this uniform be in shaderProgram.uniformLocations?
+      // TODO: The following line of code is a guess based on things seen elsewhere.  Should this uniform be in shaderProgram.uniformLocations?
       gl.uniform1i( drawable.uniformSamplerLoc, 0 );
 
-      gl.bindBuffer( gl.ARRAY_BUFFER, drawable.vertexBuffer );
-      gl.vertexAttribPointer( shaderProgram.attributeLocations.aPosition, 3, gl.FLOAT, false, 0, 0 );
-
-      gl.drawArrays( gl.TRIANGLES, 0, this.particleData.length * 3 );
+      //gl.drawArrays( gl.TRIANGLE_STRIP, 0, this.particleData.length * 4 );
+      gl.drawElements( gl.TRIANGLE_STRIP, elementData.length, gl.UNSIGNED_SHORT, 0 );
 
       shaderProgram.unuse();
     },
@@ -205,6 +246,8 @@ define( function( require ) {
     disposeWebGLDrawable: function( drawable ) {
       drawable.shaderProgram.dispose();
       drawable.gl.deleteBuffer( drawable.vertexBuffer );
+      drawable.gl.deleteBuffer( drawable.textureBuffer );
+      drawable.gl.deleteBuffer( drawable.elementBuffer );
 
       drawable.shaderProgram = null;
     },
@@ -224,7 +267,8 @@ define( function( require ) {
       if ( this.constrainedBounds.containsCoordinates( xPos, yPos ) ) {
         this.particleData.push( {
           xPos: this.modelViewTransform.modelToViewX( particle.positionX ),
-          yPos: this.modelViewTransform.modelToViewY( particle.positionY )
+          yPos: this.modelViewTransform.modelToViewY( particle.positionY ),
+          type: particle.getType()
         } );
       }
     },
