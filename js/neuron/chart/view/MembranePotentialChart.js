@@ -28,6 +28,7 @@ define( function( require ) {
   var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
   var Panel = require( 'SUN/Panel' );
   var Path = require( 'SCENERY/nodes/Path' );
+  var PhetColorScheme = require( 'SCENERY_PHET/PhetColorScheme' );
   var Shape = require( 'KITE/Shape' );
   var HBox = require( 'SCENERY/nodes/HBox' );
   var Text = require( 'SCENERY/nodes/Text' );
@@ -72,7 +73,7 @@ define( function( require ) {
     thisChart.updateCountdownTimer = 0; // Init to zero so that an update occurs right away.
     thisChart.timeIndexOfFirstDataPt = 0;
     thisChart.pausedWhenDragStarted = false;
-    thisChart.dataSeries = new XYDataSeries( { color: 'red' } );
+    thisChart.dataSeries = new XYDataSeries( { color: PhetColorScheme.RED_COLORBLIND } );
     thisChart.domain = [ 0, TIME_SPAN ];
     thisChart.range = [ -100, 100 ];
 
@@ -160,7 +161,7 @@ define( function( require ) {
       { stroke: 'white', lineWidth: 2.5 }
     );
     var closeButton = new RectangularPushButton( {
-      baseColor: 'red',
+      baseColor: PhetColorScheme.RED_COLORBLIND,
       content: xIcon,
       xMargin: 4,
       yMargin: 4,
