@@ -59,26 +59,15 @@ define( function( require ) {
         _.forOwn( particlesGroupedByType, function( particlesOfSameType, particleType ) {
           switch( particleType ) {
             case ParticleType.SODIUM_ION:
-              renderImageParticles( particlesOfSameType );
+              renderSodiumParticles( particlesOfSameType );
               //renderSodiumParticles( particlesOfSameType );
               break;
             case ParticleType.POTASSIUM_ION:
-              renderImageParticles( particlesOfSameType );
+              renderPotassiumParticles( particlesOfSameType );
               //renderPotassiumParticles( particlesOfSameType );
               break;
           }
         } );
-
-        function renderImageParticles( particles ) {
-          particles.forEach( function( particle ) {
-            var x = thisNode.modelViewTransform.modelToViewX( particle.getPositionX() );
-            var y = thisNode.modelViewTransform.modelToViewY( particle.getPositionY() );
-            var size = 5;
-            context.drawImage( woodImage, x - size / 2, y - size / 2, size, size );
-            context.globalAlpha = particle.getOpaqueness();
-          } );
-        }
-
 
         function renderSodiumParticles( particles ) {
           context.fillStyle = particles[ 0 ].getRepresentationColor().getCanvasStyle();// All sodium ions are of the same color,
