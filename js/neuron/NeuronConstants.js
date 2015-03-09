@@ -10,6 +10,7 @@ define( function( require ) {
   'use strict';
 
   // modules
+  var PhetColorScheme = require( 'SCENERY_PHET/PhetColorScheme' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
   var Color = require( 'SCENERY/util/Color' );
 
@@ -29,7 +30,7 @@ define( function( require ) {
     CONTROL_PANEL_STROKE: new Color( 100, 100, 100 ),
 
     // Colors to use when representing various atoms.
-    SODIUM_COLOR: new Color( 240, 0, 0 ),
+    SODIUM_COLOR: PhetColorScheme.RED_COLORBLIND,
     POTASSIUM_COLOR: new Color( 0, 240, 100 ),
     PROJECT_NAME: "neuron",
     MEMBRANE_THICKNESS: 4, // In nanometers, obtained from web research.

@@ -17,6 +17,7 @@ define( function( require ) {
   var Dimension2 = require( 'DOT/Dimension2' );
   var NullCaptureZone = require( 'NEURON/neuron/model/NullCaptureZone' );
   var MembraneChannelState = require( 'NEURON/neuron/model/MembraneChannelState' );
+  var PhetColorScheme = require( 'SCENERY_PHET/PhetColorScheme' );
   var TraverseChannelAndFadeMotionStrategy = require( 'NEURON/neuron/model/TraverseChannelAndFadeMotionStrategy' );
   var Matrix3 = require( 'DOT/Matrix3' );
   var Rectangle = require( 'DOT/Rectangle' );
@@ -195,7 +196,7 @@ define( function( require ) {
       return Color.MAGENTA;
     },
     getEdgeColor: function() {
-      return Color.RED;
+      return PhetColorScheme.RED_COLORBLIND;
     },
     //@protected
     setParticleVelocity: function( particleVelocity ) {
