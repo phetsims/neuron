@@ -53,6 +53,8 @@ define( function( require ) {
     new Vector2( SQUARE_HALF_DIAGONAL_LENGTH, -SQUARE_HALF_DIAGONAL_LENGTH )
   ];
 
+  var MAX_PARTICLES = 1000; // ran several trials and peak was 882, so this value should be safe
+
   /**
    * @param {NeuronModel} neuronModel
    * @param {ModelViewTransform2} modelViewTransform
@@ -148,7 +150,6 @@ define( function( require ) {
       drawable.elementBuffer = gl.createBuffer();
 
       // set up the texture
-      console.log( 'woodImage.complete = ' + particlesTextureImage.complete );
       drawable.texture = gl.createTexture();
       gl.bindTexture( gl.TEXTURE_2D, drawable.texture );
       gl.pixelStorei( gl.UNPACK_FLIP_Y_WEBGL, true );
@@ -183,7 +184,7 @@ define( function( require ) {
           // position, which is a 3-component vector
           vertexData.push( particleDatum.xPos + SQUARE_VERTEX_OFFSETS[ index ].x );
           vertexData.push( particleDatum.yPos + SQUARE_VERTEX_OFFSETS[ index ].y );
-          vertexData.push( 0.2 ); // z position
+          vertexData.push( index * ( 1 / MAX_PARTICLES ) ); // z position
 
           // texture coordinate, which is a 2-component vector
           vertexData.push( index < 2 ? 0 : 0.5 ); // x texture coordinate
