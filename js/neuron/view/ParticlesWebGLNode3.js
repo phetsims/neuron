@@ -41,10 +41,11 @@ define( function( require ) {
   var Vector2 = require( 'DOT/Vector2' );
 
   // images
-  var particlesTextureImage = require( 'image!NEURON/neuron-particles.png' );
+  //var particlesTextureImage = require( 'image!NEURON/neuron-particles.png' );
+  var particlesTextureImage = require( 'image!NEURON/neuron-particles-texture-32x32.png' );
 
   // constants
-  var SQUARE_SIDE_LENGTH = 4; // empirically determined
+  var SQUARE_SIDE_LENGTH = 5; // empirically determined
   var SQUARE_HALF_DIAGONAL_LENGTH = ( SQUARE_SIDE_LENGTH * Math.sqrt( 2 ) ) / 2;
   var SQUARE_VERTEX_OFFSETS = [
     new Vector2( -SQUARE_HALF_DIAGONAL_LENGTH, SQUARE_HALF_DIAGONAL_LENGTH ),
@@ -99,7 +100,9 @@ define( function( require ) {
       var vertexShaderSource = [
         'attribute vec3 aPosition;',
         'attribute vec2 aTextureCoordinate;',
+        'attribute float aOpacity;',
         'varying vec2 vTexCoord;',
+        'varying float vOpacity;',
         'uniform mat3 uModelViewMatrix;',
         'uniform mat3 uProjectionMatrix;',
 
@@ -112,6 +115,8 @@ define( function( require ) {
         '  vTexCoord = aTextureCoordinate;',
         // combine with the z coordinate specified
         '  gl_Position = vec4( ndc.xy, aPosition.z, 1.0 );',
+        // opacity value
+        '  vOpacity = aOpacity;',
         '}'
       ].join( '\n' );
 
@@ -119,11 +124,19 @@ define( function( require ) {
       var fragmentShaderSource = [
         'precision mediump float;',
         'varying vec2 vTexCoord;',
+        'varying float vOpacity;',
         'uniform sampler2D uSampler;',
         'void main( void ) {',
         //'  gl_FragColor = texture2D(uSampler, vec2(0.5, 0.5));',
         //'  gl_FragColor = vec4( 0, 0, 0, 1 );',
+        //'  gl_FragColor = vec4( 0, 1, 0, 0.5 );',
         '  gl_FragColor = texture2D(uSampler, vTexCoord);',
+        '  if ( gl_FragColor.a == 1.0 ){',
+        '    gl_FragColor.a = vOpacity;',
+        '  }',
+        '  else{',
+        '    gl_FragColor.a = 0.0;',
+        '  }',
         '}'
       ].join( '\n' );
       //var fragmentShaderSource = [
@@ -142,7 +155,8 @@ define( function( require ) {
       //].join( '\n' );
 
       drawable.shaderProgram = new ShaderProgram( gl, vertexShaderSource, fragmentShaderSource, {
-        attributes: [ 'aPosition', 'aTextureCoordinate' ],
+        attributes: [ 'aPosition', 'aTextureCoordinate', 'aOpacity' ],
+        //attributes: [ 'aPosition', 'aTextureCoordinate' ],
         uniforms: [ 'uModelViewMatrix', 'uProjectionMatrix' ]
       } );
 
@@ -152,11 +166,15 @@ define( function( require ) {
       // set up the texture
       drawable.texture = gl.createTexture();
       gl.bindTexture( gl.TEXTURE_2D, drawable.texture );
-      gl.pixelStorei( gl.UNPACK_FLIP_Y_WEBGL, true );
       gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, particlesTextureImage );
-      gl.generateMipmap( gl.TEXTURE_2D );
       gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR );
       gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR );
+      //gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST );
+      //gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST_MIPMAP_NEAREST );
+      //gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST_MIPMAP_LINEAR );
+      //gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST );
+      //gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR );
+      gl.generateMipmap( gl.TEXTURE_2D );
       gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.MIRRORED_REPEAT );
       gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.MIRRORED_REPEAT );
 
@@ -190,12 +208,16 @@ define( function( require ) {
           vertexData.push( index < 2 ? 0 : 0.5 ); // x texture coordinate
           var yBase = particleDatum.type === ParticleType.SODIUM_ION ? 0.5 : 0;
           vertexData.push( yBase + ( index % 2 === 0 ? 0.5 : 0 ) ); // y texture coordinate
+
+          // opacity data
+          vertexData.push( particleDatum.opacity );
         } );
       } );
 
       // Load the vertex data into the GPU.
       var elementSize = Float32Array.BYTES_PER_ELEMENT;
-      var elementsPerVertex = 3 + 2; // vertex + texture coordinate
+      var elementsPerVertex = 3 + 2 + 1; // vertex + texture coordinate + opacity
+      //var elementsPerVertex = 3 + 2; // vertex + texture coordinate
       var stride = elementSize * elementsPerVertex;
       gl.bindBuffer( gl.ARRAY_BUFFER, drawable.vertexBuffer );
       gl.bufferData( gl.ARRAY_BUFFER, new Float32Array( vertexData ), gl.STATIC_DRAW );
@@ -203,6 +225,7 @@ define( function( require ) {
       // Set up the attributes that will be passed into the vertex shader.
       gl.vertexAttribPointer( shaderProgram.attributeLocations.aPosition, 3, gl.FLOAT, false, stride, 0 );
       gl.vertexAttribPointer( shaderProgram.attributeLocations.aTextureCoordinate, 2, gl.FLOAT, false, stride, elementSize * 3 );
+      gl.vertexAttribPointer( shaderProgram.attributeLocations.aOpacity, 1, gl.FLOAT, false, stride, elementSize * 5 );
 
       // Set up the element indices.  This is done so that we can create 'degenerate triangles' and thus have
       // discontinuities in the triangle strip, thus creating separate rectangles.
@@ -269,7 +292,8 @@ define( function( require ) {
         this.particleData.push( {
           xPos: this.modelViewTransform.modelToViewX( particle.positionX ),
           yPos: this.modelViewTransform.modelToViewY( particle.positionY ),
-          type: particle.getType()
+          type: particle.getType(),
+          opacity: particle.opaqueness
         } );
       }
     },
