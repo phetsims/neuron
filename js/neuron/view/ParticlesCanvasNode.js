@@ -18,9 +18,6 @@ define( function( require ) {
   var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
   var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
 
-  // images
-  var woodImage = require( 'image!NEURON/wood_128x128.jpg' );
-
   /**
    * @param {NeuronModel} neuronModel
    * @param {ModelViewTransform2} modelViewTransform
