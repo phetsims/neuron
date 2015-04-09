@@ -1,4 +1,4 @@
-//  Copyright 2002-2014, University of Colorado Boulder
+// Copyright 2002-2014, University of Colorado Boulder
 /**
  * A simple motion strategy for moving in a straight line.  This was created
  * primarily for testing and, if it is no longer used, can be removed.

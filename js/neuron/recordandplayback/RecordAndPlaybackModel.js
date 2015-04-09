@@ -1,4 +1,4 @@
-//  Copyright 2002-2014, University of Colorado Boulder
+// Copyright 2002-2014, University of Colorado Boulder
 /**
  * 
  * This is the main model class for sims that support recording and playing back.  This is done by recording discrete states,
