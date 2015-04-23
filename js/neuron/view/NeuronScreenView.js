@@ -22,7 +22,6 @@ define( function( require ) {
   var Dimension2 = require( 'DOT/Dimension2' );
   var Property = require( 'AXON/Property' );
   var DerivedProperty = require( 'AXON/DerivedProperty' );
-  var ToggleProperty = require( 'AXON/ToggleProperty' );
   var Rectangle = require( 'SCENERY/nodes/Rectangle' );
   var RectangularPushButton = require( 'SUN/buttons/RectangularPushButton' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
@@ -133,7 +132,7 @@ define( function( require ) {
     channelLayer.addChild( membraneChannelGateCanvasNode );
 
     var recordPlayButtons = [];
-    var playToggleProperty = new ToggleProperty( true, false, neuronClockModelAdapter.pausedProperty );
+    var playToggleProperty = new Property( true, false, neuronClockModelAdapter.pausedProperty );
     var playPauseButton = new PlayPauseButton( playToggleProperty, { radius: 25 } );
 
     // Allow Step Back only if the user has initiated a StimulusPulse at least once. Stepping back without initiating a
