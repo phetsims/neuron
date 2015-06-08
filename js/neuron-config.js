@@ -36,7 +36,7 @@ require.config( {
     SUN: '../../sun/js',
 
     // this sim
-    NEURON: '.'                                       missing
+    NEURON: '.'
   },
 
   // optional cache buster to make browser refresh load all included scripts, can be disabled with ?cacheBuster=false
