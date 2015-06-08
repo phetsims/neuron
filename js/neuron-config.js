@@ -33,10 +33,10 @@ require.config( {
     REPOSITORY: '..',
     SCENERY: '../../scenery/js',
     SCENERY_PHET: '../../scenery-phet/js',
-    SUN: '../../sun/js'
+    SUN: '../../sun/js',
 
     // this sim
-    NEURON: '.'
+    NEURON: '.'                                       missing
   },
 
   // optional cache buster to make browser refresh load all included scripts, can be disabled with ?cacheBuster=false
