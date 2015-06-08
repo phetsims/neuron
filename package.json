@@ -6,6 +6,9 @@
   "phetLibs": [
     "neuron"
   ],
+  "phetLibs": [
+    "griddle"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/phetsims/neuron.git"
