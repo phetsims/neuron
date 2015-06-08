@@ -25,6 +25,7 @@ require.config( {
     AXON: '../../axon/js',
     BRAND: '../../brand/js',
     DOT: '../../dot/js',
+    GRIDDLE: '../../griddle/js',
     JOIST: '../../joist/js',
     KITE: '../../kite/js',
     PHET_CORE: '../../phet-core/js',
@@ -32,8 +33,7 @@ require.config( {
     REPOSITORY: '..',
     SCENERY: '../../scenery/js',
     SCENERY_PHET: '../../scenery-phet/js',
-    SUN: '../../sun/js',
-    GRIDDLE: '../../griddle/js',
+    SUN: '../../sun/js'
 
     // this sim
     NEURON: '.'
