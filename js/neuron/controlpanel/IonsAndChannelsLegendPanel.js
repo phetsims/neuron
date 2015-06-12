@@ -13,7 +13,7 @@ define( function( require ) {
 
   // modules
   var HBox = require( 'SCENERY/nodes/HBox' );
-  var HStrut = require( 'SUN/HStrut' );
+  var HStrut = require( 'SCENERY/nodes/HStrut' );
   var inherit = require( 'PHET_CORE/inherit' );
   var Panel = require( 'SUN/Panel' );
   var Text = require( 'SCENERY/nodes/Text' );
