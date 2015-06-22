@@ -9,6 +9,7 @@ define( function( require ) {
 
   // modules
   var Vector2 = require( 'DOT/Vector2' );
+  var Util = require( 'DOT/Util' );
 
   // These vectors are used as temporary objects for calculating distance without creating new Vector2 instances, see
   // the createTraversalPoint method.
@@ -41,7 +42,7 @@ define( function( require ) {
       val = val * factor;
 
       // Round to the nearest integer.
-      var tmp = Math.round( val );
+      var tmp = Util.roundSymmetric( val );
 
       // Shift the decimal the correct number of places
       // back to the left.
