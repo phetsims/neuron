@@ -1,0 +1,1 @@
+neuron-particles-texture-32x32.png source=PhET author=JB notes=for WebGL testing 
