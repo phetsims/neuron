@@ -46,9 +46,10 @@ define( function( require ) {
     updateSpriteSheetDimensions: function() {
       var thisTextureMap = this;
       thisTextureMap.sodiumParticleViewRadius = thisTextureMap.modelViewTransform.modelToViewDeltaX(
-        thisTextureMap.sodiumParticle.getRadius() ) * thisTextureMap.zoomProperty.value * 1.2;
+          thisTextureMap.sodiumParticle.getRadius() ) * thisTextureMap.zoomProperty.value * 1.2;
+      // TODO: There is something wrong here - it is using radius and calling it size.  Needs to be fixed up.  I'm compensating elsewhere for now.
       thisTextureMap.potassiumParticleSize = thisTextureMap.modelViewTransform.modelToViewDeltaX(
-        thisTextureMap.potassiumParticle.getRadius() ) * thisTextureMap.zoomProperty.value * 1.35;
+          thisTextureMap.potassiumParticle.getRadius() ) * thisTextureMap.zoomProperty.value * 1.35;
 
       var totalParticlesPerColumn = 20;
 
@@ -102,6 +103,19 @@ define( function( require ) {
       coords.setMaxY( yPos + h );
 
       return coords;
+    },
+
+    /**
+     * Get the current width and height for the specified particle type.
+     */
+    getParticleSize: function( particleType ) {
+      if ( particleType == ParticleType.SODIUM_ION ){
+        return this.sodiumParticleViewRadius * 2;
+      }
+      else if ( particleType == ParticleType.POTASSIUM_ION ){
+        return this.potassiumParticleSize * 2;
+      }
+      throw new Error( 'unhandled particle type' );
     },
 
     /**

@@ -227,20 +227,23 @@ define( function( require ) {
       // Convert particle data to vertices that represent a rectangle plus texture coordinates.
       // TODO: Should optimize to define the vertex data once and reuse instead of reallocating each time.
       var vertexData = [];
-      //this.populateVerticesTexCoords( vertexData );
       this.particleData.forEach( function( particleDatum ) {
-        // add the position and texture coordinates to the vertex data TODO: Faster to use C-style?
+
+        // Get the particle view size as it currently exists in the texture map (which is based on the zoom level).
+        var particleSize = self.particleTextureMap.getParticleSize( particleDatum.type );
+
+        // Get the texture coordinates.  For performance reasons, this method updates pre-allocated values.
+        self.particleTextureMap.getTexCords( particleDatum.type, particleDatum.opacity, self.tilePosVector, self.texCoords );
+
         _.times( 4, function( index ) {
 
-          // position, which is a 2-component vector (z is assumed to be 1)
-          vertexData.push( particleDatum.xPos + SQUARE_VERTEX_OFFSETS[ index ].x );
-          vertexData.push( particleDatum.yPos + SQUARE_VERTEX_OFFSETS[ index ].y );
+          // vertex, which is a 2-component vector (z is assumed to be 1)
+          vertexData.push( particleDatum.xPos + particleSize / 2 * ( index < 2 ? -1 : 1 ) );
+          vertexData.push( particleDatum.yPos + particleSize / 2 * ( index % 2 === 0 ? -1 : 1 ) );
 
           // texture coordinate, which is a 2-component vector
-          self.particleTextureMap.getTexCords( particleDatum.type, particleDatum.opacity, tilePosVector, self.texCoords );
-          vertexData.push( index < 2 ? 0 : 0.5 ); // x texture coordinate
-          var yBase = particleDatum.type === ParticleType.SODIUM_ION ? 0.5 : 0;
-          vertexData.push( yBase + ( index % 2 === 0 ? 0.5 : 0 ) ); // y texture coordinate
+          vertexData.push( index < 2 ? self.texCoords.minX : self.texCoords.maxX ); // x texture coordinate
+          vertexData.push( index % 2 === 0 ? self.texCoords.minY : self.texCoords.maxY ); // y texture coordinate
         } );
       } );
 
