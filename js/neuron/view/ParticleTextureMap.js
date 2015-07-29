@@ -176,6 +176,7 @@ define( function( require ) {
      * @returns {Vector2}
      */
     tilePostAt: function( particleType, row, column, posVector ) {
+      // TODO: IntelliJ is highlighting some things in this function as errors.  This should be fixed.
       posVector = posVector || new Vector2();
       if ( particleType === ParticleType.SODIUM_ION ) {
         posVector.x = (column * 2 * this.sodiumParticleViewRadius) + this.sodiumParticleViewRadius;
@@ -196,6 +197,7 @@ define( function( require ) {
       return posVector;
     },
 
+    // TODO: Name should be getTexCoords, not getTexCords.
     /**
      * Get the Tile's  normalized texture coordinates based on particle's opacity
      * @param {ParticleType.String} particleType
@@ -217,7 +219,7 @@ define( function( require ) {
       if ( particleType === ParticleType.SODIUM_ION ) {
         tileRadius = this.sodiumParticleViewRadius;
       }
-      if ( particleType === ParticleType.POTASSIUM_ION ) {
+      else if ( particleType === ParticleType.POTASSIUM_ION ) {
         tileRadius = this.potassiumParticleSize;
       }
 

@@ -35,6 +35,7 @@ define( function( require ) {
   'use strict';
 
   // modules
+  var Bounds2 = require( 'DOT/Bounds2' );
   var inherit = require( 'PHET_CORE/inherit' );
   var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
   var ParticleTextureMap = require( 'NEURON/neuron/view/ParticleTextureMap' );
@@ -44,7 +45,6 @@ define( function( require ) {
   var Vector2 = require( 'DOT/Vector2' );
 
   // images
-  //var particlesTextureImage = require( 'image!NEURON/neuron-particles.png' );
   var particlesTextureImage = require( 'image!NEURON/neuron-particles-texture-32x32.png' );
 
   // constants
@@ -73,15 +73,41 @@ define( function( require ) {
       canvasBounds: bounds
     } );
 
-    // keep references to the things that needed in order to render the particles
+    // Keep references to the things that needed in order to render the particles.
+    // TODO: Check that all of these are used and needed.
     this.neuronModel = neuronModel;
     this.modelViewTransform = modelViewTransform;
+    this.viewTransformationMatrix = modelViewTransform.getMatrix();
     this.particleTextureMap = new ParticleTextureMap( modelViewTransform, zoomProperty );
+    this.zoomProperty = zoomProperty;
+    this.zoomableRootNode = zoomableRootNode;
+    this.particleBounds = bounds;
+    this.visibleParticlesSize = 0; // Only Particles within the clipping region of Zoomable Node are considered visible
+    this.allParticles = [];
+
+    // Create the canvas on which particle tiles are drawn and used as a texture.
+    // TODO: Maybe rename this to something like "particleTextureCanvas".
+    this.canvas = document.createElement( 'canvas' );
+    // TODO: Maybe rename this to canvasContext.
+    this.context = this.canvas.getContext( '2d' );
+
+    // The texture must be updated when the zoom factor changes.
+    // TODO: Turned off to get it working without zoom, don't forget to turn on and get working.
+    //zoomProperty.link( function() {
+    //  self.updateTexture();
+    //} );
 
     // constrain the bounds so that the generated shapes aren't off the edge of the canvas
     this.constrainedBounds = bounds.dilated( -SQUARE_SIDE_LENGTH / 2 );
 
-    self.update();
+    // Set up some values for reuse instead of reallocating them with each repaint.  This improves performance.
+    this.texCoords = new Bounds2( 0, 0, 0, 0 ); // The normalized texture coordinates that corresponds to the vertex corners
+    this.vertexCords = new Bounds2( 0, 0, 0, 0 );// the rectangle bounds of a particle (used to create 2 triangles)
+    this.tilePosVector = new Vector2();
+    this.particleViewPosition = new Vector2();
+
+    // initial update
+    this.update();
 
     // TODO: Instead of doing what's shown below, consider just redrawing at every time step.  Seems like that would be simpler.
     // Monitor a property that indicates when a particle state has changed and initiate a redraw.
@@ -98,6 +124,8 @@ define( function( require ) {
      * @param drawable
      */
     initializeWebGLDrawable: function( drawable ) {
+      console.log( 'initializeWebGLDrawable called' );
+
       var gl = drawable.gl;
 
       // vertex shader
@@ -149,7 +177,6 @@ define( function( require ) {
 
       drawable.shaderProgram = new ShaderProgram( gl, vertexShaderSource, fragmentShaderSource, {
         attributes: [ 'aPosition', 'aTextureCoordinate' ],
-        //attributes: [ 'aPosition', 'aTextureCoordinate' ],
         uniforms: [ 'uModelViewMatrix', 'uProjectionMatrix' ]
       } );
 
@@ -157,9 +184,13 @@ define( function( require ) {
       drawable.elementBuffer = gl.createBuffer();
 
       // set up the texture
+      this.updateTexture( drawable );
+
+      /*
       drawable.texture = gl.createTexture();
       gl.bindTexture( gl.TEXTURE_2D, drawable.texture );
       gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, particlesTextureImage );
+      //gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.canvas );
       gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR );
       gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR );
       //gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST );
@@ -170,10 +201,14 @@ define( function( require ) {
       gl.generateMipmap( gl.TEXTURE_2D );
       gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.MIRRORED_REPEAT );
       gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.MIRRORED_REPEAT );
+      */
 
       // TODO: I'm totally guessing on the following, based on some examples I've been looking at (jblanco).  Should
-      // the uniform go into the ShaderProgram abstraction?
+      // the uniform go into the ShaderProgram abstraction?  Ashraf doesn't seem to use it at all, so maybe it isn't
+      // necessary.
       drawable.uniformSamplerLoc = gl.getUniformLocation( drawable.shaderProgram.program, "uSampler" );
+
+      console.log( 'initializeWebGLDrawable exited' );
     },
 
     /**
@@ -186,10 +221,15 @@ define( function( require ) {
       var gl = drawable.gl;
       var shaderProgram = drawable.shaderProgram;
 
+      // TODO: doc
+      var tilePosVector = this.tilePosVector;
+
       // Convert particle data to vertices that represent a rectangle plus texture coordinates.
+      // TODO: Should optimize to define the vertex data once and reuse instead of reallocating each time.
       var vertexData = [];
+      //this.populateVerticesTexCoords( vertexData );
       this.particleData.forEach( function( particleDatum ) {
-        // create a square that encloses this data point TODO: Faster to use C-style?
+        // add the position and texture coordinates to the vertex data TODO: Faster to use C-style?
         _.times( 4, function( index ) {
 
           // position, which is a 2-component vector (z is assumed to be 1)
@@ -197,6 +237,7 @@ define( function( require ) {
           vertexData.push( particleDatum.yPos + SQUARE_VERTEX_OFFSETS[ index ].y );
 
           // texture coordinate, which is a 2-component vector
+          self.particleTextureMap.getTexCords( particleDatum.type, particleDatum.opacity, tilePosVector, self.texCoords );
           vertexData.push( index < 2 ? 0 : 0.5 ); // x texture coordinate
           var yBase = particleDatum.type === ParticleType.SODIUM_ION ? 0.5 : 0;
           vertexData.push( yBase + ( index % 2 === 0 ? 0.5 : 0 ) ); // y texture coordinate
@@ -208,6 +249,7 @@ define( function( require ) {
       var elementsPerVertex = 2 + 2; // xy vertex + texture coordinate
       var stride = elementSize * elementsPerVertex;
       gl.bindBuffer( gl.ARRAY_BUFFER, drawable.vertexBuffer );
+      // TODO: I (jblanco) believe that Ashraf allocated the vertex data once, and I think I'm doing it for every render.  I should look at using his approach.
       gl.bufferData( gl.ARRAY_BUFFER, new Float32Array( vertexData ), gl.STATIC_DRAW );
 
       // Set up the attributes that will be passed into the vertex shader.
@@ -223,16 +265,12 @@ define( function( require ) {
         elementData.push( count++ );
         elementData.push( count++ );
         elementData.push( count );
-        //debugger;
         if ( index + 1 < self.particleData.length ) {
           // Add the 'degenerate triangle' that will force a discontinuity in the triangle strip.
           elementData.push( count++ );
           elementData.push( count );
         }
       } );
-      //if ( elementData.length > 2 ) {
-      //  debugger;
-      //}
       gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, drawable.elementBuffer );
       gl.bufferData( gl.ELEMENT_ARRAY_BUFFER, new Uint16Array( elementData ), gl.STATIC_DRAW );
 
@@ -254,7 +292,7 @@ define( function( require ) {
      * populates vertexData (Float32Array array) with vertex and texture data for all particles
      * TODO: Unused at one point during evolution, delete if ultimately unused.
      */
-    populateVerticesTexCoords: function() {
+    populateVerticesTexCoords: function( vertexData ) {
       var index = 0;
 
       var thisNode = this;
@@ -286,47 +324,111 @@ define( function( require ) {
         thisNode.particleTextureMap.getParticleCoords( particle.getType(), xPos, yPos, thisNode.vertexCords );
 
         //for performance reasons this method updates the texCords (and returns the same)  instead of creating a new one
-        thisNode.particleTextureMap.getTexCords( particle.getType(), particle.getOpaqueness(), tilePosVector, thisNode.textCords );
+        thisNode.particleTextureMap.getTexCords( particle.getType(), particle.getOpaqueness(), tilePosVector, thisNode.texCoords );
 
         //left bottom
-        thisNode.vertexData[ index++ ] = thisNode.vertexCords.getMinX();//x
-        thisNode.vertexData[ index++ ] = thisNode.vertexCords.getMaxY();//y
-        thisNode.vertexData[ index++ ] = thisNode.textCords.getMinX(); //u
-        thisNode.vertexData[ index++ ] = thisNode.textCords.getMaxY(); //v
+        vertexData[ index++ ] = thisNode.vertexCords.getMinX();//x
+        vertexData[ index++ ] = thisNode.vertexCords.getMaxY();//y
+        vertexData[ index++ ] = thisNode.texCoords.getMinX(); //u
+        vertexData[ index++ ] = thisNode.texCoords.getMaxY(); //v
 
         //left top
-        thisNode.vertexData[ index++ ] = thisNode.vertexCords.getMinX();
-        thisNode.vertexData[ index++ ] = thisNode.vertexCords.getMinY();
-        thisNode.vertexData[ index++ ] = thisNode.textCords.getMinX();//u
-        thisNode.vertexData[ index++ ] = thisNode.textCords.getMinY();//v
+        vertexData[ index++ ] = thisNode.vertexCords.getMinX();
+        vertexData[ index++ ] = thisNode.vertexCords.getMinY();
+        vertexData[ index++ ] = thisNode.texCoords.getMinX();//u
+        vertexData[ index++ ] = thisNode.texCoords.getMinY();//v
 
         //right top
-        thisNode.vertexData[ index++ ] = thisNode.vertexCords.getMaxX();
-        thisNode.vertexData[ index++ ] = thisNode.vertexCords.getMinY();
-        thisNode.vertexData[ index++ ] = thisNode.textCords.getMaxX();//u
-        thisNode.vertexData[ index++ ] = thisNode.textCords.getMinY();//v
+        vertexData[ index++ ] = thisNode.vertexCords.getMaxX();
+        vertexData[ index++ ] = thisNode.vertexCords.getMinY();
+        vertexData[ index++ ] = thisNode.texCoords.getMaxX();//u
+        vertexData[ index++ ] = thisNode.texCoords.getMinY();//v
 
         //---2nd triangle-----
 
         //right top
-        thisNode.vertexData[ index++ ] = thisNode.vertexCords.getMaxX();
-        thisNode.vertexData[ index++ ] = thisNode.vertexCords.getMinY();
-        thisNode.vertexData[ index++ ] = thisNode.textCords.getMaxX();//u
-        thisNode.vertexData[ index++ ] = thisNode.textCords.getMinY();//v
+        vertexData[ index++ ] = thisNode.vertexCords.getMaxX();
+        vertexData[ index++ ] = thisNode.vertexCords.getMinY();
+        vertexData[ index++ ] = thisNode.texCoords.getMaxX();//u
+        vertexData[ index++ ] = thisNode.texCoords.getMinY();//v
 
         //right bottom
-        thisNode.vertexData[ index++ ] = thisNode.vertexCords.getMaxX();
-        thisNode.vertexData[ index++ ] = thisNode.vertexCords.getMaxY();
-        thisNode.vertexData[ index++ ] = thisNode.textCords.getMaxX();//u
-        thisNode.vertexData[ index++ ] = thisNode.textCords.getMaxY();//v
+        vertexData[ index++ ] = thisNode.vertexCords.getMaxX();
+        vertexData[ index++ ] = thisNode.vertexCords.getMaxY();
+        vertexData[ index++ ] = thisNode.texCoords.getMaxX();//u
+        vertexData[ index++ ] = thisNode.texCoords.getMaxY();//v
 
         //left bottom
-        thisNode.vertexData[ index++ ] = thisNode.vertexCords.getMinX();
-        thisNode.vertexData[ index++ ] = thisNode.vertexCords.getMaxY();
-        thisNode.vertexData[ index++ ] = thisNode.textCords.getMinX();//u
-        thisNode.vertexData[ index++ ] = thisNode.textCords.getMaxY();//v
-
+        vertexData[ index++ ] = thisNode.vertexCords.getMinX();
+        vertexData[ index++ ] = thisNode.vertexCords.getMaxY();
+        vertexData[ index++ ] = thisNode.texCoords.getMinX();//u
+        vertexData[ index++ ] = thisNode.texCoords.getMaxY();//v
       } );
+    },
+
+    /**
+     * draw tiles based on new dimension on to the canvas
+     */
+    updateTextureImage: function() {
+
+      // TODO: Can't I just use 'this' here?
+      var thisNode = this;
+      thisNode.context.clearRect( 0, 0, thisNode.canvas.width, thisNode.canvas.height );
+      thisNode.particleTextureMap.updateSpriteSheetDimensions();
+      thisNode.particleTextureMap.calculateAndAssignCanvasDimensions( thisNode.canvas );
+      thisNode.particleTextureMap.createTiles( thisNode.context );
+      console.log( 'thisNode.canvas.toDataURL() = ' + thisNode.canvas.toDataURL() );
+    },
+
+    /**
+     * This method does the following on initialization (also context restore) and on every zooms in and out action
+     * 1)Draws the Particle Tiles based on new scaled dimension on to the canvas
+     * 2)Binds the canvas Texture
+     * 3)Get a reference to the scaleMatrix to appropriately position the particle in a zoomed state.
+     */
+    updateTexture: function( drawable ) {
+      var thisNode = this;
+      thisNode.zoomTransformationMatrix = thisNode.zoomableRootNode.getMatrix();
+      thisNode.updateTextureImage();
+      //adjust the bounds based on Zoom factor
+      thisNode.particleViewBounds = thisNode.particleBounds.copy();
+
+      // Particle View bounds is used to manually clip particles, because of Zoom functionality
+      // once scaled up/down the actual bounds gets minimized or maximized
+      thisNode.particleViewBounds = thisNode.particleViewBounds.transformed( thisNode.zoomTransformationMatrix.copy().invert() );
+      thisNode.bindTextureImage( drawable );
+    },
+
+    /**
+     * bind the tiles canvas as a texture
+     * @param drawable
+     */
+    bindTextureImage: function( drawable ) {
+      console.log( 'bindTextureImage called' );
+      var gl = drawable.gl;
+
+      // TODO: I think this deletes any previous texture.  Disabling for now, but will need to reinstate to make zooming work.
+      //if ( this.texture !== null ) {
+      //  gl.bindTexture( gl.TEXTURE_2D, null );
+      //  gl.deleteTexture( this.texture );
+      //}
+
+      var texture = drawable.texture = gl.createTexture();
+      gl.bindTexture( gl.TEXTURE_2D, texture );
+      gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE );
+      gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE );
+
+      gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.canvas );
+
+      // The alpha is not pre-multiplied in the generated canvas image not
+      // doing so results in white patch in the place  of transparent rectangle
+      gl.pixelStorei( gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true );
+
+      // Texture filtering, see http://learningwebgl.com/blog/?p=571
+      gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR );
+      gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR );
+      gl.generateMipmap( gl.TEXTURE_2D );
+      console.log( 'bindTextureImage exited' );
     },
 
     /**
@@ -358,7 +460,8 @@ define( function( require ) {
         this.particleData.push( {
           xPos: this.modelViewTransform.modelToViewX( particle.positionX ),
           yPos: this.modelViewTransform.modelToViewY( particle.positionY ),
-          type: particle.getType()
+          type: particle.getType(),
+          opacity: particle.getOpaqueness()
         } );
       }
     },
@@ -370,6 +473,13 @@ define( function( require ) {
     update: function() {
       var self = this;
       this.clearParticleData();
+
+      // TODO: I have both raw particle data and pre-processed particle data, and I should only have one.  Figure out
+      // which is better and remove the unneeded one.
+      this.allParticles = [];
+      this.allParticles = this.neuronModel.backgroundParticles.getArray().slice();
+      this.allParticles = this.allParticles.concat( this.neuronModel.transientParticles.getArray() );
+      this.allParticles = this.allParticles.concat( this.neuronModel.playbackParticles.getArray() );
 
       // TODO: Would it be substantially more efficient to do a C-style loop here?
       this.neuronModel.backgroundParticles.forEach( function( backgroundParticle ) {
