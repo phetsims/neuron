@@ -46,10 +46,10 @@ define( function( require ) {
     updateSpriteSheetDimensions: function() {
       var thisTextureMap = this;
       thisTextureMap.sodiumParticleViewRadius = thisTextureMap.modelViewTransform.modelToViewDeltaX(
-          thisTextureMap.sodiumParticle.getRadius() ) * thisTextureMap.zoomProperty.value * 1.2;
+          thisTextureMap.sodiumParticle.getRadius() ) * thisTextureMap.zoomProperty.value * 1.5;
       // TODO: There is something wrong here - it is using radius and calling it size.  Needs to be fixed up.  I'm compensating elsewhere for now.
       thisTextureMap.potassiumParticleSize = thisTextureMap.modelViewTransform.modelToViewDeltaX(
-          thisTextureMap.potassiumParticle.getRadius() ) * thisTextureMap.zoomProperty.value * 1.35;
+          thisTextureMap.potassiumParticle.getRadius() ) * thisTextureMap.zoomProperty.value * 1.5;
 
       var totalParticlesPerColumn = 20;
 
@@ -136,14 +136,13 @@ define( function( require ) {
       var particlesPerColumn = 10;
       var particlesPerRow = 10;
 
+      // create tiles for sodium particles
+
+      context.lineWidth = this.sodiumParticleViewRadius * 0.4;
+
       for ( i = 0; i < particlesPerRow; i++ ) {
         for ( j = 0; j < particlesPerColumn; j++ ) {
-
-          opacityString = "." + i + "" + j;
-          opacityValue = parseFloat( opacityString );
-          if ( opacityValue === 0.99 ) {
-            opacityValue = 1;
-          }
+          opacityValue = ( i * 0.1 ) + ( j * 0.01 );
           context.strokeStyle = Color.BLACK.withAlpha( opacityValue * 1.2 ).getCanvasStyle();
           context.fillStyle = this.sodiumParticle.getRepresentationColor().withAlpha( opacityValue ).getCanvasStyle();// All sodium ions are of the same color,
           context.beginPath();
@@ -154,16 +153,13 @@ define( function( require ) {
         }
       }
 
-      context.strokeStyle = Color.BLACK.getCanvasStyle();
-      context.lineWidth = 3;
+      // create tiles for potassium particles
+
+      context.lineWidth = Math.max( this.potassiumParticleSize * 0.5, 1 );
 
       for ( i = 0; i < particlesPerRow; i++ ) {
         for ( j = 0; j < particlesPerColumn; j++ ) {
-          opacityString = "." + i + "" + j;
-          opacityValue = parseFloat( opacityString );
-          if ( opacityValue === 0.99 ) {
-            opacityValue = 1;
-          }
+          opacityValue = ( i * 0.1 ) + ( j * 0.01 );
           particlePos = this.tilePostAt( this.potassiumParticle.getType(), i, j );
           var x = particlePos.x;
           var y = particlePos.y;

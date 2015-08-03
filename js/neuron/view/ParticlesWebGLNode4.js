@@ -235,6 +235,7 @@ define( function( require ) {
         // Get the texture coordinates.  For performance reasons, this method updates pre-allocated values.
         self.particleTextureMap.getTexCords( particleDatum.type, particleDatum.opacity, self.tilePosVector, self.texCoords );
 
+        // TODO: Faster to use C-style?
         _.times( 4, function( index ) {
 
           // vertex, which is a 2-component vector (z is assumed to be 1)

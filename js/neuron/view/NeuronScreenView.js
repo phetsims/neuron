@@ -18,6 +18,7 @@ define( function( require ) {
   var Vector2 = require( 'DOT/Vector2' );
   var Bounds2 = require( 'DOT/Bounds2' );
   var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
+  var Matrix3 = require( 'DOT/Matrix3' );
   var Shape = require( 'KITE/Shape' );
   var Dimension2 = require( 'DOT/Dimension2' );
   var Property = require( 'AXON/Property' );
@@ -53,6 +54,10 @@ define( function( require ) {
   // constants
   var BUTTON_FONT = new PhetFont( 18 );
   var SHOW_PARTICLE_CANVAS_BOUNDS = false; // for debugging
+  var MIN_ZOOM = 0.7;
+  var MAX_ZOOM = 6;
+  //var DEFAULT_ZOOM = 0.7;
+  var DEFAULT_ZOOM = 1; // TODO: The default zoom has temporarily been changed to 1, since this works better for WebGL testing.  Change back when WebGL is working.
 
   /**
    * Constructor for the NeuronView
@@ -63,7 +68,7 @@ define( function( require ) {
   function NeuronView( neuronClockModelAdapter ) {
 
     var thisView = this;
-    thisView.neuronModel = neuronClockModelAdapter.model; // model is neuronmodel
+    thisView.neuronModel = neuronClockModelAdapter.model; // model is neuron model TODO: It seems weird that the model is pulled out of the clock adapter.  What's with that?  Should be fixed.
     ScreenView.call( thisView, { layoutBounds: new Bounds2( 0, 0, 834, 504 ) } );
     var viewPortPosition = new Vector2( thisView.layoutBounds.width * 0.40, thisView.layoutBounds.height - 255 );
     // Set up the model-canvas transform.
@@ -74,17 +79,27 @@ define( function( require ) {
     // Define the area where the axon and particles will be depicted.
     var worldNodeClipArea = Shape.rect( 70, 10, this.layoutBounds.maxX - 280, this.layoutBounds.maxY - 110 );
 
-    // Define the root for the part that can be zoomed.
-    var zoomableRootNode = new Node();
-    var minZoom = 0.7;
-    var maxZoom = 6;
-    //var defaultZoom = 0.7;
-    var defaultZoom = 1.0; // The zoom has temporarily been changed to default to 1, since this works better for WebGL testing.  Change back when WebGL is working.
+    // The zoomable area needs to have a root that isn't zoomed so that it can be effectively clipped.
+    var zoomableAreaRootNode = new Node( { clipArea: worldNodeClipArea } );
+    this.addChild( zoomableAreaRootNode );
 
-    // Zommable Node zooms in and out the zoomableRootNode contents
-    var zoomProperty = new Property( defaultZoom );
-    var zoomableWorldNode = new ZoomableNode( thisView.neuronModel, zoomableRootNode, zoomProperty, worldNodeClipArea, viewPortPosition );
-    thisView.addChild( zoomableWorldNode );
+    // Define the root for the part that can be zoomed.
+    var zoomableNode = new Node();
+    zoomableAreaRootNode.addChild( zoomableNode );
+
+    // ZoomableNode zooms in and out the zoomableNode contents
+    // TODO: Why is a separate root node needed?  Why not just add zoomableWorldNode directly to this view?
+    var zoomProperty = new Property( DEFAULT_ZOOM );
+    //var zoomableWorldNode = new ZoomableNode(
+    //  thisView.neuronModel,
+    //  zoomableNode,
+    //  zoomProperty,
+    //  worldNodeClipArea,
+    //  viewPortPosition
+    //);
+    //thisView.addChild( zoomableWorldNode );
+
+    // TODO: Why does this node exist?  Why not just add the WebGL node to this view if WebGL is in use?
     var particlesWebGLParentNode = new Node();
     thisView.addChild( particlesWebGLParentNode );
 
@@ -115,10 +130,10 @@ define( function( require ) {
     var channelLayer = new Node();
     var chargeSymbolLayer = new ChargeSymbolsLayerNode( thisView.neuronModel, thisView.mvt );
 
-    zoomableRootNode.addChild( axonBodyLayer );
-    zoomableRootNode.addChild( axonCrossSectionLayer );
-    zoomableRootNode.addChild( channelLayer );
-    zoomableRootNode.addChild( chargeSymbolLayer );
+    zoomableNode.addChild( axonBodyLayer );
+    zoomableNode.addChild( axonCrossSectionLayer );
+    zoomableNode.addChild( channelLayer );
+    zoomableNode.addChild( chargeSymbolLayer );
 
     var axonBodyNode = new AxonBodyNode( thisView.neuronModel.axonMembrane, thisView.mvt );
     axonBodyLayer.addChild( axonBodyNode );
@@ -130,6 +145,27 @@ define( function( require ) {
     var channelGateBounds = new Bounds2( 100, 50, 600, 500 ); // empirically determined
     var membraneChannelGateCanvasNode = new MembraneChannelGateCanvasNode( thisView.neuronModel, thisView.mvt, channelGateBounds );
     channelLayer.addChild( membraneChannelGateCanvasNode );
+
+    // Watch the zoom property and zoom in and out correspondingly.
+    zoomProperty.link( function( zoomFactor ) {
+
+      // Zoom toward the top so that when zoomed in the membrane is in a reasonable place and there is room for the
+      // chart below it.
+      var zoomTowardTopThreshold = 0.6;
+      var scaleMatrix;
+      var scaleAroundX = Math.round( viewPortPosition.x );
+      var scaleAroundY;
+      if ( zoomFactor > zoomTowardTopThreshold ) {
+        scaleAroundY = (zoomFactor - zoomTowardTopThreshold) * thisView.neuronModel.getAxonMembrane().getCrossSectionDiameter() * 0.075;
+        scaleMatrix = Matrix3.translation( scaleAroundX, scaleAroundY ).timesMatrix( Matrix3.scaling( zoomFactor, zoomFactor ) ).timesMatrix( Matrix3.translation( -scaleAroundX, -scaleAroundY ) );
+      }
+      else {
+        scaleAroundY = 0;
+        scaleMatrix = Matrix3.translation( scaleAroundX, scaleAroundY ).timesMatrix( Matrix3.scaling( zoomFactor, zoomFactor ) ).timesMatrix( Matrix3.translation( -scaleAroundX, -scaleAroundY ) );
+      }
+
+      zoomableNode.matrix = scaleMatrix;
+    } );
 
     var recordPlayButtons = [];
     var playToggleProperty = new Property( true, false, neuronClockModelAdapter.pausedProperty );
@@ -212,7 +248,7 @@ define( function( require ) {
     // Create and add the Reset All Button in the bottom right
     var resetAllButton = new ResetAllButton( {
       listener: function() {
-        zoomProperty.value = defaultZoom;
+        zoomProperty.reset();
         neuronClockModelAdapter.reset();
       },
       right: ionsAndChannelsLegendPanel.right,
@@ -220,7 +256,7 @@ define( function( require ) {
     } );
     this.addChild( resetAllButton );
 
-    var concentrationReadoutLayerNode = new ConcentrationReadoutLayerNode( thisView.neuronModel, zoomProperty, zoomableRootNode, axonCrossSectionNode );
+    var concentrationReadoutLayerNode = new ConcentrationReadoutLayerNode( thisView.neuronModel, zoomProperty, zoomableNode, axonCrossSectionNode );
     this.addChild( concentrationReadoutLayerNode );
 
     thisView.neuronModel.concentrationReadoutVisibleProperty.link( function( concentrationVisible ) {
@@ -238,22 +274,31 @@ define( function( require ) {
     var webGLSupported = Util.isWebGLSupported && allowWebGL;
 
     if ( webGLSupported ) {
-      var particlesWebGLNode = new ParticlesWebGLNode( thisView.neuronModel, thisView.mvt, zoomProperty, zoomableRootNode, worldNodeClipArea.bounds );
+      var particlesWebGLNode = new ParticlesWebGLNode(
+        thisView.neuronModel,
+        thisView.mvt,
+        zoomProperty,
+        zoomableNode,
+        worldNodeClipArea.bounds
+      );
+      particlesWebGLNode.clipArea = worldNodeClipArea;
+
       if ( SHOW_PARTICLE_CANVAS_BOUNDS ) {
         this.addChild( Rectangle.bounds( particlesWebGLNode.bounds, { stroke: 'purple' } ) );
       }
-      particlesWebGLParentNode.addChild( particlesWebGLNode );
+      //particlesWebGLParentNode.addChild( particlesWebGLNode );
+      zoomableNode.addChild( particlesWebGLNode );
+
     }
     else {
-      //var particlesCanvasNode = new ParticlesCanvasNode( thisView.neuronModel, thisView.mvt, new Bounds2( 0, 10, 700, 600 ) );
-      var particlesCanvasNode = new ParticlesCanvasNode( thisView.neuronModel, thisView.mvt, worldNodeClipArea.bounds );
+      var particlesCanvasNode = new ParticlesCanvasNode( thisView.neuronModel, thisView.mvt, worldNodeClipArea );
       // TODO: Clarify this comment.
       //WebGL node uses its own scaling whereas Matrix canvas based Particles implementation uses Node's
-      //transform matrix for scaling so add it to the zoomableRootNode
+      //transform matrix for scaling so add it to the zoomableNode
       if ( SHOW_PARTICLE_CANVAS_BOUNDS ) {
         this.addChild( Rectangle.bounds( particlesCanvasNode.bounds, { stroke: 'green' } ) );
       }
-      zoomableRootNode.addChild( particlesCanvasNode );
+      zoomableNode.addChild( particlesCanvasNode );
     }
 
     var simSpeedControlPanel = new SimSpeedControlPanel( neuronClockModelAdapter.speedProperty );
@@ -261,7 +306,7 @@ define( function( require ) {
     simSpeedControlPanel.centerY = centerYForLowerControls;
     thisView.addChild( simSpeedControlPanel );
 
-    var zoomControl = new ZoomControl( zoomProperty, minZoom, maxZoom );
+    var zoomControl = new ZoomControl( zoomProperty, MIN_ZOOM, MAX_ZOOM );
     this.addChild( zoomControl );
     zoomControl.top = clipAreaBounds.y;
     zoomControl.left = this.layoutBounds.minX + leftPadding;

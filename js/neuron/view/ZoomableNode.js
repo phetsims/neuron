@@ -42,11 +42,9 @@ define( function( require ) {
       else {
         scaleAroundY = 0;
         scaleMatrix = Matrix3.translation( scaleAroundX, scaleAroundY ).timesMatrix( Matrix3.scaling( zoomFactor, zoomFactor ) ).timesMatrix( Matrix3.translation( -scaleAroundX, -scaleAroundY ) );
-
       }
 
       zoomableRootNode.matrix = scaleMatrix;
-
     } );
 
     thisNode.addChild( zoomableRootNode );

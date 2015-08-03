@@ -21,12 +21,17 @@ define( function( require ) {
   /**
    * @param {NeuronModel} neuronModel
    * @param {ModelViewTransform2} modelViewTransform
-   * @param {Bounds2} bounds
+   * @param {Shape} clipArea
    * @constructor
    */
-  function ParticlesCanvasNode( neuronModel, modelViewTransform, bounds ) {
+  function ParticlesCanvasNode( neuronModel, modelViewTransform, clipArea ) {
     var thisNode = this;
-    CanvasNode.call( thisNode, { pickable: false, canvasBounds: bounds, layerSplit: true } );
+    CanvasNode.call( thisNode, {
+      pickable: false,
+      canvasBounds: clipArea.bounds,
+      clipArea: clipArea,
+      layerSplit: true
+    } );
     thisNode.modelViewTransform = modelViewTransform;
     thisNode.neuronModel = neuronModel;
 
