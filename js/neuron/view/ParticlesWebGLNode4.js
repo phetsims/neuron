@@ -63,11 +63,12 @@ define( function( require ) {
    * @param {NeuronModel} neuronModel
    * @param {ModelViewTransform2} modelViewTransform
    * @param {Property.<number>} zoomProperty
-   * @param {Node} zoomableRootNode
+   * @param {Property.<Matrix3>} zoomMatrixProperty - a matrix that tracks how zoomed in or out this node is, used to
+   * determine whether a given particle needs to be rendered
    * @param {Shape} bounds
    * @constructor
    */
-  function ParticlesWebGLNode( neuronModel, modelViewTransform, zoomProperty, zoomableRootNode, bounds ) {
+  function ParticlesWebGLNode( neuronModel, modelViewTransform, zoomProperty, zoomMatrixProperty, bounds ) {
     var self = this;
     WebGLNode.call( this, {
       canvasBounds: bounds
@@ -80,7 +81,7 @@ define( function( require ) {
     this.viewTransformationMatrix = modelViewTransform.getMatrix();
     this.particleTextureMap = new ParticleTextureMap( modelViewTransform, zoomProperty );
     this.zoomProperty = zoomProperty;
-    this.zoomableRootNode = zoomableRootNode;
+    this.zoomMatrixProperty = zoomMatrixProperty;
     this.particleBounds = bounds;
     this.visibleParticlesSize = 0; // Only Particles within the clipping region of Zoomable Node are considered visible
     this.allParticles = [];
@@ -92,13 +93,11 @@ define( function( require ) {
     this.context = this.canvas.getContext( '2d' );
 
     // The texture must be updated when the zoom factor changes.
-    // TODO: Turned off to get it working without zoom, don't forget to turn on and get working.
-    //zoomProperty.link( function() {
-    //  self.updateTexture();
-    //} );
-
-    // constrain the bounds so that the generated shapes aren't off the edge of the canvas
-    this.constrainedBounds = bounds.dilated( -SQUARE_SIDE_LENGTH / 2 );
+    zoomProperty.lazyLink( function() {
+      if ( self.drawable ) {
+        self.updateTexture( self.drawable );
+      }
+    } );
 
     // Set up some values for reuse instead of reallocating them with each repaint.  This improves performance.
     this.texCoords = new Bounds2( 0, 0, 0, 0 ); // The normalized texture coordinates that corresponds to the vertex corners
@@ -185,23 +184,24 @@ define( function( require ) {
 
       // set up the texture
       this.updateTexture( drawable );
+      this.drawable = drawable;
 
       /*
-      drawable.texture = gl.createTexture();
-      gl.bindTexture( gl.TEXTURE_2D, drawable.texture );
-      gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, particlesTextureImage );
-      //gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.canvas );
-      gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR );
-      gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR );
-      //gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST );
-      //gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST_MIPMAP_NEAREST );
-      //gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST_MIPMAP_LINEAR );
-      //gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST );
-      //gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR );
-      gl.generateMipmap( gl.TEXTURE_2D );
-      gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.MIRRORED_REPEAT );
-      gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.MIRRORED_REPEAT );
-      */
+       drawable.texture = gl.createTexture();
+       gl.bindTexture( gl.TEXTURE_2D, drawable.texture );
+       gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, particlesTextureImage );
+       //gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.canvas );
+       gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR );
+       gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR );
+       //gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST );
+       //gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST_MIPMAP_NEAREST );
+       //gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST_MIPMAP_LINEAR );
+       //gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST );
+       //gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR );
+       gl.generateMipmap( gl.TEXTURE_2D );
+       gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.MIRRORED_REPEAT );
+       gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.MIRRORED_REPEAT );
+       */
 
       // TODO: I'm totally guessing on the following, based on some examples I've been looking at (jblanco).  Should
       // the uniform go into the ShaderProgram abstraction?  Ashraf doesn't seem to use it at all, so maybe it isn't
@@ -293,84 +293,6 @@ define( function( require ) {
     },
 
     /**
-     * populates vertexData (Float32Array array) with vertex and texture data for all particles
-     * TODO: Unused at one point during evolution, delete if ultimately unused.
-     */
-    populateVerticesTexCoords: function( vertexData ) {
-      var index = 0;
-
-      var thisNode = this;
-      this.visibleParticlesSize = 0;
-
-      // Use the same reference, the Vertex buffer array uses only the primitives, so no need to create new instances
-      var tilePosVector = this.tilePosVector;
-      var viewTransformationMatrix = this.viewTransformationMatrix;
-      var particleViewPosition = this.particleViewPosition;
-
-      this.allParticles.forEach( function( particle ) {
-
-        particleViewPosition.x = particle.getPositionX();
-        particleViewPosition.y = particle.getPositionY();
-        viewTransformationMatrix.multiplyVector2( particleViewPosition );
-        if ( !thisNode.particleViewBounds.containsCoordinates( particleViewPosition.x, particleViewPosition.y ) ) {
-          return;
-        }
-        thisNode.visibleParticlesSize++;
-        // Position according to the scaled and Translated Position of ZoomableRootNode. The zoomProperty is
-        // Observed by this class and the scaleMatrix is updated from zoomableRootNode
-        thisNode.zoomTransformationMatrix.multiplyVector2( particleViewPosition ); // (changes, the passed particleViewPosition)
-
-        //center Position
-        var xPos = particleViewPosition.x;
-        var yPos = particleViewPosition.y;
-
-        //for performance reasons this method updates vertexCords (and returns the same)   instead of creating a new one
-        thisNode.particleTextureMap.getParticleCoords( particle.getType(), xPos, yPos, thisNode.vertexCords );
-
-        //for performance reasons this method updates the texCords (and returns the same)  instead of creating a new one
-        thisNode.particleTextureMap.getTexCords( particle.getType(), particle.getOpaqueness(), tilePosVector, thisNode.texCoords );
-
-        //left bottom
-        vertexData[ index++ ] = thisNode.vertexCords.getMinX();//x
-        vertexData[ index++ ] = thisNode.vertexCords.getMaxY();//y
-        vertexData[ index++ ] = thisNode.texCoords.getMinX(); //u
-        vertexData[ index++ ] = thisNode.texCoords.getMaxY(); //v
-
-        //left top
-        vertexData[ index++ ] = thisNode.vertexCords.getMinX();
-        vertexData[ index++ ] = thisNode.vertexCords.getMinY();
-        vertexData[ index++ ] = thisNode.texCoords.getMinX();//u
-        vertexData[ index++ ] = thisNode.texCoords.getMinY();//v
-
-        //right top
-        vertexData[ index++ ] = thisNode.vertexCords.getMaxX();
-        vertexData[ index++ ] = thisNode.vertexCords.getMinY();
-        vertexData[ index++ ] = thisNode.texCoords.getMaxX();//u
-        vertexData[ index++ ] = thisNode.texCoords.getMinY();//v
-
-        //---2nd triangle-----
-
-        //right top
-        vertexData[ index++ ] = thisNode.vertexCords.getMaxX();
-        vertexData[ index++ ] = thisNode.vertexCords.getMinY();
-        vertexData[ index++ ] = thisNode.texCoords.getMaxX();//u
-        vertexData[ index++ ] = thisNode.texCoords.getMinY();//v
-
-        //right bottom
-        vertexData[ index++ ] = thisNode.vertexCords.getMaxX();
-        vertexData[ index++ ] = thisNode.vertexCords.getMaxY();
-        vertexData[ index++ ] = thisNode.texCoords.getMaxX();//u
-        vertexData[ index++ ] = thisNode.texCoords.getMaxY();//v
-
-        //left bottom
-        vertexData[ index++ ] = thisNode.vertexCords.getMinX();
-        vertexData[ index++ ] = thisNode.vertexCords.getMaxY();
-        vertexData[ index++ ] = thisNode.texCoords.getMinX();//u
-        vertexData[ index++ ] = thisNode.texCoords.getMaxY();//v
-      } );
-    },
-
-    /**
      * draw tiles based on new dimension on to the canvas
      */
     updateTextureImage: function() {
@@ -392,14 +314,13 @@ define( function( require ) {
      */
     updateTexture: function( drawable ) {
       var thisNode = this;
-      thisNode.zoomTransformationMatrix = thisNode.zoomableRootNode.getMatrix();
       thisNode.updateTextureImage();
       //adjust the bounds based on Zoom factor
       thisNode.particleViewBounds = thisNode.particleBounds.copy();
 
       // Particle View bounds is used to manually clip particles, because of Zoom functionality
       // once scaled up/down the actual bounds gets minimized or maximized
-      thisNode.particleViewBounds = thisNode.particleViewBounds.transformed( thisNode.zoomTransformationMatrix.copy().invert() );
+      thisNode.particleViewBounds = thisNode.particleViewBounds.transformed( thisNode.zoomMatrixProperty.value.copy().invert() );
       thisNode.bindTextureImage( drawable );
     },
 
@@ -460,10 +381,17 @@ define( function( require ) {
     addDataForParticle: function( particle ) {
       var xPos = this.modelViewTransform.modelToViewX( particle.positionX );
       var yPos = this.modelViewTransform.modelToViewY( particle.positionY );
-      if ( this.constrainedBounds.containsCoordinates( xPos, yPos ) ) {
+
+      // Figure out the location of the zoomed particle and then determine whether that location is within the bounds.
+      // This is done in order to effectively clip the particle rendering region, since clip areas are not supported
+      // in WebGLNode as of this writing (Aug 3 2010).
+      var zoomMatrix = this.zoomMatrixProperty.value;
+      var zoomedXPos = zoomMatrix.m00() * xPos + zoomMatrix.m02();
+      var zoomedYPos = zoomMatrix.m11() * yPos + zoomMatrix.m12();
+      if ( this.particleBounds.containsCoordinates( zoomedXPos, zoomedYPos ) ) {
         this.particleData.push( {
-          xPos: this.modelViewTransform.modelToViewX( particle.positionX ),
-          yPos: this.modelViewTransform.modelToViewY( particle.positionY ),
+          xPos: zoomedXPos,
+          yPos: zoomedYPos,
           type: particle.getType(),
           opacity: particle.getOpaqueness()
         } );
@@ -478,8 +406,8 @@ define( function( require ) {
       var self = this;
       this.clearParticleData();
 
-      // TODO: I have both raw particle data and pre-processed particle data, and I should only have one.  Figure out
-      // which is better and remove the unneeded one.
+      // TODO: I (jblanco) have both raw particle data and pre-processed particle data, and I should only have one.
+      // Figure out which is better and remove the unneeded one.
       this.allParticles = [];
       this.allParticles = this.neuronModel.backgroundParticles.getArray().slice();
       this.allParticles = this.allParticles.concat( this.neuronModel.transientParticles.getArray() );

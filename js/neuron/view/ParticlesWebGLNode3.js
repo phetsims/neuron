@@ -236,16 +236,12 @@ define( function( require ) {
         elementData.push( count++ );
         elementData.push( count++ );
         elementData.push( count );
-        //debugger;
         if ( index + 1 < self.particleData.length ) {
           // Add the 'degenerate triangle' that will force a discontinuity in the triangle strip.
           elementData.push( count++ );
           elementData.push( count );
         }
       } );
-      //if ( elementData.length > 2 ) {
-      //  debugger;
-      //}
       gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, drawable.elementBuffer );
       gl.bufferData( gl.ELEMENT_ARRAY_BUFFER, new Uint16Array( elementData ), gl.STATIC_DRAW );
 

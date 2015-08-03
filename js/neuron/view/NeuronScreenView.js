@@ -132,6 +132,9 @@ define( function( require ) {
     // Create that property that will control the zoom amount.
     var zoomProperty = new Property( DEFAULT_ZOOM );
 
+    // Create a property that will contain the current zoom transformation matrix.
+    var zoomMatrixProperty = new Property();
+
     // Watch the zoom property and zoom in and out correspondingly.
     zoomProperty.link( function( zoomFactor ) {
 
@@ -151,6 +154,7 @@ define( function( require ) {
       }
 
       zoomableNode.matrix = scaleMatrix;
+      zoomMatrixProperty.value = scaleMatrix;
     } );
 
     var recordPlayButtons = [];
@@ -264,16 +268,17 @@ define( function( require ) {
         thisView.neuronModel,
         thisView.mvt,
         zoomProperty,
-        zoomableNode,
+        zoomMatrixProperty,
         worldNodeClipArea.bounds
       );
-      particlesWebGLNode.clipArea = worldNodeClipArea;
 
       if ( SHOW_PARTICLE_CANVAS_BOUNDS ) {
         this.addChild( Rectangle.bounds( particlesWebGLNode.bounds, { stroke: 'purple' } ) );
       }
-      zoomableNode.addChild( particlesWebGLNode );
 
+      // The WebGL particles node does its own clipping and zooming since these operations don't work very well when
+      // using the stock WebGLNode support, so it isn't added to the zoomable node hierarchy in the scene graph.
+      thisView.addChild( particlesWebGLNode );
     }
     else {
       var particlesCanvasNode = new ParticlesCanvasNode( thisView.neuronModel, thisView.mvt, worldNodeClipArea );
