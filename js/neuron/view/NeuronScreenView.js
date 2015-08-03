@@ -37,7 +37,6 @@ define( function( require ) {
   var MembraneChannelGateCanvasNode = require( 'NEURON/neuron/view/MembraneChannelGateCanvasNode' );
   var ChargeSymbolsLayerNode = require( 'NEURON/neuron/view/ChargeSymbolsLayerNode' );
   var StepBackButton = require( 'SCENERY_PHET/buttons/StepBackButton' );
-  var ZoomableNode = require( 'NEURON/neuron/view/ZoomableNode' );
   var ZoomControl = require( 'NEURON/neuron/view/ZoomControl' );
   var MembranePotentialChart = require( 'NEURON/neuron/chart/view/MembranePotentialChart' );
   var IonsAndChannelsLegendPanel = require( 'NEURON/neuron/controlpanel/IonsAndChannelsLegendPanel' );
@@ -87,22 +86,6 @@ define( function( require ) {
     var zoomableNode = new Node();
     zoomableAreaRootNode.addChild( zoomableNode );
 
-    // ZoomableNode zooms in and out the zoomableNode contents
-    // TODO: Why is a separate root node needed?  Why not just add zoomableWorldNode directly to this view?
-    var zoomProperty = new Property( DEFAULT_ZOOM );
-    //var zoomableWorldNode = new ZoomableNode(
-    //  thisView.neuronModel,
-    //  zoomableNode,
-    //  zoomProperty,
-    //  worldNodeClipArea,
-    //  viewPortPosition
-    //);
-    //thisView.addChild( zoomableWorldNode );
-
-    // TODO: Why does this node exist?  Why not just add the WebGL node to this view if WebGL is in use?
-    var particlesWebGLParentNode = new Node();
-    thisView.addChild( particlesWebGLParentNode );
-
     // The particle WebGL layer doesn't support bounds clipping, so a border-like shape is applied and added as a top
     // node with the same color as the screen background to make particles appear to be properly clipped. For more
     // detail, see https://github.com/phetsims/neuron/issues/7.
@@ -145,6 +128,9 @@ define( function( require ) {
     var channelGateBounds = new Bounds2( 100, 50, 600, 500 ); // empirically determined
     var membraneChannelGateCanvasNode = new MembraneChannelGateCanvasNode( thisView.neuronModel, thisView.mvt, channelGateBounds );
     channelLayer.addChild( membraneChannelGateCanvasNode );
+
+    // Create that property that will control the zoom amount.
+    var zoomProperty = new Property( DEFAULT_ZOOM );
 
     // Watch the zoom property and zoom in and out correspondingly.
     zoomProperty.link( function( zoomFactor ) {
@@ -286,7 +272,6 @@ define( function( require ) {
       if ( SHOW_PARTICLE_CANVAS_BOUNDS ) {
         this.addChild( Rectangle.bounds( particlesWebGLNode.bounds, { stroke: 'purple' } ) );
       }
-      //particlesWebGLParentNode.addChild( particlesWebGLNode );
       zoomableNode.addChild( particlesWebGLNode );
 
     }
