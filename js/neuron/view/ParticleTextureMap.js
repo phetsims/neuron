@@ -109,10 +109,10 @@ define( function( require ) {
      * Get the current width and height for the specified particle type.
      */
     getParticleSize: function( particleType ) {
-      if ( particleType == ParticleType.SODIUM_ION ) {
+      if ( particleType === ParticleType.SODIUM_ION ) {
         return this.sodiumParticleViewSize;
       }
-      else if ( particleType == ParticleType.POTASSIUM_ION ) {
+      else if ( particleType === ParticleType.POTASSIUM_ION ) {
         return this.potassiumParticleViewSize;
       }
       throw new Error( 'unhandled particle type' );
@@ -127,7 +127,6 @@ define( function( require ) {
       context.strokeStyle = Color.BLACK.getCanvasStyle();
       context.lineWidth = 1;
 
-      var opacityString;
       var opacityValue;
       var particlePos;
       var i = 0;

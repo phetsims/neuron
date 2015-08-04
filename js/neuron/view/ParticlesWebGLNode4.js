@@ -21,16 +21,13 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
   var ParticleTextureMap = require( 'NEURON/neuron/view/ParticleTextureMap' );
-  var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
   var ShaderProgram = require( 'SCENERY/util/ShaderProgram' );
   var WebGLNode = require( 'SCENERY/nodes/WebGLNode' );
   var Vector2 = require( 'DOT/Vector2' );
 
-  // images
-  var particlesTextureImage = require( 'image!NEURON/neuron-particles-texture-32x32.png' );
-
   // constants
-  var MAX_PARTICLES = 1000; // several trials were run and peak number of particles was 882, so this value should be safe
+  // TODO: Add MAX_PARTICLES back when optimizing allocation of array data (such as vertex data).
+  //var MAX_PARTICLES = 1000; // several trials were run and peak number of particles was 882, so this value should be safe
   var PRINT_DATA_URL_OF_SPRITE_SHEET = true; // very useful for debugging issues with the sprite sheet texture
 
   /**
