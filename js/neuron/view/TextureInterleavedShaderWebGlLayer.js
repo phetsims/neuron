@@ -7,6 +7,8 @@
  * classes work together.
  * @author Sharfudeen Ashraf (for Ghent University)
  *
+ * TODO: This may be obsolete, check if it's unused and delete if so.
+ *
  */
 define( function( require ) {
   'use strict';
