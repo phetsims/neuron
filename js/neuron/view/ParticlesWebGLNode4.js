@@ -92,11 +92,12 @@ define( function( require ) {
     // TODO: Maybe rename this to canvasContext.
     this.context = this.canvas.getContext( '2d' );
 
+    // flag to indicate whether the texture needs to be updated on next paint.
+    this.textureDirty = true;
+
     // The texture must be updated when the zoom factor changes.
     zoomProperty.lazyLink( function() {
-      if ( self.drawable ) {
-        self.updateTexture( self.drawable );
-      }
+      self.textureDirty = true;
     } );
 
     // Set up some values for reuse instead of reallocating them with each repaint.  This improves performance.
@@ -182,10 +183,6 @@ define( function( require ) {
       drawable.vertexBuffer = gl.createBuffer();
       drawable.elementBuffer = gl.createBuffer();
 
-      // set up the texture
-      this.updateTexture( drawable );
-      this.drawable = drawable;
-
       /*
        drawable.texture = gl.createTexture();
        gl.bindTexture( gl.TEXTURE_2D, drawable.texture );
@@ -221,7 +218,12 @@ define( function( require ) {
       var gl = drawable.gl;
       var shaderProgram = drawable.shaderProgram;
 
-      // TODO: doc
+      if ( this.textureDirty ){
+        this.updateTexture( drawable );
+        this.textureDirty = false;
+      }
+
+      // TODO: doc - I think this may be reducing vector allocations
       var tilePosVector = this.tilePosVector;
 
       // Convert particle data to vertices that represent a rectangle plus texture coordinates.
@@ -343,16 +345,21 @@ define( function( require ) {
       gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE );
       gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE );
 
-      gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.canvas );
 
-      // The alpha is not pre-multiplied in the generated canvas image not
-      // doing so results in white patch in the place  of transparent rectangle
+      // The alpha is not pre-multiplied in the generated canvas image.  This results in white patch in the place
+      // of transparent rectangle if this next step isn't done.
       gl.pixelStorei( gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true );
 
       // Texture filtering, see http://learningwebgl.com/blog/?p=571
       gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR );
       gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR );
+
+      // ship the texture data to the GPU
+      gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.canvas );
+
+      // generate a mipmap for better handling of zoom in/out
       gl.generateMipmap( gl.TEXTURE_2D );
+
       console.log( 'bindTextureImage exited' );
     },
 
