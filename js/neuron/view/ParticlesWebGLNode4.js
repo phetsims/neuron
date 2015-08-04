@@ -1,35 +1,17 @@
 // Copyright 2002-2015, University of Colorado Boulder
 
 /**
- * A WebGL Scenery node that is used to render particles.  This is done as an optimization, since representing every
- * particle as an individual Scenery node proved to be too computationally intensive.
+ * A WebGL Scenery node that is used to render the sodium and potassium particles, a.k.a. atoms, that need to be
+ * portrayed in the Neuron simulation.  This node exists an optimization, since representing every particle as an
+ * individual Scenery node proved to be far too computationally intensive.
  *
- * Note to self: This version is an attempt to use Ashraf's sprite sheet approach for handling opacity.
+ * Particles in this node are rendered using a dynamically created "sprite sheet" that has different graduations of
+ * opacity. The tile shapes (circle or rhombus) for the particles are arranged by opacity value ranging from 0.00 to
+ * 0.99 (a total of 100 tiles for each particle, 10 rows and 10 columns).  The sprite sheet is updated when the user
+ * zooms in or out.
  *
- * !!!!!!!!!!!!!!!!! TODO: Fix this header doc up, it's copied from the original version Scenery 0.1 version !!!!!!!!!
- *
- * Particles Node, rendered in WebGL to improve performance
- * Particles are rendered by mapping their rectangular corners with a dynamically created SpriteSheet tiles.
- *
- * The Tile shapes (Circle or Rhombus) are arranged by Opacity value ranging from 0.00 to 0.99 (A total of 100 tiles
- * for each particle, 10 rows and 10 columns).The Tiles doesn't get created on every  webgl render call  but only when the
- * user zooms in and out.Having a fixed Sprite sheet results in  pixelation thats  why we have to scale and draw the
- * SpriteSheet dynamically whenever  changes the Zoom property.
- *
- * The code makes use of a different vertex shader, the Default WebglLayer's Vertex shader assumes the TextureCoordinates to
- * be Vertex Coordinates itself.(that's why  Vertex are given in normalized coordinates ).
- *
- * In case of Base WebGLNode, the transformation of shapes are handled by manipulating the viewMatrix during rendering.However
- * this is not applicable in our case as we have to display 1000s triangles each mapped to a different tile position.
- * So each Vertex is interleaved with the appropriate Texture coordinates and sent to Webgl subsystem.
- * The shaderProgram.attributeLocations.aTexCoord in theSetMaterial method informs the shader how to retrieve the
- * Texture coordinates for each vertex.
- *
- * The Particles position is also transformed using the Zoomable Node's transform matrix to take care of the particle's
- * position when scaled.
- *
- ** @author Sharfudeen Ashraf (for Ghent University)
- ** @author John Blanco
+ * @author Sharfudeen Ashraf (for Ghent University)
+ * @author John Blanco
  */
 define( function( require ) {
   'use strict';
@@ -48,16 +30,8 @@ define( function( require ) {
   var particlesTextureImage = require( 'image!NEURON/neuron-particles-texture-32x32.png' );
 
   // constants
-  var SQUARE_SIDE_LENGTH = 5; // empirically determined
-  var SQUARE_HALF_DIAGONAL_LENGTH = ( SQUARE_SIDE_LENGTH * Math.sqrt( 2 ) ) / 2;
-  var SQUARE_VERTEX_OFFSETS = [
-    new Vector2( -SQUARE_HALF_DIAGONAL_LENGTH, SQUARE_HALF_DIAGONAL_LENGTH ),
-    new Vector2( -SQUARE_HALF_DIAGONAL_LENGTH, -SQUARE_HALF_DIAGONAL_LENGTH ),
-    new Vector2( SQUARE_HALF_DIAGONAL_LENGTH, SQUARE_HALF_DIAGONAL_LENGTH ),
-    new Vector2( SQUARE_HALF_DIAGONAL_LENGTH, -SQUARE_HALF_DIAGONAL_LENGTH )
-  ];
-
-  var MAX_PARTICLES = 1000; // ran several trials and peak was 882, so this value should be safe
+  var MAX_PARTICLES = 1000; // several trials were run and peak number of particles was 882, so this value should be safe
+  var PRINT_DATA_URL_OF_SPRITE_SHEET = true; // very useful for debugging issues with the sprite sheet texture
 
   /**
    * @param {NeuronModel} neuronModel
@@ -80,19 +54,15 @@ define( function( require ) {
     this.modelViewTransform = modelViewTransform;
     this.viewTransformationMatrix = modelViewTransform.getMatrix();
     this.particleTextureMap = new ParticleTextureMap( modelViewTransform, zoomProperty );
-    this.zoomProperty = zoomProperty;
     this.zoomMatrixProperty = zoomMatrixProperty;
     this.particleBounds = bounds;
     this.visibleParticlesSize = 0; // Only Particles within the clipping region of Zoomable Node are considered visible
-    this.allParticles = [];
 
     // Create the canvas on which particle tiles are drawn and used as a texture.
-    // TODO: Maybe rename this to something like "particleTextureCanvas".
-    this.canvas = document.createElement( 'canvas' );
-    // TODO: Maybe rename this to canvasContext.
-    this.context = this.canvas.getContext( '2d' );
+    this.particleTextureCanvas = document.createElement( 'canvas' );
+    this.particleCanvasContext = this.particleTextureCanvas.getContext( '2d' );
 
-    // flag to indicate whether the texture needs to be updated on next paint.
+    // flag to indicate whether the texture needs to be updated on next paint
     this.textureDirty = true;
 
     // The texture must be updated when the zoom factor changes.
@@ -100,7 +70,7 @@ define( function( require ) {
       self.textureDirty = true;
     } );
 
-    // Set up some values for reuse instead of reallocating them with each repaint.  This improves performance.
+    // Set up some variables for reuse instead of reallocating them with each repaint.  This improves performance.
     this.texCoords = new Bounds2( 0, 0, 0, 0 ); // The normalized texture coordinates that corresponds to the vertex corners
     this.vertexCords = new Bounds2( 0, 0, 0, 0 );// the rectangle bounds of a particle (used to create 2 triangles)
     this.tilePosVector = new Vector2();
@@ -109,8 +79,9 @@ define( function( require ) {
     // initial update
     this.update();
 
-    // TODO: Instead of doing what's shown below, consider just redrawing at every time step.  Seems like that would be simpler.
-    // Monitor a property that indicates when a particle state has changed and initiate a redraw.
+    // Monitor a property that indicates when a particle state has changed and initiate a redraw.  WARNING: The model
+    // should be set up such that it only triggers this event once per time stamp at the most, otherwise performance
+    // will suffer.
     neuronModel.on( NeuronConstants.PARTICLES_MOVED_EVENT, function() {
       self.update();
     } );
@@ -121,11 +92,9 @@ define( function( require ) {
     /**
      * Initialization routine called by the base class that sets up the vertex and fragment shaders and does other
      * initialization.
-     * @param drawable
+     * @param {WebGLNodeDrawable} drawable
      */
     initializeWebGLDrawable: function( drawable ) {
-      console.log( 'initializeWebGLDrawable called' );
-
       var gl = drawable.gl;
 
       // vertex shader
@@ -143,7 +112,7 @@ define( function( require ) {
         '  vec3 ndc = uProjectionMatrix * vec3( view.xy, 1 );',
         // texture coordinate
         '  vTextureCoordinate = aTextureCoordinate;',
-        // assume a z value of 1 for the actual position
+        // assume a z value of 1 for the position
         '  gl_Position = vec4( ndc.xy, 1.0, 1.0 );',
         '}'
       ].join( '\n' );
@@ -154,77 +123,44 @@ define( function( require ) {
         'varying vec2 vTextureCoordinate;',
         'uniform sampler2D uSampler;',
         'void main( void ) {',
+        // TODO: I (jblanco) am leaving some commented-out code below for ease of testing, these should be removed
+        // when all the WebGL functionality has been finalized.
         //'  gl_FragColor = texture2D(uSampler, vec2(0.5, 0.5));',
         //'  gl_FragColor = vec4( 0, 0, 0, 1 );',
         //'  gl_FragColor = vec4( 0, 1, 0, 0.5 );',
-        '  gl_FragColor = texture2D(uSampler, vTextureCoordinate);',
+        '  gl_FragColor = texture2D( uSampler, vTextureCoordinate );',
         '}'
       ].join( '\n' );
-      //var fragmentShaderSource = [
-      //  'precision mediump float;',
-      //  'varying vec2 vTextureCoordinate;',
-      //  'uniform sampler2D uSampler;',
-      //  'void main( void ) {',
-      //  '  gl_FragColor = texture2D(uSampler, vTextureCoordinate);',
-      //  '}'
-      //].join( '\n' );
-      //var fragmentShaderSource = [
-      //  'precision mediump float;',
-      //  'void main( void ) {',
-      //  '  gl_FragColor = vec4( 0, 0, 0.5, 1 );',
-      //  '}'
-      //].join( '\n' );
 
       drawable.shaderProgram = new ShaderProgram( gl, vertexShaderSource, fragmentShaderSource, {
         attributes: [ 'aPosition', 'aTextureCoordinate' ],
         uniforms: [ 'uModelViewMatrix', 'uProjectionMatrix' ]
       } );
 
+      drawable.texture = gl.createTexture();
       drawable.vertexBuffer = gl.createBuffer();
       drawable.elementBuffer = gl.createBuffer();
-
-      /*
-       drawable.texture = gl.createTexture();
-       gl.bindTexture( gl.TEXTURE_2D, drawable.texture );
-       gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, particlesTextureImage );
-       //gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.canvas );
-       gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR );
-       gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR );
-       //gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST );
-       //gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST_MIPMAP_NEAREST );
-       //gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST_MIPMAP_LINEAR );
-       //gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST );
-       //gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR );
-       gl.generateMipmap( gl.TEXTURE_2D );
-       gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.MIRRORED_REPEAT );
-       gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.MIRRORED_REPEAT );
-       */
 
       // TODO: I'm totally guessing on the following, based on some examples I've been looking at (jblanco).  Should
       // the uniform go into the ShaderProgram abstraction?  Ashraf doesn't seem to use it at all, so maybe it isn't
       // necessary.
       drawable.uniformSamplerLoc = gl.getUniformLocation( drawable.shaderProgram.program, "uSampler" );
-
-      console.log( 'initializeWebGLDrawable exited' );
     },
 
     /**
-     * TODO: Document this once finalized (and when I understand it better).
-     * @param drawable
-     * @param matrix
+     * method that is called by Scenery to repaint this node
+     * @param {WebGLDrawable} drawable
+     * @param {Matrix3} matrix
      */
     paintWebGLDrawable: function( drawable, matrix ) {
       var self = this;
       var gl = drawable.gl;
       var shaderProgram = drawable.shaderProgram;
 
-      if ( this.textureDirty ){
+      if ( this.textureDirty ) {
         this.updateTexture( drawable );
         this.textureDirty = false;
       }
-
-      // TODO: doc - I think this may be reducing vector allocations
-      var tilePosVector = this.tilePosVector;
 
       // Convert particle data to vertices that represent a rectangle plus texture coordinates.
       // TODO: Should optimize to define the vertex data once and reuse instead of reallocating each time.
@@ -295,35 +231,18 @@ define( function( require ) {
     },
 
     /**
-     * draw tiles based on new dimension on to the canvas
-     */
-    updateTextureImage: function() {
-
-      // TODO: Can't I just use 'this' here?
-      var thisNode = this;
-      thisNode.context.clearRect( 0, 0, thisNode.canvas.width, thisNode.canvas.height );
-      thisNode.particleTextureMap.updateSpriteSheetDimensions();
-      thisNode.particleTextureMap.calculateAndAssignCanvasDimensions( thisNode.canvas );
-      thisNode.particleTextureMap.createTiles( thisNode.context );
-      console.log( 'thisNode.canvas.toDataURL() = ' + thisNode.canvas.toDataURL() );
-    },
-
-    /**
-     * This method does the following on initialization (also context restore) and on every zooms in and out action
-     * 1)Draws the Particle Tiles based on new scaled dimension on to the canvas
-     * 2)Binds the canvas Texture
-     * 3)Get a reference to the scaleMatrix to appropriately position the particle in a zoomed state.
+     * Update the texture that is used to render the individual particles.  This is generally called when the zoom
+     * amount is changed.  This also binds the texture.
      */
     updateTexture: function( drawable ) {
-      var thisNode = this;
-      thisNode.updateTextureImage();
-      //adjust the bounds based on Zoom factor
-      thisNode.particleViewBounds = thisNode.particleBounds.copy();
-
-      // Particle View bounds is used to manually clip particles, because of Zoom functionality
-      // once scaled up/down the actual bounds gets minimized or maximized
-      thisNode.particleViewBounds = thisNode.particleViewBounds.transformed( thisNode.zoomMatrixProperty.value.copy().invert() );
-      thisNode.bindTextureImage( drawable );
+      this.particleCanvasContext.clearRect( 0, 0, this.particleTextureCanvas.width, this.particleTextureCanvas.height );
+      this.particleTextureMap.updateSpriteSheetDimensions();
+      this.particleTextureMap.calculateAndAssignCanvasDimensions( this.particleTextureCanvas );
+      this.particleTextureMap.createTiles( this.particleCanvasContext );
+      if ( PRINT_DATA_URL_OF_SPRITE_SHEET ) {
+        console.log( 'this.particleTextureCanvas.toDataURL() = ' + this.particleTextureCanvas.toDataURL() );
+      }
+      this.bindTextureImage( drawable );
     },
 
     /**
@@ -331,20 +250,11 @@ define( function( require ) {
      * @param drawable
      */
     bindTextureImage: function( drawable ) {
-      console.log( 'bindTextureImage called' );
       var gl = drawable.gl;
 
-      // TODO: I think this deletes any previous texture.  Disabling for now, but will need to reinstate to make zooming work.
-      //if ( this.texture !== null ) {
-      //  gl.bindTexture( gl.TEXTURE_2D, null );
-      //  gl.deleteTexture( this.texture );
-      //}
-
-      var texture = drawable.texture = gl.createTexture();
-      gl.bindTexture( gl.TEXTURE_2D, texture );
+      gl.bindTexture( gl.TEXTURE_2D, drawable.texture );
       gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE );
       gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE );
-
 
       // The alpha is not pre-multiplied in the generated canvas image.  This results in white patch in the place
       // of transparent rectangle if this next step isn't done.
@@ -355,22 +265,16 @@ define( function( require ) {
       gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR );
 
       // ship the texture data to the GPU
-      gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.canvas );
+      gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.particleTextureCanvas );
 
       // generate a mipmap for better handling of zoom in/out
       gl.generateMipmap( gl.TEXTURE_2D );
-
-      console.log( 'bindTextureImage exited' );
     },
 
-    /**
-     * TODO: Document this once finalized (and when I understand it better).
-     * @param drawable
-     */
     disposeWebGLDrawable: function( drawable ) {
       drawable.shaderProgram.dispose();
       drawable.gl.deleteBuffer( drawable.vertexBuffer );
-      drawable.gl.deleteBuffer( drawable.textureBuffer );
+      drawable.gl.deleteTexture( drawable.texture );
       drawable.gl.deleteBuffer( drawable.elementBuffer );
 
       drawable.shaderProgram = null;
@@ -412,13 +316,6 @@ define( function( require ) {
     update: function() {
       var self = this;
       this.clearParticleData();
-
-      // TODO: I (jblanco) have both raw particle data and pre-processed particle data, and I should only have one.
-      // Figure out which is better and remove the unneeded one.
-      this.allParticles = [];
-      this.allParticles = this.neuronModel.backgroundParticles.getArray().slice();
-      this.allParticles = this.allParticles.concat( this.neuronModel.transientParticles.getArray() );
-      this.allParticles = this.allParticles.concat( this.neuronModel.playbackParticles.getArray() );
 
       // TODO: Would it be substantially more efficient to do a C-style loop here?
       this.neuronModel.backgroundParticles.forEach( function( backgroundParticle ) {
