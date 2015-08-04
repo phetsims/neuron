@@ -31,10 +31,9 @@ define( function( require ) {
     this.zoomProperty = zoomProperty;
     this.sodiumParticle = new SodiumIon();
     this.potassiumParticle = new PotassiumIon();
-    this.canvasStrokeStyle = Color.BLACK.getCanvasStyle();
     this.strokeGapBetweenParticles = 4;
 
-    //Start building the tiles after a gap so the strokes dont overlap
+    // Start building the tiles after a gap so the strokes don't overlap
     this.xMargin = this.strokeGapBetweenParticles;
     this.yMargin = this.strokeGapBetweenParticles;
   }
@@ -42,28 +41,37 @@ define( function( require ) {
   return inherit( Object, ParticleTextureMap, {
 
     /**
-     * Update the overall dimensions of the sprite sheet.  The dimensions are a function of the zoom factor.
+     * TODO: doc
      */
     updateSpriteSheetDimensions: function() {
-      // The particle images are contained in a square space, particleSize is the height/width of that square.  The
-      // multiplier was empirically determined.
-      this.particleSize = this.modelViewTransform.modelToViewDeltaX( this.sodiumParticle.getRadius() ) *
-                          this.zoomProperty.value * 3;
+
+      // The particle images are contained in a square space, and the following two variables represent the width and
+      // height of that square as a single number value for each of the particle types. The multipliers were
+      // empirically determined.  Potassium atoms are made to have a slightly larger size or else they end up looking
+      // smaller than the sodium atoms.
+      this.sodiumParticleViewSize = this.modelViewTransform.modelToViewDeltaX( this.sodiumParticle.getRadius() ) *
+                                    this.zoomProperty.value * 3;
+      this.potassiumParticleViewSize = this.modelViewTransform.modelToViewDeltaX( this.sodiumParticle.getRadius() ) *
+                                       this.zoomProperty.value * 3.3;
+      this.particleSize = this.modelViewTransform.modelToViewDeltaX( this.sodiumParticle.getRadius() ) * this.zoomProperty.value * 3;
+
+      // some things below are based on the assumption that potassium atoms are greater or equal in size, so check it.
+      assert && assert( this.potassiumParticleViewSize >= this.sodiumParticleViewSize );
 
       var totalParticlesPerColumn = 20;
 
       // Draw potassium particle shapes after drawing all the sodium particles
       this.potasiumTileHeightOffset = this.yMargin;
-      this.potasiumTileHeightOffset += ( totalParticlesPerColumn * this.particleSize / 2 );
+      this.potasiumTileHeightOffset += ( totalParticlesPerColumn * this.potassiumParticleViewSize / 2 );
       this.potasiumTileHeightOffset += 10 * this.strokeGapBetweenParticles;
 
       this.tileTotalHeght = this.potasiumTileHeightOffset;
-      this.tileTotalHeght += totalParticlesPerColumn * this.particleSize / 2;
+      this.tileTotalHeght += totalParticlesPerColumn * this.potassiumParticleViewSize / 2;
       this.tileTotalHeght += 10 * this.strokeGapBetweenParticles;
       this.tileTotalHeght += this.yMargin;
 
       this.tileTotalWidth = this.xMargin;
-      this.tileTotalWidth += totalParticlesPerColumn * this.particleSize;
+      this.tileTotalWidth += totalParticlesPerColumn * this.potassiumParticleViewSize;
       this.tileTotalWidth += 10 * this.strokeGapBetweenParticles;
 
       this.canvasWidth = 0;
@@ -87,7 +95,7 @@ define( function( require ) {
      */
     getParticleCoords: function( particleType, xPos, yPos, coords ) {
       coords = coords || new Bounds2( 0, 0, 0, 0 );
-      var w = this.particleSize;
+      var w = this.getParticleSize( particleType );
       var h = w;
       coords.setMinX( xPos - w / 2 );
       coords.setMinY( yPos - h / 2 );
@@ -99,10 +107,15 @@ define( function( require ) {
 
     /**
      * Get the current width and height for the specified particle type.
-     * TODO: if the refactoring to make the particles the same size works out, this can be replaced with a public variable
      */
     getParticleSize: function( particleType ) {
-      return this.particleSize;
+      if ( particleType == ParticleType.SODIUM_ION ) {
+        return this.sodiumParticleViewSize;
+      }
+      else if ( particleType == ParticleType.POTASSIUM_ION ) {
+        return this.potassiumParticleViewSize;
+      }
+      throw new Error( 'unhandled particle type' );
     },
 
     /**
@@ -125,7 +138,7 @@ define( function( require ) {
 
       // create tiles for sodium particles
 
-      context.lineWidth = Math.floor( this.particleSize * 0.1 );
+      context.lineWidth = Math.floor( this.sodiumParticleViewSize * 0.1 );
 
       for ( i = 0; i < particlesPerRow; i++ ) {
         for ( j = 0; j < particlesPerColumn; j++ ) {
@@ -134,7 +147,7 @@ define( function( require ) {
           context.fillStyle = this.sodiumParticle.getRepresentationColor().withAlpha( opacityValue ).getCanvasStyle();// All sodium ions are of the same color,
           context.beginPath();
           particlePos = this.tilePostAt( this.sodiumParticle.getType(), i, j );
-          context.arc( particlePos.x, particlePos.y, this.particleSize / 2, 0, 2 * Math.PI, false );
+          context.arc( particlePos.x, particlePos.y, this.sodiumParticleViewSize / 2, 0, 2 * Math.PI, false );
           context.fill();
           context.stroke();
         }
@@ -142,7 +155,8 @@ define( function( require ) {
 
       // create tiles for potassium particles
 
-      context.lineWidth = Math.max( this.particleSize * 0.2, 1 );
+      // TODO: if lineWidth is the same when this is worked out, eliminate redundant setting here.
+      context.lineWidth = Math.floor( this.potassiumParticleViewSize * 0.1 );
 
       for ( i = 0; i < particlesPerRow; i++ ) {
         for ( j = 0; j < particlesPerColumn; j++ ) {
@@ -151,15 +165,16 @@ define( function( require ) {
           var x = particlePos.x;
           var y = particlePos.y;
           context.strokeStyle = Color.BLACK.withAlpha( opacityValue * 1.3 ).getCanvasStyle();
-          context.fillStyle = this.potassiumParticle.getRepresentationColor().withAlpha( opacityValue ).getCanvasStyle();// All sodium ions are of the same color,
+          context.fillStyle = this.potassiumParticle.getRepresentationColor().withAlpha( opacityValue ).getCanvasStyle();
+          context.lineJoin = 'round';
           context.beginPath();
-          context.moveTo( x - this.particleSize / 2, y );
-          context.lineTo( x, y - this.particleSize / 2 );
-          context.lineTo( x + this.particleSize / 2, y );
-          context.lineTo( x, y + this.particleSize / 2 );
+          context.moveTo( x - this.potassiumParticleViewSize / 2, y );
+          context.lineTo( x, y - this.potassiumParticleViewSize / 2 );
+          context.lineTo( x + this.potassiumParticleViewSize / 2, y );
+          context.lineTo( x, y + this.potassiumParticleViewSize / 2 );
           context.closePath();
-          context.stroke();
           context.fill();
+          context.stroke();
         }
       }
     },
@@ -175,9 +190,13 @@ define( function( require ) {
     tilePostAt: function( particleType, row, column, posVector ) {
       // TODO: IntelliJ is highlighting some things in this function as errors.  This should be fixed.
       posVector = posVector || new Vector2();
-        posVector.x = ( column * this.particleSize ) + this.particleSize / 2;
-        posVector.y = ( row * this.particleSize) + this.particleSize / 2;
+      if ( particleType === ParticleType.SODIUM_ION ) {
+        posVector.x = (column * this.sodiumParticleViewSize ) + this.sodiumParticleViewSize / 2;
+        posVector.y = (row * this.sodiumParticleViewSize ) + this.sodiumParticleViewSize / 2;
+      }
       if ( particleType === ParticleType.POTASSIUM_ION ) {
+        posVector.x = (column * this.potassiumParticleViewSize ) + this.potassiumParticleViewSize / 2;
+        posVector.y = (row * this.potassiumParticleViewSize ) + this.potassiumParticleViewSize / 2;
         //The Potassium Tiles are arranged after Sodium
         posVector.y += this.potasiumTileHeightOffset;
       }
@@ -207,7 +226,7 @@ define( function( require ) {
       var parts = opacityStr.split( "." );
       var row = parts[ 1 ].charAt( 0 );
       var column = parts[ 1 ].charAt( 1 );
-      var tileRadius = this.particleSize / 2;
+      var tileRadius = this.getParticleSize( particleType ) / 2;
       var tilePost = this.tilePostAt( particleType, row, column, posVector );
       tileRadius += this.strokeGapBetweenParticles / 2;
       coords = coords || new Bounds2( 0, 0, 0, 0 );
