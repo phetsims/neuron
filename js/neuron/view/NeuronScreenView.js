@@ -86,17 +86,8 @@ define( function( require ) {
     var zoomableNode = new Node();
     zoomableAreaRootNode.addChild( zoomableNode );
 
-    // The particle WebGL layer doesn't support bounds clipping, so a border-like shape is applied and added as a top
-    // node with the same color as the screen background to make particles appear to be properly clipped. For more
-    // detail, see https://github.com/phetsims/neuron/issues/7.
-    var maskLineWidth = 14; // empirically determined
-    var clipAreaBounds = worldNodeClipArea.bounds;
-    var maskingShape = Shape.rect( clipAreaBounds.x - ( maskLineWidth / 2 ), clipAreaBounds.y - ( maskLineWidth / 2 ),
-      clipAreaBounds.width + maskLineWidth, clipAreaBounds.height + maskLineWidth );
-    var maskNode = new Path( maskingShape, { stroke: NeuronConstants.SCREEN_BACKGROUND, lineWidth: maskLineWidth } );
-    thisView.addChild( maskNode );
-
     // Add a subtle outline to the zoomable area.
+    var clipAreaBounds = worldNodeClipArea.bounds;
     thisView.addChild( new Rectangle(
       clipAreaBounds.x,
       clipAreaBounds.y,
@@ -157,6 +148,53 @@ define( function( require ) {
       zoomMatrixProperty.value = scaleMatrix;
     } );
 
+    // Check to see if WebGL was prevented by a query parameter
+    var allowWebGL = phet.chipper.getQueryParameter( 'webgl' ) !== 'false';
+    var webGLSupported = Util.isWebGLSupported && allowWebGL;
+
+    if ( webGLSupported ) {
+
+      var estimatedMaxParticleWidth = 30; // empirically determined, used to support clipping-like behavior
+
+      var particlesWebGLNode = new ParticlesWebGLNode(
+        thisView.neuronModel,
+        thisView.mvt,
+        zoomProperty,
+        zoomMatrixProperty,
+        worldNodeClipArea.bounds.dilated( estimatedMaxParticleWidth / 2 )
+      );
+
+      if ( SHOW_PARTICLE_CANVAS_BOUNDS ) {
+        this.addChild( Rectangle.bounds( particlesWebGLNode.bounds, { stroke: 'purple' } ) );
+      }
+
+      // The WebGL particles node does its own clipping and zooming since these operations don't work very well when
+      // using the stock WebGLNode support, so it isn't added to the zoomable node hierarchy in the scene graph.
+      thisView.addChild( particlesWebGLNode );
+
+      // WebGLNode doesn't support clipping, so we add a shape around the viewport that matches the background color
+      // and makes it look like particles are being clipped. For more detail, see
+      // https://github.com/phetsims/neuron/issues/7.
+      var maskingShape = Shape.rect(
+        clipAreaBounds.x - ( estimatedMaxParticleWidth / 2 ),
+        clipAreaBounds.y - ( estimatedMaxParticleWidth / 2 ),
+        clipAreaBounds.width + estimatedMaxParticleWidth,
+        clipAreaBounds.height + estimatedMaxParticleWidth
+      );
+      var maskNode = new Path( maskingShape, { stroke: NeuronConstants.SCREEN_BACKGROUND, lineWidth: estimatedMaxParticleWidth } );
+      thisView.addChild( maskNode );
+    }
+    else {
+      var particlesCanvasNode = new ParticlesCanvasNode( thisView.neuronModel, thisView.mvt, worldNodeClipArea );
+      // TODO: Clarify this comment.
+      //WebGL node uses its own scaling whereas Matrix canvas based Particles implementation uses Node's
+      //transform matrix for scaling so add it to the zoomableNode
+      if ( SHOW_PARTICLE_CANVAS_BOUNDS ) {
+        this.addChild( Rectangle.bounds( particlesCanvasNode.bounds, { stroke: 'green' } ) );
+      }
+      zoomableNode.addChild( particlesCanvasNode );
+    }
+
     var recordPlayButtons = [];
     var playToggleProperty = new Property( true, false, neuronClockModelAdapter.pausedProperty );
     var playPauseButton = new PlayPauseButton( playToggleProperty, { radius: 25 } );
@@ -201,7 +239,7 @@ define( function( require ) {
 
     this.addChild( recordPlayButtonBox );
 
-    //space between layout edge and controls like reset,zoom control,legend,speed panel etc
+    // space between layout edge and controls like reset, zoom control, legend, speed panel, etc.
     var leftPadding = 20;
 
     var stimulateNeuronButton = new RectangularPushButton( {
@@ -258,38 +296,6 @@ define( function( require ) {
     membranePotentialChartNode.left = worldNodeClipArea.bounds.left;
     membranePotentialChartNode.bottom = clipAreaBounds.maxY;
     thisView.addChild( membranePotentialChartNode );
-
-    // Check to see if WebGL was prevented by a query parameter
-    var allowWebGL = phet.chipper.getQueryParameter( 'webgl' ) !== 'false';
-    var webGLSupported = Util.isWebGLSupported && allowWebGL;
-
-    if ( webGLSupported ) {
-      var particlesWebGLNode = new ParticlesWebGLNode(
-        thisView.neuronModel,
-        thisView.mvt,
-        zoomProperty,
-        zoomMatrixProperty,
-        worldNodeClipArea.bounds
-      );
-
-      if ( SHOW_PARTICLE_CANVAS_BOUNDS ) {
-        this.addChild( Rectangle.bounds( particlesWebGLNode.bounds, { stroke: 'purple' } ) );
-      }
-
-      // The WebGL particles node does its own clipping and zooming since these operations don't work very well when
-      // using the stock WebGLNode support, so it isn't added to the zoomable node hierarchy in the scene graph.
-      thisView.addChild( particlesWebGLNode );
-    }
-    else {
-      var particlesCanvasNode = new ParticlesCanvasNode( thisView.neuronModel, thisView.mvt, worldNodeClipArea );
-      // TODO: Clarify this comment.
-      //WebGL node uses its own scaling whereas Matrix canvas based Particles implementation uses Node's
-      //transform matrix for scaling so add it to the zoomableNode
-      if ( SHOW_PARTICLE_CANVAS_BOUNDS ) {
-        this.addChild( Rectangle.bounds( particlesCanvasNode.bounds, { stroke: 'green' } ) );
-      }
-      zoomableNode.addChild( particlesCanvasNode );
-    }
 
     var simSpeedControlPanel = new SimSpeedControlPanel( neuronClockModelAdapter.speedProperty );
     simSpeedControlPanel.left = thisView.layoutBounds.minX + leftPadding;

@@ -208,7 +208,7 @@ define( function( require ) {
      * add it to the list that will be converted into vertex data in a subsequent step.
      * @param particle
      */
-    addDataForParticle: function( particle ) {
+    addParticleData: function( particle ) {
       var xPos = this.modelViewTransform.modelToViewX( particle.positionX );
       var yPos = this.modelViewTransform.modelToViewY( particle.positionY );
       if ( this.constrainedBounds.containsCoordinates( xPos, yPos ) ) {
@@ -231,12 +231,12 @@ define( function( require ) {
 
       // TODO: Would it be substantially more efficient to do a C-style loop here?
       this.neuronModel.backgroundParticles.forEach( function( backgroundParticle ) {
-        self.addDataForParticle( backgroundParticle );
+        self.addParticleData( backgroundParticle );
       } );
 
       // TODO: Would it be substantially more efficient to do a C-style loop here?
       this.neuronModel.transientParticles.forEach( function( transientParticle ) {
-        self.addDataForParticle( transientParticle );
+        self.addParticleData( transientParticle );
       } );
 
       self.invalidatePaint();

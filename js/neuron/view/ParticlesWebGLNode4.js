@@ -53,7 +53,6 @@ define( function( require ) {
     this.particleTextureMap = new ParticleTextureMap( modelViewTransform, zoomProperty );
     this.zoomMatrixProperty = zoomMatrixProperty;
     this.particleBounds = bounds;
-    this.visibleParticlesSize = 0; // Only Particles within the clipping region of Zoomable Node are considered visible
 
     // Create the canvas on which particle tiles are drawn and used as a texture.
     this.particleTextureCanvas = document.createElement( 'canvas' );
@@ -286,7 +285,7 @@ define( function( require ) {
      * add it to the list that will be converted into vertex data in a subsequent step.
      * @param particle
      */
-    addDataForParticle: function( particle ) {
+    addParticleData: function( particle ) {
       var xPos = this.modelViewTransform.modelToViewX( particle.positionX );
       var yPos = this.modelViewTransform.modelToViewY( particle.positionY );
 
@@ -316,12 +315,12 @@ define( function( require ) {
 
       // TODO: Would it be substantially more efficient to do a C-style loop here?
       this.neuronModel.backgroundParticles.forEach( function( backgroundParticle ) {
-        self.addDataForParticle( backgroundParticle );
+        self.addParticleData( backgroundParticle );
       } );
 
       // TODO: Would it be substantially more efficient to do a C-style loop here?
       this.neuronModel.transientParticles.forEach( function( transientParticle ) {
-        self.addDataForParticle( transientParticle );
+        self.addParticleData( transientParticle );
       } );
 
       self.invalidatePaint();
