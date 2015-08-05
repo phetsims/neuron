@@ -36,7 +36,7 @@ define( function( require ) {
     thisNode.neuronModel = neuronModel;
 
     // Monitor a property that indicates when a particle state has changed and initiate a redraw.
-    neuronModel.on( NeuronConstants.PARTICLES_MOVED_EVENT, function( newValue ) {
+    neuronModel.on( NeuronConstants.PARTICLES_MOVED_EVENT, function() {
       thisNode.invalidatePaint();
     } );
   }
@@ -51,6 +51,7 @@ define( function( require ) {
       var thisNode = this;
       var canvasStrokeStyle = Color.BLACK.getCanvasStyle();
 
+      // TODO: This appears to be redefining the function on every paint, which seems crazy.  Can this be moved out?
       function renderParticles( particleTypes ) {
 
         // group by particle type, this way no need to set the fillStyle for every particle instance

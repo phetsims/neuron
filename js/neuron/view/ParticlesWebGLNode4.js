@@ -46,7 +46,6 @@ define( function( require ) {
     } );
 
     // Keep references to the things that needed in order to render the particles.
-    // TODO: Check that all of these are used and needed.
     this.neuronModel = neuronModel;
     this.modelViewTransform = modelViewTransform;
     this.viewTransformationMatrix = modelViewTransform.getMatrix();
@@ -73,13 +72,11 @@ define( function( require ) {
     this.particleViewPosition = new Vector2();
 
     // initial update
-    this.update();
+    this.updateParticleData();
 
-    // Monitor a property that indicates when a particle state has changed and initiate a redraw.  WARNING: The model
-    // should be set up such that it only triggers this event once per time stamp at the most, otherwise performance
-    // will suffer.
+    // Monitor a property that indicates when a particle state has changed and initiate a redraw.
     neuronModel.on( NeuronConstants.PARTICLES_MOVED_EVENT, function() {
-      self.update();
+      self.invalidatePaint();
     } );
   }
 
@@ -152,6 +149,8 @@ define( function( require ) {
       var self = this;
       var gl = drawable.gl;
       var shaderProgram = drawable.shaderProgram;
+
+      this.updateParticleData();
 
       if ( this.textureDirty ) {
         this.updateTexture( drawable );
@@ -309,7 +308,7 @@ define( function( require ) {
      * Update the representation shown in the canvas based on the model state.  This is intended to be called any time
      * one or more particles move in a given time step, which means once per frame or less.
      */
-    update: function() {
+    updateParticleData: function() {
       var self = this;
       this.clearParticleData();
 
@@ -323,7 +322,10 @@ define( function( require ) {
         self.addParticleData( transientParticle );
       } );
 
-      self.invalidatePaint();
+      // TODO: Would it be substantially more efficient to do a C-style loop here?
+      this.neuronModel.playbackParticles.forEach( function( playbackParticle ) {
+        self.addParticleData( playbackParticle );
+      } );
     }
   } );
 } );
