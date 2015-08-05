@@ -42,7 +42,7 @@ define( function( require ) {
             this.recordAndPlaybackModel.setRecord( true );
           }
           if ( BehaviourModeType.pauseAtEndOfPlayback ) {
-            this.recordAndPlaybackModel.setPaused( true );
+            this.recordAndPlaybackModel.setPlaying( false );
           }
         }
       }

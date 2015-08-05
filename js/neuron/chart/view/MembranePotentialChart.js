@@ -72,7 +72,7 @@ define( function( require ) {
     thisChart.neuronModel = neuronClockModelAdapter.model;
     thisChart.updateCountdownTimer = 0; // Init to zero so that an update occurs right away.
     thisChart.timeIndexOfFirstDataPt = 0;
-    thisChart.pausedWhenDragStarted = false;
+    thisChart.playingWhenDragStarted = true;
     thisChart.dataSeries = new XYDataSeries( { color: PhetColorScheme.RED_COLORBLIND } );
     thisChart.domain = [ 0, TIME_SPAN ];
     thisChart.range = [ -100, 100 ];
@@ -215,8 +215,8 @@ define( function( require ) {
     this.chartCursor = new ChartCursor( thisChart );
     plotNode.addChild( this.chartCursor );
 
-    neuronClockModelAdapter.pausedProperty.link( function( paused ) {
-      thisChart.updateOnClockPaused();
+    neuronClockModelAdapter.playingProperty.link( function() {
+      thisChart.updateCursorState();
     } );
 
     thisChart.neuronModel.timeProperty.link( thisChart.updateChartCursor.bind( thisChart ) );
@@ -392,18 +392,16 @@ define( function( require ) {
       this.updateChartCursorVisibility();
     },
 
-    updateOnClockPaused: function() {
+    updateCursorState: function() {
       this.updateChartCursorPos();
       this.updateChartCursorVisibility();
     },
     /**
-     * Used to control the paused state of Neuron clock
-     * Example : Clock is paused on/off when user drags the MembranePotential chart cursor
-     * @param {boolean} paused
+     * Used to control the play/pause state of clock, since grabbing the cursor causes the clock to pause.
+     * @param {boolean} playing
      */
-    setPaused: function( paused ) {
-      this.clock.setPaused( paused );
+    setPlaying: function( playing ) {
+      this.clock.playing = playing;
     }
   } );
-
 } );

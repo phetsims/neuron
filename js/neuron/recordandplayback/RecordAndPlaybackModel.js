@@ -1,6 +1,6 @@
 // Copyright 2002-2014, University of Colorado Boulder
 /**
- * 
+ *
  * This is the main model class for sims that support recording and playing back.  This is done by recording discrete states,
  * then being able to set re-apply them to the model.  This library does not currently provide support for interpolation between states.
  * <p/>
@@ -28,7 +28,7 @@ define( function( require ) {
    */
   function RecordAndPlaybackModel( maxRecordPoints, props ) {
     props = _.extend( props, {
-      paused: false, // True if the current mode is paused
+      playing: true, // True if playing, false if paused
       time: 0, // Current time of recording or playback
       historyRemainderCleared: false,
       historyCleared: false,
@@ -73,7 +73,7 @@ define( function( require ) {
      * @param simulationTimeChange
      */
     step: function( simulationTimeChange ) {
-      if ( !this.isPaused() ) {
+      if ( this.playing ) {
         this.stepMode( simulationTimeChange );
       }
     },
@@ -103,12 +103,12 @@ define( function( require ) {
       return this.mode === this.liveMode;
     },
 
-    setPaused: function( p ) {
-      this.paused = p;
+    setPlaying: function( p ) {
+      this.playing = p;
     },
 
-    isPaused: function() {
-      return this.paused;
+    isPlaying: function() {
+      return this.playing;
     },
 
     isRecordingFull: function() {
@@ -179,7 +179,7 @@ define( function( require ) {
     },
     startRecording: function() {
       this.setModeRecord();
-      this.setPaused( false );
+      this.setPlaying( true );
     },
 
     clearHistory: function() {
@@ -299,11 +299,7 @@ define( function( require ) {
       this.clearHistory();
       this.setTime( 0.0 );
       this.setRecord( true );
-      this.setPaused( true );
+      this.setPlaying( false );
     }
-
-
   } );
-
-} )
-;
+} );

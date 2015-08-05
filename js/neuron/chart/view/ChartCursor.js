@@ -65,12 +65,11 @@ define( function( require ) {
         this.currentPoint = e.currentTarget.globalToParentPoint( e.pointer.point );
         this.pressPoint = this.currentPoint.copy();
         this.pressTime = membranePotentialChart.chartMvt.viewToModelPosition( new Vector2( thisChartCursor.x, thisChartCursor.y ) ).x;
-        membranePotentialChart.pausedWhenDragStarted = membranePotentialChart.clock.isPaused();
-        if ( !membranePotentialChart.pausedWhenDragStarted ) {
-          // The user must be trying to grab the cursor while the sim is
-          // running or while recorded content is being played back.  Pause
-          // the clock.
-          membranePotentialChart.setPaused( true );
+        membranePotentialChart.playingWhenDragStarted = membranePotentialChart.clock.playing;
+        if ( membranePotentialChart.playingWhenDragStarted ) {
+          // The user must be trying to grab the cursor while the sim is running or while recorded content is being
+          // played back.  Pause the clock.
+          membranePotentialChart.setPlaying( false );
         }
       },
 
@@ -88,11 +87,10 @@ define( function( require ) {
       },
 
       end: function() {
-        if ( !membranePotentialChart.pausedWhenDragStarted ) {
-          // The clock wasn't paused when the user grabbed this
-          // cursor, so now that they are releasing the cursor we
-          // should un-pause the clock.
-          membranePotentialChart.setPaused( false );
+        if ( membranePotentialChart.playingWhenDragStarted ) {
+          // The clock was playing when the user grabbed this cursor, so now that they are releasing the cursor we
+          // should set the mode back to playing.
+          membranePotentialChart.setPlaying( true );
         }
       }
     } );

@@ -46,7 +46,7 @@ define( function( require ) {
     thisModel.simulationTime = 0.0;
 
     PropertySet.call( this, {
-        paused: false,//linked to playPause button
+        playing: true, // linked to playPause button
         speed: 1 // factor controlling simulation clock speed)
       }
     );
@@ -65,13 +65,13 @@ define( function( require ) {
 
     step: function( dt ) {
       // step one frame, assuming 60fps
-      if ( !this.isPaused() ) {
+      if ( this.playing ) {
         this.eventTimer.step( this.speed / 60 );
       }
     },
 
     constantStep: function( timeElapsed ) {
-      if ( !this.isPaused() ) {
+      if ( this.playing ) {
         this.tick( this.simulationTimeChange );
       }
     },
@@ -104,10 +104,6 @@ define( function( require ) {
     registerResetCallback: function( callback ) {
       this.resetCallBacks.push( callback );
     },
-
-    setPaused: function( p ) { this.paused = p; },
-
-    isPaused: function() { return this.paused; },
 
     /**
      * Update the clock, updating the wall time and possibly simulation time.

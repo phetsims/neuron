@@ -297,7 +297,7 @@ define( function( require ) {
       // the recorded data, we should automatically switch to record mode.
       if ( this.isPlayback() && this.getTime() >= this.getMaxRecordedTime() ) {
         this.setModeRecord();
-        this.setPaused( false );
+        this.setPlaying( true );
       }
     },
 
@@ -499,11 +499,10 @@ define( function( require ) {
       // original state.
       this.setAllIonsSimulated( DEFAULT_FOR_SHOW_ALL_IONS );
 
-      // Set the state of the record-and-playback model to be "live"
-      // (neither recording nor playing) and unpaused.
+      // Set the state of the record-and-playback model to be "live" (neither recording nor playing) and unpaused.
       this.clearHistory();
       this.setModeLive();
-      this.setPaused( false );
+      this.setPlaying( true );
       this.allowStepNavigation = false;
     },
 
