@@ -18,7 +18,6 @@ define( function( require ) {
   var Bounds2 = require( 'DOT/Bounds2' );
   var Color = require( 'SCENERY/util/Color' );
   var Util = require( 'SCENERY/util/Util' );
-  var DOTUtil = require( 'DOT/Util' );
   var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
 
   /**
