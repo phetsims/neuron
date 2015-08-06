@@ -221,10 +221,8 @@ define( function( require ) {
       if ( opacity >= 1 ) {
         opacity = 0.99; // The Max is 0.99 but mapped to 1 , see createTiles method
       }
-      var opacityStr = DOTUtil.toFixed( opacity, 4 );
-      var parts = opacityStr.split( "." );
-      var row = parts[ 1 ].charAt( 0 );
-      var column = parts[ 1 ].charAt( 1 );
+      var row = Math.floor( opacity * 10 );
+      var column = Math.floor( opacity * 100 ) % 10;
       var tileRadius = this.getParticleSize( particleType ) / 2;
       var tilePost = this.tilePostAt( particleType, row, column, posVector );
       tileRadius += this.strokeGapBetweenParticles / 2;
