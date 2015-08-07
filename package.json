@@ -1,6 +1,6 @@
 {
   "name": "neuron",
-  "version": "1.0.0-dev.10",
+  "version": "1.0.0-dev.11",
   "license": "GPLv3",
   "simTitleStringKey": "NEURON/neuron.name",
   "phetLibs": [
