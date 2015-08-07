@@ -55,8 +55,7 @@ define( function( require ) {
   var SHOW_PARTICLE_CANVAS_BOUNDS = false; // for debugging
   var MIN_ZOOM = 0.7;
   var MAX_ZOOM = 6;
-  //var DEFAULT_ZOOM = 0.7;
-  var DEFAULT_ZOOM = 1; // TODO: The default zoom has temporarily been changed to 1, since this works better for WebGL testing.  Change back when WebGL is working.
+  var DEFAULT_ZOOM = 0.7;
 
   /**
    * Constructor for the NeuronView
