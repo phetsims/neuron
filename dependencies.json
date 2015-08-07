@@ -1,0 +1,63 @@
+{
+  "comment": "# neuron 1.0.0-dev.11 Fri Aug 07 2015 16:39:35 GMT-0600 (Mountain Daylight Time)",
+  "assert": {
+    "sha": "858e65ac477bf1861883ce06eed56d9fdefa5027",
+    "branch": "master"
+  },
+  "axon": {
+    "sha": "1f0ca9f4fca42ddd7912c7c99d6f96edcbb4a8be",
+    "branch": "master"
+  },
+  "brand": {
+    "sha": "aa39bc48491aaee6c9059e0194c8974fd02bceba",
+    "branch": "master"
+  },
+  "chipper": {
+    "sha": "5ddc5b26d4510d188ac491d56362778230a84d03",
+    "branch": "master"
+  },
+  "dot": {
+    "sha": "e34c6b2c53b83ea1f8d2a5091cadfdc6353a501d",
+    "branch": "master"
+  },
+  "griddle": {
+    "sha": "7699ef4077b3fdcddb19f6a631b16db779416096",
+    "branch": "master"
+  },
+  "joist": {
+    "sha": "fe0ae4589803343bab22635713a6929966823af5",
+    "branch": "master"
+  },
+  "kite": {
+    "sha": "2497814682e359a8500fcb2a6dca2e276a00b6f9",
+    "branch": "master"
+  },
+  "neuron": {
+    "sha": "2870dbf5f1684d0c3158a2b6570d28968824d6cc",
+    "branch": "master"
+  },
+  "phet-core": {
+    "sha": "8e31808c67a23066b43fbbd2080784daa44433c2",
+    "branch": "master"
+  },
+  "phetcommon": {
+    "sha": "89a44d2cefd4b66f031f7f3fc30c0578a3130b5e",
+    "branch": "master"
+  },
+  "scenery": {
+    "sha": "63a4deeec7c634f8ac117300e82a1611b84c9d83",
+    "branch": "master"
+  },
+  "scenery-phet": {
+    "sha": "d3b26386314629f77f95edf1f7bb0a765e88ce51",
+    "branch": "master"
+  },
+  "sherpa": {
+    "sha": "589d339ab9fe1747997e3c67e8eaa965359d1f63",
+    "branch": "master"
+  },
+  "sun": {
+    "sha": "70796d170f5189a4d41d26f528c5a8f45872b50b",
+    "branch": "master"
+  }
+}
