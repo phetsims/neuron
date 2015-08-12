@@ -423,7 +423,6 @@ define( function( require ) {
         this.concentrationChanged = true;
       }
 
-
       // Trigger the event that lets the view know that the particles should be redrawn.
       this.trigger( NeuronConstants.PARTICLES_MOVED_EVENT );
 

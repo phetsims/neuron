@@ -1,14 +1,12 @@
 // Copyright 2002-2014, University of Colorado Boulder
 
 /**
- * The clock for this simulation. The simulation time change (dt) on each
- * clock tick is constant, regardless of when (in wall time) the ticks
- * actually happen.
+ * The clock for this simulation, which provide support for normal operation, play and pause, stepping backwards in
+ * time, and playback of previously recorded data.
  * <p/>
- * Note: The whole approach of using explicit clocks and clock adapters is
- * a holdover from PhET's Java days, and is present in this sim because the
- * sim was ported from a Java version.  Use of this technique is not
- * recommended for new HTML5/JavaScript simulations.
+ * Note: The whole approach of using explicit clocks and clock adapters is a holdover from PhET's Java days, and is
+ * present in this sim because the sim was ported from a Java version.  Use of this technique is not recommended for
+ * new HTML5/JavaScript simulations.
  * <p/>
  * @author Chris Malley (cmalley@pixelzoom.com)
  * @author Sharfudeen Ashraf (for Ghent University)
@@ -33,7 +31,6 @@ define( function( require ) {
    * @param {NeuronModel} model (whose simulation timing is controlled by this adapter, Note:- The Adapter is generic and doesn't have any dependency on the model it controls)
    * @param {number} framesPerSecond the number of frames per second
    * @param {number} dt constant simulation time change between ticks
-
    */
   function NeuronClockModelAdapter( model, framesPerSecond, dt ) {
 
@@ -47,7 +44,7 @@ define( function( require ) {
 
     PropertySet.call( this, {
         playing: true, // linked to playPause button
-        speed: 1 // factor controlling simulation clock speed)
+        speed: 1 // factor controlling simulation clock speed
       }
     );
 
@@ -64,9 +61,8 @@ define( function( require ) {
   return inherit( PropertySet, NeuronClockModelAdapter, {
 
     step: function( dt ) {
-      // step one frame, assuming 60fps
       if ( this.playing ) {
-        this.eventTimer.step( this.speed / 60 );
+        this.eventTimer.step( dt );
       }
     },
 
@@ -114,8 +110,6 @@ define( function( require ) {
       for ( var i = 0; i < this.stepCallbacks.length; i++ ) {
         this.stepCallbacks[ i ]( this.getSimulationTimeChange() );
       }
-
-
     },
 
     // @private below this line
@@ -126,6 +120,7 @@ define( function( require ) {
         changedCallbacks[ i ]( this );
       }
     },
+
     /**
      * Gets the constant simulation time change (dt) between ticks.
      * @return dt
