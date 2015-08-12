@@ -29,6 +29,9 @@ define( function( require ) {
   // TODO: Add MAX_PARTICLES back when optimizing allocation of array data (such as vertex data).
   var MAX_PARTICLES = 2000; // several trials were run and peak number of particles was 1841, so this value should be safe
   var PRINT_DATA_URL_OF_SPRITE_SHEET = true; // very useful for debugging issues with the sprite sheet texture
+  var VERTICES_PER_PARTICLE = 4; // basically one per corner of the rectangle that encloses the particle
+  var POSITION_VALUES_PER_VERTEX = 2; // x and y, z is considered to be always 1
+  var TEXTURE_VALUES_PER_VERTEX = 2; // x and y coordinates within the 2D texture
 
   /**
    * @param {NeuronModel} neuronModel
@@ -66,6 +69,8 @@ define( function( require ) {
     } );
 
     // Set up some variables for reuse instead of reallocating them with each repaint.  This improves performance.
+    this.vertexData = new Float32Array( MAX_PARTICLES * VERTICES_PER_PARTICLE *
+                                        ( POSITION_VALUES_PER_VERTEX + TEXTURE_VALUES_PER_VERTEX ) );
     this.texCoords = new Bounds2( 0, 0, 0, 0 ); // The normalized texture coordinates that corresponds to the vertex corners
     this.vertexCords = new Bounds2( 0, 0, 0, 0 );// the rectangle bounds of a particle (used to create 2 triangles)
     this.tilePosVector = new Vector2();
@@ -172,40 +177,39 @@ define( function( require ) {
       }
 
       // Convert particle data to vertices that represent a rectangle plus texture coordinates.
-      // TODO: Should optimize to define the vertex data once and reuse instead of reallocating each time.
-      var vertexData = [];
+      var offset = 0;
       for ( i = 0; i < this.numActiveParticles; i++ ) {
+
+        // convenience var
         var particleDatum = this.particleData[ i ];
 
         // Get the particle view size as it currently exists in the texture map (which is based on the zoom level).
         var particleSize = self.particleTextureMap.getParticleSize( particleDatum.type );
 
         // Get the texture coordinates.  For performance reasons, this method updates pre-allocated values.
-        self.particleTextureMap.getTexCords( particleDatum.type, particleDatum.opacity, self.tilePosVector, self.texCoords );
+        this.particleTextureMap.getTexCords( particleDatum.type, particleDatum.opacity, self.tilePosVector, self.texCoords );
 
-        // TODO: Faster to use C-style?
-        _.times( 4, function( index ) {
+        // Add the vertices, which essentially represent the four corners that enclose the particle.
+        for ( var j = 0; j < VERTICES_PER_PARTICLE; j++ ){
 
           // vertex, which is a 2-component vector (z is assumed to be 1)
-          vertexData.push( particleDatum.xPos + particleSize / 2 * ( index < 2 ? -1 : 1 ) );
-          vertexData.push( particleDatum.yPos + particleSize / 2 * ( index % 2 === 0 ? -1 : 1 ) );
+          this.vertexData[ offset++ ] = particleDatum.xPos + particleSize / 2 * ( j < 2 ? -1 : 1 );
+          this.vertexData[ offset++ ] = particleDatum.yPos + particleSize / 2 * ( j % 2 === 0 ? -1 : 1 );
 
           // texture coordinate, which is a 2-component vector
-          vertexData.push( index < 2 ? self.texCoords.minX : self.texCoords.maxX ); // x texture coordinate
-          vertexData.push( index % 2 === 0 ? self.texCoords.minY : self.texCoords.maxY ); // y texture coordinate
-        } );
+          this.vertexData[ offset++ ] = j < 2 ? self.texCoords.minX : self.texCoords.maxX; // x texture coordinate
+          this.vertexData[ offset++ ] = j % 2 === 0 ? self.texCoords.minY : self.texCoords.maxY; // y texture coordinate
+        }
       }
-      ;
 
       // Load the vertex data into the GPU.
+      gl.bindBuffer( gl.ARRAY_BUFFER, drawable.vertexBuffer );
+      gl.bufferData( gl.ARRAY_BUFFER, this.vertexData, gl.STATIC_DRAW );
+
+      // Set up the attributes that will be passed into the vertex shader.
       var elementSize = Float32Array.BYTES_PER_ELEMENT;
       var elementsPerVertex = 2 + 2; // xy vertex + texture coordinate
       var stride = elementSize * elementsPerVertex;
-      gl.bindBuffer( gl.ARRAY_BUFFER, drawable.vertexBuffer );
-      // TODO: I (jblanco) believe that Ashraf allocated the vertex data once, and I think I'm doing it for every render.  I should look at using his approach.
-      gl.bufferData( gl.ARRAY_BUFFER, new Float32Array( vertexData ), gl.STATIC_DRAW );
-
-      // Set up the attributes that will be passed into the vertex shader.
       gl.vertexAttribPointer( shaderProgram.attributeLocations.aPosition, 2, gl.FLOAT, false, stride, 0 );
       gl.vertexAttribPointer( shaderProgram.attributeLocations.aTextureCoordinate, 2, gl.FLOAT, false, stride, elementSize * 2 );
 
