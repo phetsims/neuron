@@ -197,8 +197,6 @@ define( function( require ) {
     } );
     chartContentNode.addChild( graphNode );
 
-    //
-
     thisChart.dataSeries.addDataSeriesListener( function( x, y, xPrevious, yPrevious ) {
       if ( xPrevious && yPrevious && (xPrevious !== 0 || yPrevious !== 0 ) ) {
         graphLinesShape.moveTo( thisChart.chartMvt.modelToViewX( xPrevious ), thisChart.chartMvt.modelToViewY( yPrevious ) );
