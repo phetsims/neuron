@@ -95,7 +95,6 @@ define( function( require ) {
 
     // Monitor a property that indicates when a particle state has changed and initiate a redraw.
     neuronModel.on( NeuronConstants.PARTICLES_MOVED_EVENT, function() {
-      self.updateParticleData();
       self.invalidatePaint();
     } );
   }
