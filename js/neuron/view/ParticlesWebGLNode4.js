@@ -95,6 +95,7 @@ define( function( require ) {
 
     // Monitor a property that indicates when a particle state has changed and initiate a redraw.
     neuronModel.on( NeuronConstants.PARTICLES_MOVED_EVENT, function() {
+      self.updateParticleData();
       self.invalidatePaint();
     } );
   }
@@ -346,7 +347,7 @@ define( function( require ) {
         self.addParticleData( particleArray[ i ] );
       }
 
-      particleArray = this.neuronModel.transientParticles.getArray();
+      particleArray = this.neuronModel.playbackParticles.getArray();
 
       for ( i = 0; i < particleArray.length; i++ ) {
         self.addParticleData( particleArray[ i ] );
