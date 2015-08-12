@@ -27,7 +27,7 @@ define( function( require ) {
 
   // constants
   // TODO: Add MAX_PARTICLES back when optimizing allocation of array data (such as vertex data).
-  //var MAX_PARTICLES = 1000; // several trials were run and peak number of particles was 882, so this value should be safe
+  var MAX_PARTICLES = 2000; // several trials were run and peak number of particles was 1841, so this value should be safe
   var PRINT_DATA_URL_OF_SPRITE_SHEET = true; // very useful for debugging issues with the sprite sheet texture
 
   /**
@@ -70,6 +70,19 @@ define( function( require ) {
     this.vertexCords = new Bounds2( 0, 0, 0, 0 );// the rectangle bounds of a particle (used to create 2 triangles)
     this.tilePosVector = new Vector2();
     this.particleViewPosition = new Vector2();
+
+    // For better performance, an array of particle data objects is allocated now, and their values are updated rather
+    // than discarded and reallocated.
+    this.particleData = new Array( MAX_PARTICLES );
+    for ( var i = 0; i < MAX_PARTICLES; i++ ) {
+      this.particleData[ i ] = {
+        xPos: 0,
+        yPos: 0,
+        type: null,
+        opacity: 1
+      };
+    }
+    this.numActiveParticles = 0;
 
     // initial update
     this.updateParticleData();
@@ -149,6 +162,7 @@ define( function( require ) {
       var self = this;
       var gl = drawable.gl;
       var shaderProgram = drawable.shaderProgram;
+      var i; // loop index
 
       this.updateParticleData();
 
@@ -160,7 +174,8 @@ define( function( require ) {
       // Convert particle data to vertices that represent a rectangle plus texture coordinates.
       // TODO: Should optimize to define the vertex data once and reuse instead of reallocating each time.
       var vertexData = [];
-      this.particleData.forEach( function( particleDatum ) {
+      for ( i = 0; i < this.numActiveParticles; i++ ) {
+        var particleDatum = this.particleData[ i ];
 
         // Get the particle view size as it currently exists in the texture map (which is based on the zoom level).
         var particleSize = self.particleTextureMap.getParticleSize( particleDatum.type );
@@ -179,7 +194,8 @@ define( function( require ) {
           vertexData.push( index < 2 ? self.texCoords.minX : self.texCoords.maxX ); // x texture coordinate
           vertexData.push( index % 2 === 0 ? self.texCoords.minY : self.texCoords.maxY ); // y texture coordinate
         } );
-      } );
+      }
+      ;
 
       // Load the vertex data into the GPU.
       var elementSize = Float32Array.BYTES_PER_ELEMENT;
@@ -197,17 +213,17 @@ define( function( require ) {
       // discontinuities in the triangle strip, thus creating separate rectangles.
       var elementData = [];
       var count = 0;
-      _.times( this.particleData.length, function( index ) {
+      for ( i = 0; i < this.numActiveParticles; i++ ) {
         elementData.push( count++ );
         elementData.push( count++ );
         elementData.push( count++ );
         elementData.push( count );
-        if ( index + 1 < self.particleData.length ) {
+        if ( i + 1 < self.numActiveParticles ) {
           // Add the 'degenerate triangle' that will force a discontinuity in the triangle strip.
           elementData.push( count++ );
           elementData.push( count );
         }
-      } );
+      }
       gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, drawable.elementBuffer );
       gl.bufferData( gl.ELEMENT_ARRAY_BUFFER, new Uint16Array( elementData ), gl.STATIC_DRAW );
 
@@ -219,7 +235,7 @@ define( function( require ) {
       // TODO: The following line of code is a guess based on things seen elsewhere.  Should this uniform be in shaderProgram.uniformLocations?
       gl.uniform1i( drawable.uniformSamplerLoc, 0 );
 
-      //gl.drawArrays( gl.TRIANGLE_STRIP, 0, this.particleData.length * 4 );
+      // add the element data
       gl.drawElements( gl.TRIANGLE_STRIP, elementData.length, gl.UNSIGNED_SHORT, 0 );
 
       shaderProgram.unuse();
@@ -275,10 +291,6 @@ define( function( require ) {
       drawable.shaderProgram = null;
     },
 
-    clearParticleData: function() {
-      this.particleData = [];
-    },
-
     /**
      * Check if the provided particle is in the current rendering bounds and, if so, create a particle data object and
      * add it to the list that will be converted into vertex data in a subsequent step.
@@ -295,12 +307,13 @@ define( function( require ) {
       var zoomedXPos = zoomMatrix.m00() * xPos + zoomMatrix.m02();
       var zoomedYPos = zoomMatrix.m11() * yPos + zoomMatrix.m12();
       if ( this.particleBounds.containsCoordinates( zoomedXPos, zoomedYPos ) ) {
-        this.particleData.push( {
-          xPos: zoomedXPos,
-          yPos: zoomedYPos,
-          type: particle.getType(),
-          opacity: particle.getOpaqueness()
-        } );
+        var particleDataEntry = this.particleData[ this.numActiveParticles ];
+        particleDataEntry.xPos = zoomedXPos;
+        particleDataEntry.yPos = zoomedYPos;
+        particleDataEntry.type = particle.getType();
+        particleDataEntry.opacity = particle.getOpaqueness();
+        assert && assert( this.numActiveParticles < MAX_PARTICLES - 1 );
+        this.numActiveParticles = Math.min( this.numActiveParticles + 1, MAX_PARTICLES );
       }
     },
 
@@ -310,7 +323,7 @@ define( function( require ) {
      */
     updateParticleData: function() {
       var self = this;
-      this.clearParticleData();
+      this.numActiveParticles = 0;
 
       // For better performance, we loop over the arrays contained within the observable arrays rather than using the
       // forEach function.  This is much more efficient.  Note that this is only safe if no mods are made to the
@@ -319,19 +332,19 @@ define( function( require ) {
       var i = 0;
       var particleArray = this.neuronModel.backgroundParticles.getArray();
 
-      for ( i = 0; i < particleArray.length; i++ ){
+      for ( i = 0; i < particleArray.length; i++ ) {
         self.addParticleData( particleArray[ i ] );
       }
 
       particleArray = this.neuronModel.transientParticles.getArray();
 
-      for ( i = 0; i < particleArray.length; i++ ){
+      for ( i = 0; i < particleArray.length; i++ ) {
         self.addParticleData( particleArray[ i ] );
       }
 
       particleArray = this.neuronModel.transientParticles.getArray();
 
-      for ( i = 0; i < particleArray.length; i++ ){
+      for ( i = 0; i < particleArray.length; i++ ) {
         self.addParticleData( particleArray[ i ] );
       }
     }
