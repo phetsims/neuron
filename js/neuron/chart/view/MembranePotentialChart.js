@@ -152,6 +152,7 @@ define( function( require ) {
     } );
 
     // close button
+    // TODO: Should go into common code if not already there
     var closeIconLength = 5;
     var xIcon = new Path( new Shape()
         .moveTo( -closeIconLength, -closeIconLength )
@@ -191,9 +192,12 @@ define( function( require ) {
 
     var graphLinesShape = new Shape();
     var graphNode = new Path( graphLinesShape, {
-      stroke: thisChart.dataSeries.color
+      stroke: thisChart.dataSeries.color,
+      boundsMethod: 'none' // so that this can be changed without a lot of processing burden, disable the bounds calculation
     } );
     chartContentNode.addChild( graphNode );
+
+    //
 
     thisChart.dataSeries.addDataSeriesListener( function( x, y, xPrevious, yPrevious ) {
       if ( xPrevious && yPrevious && (xPrevious !== 0 || yPrevious !== 0 ) ) {
