@@ -71,6 +71,7 @@ define( function( require ) {
     // Set up some variables for reuse instead of reallocating them with each repaint.  This improves performance.
     this.vertexData = new Float32Array( MAX_PARTICLES * VERTICES_PER_PARTICLE *
                                         ( POSITION_VALUES_PER_VERTEX + TEXTURE_VALUES_PER_VERTEX ) );
+    this.elementData = new Array( MAX_PARTICLES * ( VERTICES_PER_PARTICLE + 2 ) );
     this.texCoords = new Bounds2( 0, 0, 0, 0 ); // The normalized texture coordinates that corresponds to the vertex corners
     this.vertexCords = new Bounds2( 0, 0, 0, 0 );// the rectangle bounds of a particle (used to create 2 triangles)
     this.tilePosVector = new Vector2();
@@ -164,7 +165,6 @@ define( function( require ) {
      * @param {Matrix3} matrix
      */
     paintWebGLDrawable: function( drawable, matrix ) {
-      var self = this;
       var gl = drawable.gl;
       var shaderProgram = drawable.shaderProgram;
       var i; // loop index
@@ -177,28 +177,42 @@ define( function( require ) {
       }
 
       // Convert particle data to vertices that represent a rectangle plus texture coordinates.
-      var offset = 0;
+      var vertexDataIndex = 0;
+      var elementDataIndex = 0;
+      var elementDataValue = 0;
       for ( i = 0; i < this.numActiveParticles; i++ ) {
 
         // convenience var
         var particleDatum = this.particleData[ i ];
 
         // Get the particle view size as it currently exists in the texture map (which is based on the zoom level).
-        var particleSize = self.particleTextureMap.getParticleSize( particleDatum.type );
+        var particleSize = this.particleTextureMap.getParticleSize( particleDatum.type );
 
         // Get the texture coordinates.  For performance reasons, this method updates pre-allocated values.
-        this.particleTextureMap.getTexCords( particleDatum.type, particleDatum.opacity, self.tilePosVector, self.texCoords );
+        this.particleTextureMap.getTexCords( particleDatum.type, particleDatum.opacity, this.tilePosVector, this.texCoords );
 
         // Add the vertices, which essentially represent the four corners that enclose the particle.
         for ( var j = 0; j < VERTICES_PER_PARTICLE; j++ ){
 
           // vertex, which is a 2-component vector (z is assumed to be 1)
-          this.vertexData[ offset++ ] = particleDatum.xPos + particleSize / 2 * ( j < 2 ? -1 : 1 );
-          this.vertexData[ offset++ ] = particleDatum.yPos + particleSize / 2 * ( j % 2 === 0 ? -1 : 1 );
+          this.vertexData[ vertexDataIndex++ ] = particleDatum.xPos + particleSize / 2 * ( j < 2 ? -1 : 1 );
+          this.vertexData[ vertexDataIndex++ ] = particleDatum.yPos + particleSize / 2 * ( j % 2 === 0 ? -1 : 1 );
 
           // texture coordinate, which is a 2-component vector
-          this.vertexData[ offset++ ] = j < 2 ? self.texCoords.minX : self.texCoords.maxX; // x texture coordinate
-          this.vertexData[ offset++ ] = j % 2 === 0 ? self.texCoords.minY : self.texCoords.maxY; // y texture coordinate
+          this.vertexData[ vertexDataIndex++ ] = j < 2 ? this.texCoords.minX : this.texCoords.maxX; // x texture coordinate
+          this.vertexData[ vertexDataIndex++ ] = j % 2 === 0 ? this.texCoords.minY : this.texCoords.maxY; // y texture coordinate
+        }
+
+        // Add the element indices.  This is done so that we can create 'degenerate triangles' and thus have
+        // discontinuities in the triangle strip, thus creating separate rectangles.
+        this.elementData[ elementDataIndex++ ] = elementDataValue++;
+        this.elementData[ elementDataIndex++ ] = elementDataValue++;
+        this.elementData[ elementDataIndex++ ] = elementDataValue++;
+        this.elementData[ elementDataIndex++ ] = elementDataValue;
+        if ( i + 1 < this.numActiveParticles ) {
+          // Add the 'degenerate triangle' that will force a discontinuity in the triangle strip.
+          this.elementData[ elementDataIndex++ ] = elementDataValue++;
+          this.elementData[ elementDataIndex++ ] = elementDataValue;
         }
       }
 
@@ -213,23 +227,9 @@ define( function( require ) {
       gl.vertexAttribPointer( shaderProgram.attributeLocations.aPosition, 2, gl.FLOAT, false, stride, 0 );
       gl.vertexAttribPointer( shaderProgram.attributeLocations.aTextureCoordinate, 2, gl.FLOAT, false, stride, elementSize * 2 );
 
-      // Set up the element indices.  This is done so that we can create 'degenerate triangles' and thus have
-      // discontinuities in the triangle strip, thus creating separate rectangles.
-      var elementData = [];
-      var count = 0;
-      for ( i = 0; i < this.numActiveParticles; i++ ) {
-        elementData.push( count++ );
-        elementData.push( count++ );
-        elementData.push( count++ );
-        elementData.push( count );
-        if ( i + 1 < self.numActiveParticles ) {
-          // Add the 'degenerate triangle' that will force a discontinuity in the triangle strip.
-          elementData.push( count++ );
-          elementData.push( count );
-        }
-      }
+      // Load the element data into the GPU.
       gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, drawable.elementBuffer );
-      gl.bufferData( gl.ELEMENT_ARRAY_BUFFER, new Uint16Array( elementData ), gl.STATIC_DRAW );
+      gl.bufferData( gl.ELEMENT_ARRAY_BUFFER, new Uint16Array( this.elementData ), gl.STATIC_DRAW );
 
       shaderProgram.use();
 
@@ -240,7 +240,7 @@ define( function( require ) {
       gl.uniform1i( drawable.uniformSamplerLoc, 0 );
 
       // add the element data
-      gl.drawElements( gl.TRIANGLE_STRIP, elementData.length, gl.UNSIGNED_SHORT, 0 );
+      gl.drawElements( gl.TRIANGLE_STRIP, elementDataIndex, gl.UNSIGNED_SHORT, 0 );
 
       shaderProgram.unuse();
     },
