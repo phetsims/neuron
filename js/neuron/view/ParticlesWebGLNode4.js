@@ -312,20 +312,28 @@ define( function( require ) {
       var self = this;
       this.clearParticleData();
 
-      // TODO: Would it be substantially more efficient to do a C-style loop here?
-      this.neuronModel.backgroundParticles.forEach( function( backgroundParticle ) {
-        self.addParticleData( backgroundParticle );
-      } );
+      // For better performance, we loop over the arrays contained within the observable arrays rather than using the
+      // forEach function.  This is much more efficient.  Note that this is only safe if no mods are made to the
+      // contents of the observable array.
 
-      // TODO: Would it be substantially more efficient to do a C-style loop here?
-      this.neuronModel.transientParticles.forEach( function( transientParticle ) {
-        self.addParticleData( transientParticle );
-      } );
+      var i = 0;
+      var particleArray = this.neuronModel.backgroundParticles.getArray();
 
-      // TODO: Would it be substantially more efficient to do a C-style loop here?
-      this.neuronModel.playbackParticles.forEach( function( playbackParticle ) {
-        self.addParticleData( playbackParticle );
-      } );
+      for ( i = 0; i < particleArray.length; i++ ){
+        self.addParticleData( particleArray[ i ] );
+      }
+
+      particleArray = this.neuronModel.transientParticles.getArray();
+
+      for ( i = 0; i < particleArray.length; i++ ){
+        self.addParticleData( particleArray[ i ] );
+      }
+
+      particleArray = this.neuronModel.transientParticles.getArray();
+
+      for ( i = 0; i < particleArray.length; i++ ){
+        self.addParticleData( particleArray[ i ] );
+      }
     }
   } );
 } );

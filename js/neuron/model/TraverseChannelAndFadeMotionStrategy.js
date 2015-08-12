@@ -18,7 +18,6 @@ define( function( require ) {
   var TimedFadeAwayStrategy = require( 'NEURON/neuron/model/TimedFadeAwayStrategy' );
   var MathUtils = require( 'NEURON/neuron/utils/MathUtils' );
 
-
   /**
    *
    * @param {MembraneChannel} channel
@@ -53,30 +52,34 @@ define( function( require ) {
       var currentPositionRefX = movableModelElement.getPositionX();
       var currentPositionRefY = movableModelElement.getPositionY();
 
-
       if ( dt < 0 ) {
         return this.moveBack( movableModelElement, fadableModelElement, dt );
       }
 
       if ( !this.channelHasBeenEntered ) {
-        // Update the flag the tracks whether this particle has made it
-        // to the channel and started traversing it.
+        // Update the flag the tracks whether this particle has made it to the channel and started traversing it.
         this.channelHasBeenEntered = this.channel.isPointInChannel( currentPositionRefX, currentPositionRefY );
       }
 
       if ( this.channel.isOpen() || this.channelHasBeenEntered ) {
-        // The channel is open, or we are inside it or have gone all the
-        // way through, so keep executing this motion strategy.
-        if ( this.currentDestinationIndex >= this.traversalPoints.length || this.maxVelocity * dt < this.distanceBetweenPosAndTraversalPoint( currentPositionRefX, currentPositionRefY, this.traversalPoints[ this.currentDestinationIndex ] ) ) {
+
+        // The channel is open, or we are inside it or have gone all the way through, so keep executing this motion strategy.
+        if ( this.currentDestinationIndex >= this.traversalPoints.length ||
+             this.maxVelocity * dt < this.distanceBetweenPosAndTraversalPoint(
+               currentPositionRefX,
+               currentPositionRefY,
+               this.traversalPoints[ this.currentDestinationIndex ] ) ) {
+
           // Move according to the current velocity.
           movableModelElement.setPosition( currentPositionRefX + this.velocityVector.x * dt,
             currentPositionRefY + this.velocityVector.y * dt );
         }
         else {
 
-          // We are close enough to the destination that we should just
-          // position ourself there and update to the next traversal point.
-          movableModelElement.setPosition( this.traversalPoints[ this.currentDestinationIndex ].x, this.traversalPoints[ this.currentDestinationIndex ].y );
+          // We are close enough to the destination that we should just position ourself there and update to the next
+          // traversal point.
+          movableModelElement.setPosition( this.traversalPoints[ this.currentDestinationIndex ].x,
+            this.traversalPoints[ this.currentDestinationIndex ].y );
           this.currentDestinationIndex++;
           this.setCourseForCurrentTraversalPoint( movableModelElement.getPositionX(), movableModelElement.getPositionY() );
           if ( this.currentDestinationIndex === this.traversalPoints.length ) {

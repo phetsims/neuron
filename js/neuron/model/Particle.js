@@ -53,7 +53,6 @@ define( function( require ) {
 
     // Fade strategy for fading in and out.
     this.fadeStrategy = NullFadeStrategy.getInstance();
-
   }
 
   return inherit( ViewableParticle, Particle, {
@@ -80,10 +79,10 @@ define( function( require ) {
     getPositionX: function() {
       return this.positionX;
     },
+
     getPositionY: function() {
       return this.positionY;
     },
-
 
     /**
      * Get the radius of the object being moved.  This is generally used when
@@ -97,15 +96,18 @@ define( function( require ) {
     getRadius: function() {
       return DEFAULT_PARTICLE_RADIUS;   // Default value, override if needed to support other particles.
     },
+
     /**
      * Set the fade strategy for the element.
      */
     setFadeStrategy: function( fadeStrategy ) {
       this.fadeStrategy = fadeStrategy;
     },
+
     setMotionStrategy: function( motionStrategy ) {
       this.motionStrategy = motionStrategy;
     },
+
     setPosition: function( x, y ) {
       this.positionX = x;
       this.positionY = y;

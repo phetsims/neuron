@@ -273,25 +273,24 @@ define( function( require ) {
   return inherit( RecordAndPlaybackModel, NeuronModel, {
     /**
      * dispatched from NeuronClockModelAdapter's step function
-     * @param {number} simulationTimeChange
+     * @param {number} dt - delta time, in seconds
      */
-    step: function( simulationTimeChange ) {
-      if ( simulationTimeChange < 0 && this.getPlaybackSpeed() > 0 ) {
-        // This is a step backwards in time but the record-and-playback
-        // model is not set up for backstepping, so set it up for
-        // backwards stepping.
+    step: function( dt ) {
+      if ( dt < 0 && this.getPlaybackSpeed() > 0 ) {
+        // This is a step backwards in time but the record-and-playback model is not set up for backstepping, so set it
+        // up for that now.
         this.setPlayback( -1 );  // The -1 indicates playing in reverse.
         if ( this.getTime() > this.getMaxRecordedTime() ) {
           this.setTime( this.getMaxRecordedTime() );
         }
       }
-      else if ( this.getPlaybackSpeed() < 0 && simulationTimeChange > 0 && this.isPlayback() ) {
-        // This is a step forward in time but the record-and-playback
-        // model is set up for backwards stepping, so straighten it out.
+      else if ( this.getPlaybackSpeed() < 0 && dt > 0 && this.isPlayback() ) {
+        // This is a step forward in time but the record-and-playback model is set up for backwards stepping, so set it
+        // back to forward stepping.
         this.setPlayback( 1 );
       }
 
-      RecordAndPlaybackModel.prototype.step.call( this, simulationTimeChange );
+      RecordAndPlaybackModel.prototype.step.call( this, dt );
 
       // If we are currently in playback mode and we have reached the end of
       // the recorded data, we should automatically switch to record mode.
@@ -307,25 +306,27 @@ define( function( require ) {
      * @returns {NeuronModelState}
      */
     stepInTime: function( dt ) {
-      // Step the membrane in time.  This is done prior to stepping the
-      // HH model because the traveling action potential is part of the
-      // membrane, so if it reaches the cross section in this time step the
-      // membrane potential will be modified.
+
+      // Step the membrane in time.  This is done prior to stepping the HH model because the traveling action potential
+      // is part of the membrane, so if it reaches the cross section in this time step the membrane potential will be
+      // modified.
       this.axonMembrane.stepInTime( dt );
 
       // This is a step forward in time.  Update the value of the
       // membrane potential by stepping the Hodgkins-Huxley model.
       this.hodgkinHuxleyModel.stepInTime( dt );
 
-      // There is a bit of a threshold on sending out notifications of
-      // membrane voltage changes, since otherwise the natural "noise" in
-      // the model causes notifications to be sent out continuously.
+      // There is a bit of a threshold on sending out notifications of membrane voltage changes, since otherwise the
+      // natural "noise" in the model causes notifications to be sent out continuously.
       if ( Math.abs( this.membranePotential - this.hodgkinHuxleyModel.getMembraneVoltage() ) > MEMBRANE_POTENTIAL_CHANGE_THRESHOLD ) {
         this.membranePotential = this.hodgkinHuxleyModel.getMembraneVoltage();
       }
 
       // Update the stimulus lockout state.
       this.updateStimulusLockoutState();
+
+      // OPTIMIZATION NOTE: For better performance, and because the contents of the observable arrays are not being
+      // modified, the following loops reach into the observable arrays and loop on the regular array contained within.
 
       // Step the channels.
       this.membraneChannels.forEach( function( channel ) {
@@ -594,8 +595,7 @@ define( function( require ) {
       thisModel.addBackgroundParticles( ParticleType.POTASSIUM_ION, ParticlePosition.INSIDE_MEMBRANE, NUM_POTASSIUM_IONS_INSIDE_CELL );
       thisModel.addBackgroundParticles( ParticleType.POTASSIUM_ION, ParticlePosition.OUTSIDE_MEMBRANE, NUM_POTASSIUM_IONS_OUTSIDE_CELL );
 
-      // Look at each sodium gate and, if there are no ions in its capture
-      // zone, add some.
+      // Look at each sodium gate and, if there are no ions in its capture zone, add some.
       thisModel.membraneChannels.forEach( function( membraneChannel ) {
         if ( membraneChannel instanceof SodiumDualGatedChannel ) {
           var captureZone = membraneChannel.getExteriorCaptureZone();
@@ -762,9 +762,10 @@ define( function( require ) {
       var totalNumberOfParticles = 0;
       var captureZoneOrigin = zone.getOriginPoint();
 
-      thisModel.transientParticles.forEach( function( particle ) {
+      // loop over the contained array - this is faster, but the array can't be modified
+      thisModel.transientParticles.getArray().forEach( function( particle ) {
 
-        //This method is refactored to use position x,y components instead of vector2 instances
+        // This method is refactored to use position x,y components instead of vector2 instances
         if ( (particle.getType() === particleType) && (particle.isAvailableForCapture()) && (zone.isPointInZone( particle.getPositionX(), particle.getPositionY() )) ) {
           totalNumberOfParticles++;
           if ( closestFreeParticle === null ) {
@@ -1039,7 +1040,7 @@ define( function( require ) {
       this.axonMembrane.setState( state.getAxonMembraneState() );
 
       // Set the states of the membrane channels.
-      this.membraneChannels.forEach( function( membraneChannel ) {
+      this.membraneChannels.getArray().forEach( function( membraneChannel ) {
         var mcs = state.getMembraneChannelStateMap().get( membraneChannel );
         // Error handling.
         if ( mcs === null ) {
