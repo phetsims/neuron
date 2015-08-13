@@ -1,11 +1,11 @@
 {
-  "comment": "# neuron 1.0.0-dev.11 Fri Aug 07 2015 17:09:54 GMT-0600 (Mountain Daylight Time)",
+  "comment": "# neuron 1.0.0-dev.12 Thu Aug 13 2015 09:51:23 GMT-0600 (Mountain Daylight Time)",
   "assert": {
     "sha": "858e65ac477bf1861883ce06eed56d9fdefa5027",
     "branch": "master"
   },
   "axon": {
-    "sha": "1f0ca9f4fca42ddd7912c7c99d6f96edcbb4a8be",
+    "sha": "5be7fe049bbc0963a28c0125dc90039f04fb651c",
     "branch": "master"
   },
   "brand": {
@@ -13,7 +13,7 @@
     "branch": "master"
   },
   "chipper": {
-    "sha": "5ddc5b26d4510d188ac491d56362778230a84d03",
+    "sha": "51c45026022c5096cd180c6f578379cfda7c5414",
     "branch": "master"
   },
   "dot": {
@@ -21,11 +21,11 @@
     "branch": "master"
   },
   "griddle": {
-    "sha": "7699ef4077b3fdcddb19f6a631b16db779416096",
+    "sha": "5f454cb7a47776a6d0a46984e41a98101ecb7c01",
     "branch": "master"
   },
   "joist": {
-    "sha": "fe0ae4589803343bab22635713a6929966823af5",
+    "sha": "e9f47dd31e40b11de634fec9e82a12939c98031d",
     "branch": "master"
   },
   "kite": {
@@ -33,7 +33,7 @@
     "branch": "master"
   },
   "neuron": {
-    "sha": "e83b375385ed8ac6d3938f74f8865cfd90900209",
+    "sha": "e53d0596a4f103c329a2d402ccf4dea7879691a3",
     "branch": "master"
   },
   "phet-core": {
@@ -45,19 +45,19 @@
     "branch": "master"
   },
   "scenery": {
-    "sha": "63a4deeec7c634f8ac117300e82a1611b84c9d83",
+    "sha": "3a136ff106beeb71270b3d3e60fd95b7490f2be7",
     "branch": "master"
   },
   "scenery-phet": {
-    "sha": "d3b26386314629f77f95edf1f7bb0a765e88ce51",
+    "sha": "9d57d70eacd33fa5342d548f775040a4f70c72b1",
     "branch": "master"
   },
   "sherpa": {
-    "sha": "589d339ab9fe1747997e3c67e8eaa965359d1f63",
+    "sha": "1759eadefb4f6d680f85aef394ea7727df1928e6",
     "branch": "master"
   },
   "sun": {
-    "sha": "70796d170f5189a4d41d26f528c5a8f45872b50b",
+    "sha": "1320a557747cdae948b731a9398ec3670b139334",
     "branch": "master"
   }
 }
