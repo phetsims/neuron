@@ -329,17 +329,17 @@ define( function( require ) {
       // modified, the following loops reach into the observable arrays and loop on the regular array contained within.
 
       // Step the channels.
-      this.membraneChannels.forEach( function( channel ) {
+      this.membraneChannels.getArray().forEach( function( channel ) {
         channel.stepInTime( dt );
       } );
 
-      this.transientParticles.forEach( function( particle ) {
+      this.transientParticles.getArray().forEach( function( particle ) {
         particle.stepInTime( dt );
       } );
 
       // Step the background particles, which causes them to exhibit a
       // little Brownian motion
-      this.backgroundParticles.forEach( function( particle ) {
+      this.backgroundParticles.getArray().forEach( function( particle ) {
         particle.stepInTime( dt );
       } );
 
