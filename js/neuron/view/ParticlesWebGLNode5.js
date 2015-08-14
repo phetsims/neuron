@@ -5,10 +5,7 @@
  * portrayed in the Neuron simulation.  This node exists an optimization, since representing every particle as an
  * individual Scenery node proved to be far too computationally intensive.
  *
- * Particles in this node are rendered using a dynamically created "sprite sheet" that has different graduations of
- * opacity. The tile shapes (circle or rhombus) for the particles are arranged by opacity value ranging from 0.00 to
- * 0.99 (a total of 100 tiles for each particle, 10 rows and 10 columns).  The sprite sheet is updated when the user
- * zooms in or out.
+ * TODO: Elaborate on the specific approach used if this node is retained.
  *
  * @author Sharfudeen Ashraf (for Ghent University)
  * @author John Blanco
@@ -20,7 +17,7 @@ define( function( require ) {
   var Bounds2 = require( 'DOT/Bounds2' );
   var inherit = require( 'PHET_CORE/inherit' );
   var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
-  var ParticleTextureMap = require( 'NEURON/neuron/view/ParticleTextureMap' );
+  var ParticleTextureMap = require( 'NEURON/neuron/view/ParticleTextureMap2' );
   var ShaderProgram = require( 'SCENERY/util/ShaderProgram' );
   var WebGLNode = require( 'SCENERY/nodes/WebGLNode' );
   var Vector2 = require( 'DOT/Vector2' );
@@ -31,6 +28,7 @@ define( function( require ) {
   var VERTICES_PER_PARTICLE = 4; // basically one per corner of the rectangle that encloses the particle
   var POSITION_VALUES_PER_VERTEX = 2; // x and y, z is considered to be always 1
   var TEXTURE_VALUES_PER_VERTEX = 2; // x and y coordinates within the 2D texture
+  var OPACITY_VALUES_PER_VERTEX = 1; // a single value from 0 to 1
 
   /**
    * @param {NeuronModel} neuronModel
@@ -69,7 +67,7 @@ define( function( require ) {
 
     // Set up some variables for reuse instead of reallocating them with each repaint.  This improves performance.
     this.vertexData = new Float32Array( MAX_PARTICLES * VERTICES_PER_PARTICLE *
-                                        ( POSITION_VALUES_PER_VERTEX + TEXTURE_VALUES_PER_VERTEX ) );
+                                        ( POSITION_VALUES_PER_VERTEX + TEXTURE_VALUES_PER_VERTEX + OPACITY_VALUES_PER_VERTEX) );
     this.elementData = new Array( MAX_PARTICLES * ( VERTICES_PER_PARTICLE + 2 ) );
     this.texCoords = new Bounds2( 0, 0, 0, 0 ); // The normalized texture coordinates that corresponds to the vertex corners
     this.vertexCords = new Bounds2( 0, 0, 0, 0 );// the rectangle bounds of a particle (used to create 2 triangles)
@@ -110,9 +108,11 @@ define( function( require ) {
 
       // vertex shader
       var vertexShaderSource = [
-        'attribute vec3 aPosition;',
+        'attribute vec2 aPosition;',
         'attribute vec2 aTextureCoordinate;',
+        'attribute float aOpacity;',
         'varying vec2 vTextureCoordinate;',
+        'varying float vOpacity;',
         'uniform mat3 uModelViewMatrix;',
         'uniform mat3 uProjectionMatrix;',
 
@@ -123,6 +123,8 @@ define( function( require ) {
         '  vec3 ndc = uProjectionMatrix * vec3( view.xy, 1 );',
         // texture coordinate
         '  vTextureCoordinate = aTextureCoordinate;',
+        // opacity
+        '  vOpacity = aOpacity;',
         // assume a z value of 1 for the position
         '  gl_Position = vec4( ndc.xy, 1.0, 1.0 );',
         '}'
@@ -132,19 +134,23 @@ define( function( require ) {
       var fragmentShaderSource = [
         'precision mediump float;',
         'varying vec2 vTextureCoordinate;',
+        'varying float vOpacity;',
         'uniform sampler2D uSampler;',
         'void main( void ) {',
         // TODO: I (jblanco) am leaving some commented-out code below for ease of testing, these should be removed
         // when all the WebGL functionality has been finalized.
         //'  gl_FragColor = texture2D(uSampler, vec2(0.5, 0.5));',
         //'  gl_FragColor = vec4( 0, 0, 0, 1 );',
-        //'  gl_FragColor = vec4( 0, 1, 0, 0.5 );',
+        //'  gl_FragColor = vec4( 0, 1, 0, 0.1 );',
         '  gl_FragColor = texture2D( uSampler, vTextureCoordinate );',
+        '  if ( gl_FragColor.a > 0.0 ){',
+        '    gl_FragColor.a = vOpacity;',
+        '  }',
         '}'
       ].join( '\n' );
 
       drawable.shaderProgram = new ShaderProgram( gl, vertexShaderSource, fragmentShaderSource, {
-        attributes: [ 'aPosition', 'aTextureCoordinate' ],
+        attributes: [ 'aPosition', 'aTextureCoordinate', 'aOpacity' ],
         uniforms: [ 'uModelViewMatrix', 'uProjectionMatrix' ]
       } );
 
@@ -188,10 +194,10 @@ define( function( require ) {
         var particleSize = this.particleTextureMap.getParticleSize( particleDatum.type );
 
         // Get the texture coordinates.  For performance reasons, this method updates pre-allocated values.
-        this.particleTextureMap.getTexCords( particleDatum.type, particleDatum.opacity, this.tilePosVector, this.texCoords );
+        this.particleTextureMap.getTexCords( particleDatum.type, this.tilePosVector, this.texCoords );
 
         // Add the vertices, which essentially represent the four corners that enclose the particle.
-        for ( var j = 0; j < VERTICES_PER_PARTICLE; j++ ){
+        for ( var j = 0; j < VERTICES_PER_PARTICLE; j++ ) {
 
           // vertex, which is a 2-component vector (z is assumed to be 1)
           this.vertexData[ vertexDataIndex++ ] = particleDatum.xPos + particleSize / 2 * ( j < 2 ? -1 : 1 );
@@ -200,6 +206,9 @@ define( function( require ) {
           // texture coordinate, which is a 2-component vector
           this.vertexData[ vertexDataIndex++ ] = j < 2 ? this.texCoords.minX : this.texCoords.maxX; // x texture coordinate
           this.vertexData[ vertexDataIndex++ ] = j % 2 === 0 ? this.texCoords.minY : this.texCoords.maxY; // y texture coordinate
+
+          // opacity, which is a single value
+          this.vertexData[ vertexDataIndex++ ] = particleDatum.opacity;
         }
 
         // Add the element indices.  This is done so that we can create 'degenerate triangles' and thus have
@@ -221,10 +230,13 @@ define( function( require ) {
 
       // Set up the attributes that will be passed into the vertex shader.
       var elementSize = Float32Array.BYTES_PER_ELEMENT;
-      var elementsPerVertex = 2 + 2; // xy vertex + texture coordinate
+      var elementsPerVertex = POSITION_VALUES_PER_VERTEX + TEXTURE_VALUES_PER_VERTEX + OPACITY_VALUES_PER_VERTEX;
       var stride = elementSize * elementsPerVertex;
       gl.vertexAttribPointer( shaderProgram.attributeLocations.aPosition, 2, gl.FLOAT, false, stride, 0 );
-      gl.vertexAttribPointer( shaderProgram.attributeLocations.aTextureCoordinate, 2, gl.FLOAT, false, stride, elementSize * 2 );
+      gl.vertexAttribPointer( shaderProgram.attributeLocations.aTextureCoordinate, 2, gl.FLOAT, false, stride,
+        elementSize * TEXTURE_VALUES_PER_VERTEX );
+      gl.vertexAttribPointer( shaderProgram.attributeLocations.aOpacity, 1, gl.FLOAT, false, stride,
+        elementSize * ( POSITION_VALUES_PER_VERTEX + TEXTURE_VALUES_PER_VERTEX ) );
 
       // Load the element data into the GPU.
       gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, drawable.elementBuffer );
