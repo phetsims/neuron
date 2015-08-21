@@ -126,45 +126,38 @@ define( function( require ) {
       var particlesPerColumn = 1;
       var particlesPerRow = 1;
 
-      // create tiles for sodium particles
+      // create the image for sodium particles
 
       context.lineWidth = Math.floor( this.sodiumParticleViewSize * 0.1 );
 
-      for ( i = 0; i < particlesPerRow; i++ ) {
-        for ( j = 0; j < particlesPerColumn; j++ ) {
-          context.strokeStyle = Color.BLACK.getCanvasStyle();
-          context.fillStyle = this.sodiumParticle.getRepresentationColor().getCanvasStyle();
-          context.beginPath();
-          particlePos = this.tilePostAt( this.sodiumParticle.getType() );
-          context.arc( particlePos.x, particlePos.y, this.sodiumParticleViewSize / 2, 0, 2 * Math.PI, false );
-          context.fill();
-          context.stroke();
-        }
-      }
+      context.strokeStyle = Color.BLACK.getCanvasStyle();
+      context.fillStyle = this.sodiumParticle.getRepresentationColor().getCanvasStyle();
+      context.beginPath();
+      particlePos = this.tilePostAt( this.sodiumParticle.getType() );
+      context.arc( particlePos.x, particlePos.y, this.sodiumParticleViewSize / 2, 0, 2 * Math.PI, false );
+      context.fill();
+      context.stroke();
 
-      // create tiles for potassium particles
+
+      // create the image for potassium particles
 
       // TODO: if lineWidth is the same when this is worked out, eliminate redundant setting here.
       context.lineWidth = Math.floor( this.potassiumParticleViewSize * 0.1 );
 
-      for ( i = 0; i < particlesPerRow; i++ ) {
-        for ( j = 0; j < particlesPerColumn; j++ ) {
-          particlePos = this.tilePostAt( this.potassiumParticle.getType() );
-          var x = particlePos.x;
-          var y = particlePos.y;
-          context.strokeStyle = Color.BLACK.getCanvasStyle();
-          context.fillStyle = this.potassiumParticle.getRepresentationColor().getCanvasStyle();
-          context.lineJoin = 'round';
-          context.beginPath();
-          context.moveTo( x - this.potassiumParticleViewSize / 2, y );
-          context.lineTo( x, y - this.potassiumParticleViewSize / 2 );
-          context.lineTo( x + this.potassiumParticleViewSize / 2, y );
-          context.lineTo( x, y + this.potassiumParticleViewSize / 2 );
-          context.closePath();
-          context.fill();
-          context.stroke();
-        }
-      }
+      particlePos = this.tilePostAt( this.potassiumParticle.getType() );
+      var x = particlePos.x;
+      var y = particlePos.y;
+      context.strokeStyle = Color.BLACK.getCanvasStyle();
+      context.fillStyle = this.potassiumParticle.getRepresentationColor().getCanvasStyle();
+      context.lineJoin = 'round';
+      context.beginPath();
+      context.moveTo( x - this.potassiumParticleViewSize / 2, y );
+      context.lineTo( x, y - this.potassiumParticleViewSize / 2 );
+      context.lineTo( x + this.potassiumParticleViewSize / 2, y );
+      context.lineTo( x, y + this.potassiumParticleViewSize / 2 );
+      context.closePath();
+      context.fill();
+      context.stroke();
     },
 
     /**
