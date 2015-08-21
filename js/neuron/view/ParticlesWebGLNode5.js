@@ -58,14 +58,6 @@ define( function( require ) {
     this.particleTextureCanvas = document.createElement( 'canvas' );
     this.particleCanvasContext = this.particleTextureCanvas.getContext( '2d' );
 
-    // flag to indicate whether the texture needs to be updated on next paint
-    this.textureDirty = true;
-
-    // The texture must be updated when the zoom factor changes.
-    zoomProperty.lazyLink( function() {
-      self.textureDirty = true;
-    } );
-
     // Set up some variables for reuse instead of reallocating them with each repaint.  This improves performance.
     this.vertexData = new Float32Array( MAX_PARTICLES * VERTICES_PER_PARTICLE *
                                         ( POSITION_VALUES_PER_VERTEX + TEXTURE_VALUES_PER_VERTEX + OPACITY_VALUES_PER_VERTEX) );
@@ -170,6 +162,9 @@ define( function( require ) {
       // the uniform go into the ShaderProgram abstraction?  Ashraf doesn't seem to use it at all, so maybe it isn't
       // necessary.
       drawable.uniformSamplerLoc = gl.getUniformLocation( drawable.shaderProgram.program, "uSampler" );
+
+      // create and bind the texture that will be used to render the particles
+      this.createParticleTexture( drawable );
     },
 
     /**
@@ -183,11 +178,6 @@ define( function( require ) {
       var i; // loop index
 
       this.updateParticleData();
-
-      if ( this.textureDirty ) {
-        this.createParticleTexture( drawable );
-        this.textureDirty = false;
-      }
 
       // Convert particle data to vertices that represent a rectangle plus texture coordinates.
       var vertexDataIndex = 0;
@@ -287,7 +277,7 @@ define( function( require ) {
     },
 
     /**
-     * bind the tiles canvas as a texture
+     * bind the canvas that contains the particle images as a texture
      * @param drawable
      */
     bindTextureImage: function( drawable ) {
