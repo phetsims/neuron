@@ -1,8 +1,6 @@
 // Copyright 2002-2011, University of Colorado
 /**
- * Creates tiles for particles of different opacity
- * A opacity of .34 will be on the 3rd row and 4th column
- * The Texture contains group of 400 tiles (200 for Sodium and 200 for potassium)
+ * Creates tiles for sodium and potassium atoms, a.k.a. particles.
  *
  * @author Sharfudeen Ashraf (for Ghent University)
  * @author John Blanco
@@ -118,21 +116,19 @@ define( function( require ) {
     },
 
     /**
-     * Creates tiles for particles of different opacity
-     * A opacity of .34 will be on the 3rd row and 4th column
+     * TODO: Doc if retained.
      * @param {Canvas.context} context
      */
     createTiles: function( context ) {
       context.strokeStyle = Color.BLACK.getCanvasStyle();
       context.lineWidth = 1;
 
-      var opacityValue;
       var particlePos;
       var i = 0;
       var j = 0;
 
-      var particlesPerColumn = 10;
-      var particlesPerRow = 10;
+      var particlesPerColumn = 1;
+      var particlesPerRow = 1;
 
       // create tiles for sodium particles
 
@@ -140,11 +136,10 @@ define( function( require ) {
 
       for ( i = 0; i < particlesPerRow; i++ ) {
         for ( j = 0; j < particlesPerColumn; j++ ) {
-          opacityValue = ( i * 0.1 ) + ( j * 0.01 );
-          context.strokeStyle = Color.BLACK.withAlpha( opacityValue * 1.2 ).getCanvasStyle();
-          context.fillStyle = this.sodiumParticle.getRepresentationColor().withAlpha( opacityValue ).getCanvasStyle();// All sodium ions are of the same color,
+          context.strokeStyle = Color.BLACK.getCanvasStyle();
+          context.fillStyle = this.sodiumParticle.getRepresentationColor().getCanvasStyle();
           context.beginPath();
-          particlePos = this.tilePostAt( this.sodiumParticle.getType(), i, j );
+          particlePos = this.tilePostAt( this.sodiumParticle.getType() );
           context.arc( particlePos.x, particlePos.y, this.sodiumParticleViewSize / 2, 0, 2 * Math.PI, false );
           context.fill();
           context.stroke();
@@ -158,12 +153,11 @@ define( function( require ) {
 
       for ( i = 0; i < particlesPerRow; i++ ) {
         for ( j = 0; j < particlesPerColumn; j++ ) {
-          opacityValue = ( i * 0.1 ) + ( j * 0.01 );
-          particlePos = this.tilePostAt( this.potassiumParticle.getType(), i, j );
+          particlePos = this.tilePostAt( this.potassiumParticle.getType() );
           var x = particlePos.x;
           var y = particlePos.y;
-          context.strokeStyle = Color.BLACK.withAlpha( opacityValue * 1.3 ).getCanvasStyle();
-          context.fillStyle = this.potassiumParticle.getRepresentationColor().withAlpha( opacityValue ).getCanvasStyle();
+          context.strokeStyle = Color.BLACK.getCanvasStyle();
+          context.fillStyle = this.potassiumParticle.getRepresentationColor().getCanvasStyle();
           context.lineJoin = 'round';
           context.beginPath();
           context.moveTo( x - this.potassiumParticleViewSize / 2, y );
@@ -180,47 +174,43 @@ define( function( require ) {
     /**
      * returns or sets the center pos of the tile on the given posVector
      * @param {ParticleType.String} particleType
-     * @param {number} row
-     * @param {number} column
      * @param {Vector2} posVector
      * @returns {Vector2}
+     * @private
      */
-    tilePostAt: function( particleType, row, column, posVector ) {
+    tilePostAt: function( particleType, posVector ) {
       // TODO: IntelliJ is highlighting some things in this function as errors.  This should be fixed.
       posVector = posVector || new Vector2();
       if ( particleType === ParticleType.SODIUM_ION ) {
-        posVector.x = (column * this.sodiumParticleViewSize ) + this.sodiumParticleViewSize / 2;
-        posVector.y = (row * this.sodiumParticleViewSize ) + this.sodiumParticleViewSize / 2;
+        posVector.x = (this.sodiumParticleViewSize ) + this.sodiumParticleViewSize / 2;
+        posVector.y = (this.sodiumParticleViewSize ) + this.sodiumParticleViewSize / 2;
       }
       if ( particleType === ParticleType.POTASSIUM_ION ) {
-        posVector.x = (column * this.potassiumParticleViewSize ) + this.potassiumParticleViewSize / 2;
-        posVector.y = (row * this.potassiumParticleViewSize ) + this.potassiumParticleViewSize / 2;
+        posVector.x = (this.potassiumParticleViewSize ) + this.potassiumParticleViewSize / 2;
+        posVector.y = (this.potassiumParticleViewSize ) + this.potassiumParticleViewSize / 2;
         //The Potassium Tiles are arranged after Sodium
         posVector.y += this.potasiumTileHeightOffset;
       }
 
       posVector.x += this.xMargin; // account for horizontal margin
       posVector.y += this.yMargin;
-      posVector.x += column * this.strokeGapBetweenParticles; // account for gap between particles
-      posVector.y += row * this.strokeGapBetweenParticles;
+      posVector.x += this.strokeGapBetweenParticles; // account for gap between particles
+      posVector.y += this.strokeGapBetweenParticles;
 
       return posVector;
     },
 
     // TODO: Name should be getTexCoords, not getTexCords.
     /**
-     * Get the Tile's  normalized texture coordinates based on particle's opacity
+     * Get the Tile's normalized texture coordinates
      * @param {ParticleType.String} particleType
-     * @param {number} opacity
-     * @param {Vector2}posVector
+     * @param {Vector2} posVector
      * @param {Bounds2} coords
-     * @returns {*|Bounds2}
+     * @returns {Bounds2}
      */
     getTexCords: function( particleType, posVector, coords ) {
-      var row = 9;
-      var column = 9;
       var tileRadius = this.getParticleSize( particleType ) / 2;
-      var tilePost = this.tilePostAt( particleType, row, column, posVector );
+      var tilePost = this.tilePostAt( particleType, posVector );
       tileRadius += this.strokeGapBetweenParticles / 2;
       coords = coords || new Bounds2( 0, 0, 0, 0 );
 

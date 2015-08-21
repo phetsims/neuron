@@ -106,6 +106,10 @@ define( function( require ) {
     initializeWebGLDrawable: function( drawable ) {
       var gl = drawable.gl;
 
+      gl.enable( gl.BLEND );
+      gl.blendFunc( gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA );
+
+
       // vertex shader
       var vertexShaderSource = [
         'attribute vec2 aPosition;',
@@ -143,9 +147,10 @@ define( function( require ) {
         //'  gl_FragColor = vec4( 0, 0, 0, 1 );',
         //'  gl_FragColor = vec4( 0, 1, 0, 0.1 );',
         '  gl_FragColor = texture2D( uSampler, vTextureCoordinate );',
-        '  if ( gl_FragColor.a > 0.0 ){',
-        '    gl_FragColor.a = vOpacity;',
-        '  }',
+        //'  if ( gl_FragColor.a > 0.0 ){',
+        //'    gl_FragColor.a = vOpacity;',
+        //'  }',
+        '  gl_FragColor.a *= vOpacity;', // suggested by JO instead of the 'if' clause
         '}'
       ].join( '\n' );
 
@@ -284,6 +289,7 @@ define( function( require ) {
 
       // The alpha is not pre-multiplied in the generated canvas image.  This results in white patch in the place
       // of transparent rectangle if this next step isn't done.
+      // TODO: This doesn't seem to do anything in some incarnations of the particle canvas, so test if it's needed and remove if not.
       gl.pixelStorei( gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true );
 
       // Texture filtering, see http://learningwebgl.com/blog/?p=571
