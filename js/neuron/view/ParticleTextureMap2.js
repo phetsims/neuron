@@ -29,7 +29,7 @@ define( function( require ) {
     this.modelViewTransform = modelViewTransform;
     this.sodiumParticle = new SodiumIon();
     this.potassiumParticle = new PotassiumIon();
-    this.strokeGapBetweenParticles = 4;
+    this.strokeGapBetweenParticles = 4; // empirically determined
 
     // Start building the tiles after a gap so the strokes don't overlap
     this.xMargin = this.strokeGapBetweenParticles;
@@ -47,22 +47,20 @@ define( function( require ) {
 
       this.potassiumTileHeightOffset = this.yMargin + PARTICLE_IMAGE_SIZE + this.strokeGapBetweenParticles;
 
-      this.tileTotalHeight = this.potassiumTileHeightOffset;
-      this.tileTotalHeight += numParticleTypes * PARTICLE_IMAGE_SIZE;
-      this.tileTotalHeight += this.strokeGapBetweenParticles;
-      this.tileTotalHeight += this.yMargin;
+      this.totalHeight = this.yMargin * 2;
+      this.totalHeight += numParticleTypes * PARTICLE_IMAGE_SIZE;
+      this.totalHeight += ( numParticleTypes - 1 ) * this.strokeGapBetweenParticles;
 
-      this.tileTotalWidth = this.xMargin;
-      this.tileTotalWidth += numParticleTypes * PARTICLE_IMAGE_SIZE;
-      this.tileTotalWidth += 10 * this.strokeGapBetweenParticles;
+      this.totalWidth = 2 * this.xMargin;
+      this.totalWidth += PARTICLE_IMAGE_SIZE;
 
       this.canvasWidth = 0;
       this.canvasHeight = 0;
     },
 
     calculateAndAssignCanvasDimensions: function( canvas ) {
-      this.canvasWidth = canvas.width = Util.toPowerOf2( this.tileTotalWidth );
-      this.canvasHeight = canvas.height = Util.toPowerOf2( this.tileTotalHeight );
+      this.canvasWidth = canvas.width = Util.toPowerOf2( this.totalWidth );
+      this.canvasHeight = canvas.height = Util.toPowerOf2( this.totalHeight );
     },
 
     /**
@@ -110,29 +108,23 @@ define( function( require ) {
     },
 
     /**
-     * returns or sets the center pos of the tile on the given posVector
+     * calculates the center position of the tile for the given type
      * @param {ParticleType.String} particleType
      * @param {Vector2} posVector - vector where calcluated values are placed, prevents allocation if provided
      * @private
      */
     tilePostAt: function( particleType, posVector ) {
-      // TODO: IntelliJ is highlighting some things in this function as errors.  This should be fixed.
-      posVector = posVector || new Vector2();
-      if ( particleType === ParticleType.SODIUM_ION ) {
-        posVector.x = ( PARTICLE_IMAGE_SIZE ) + PARTICLE_IMAGE_SIZE / 2;
-        posVector.y = ( PARTICLE_IMAGE_SIZE ) + PARTICLE_IMAGE_SIZE / 2;
-      }
-      if ( particleType === ParticleType.POTASSIUM_ION ) {
-        posVector.x = (PARTICLE_IMAGE_SIZE ) + PARTICLE_IMAGE_SIZE / 2;
-        posVector.y = (PARTICLE_IMAGE_SIZE ) + PARTICLE_IMAGE_SIZE / 2;
-        //The Potassium Tiles are arranged after Sodium
-        posVector.y += this.potassiumTileHeightOffset;
-      }
 
-      posVector.x += this.xMargin; // account for horizontal margin
-      posVector.y += this.yMargin;
-      posVector.x += this.strokeGapBetweenParticles; // account for gap between particles
-      posVector.y += this.strokeGapBetweenParticles;
+      // allocate a vector if none was provided
+      posVector = posVector || new Vector2();
+
+      // calculate the center position
+      posVector.x = this.xMargin + PARTICLE_IMAGE_SIZE / 2;
+      posVector.y = PARTICLE_IMAGE_SIZE / 2 + this.yMargin;
+      if ( particleType === ParticleType.POTASSIUM_ION ) {
+        //The Potassium Tiles are arranged after Sodium
+        posVector.y = posVector.y + this.potassiumTileHeightOffset;
+      }
 
       return posVector;
     },
