@@ -50,17 +50,14 @@ define( function( require ) {
                                     this.zoomProperty.value * 3;
       this.potassiumParticleViewSize = this.modelViewTransform.modelToViewDeltaX( this.sodiumParticle.getRadius() ) *
                                        this.zoomProperty.value * 3.3;
-      this.particleSize = this.modelViewTransform.modelToViewDeltaX( this.sodiumParticle.getRadius() ) * this.zoomProperty.value * 3;
 
       // some things below are based on the assumption that potassium atoms are greater or equal in size, so check it.
       assert && assert( this.potassiumParticleViewSize >= this.sodiumParticleViewSize );
 
-      var totalParticlesPerColumn = 20;
+      var totalParticlesPerColumn = 2;
 
-      // Draw potassium particle shapes after drawing all the sodium particles
-      this.potasiumTileHeightOffset = this.yMargin;
-      this.potasiumTileHeightOffset += ( totalParticlesPerColumn * this.potassiumParticleViewSize / 2 );
-      this.potasiumTileHeightOffset += 10 * this.strokeGapBetweenParticles;
+      // Draw potassium particle shape after drawing all the sodium shape
+      this.potasiumTileHeightOffset = this.yMargin + this.potassiumParticleViewSize + this.strokeGapBetweenParticles;
 
       this.tileTotalHeght = this.potasiumTileHeightOffset;
       this.tileTotalHeght += totalParticlesPerColumn * this.potassiumParticleViewSize / 2;
@@ -81,8 +78,7 @@ define( function( require ) {
     },
 
     /**
-     * For a given particle type and position the method gives
-     * the bounding rectangle of that particle
+     * For a given particle type and position the method gives the bounding rectangle of that particle.
      *
      * @param {ParticleType.String} particleType
      * @param {number} xPos
