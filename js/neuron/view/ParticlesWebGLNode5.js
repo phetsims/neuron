@@ -18,6 +18,7 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
   var ParticleTextureMap = require( 'NEURON/neuron/view/ParticleTextureMap2' );
+  var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
   var ShaderProgram = require( 'SCENERY/util/ShaderProgram' );
   var WebGLNode = require( 'SCENERY/nodes/WebGLNode' );
   var Vector2 = require( 'DOT/Vector2' );
@@ -49,7 +50,7 @@ define( function( require ) {
     this.neuronModel = neuronModel;
     this.modelViewTransform = modelViewTransform;
     this.viewTransformationMatrix = modelViewTransform.getMatrix();
-    this.particleTextureMap = new ParticleTextureMap( modelViewTransform, zoomProperty );
+    this.particleTextureMap = new ParticleTextureMap( modelViewTransform );
     this.zoomMatrixProperty = zoomMatrixProperty;
     this.particleBounds = bounds;
 
@@ -81,6 +82,7 @@ define( function( require ) {
       this.particleData[ i ] = {
         xPos: 0,
         yPos: 0,
+        radius: 1,
         type: null,
         opacity: 1
       };
@@ -106,6 +108,7 @@ define( function( require ) {
     initializeWebGLDrawable: function( drawable ) {
       var gl = drawable.gl;
 
+      // TODO: This helped make the particles fade better.  Found on the web, need to document.
       gl.enable( gl.BLEND );
       gl.blendFunc( gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA );
 
@@ -182,7 +185,7 @@ define( function( require ) {
       this.updateParticleData();
 
       if ( this.textureDirty ) {
-        this.updateTexture( drawable );
+        this.createParticleTexture( drawable );
         this.textureDirty = false;
       }
 
@@ -195,8 +198,15 @@ define( function( require ) {
         // convenience var
         var particleDatum = this.particleData[ i ];
 
-        // Get the particle view size as it currently exists in the texture map (which is based on the zoom level).
-        var particleSize = this.particleTextureMap.getParticleSize( particleDatum.type );
+        // Tweak Alert!  The radii of the particles are adjust here in order to look correct.
+        // TODO: I (jblanco) am not entirely sure why this is needed in order to look right.  This should be investigated if retained.
+        var adjustedParticleRadius;
+        if ( particleDatum.type === ParticleType.SODIUM_ION ){
+          adjustedParticleRadius = particleDatum.radius * 1.5;
+        }
+        else if ( particleDatum.type === ParticleType.POTASSIUM_ION ){
+          adjustedParticleRadius = particleDatum.radius * 1.5;
+        }
 
         // Get the texture coordinates.  For performance reasons, this method updates pre-allocated values.
         this.particleTextureMap.getTexCords( particleDatum.type, this.tilePosVector, this.texCoords );
@@ -205,8 +215,8 @@ define( function( require ) {
         for ( var j = 0; j < VERTICES_PER_PARTICLE; j++ ) {
 
           // vertex, which is a 2-component vector (z is assumed to be 1)
-          this.vertexData[ vertexDataIndex++ ] = particleDatum.xPos + particleSize / 2 * ( j < 2 ? -1 : 1 );
-          this.vertexData[ vertexDataIndex++ ] = particleDatum.yPos + particleSize / 2 * ( j % 2 === 0 ? -1 : 1 );
+          this.vertexData[ vertexDataIndex++ ] = particleDatum.xPos + adjustedParticleRadius * ( j < 2 ? -1 : 1 );
+          this.vertexData[ vertexDataIndex++ ] = particleDatum.yPos + adjustedParticleRadius * ( j % 2 === 0 ? -1 : 1 );
 
           // texture coordinate, which is a 2-component vector
           this.vertexData[ vertexDataIndex++ ] = j < 2 ? this.texCoords.minX : this.texCoords.maxX; // x texture coordinate
@@ -262,10 +272,10 @@ define( function( require ) {
     },
 
     /**
-     * Update the texture that is used to render the individual particles.  This is generally called when the zoom
-     * amount is changed.  This also binds the texture.
+     * Create the texture that is used to render the individual particles.  This is generally called during WebGL node
+     * initialization.  This also binds the texture.
      */
-    updateTexture: function( drawable ) {
+    createParticleTexture: function( drawable ) {
       this.particleCanvasContext.clearRect( 0, 0, this.particleTextureCanvas.width, this.particleTextureCanvas.height );
       this.particleTextureMap.updateSpriteSheetDimensions();
       this.particleTextureMap.calculateAndAssignCanvasDimensions( this.particleTextureCanvas );
@@ -320,17 +330,20 @@ define( function( require ) {
     addParticleData: function( particle ) {
       var xPos = this.modelViewTransform.modelToViewX( particle.positionX );
       var yPos = this.modelViewTransform.modelToViewY( particle.positionY );
+      var radius = this.modelViewTransform.modelToViewDeltaX( particle.getRadius() );
 
-      // Figure out the location of the zoomed particle and then determine whether that location is within the bounds.
-      // This is done in order to effectively clip the particle rendering region, since clip areas are not supported
-      // in WebGLNode as of this writing (Aug 3 2010).
+      // Figure out the location and radius of the zoomed particle.
       var zoomMatrix = this.zoomMatrixProperty.value;
       var zoomedXPos = zoomMatrix.m00() * xPos + zoomMatrix.m02();
       var zoomedYPos = zoomMatrix.m11() * yPos + zoomMatrix.m12();
+      var zoomedRadius = zoomMatrix.m00() * radius;
+
+      // Only add the particle if its zoomed location is within the bounds being shown.
       if ( this.particleBounds.containsCoordinates( zoomedXPos, zoomedYPos ) ) {
         var particleDataEntry = this.particleData[ this.numActiveParticles ];
         particleDataEntry.xPos = zoomedXPos;
         particleDataEntry.yPos = zoomedYPos;
+        particleDataEntry.radius = zoomedRadius;
         particleDataEntry.type = particle.getType();
         particleDataEntry.opacity = particle.getOpaqueness();
         assert && assert( this.numActiveParticles < MAX_PARTICLES - 1 );

@@ -1,6 +1,6 @@
 // Copyright 2002-2011, University of Colorado
 /**
- * Creates tiles for sodium and potassium atoms, a.k.a. particles.
+ * Creates images that can be used as a WebGL texture for the purpose of rendering sodium and potassium ions.
  *
  * @author Sharfudeen Ashraf (for Ghent University)
  * @author John Blanco
@@ -18,14 +18,15 @@ define( function( require ) {
   var Util = require( 'SCENERY/util/Util' );
   var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
 
+  // constants
+  var PARTICLE_IMAGE_SIZE = 100; // height and width in pixels of the particle images created
+
   /**
    * @param {ModelViewTransform2} modelViewTransform
-   * @param {Property.<number>} zoomProperty
    * @constructor
    */
-  function ParticleTextureMap( modelViewTransform, zoomProperty ) {
+  function ParticleTextureMap( modelViewTransform ) {
     this.modelViewTransform = modelViewTransform;
-    this.zoomProperty = zoomProperty;
     this.sodiumParticle = new SodiumIon();
     this.potassiumParticle = new PotassiumIon();
     this.strokeGapBetweenParticles = 4;
@@ -46,10 +47,12 @@ define( function( require ) {
       // height of that square as a single number value for each of the particle types. The multipliers were
       // empirically determined.  Potassium atoms are made to have a slightly larger size or else they end up looking
       // smaller than the sodium atoms.
-      this.sodiumParticleViewSize = this.modelViewTransform.modelToViewDeltaX( this.sodiumParticle.getRadius() ) *
-                                    this.zoomProperty.value * 3;
-      this.potassiumParticleViewSize = this.modelViewTransform.modelToViewDeltaX( this.sodiumParticle.getRadius() ) *
-                                       this.zoomProperty.value * 3.3;
+      //this.sodiumParticleViewSize = this.modelViewTransform.modelToViewDeltaX( this.sodiumParticle.getRadius() ) *
+      //                              this.zoomProperty.value * 3;
+      this.sodiumParticleViewSize = this.modelViewTransform.modelToViewDeltaX( this.sodiumParticle.getRadius() ) * 20;
+      //this.potassiumParticleViewSize = this.modelViewTransform.modelToViewDeltaX( this.sodiumParticle.getRadius() ) *
+      //                                 this.zoomProperty.value * 3.3;
+      this.potassiumParticleViewSize = this.modelViewTransform.modelToViewDeltaX( this.sodiumParticle.getRadius() ) * 20;
 
       // some things below are based on the assumption that potassium atoms are greater or equal in size, so check it.
       assert && assert( this.potassiumParticleViewSize >= this.sodiumParticleViewSize );
@@ -59,10 +62,10 @@ define( function( require ) {
       // Draw potassium particle shape after drawing all the sodium shape
       this.potasiumTileHeightOffset = this.yMargin + this.potassiumParticleViewSize + this.strokeGapBetweenParticles;
 
-      this.tileTotalHeght = this.potasiumTileHeightOffset;
-      this.tileTotalHeght += totalParticlesPerColumn * this.potassiumParticleViewSize / 2;
-      this.tileTotalHeght += 10 * this.strokeGapBetweenParticles;
-      this.tileTotalHeght += this.yMargin;
+      this.tileTotalHeight = this.potasiumTileHeightOffset;
+      this.tileTotalHeight += totalParticlesPerColumn * this.potassiumParticleViewSize / 2;
+      this.tileTotalHeight += 10 * this.strokeGapBetweenParticles;
+      this.tileTotalHeight += this.yMargin;
 
       this.tileTotalWidth = this.xMargin;
       this.tileTotalWidth += totalParticlesPerColumn * this.potassiumParticleViewSize;
@@ -74,7 +77,7 @@ define( function( require ) {
 
     calculateAndAssignCanvasDimensions: function( canvas ) {
       this.canvasWidth = canvas.width = Util.toPowerOf2( this.tileTotalWidth );
-      this.canvasHeight = canvas.height = Util.toPowerOf2( this.tileTotalHeght );
+      this.canvasHeight = canvas.height = Util.toPowerOf2( this.tileTotalHeight );
     },
 
     /**
