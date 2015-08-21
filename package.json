@@ -15,7 +15,6 @@
   },
   "phet": {
     "requirejsNamespace": "NEURON",
-    "simTitleStringKey": "NEURON/neuron.name",
     "phetLibs": [
       "griddle"
     ]
