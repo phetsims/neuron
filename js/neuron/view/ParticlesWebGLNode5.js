@@ -209,7 +209,7 @@ define( function( require ) {
         }
 
         // Get the texture coordinates.  For performance reasons, this method updates pre-allocated values.
-        this.particleTextureMap.getTexCords( particleDatum.type, this.tilePosVector, this.texCoords );
+        this.particleTextureMap.getTexCoords( particleDatum.type, this.tilePosVector, this.texCoords );
 
         // Add the vertices, which essentially represent the four corners that enclose the particle.
         for ( var j = 0; j < VERTICES_PER_PARTICLE; j++ ) {
