@@ -24,7 +24,7 @@ define( function( require ) {
   function ParticlePlaybackMemento( particle ) {
     this.positionX = particle.getPositionX();
     this.positionY = particle.getPositionY();
-    this.opaqueness = particle.getOpaqueness();
+    this.opacity = particle.getOpacity();
     this.particleType = particle.getType();
     this.radius = particle.getRadius();
     this.representationColor = particle.getRepresentationColor();
@@ -38,8 +38,8 @@ define( function( require ) {
     getPositionY: function() {
       return this.positionY;
     },
-    getOpaqueness: function() {
-      return this.opaqueness;
+    getOpacity: function() {
+      return this.opacity;
     },
     getParticleType: function() {
       return this.particleType;

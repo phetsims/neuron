@@ -35,7 +35,7 @@ define( function( require ) {
 
     this.positionX = particle.getPositionX();
     this.positionY = particle.getPositionY();
-    this.opaqueness = particle.getOpaqueness();
+    this.opacity = particle.getOpacity();
     this.representationColor = particle.getRepresentationColor();
     this.radius = particle.getRadius();
     this.particleType = particle.getType();
@@ -51,8 +51,8 @@ define( function( require ) {
       this.setPosition( memento.getPositionX(), memento.getPositionY() );
 
       var appearanceChanged = false;
-      if ( this.opaqueness !== memento.getOpaqueness() ) {
-        this.opaqueness = memento.getOpaqueness();
+      if ( this.opacity !== memento.getOpacity() ) {
+        this.opacity = memento.getOpacity();
         appearanceChanged = true;
       }
       if ( this.particleType !== memento.getParticleType() ) {
@@ -83,8 +83,8 @@ define( function( require ) {
       return this.representationColor;
     },
 
-    getOpaqueness: function() {
-      return this.opaqueness;
+    getOpacity: function() {
+      return this.opacity;
     },
 
     getRadius: function() {

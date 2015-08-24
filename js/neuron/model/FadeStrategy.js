@@ -22,8 +22,8 @@ define( function( require ) {
      * @param fadableModelElement
      * @param dt
      */
-    updateOpaqueness: function( fadableModelElement, dt ) {
-      throw new Error( 'updateOpaqueness should be implemented in descendant classes.' );
+    updateOpacity: function( fadableModelElement, dt ) {
+      throw new Error( 'updateOpacity should be implemented in descendant classes.' );
     },
 
     /**

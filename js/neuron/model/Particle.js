@@ -45,8 +45,8 @@ define( function( require ) {
     this.positionX = xPos;
     this.positionY = yPos;
 
-    // Opaqueness value, ranges from 0 (completely transparent) to 1 (completely opaque).
-    this.opaqueness = 1;
+    // Opacity value, ranges from 0 (completely transparent) to 1 (completely opaque).
+    this.opacity = 1;
 
     // Motion strategy for moving this particle around. StillnessMotionStrategy is stateless so use the singleton instance.
     this.motionStrategy = StillnessMotionStrategy.getInstance();
@@ -59,7 +59,7 @@ define( function( require ) {
 
     stepInTime: function( dt ) {
       this.motionStrategy.move( this, this, dt );
-      this.fadeStrategy.updateOpaqueness( this, dt );
+      this.fadeStrategy.updateOpacity( this, dt );
       if ( !this.fadeStrategy.shouldContinueExisting( this ) ) {
         // This particle has faded out of existence, so send out a
         // notification that indicates that it is being removed from the
@@ -129,12 +129,12 @@ define( function( require ) {
       return new ParticlePlaybackMemento( this );
     },
 
-    setOpaqueness: function( opaqueness ) {
-      this.opaqueness = opaqueness;
+    setOpacity: function( opacity ) {
+      this.opacity = opacity;
     },
 
-    getOpaqueness: function() {
-      return this.opaqueness;
+    getOpacity: function() {
+      return this.opacity;
     }
   } );
 } );

@@ -289,7 +289,7 @@ define( function( require ) {
           xPos: this.modelViewTransform.modelToViewX( particle.positionX ),
           yPos: this.modelViewTransform.modelToViewY( particle.positionY ),
           type: particle.getType(),
-          opacity: particle.opaqueness
+          opacity: particle.opacity
         } );
       }
     },

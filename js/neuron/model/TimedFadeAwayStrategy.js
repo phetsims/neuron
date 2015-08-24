@@ -28,14 +28,14 @@ define( function( require ) {
   return inherit( FadeStrategy, TimedFadeAwayStrategy, {
 
     //@Override
-    updateOpaqueness: function( fadableModelElement, dt ) {
-      fadableModelElement.setOpaqueness( Math.min( Math.max( this.fadeCountdownTimer / this.fadeTime, 0 ), fadableModelElement.getOpaqueness() ) );
+    updateOpacity: function( fadableModelElement, dt ) {
+      fadableModelElement.setOpacity( Math.min( Math.max( this.fadeCountdownTimer / this.fadeTime, 0 ), fadableModelElement.getOpacity() ) );
       this.fadeCountdownTimer -= dt;
     },
 
     //@Override
     shouldContinueExisting: function( fadeableModelElement ) {
-      return fadeableModelElement.getOpaqueness() > 0;
+      return fadeableModelElement.getOpacity() > 0;
     }
 
   } );

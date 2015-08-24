@@ -201,7 +201,7 @@ define( function( require ) {
         thisNode.particleTextureMap.getParticleCoords( particle.getType(), xPos, yPos, thisNode.vertexCords );
 
         //for performance reasons this method updates the texCords (and returns the same)  instead of creating a new one
-        thisNode.particleTextureMap.getTexCords( particle.getType(), particle.getOpaqueness(), tilePosVector, thisNode.textCords );
+        thisNode.particleTextureMap.getTexCords( particle.getType(), particle.getOpacity(), tilePosVector, thisNode.textCords );
 
         //left bottom
         thisNode.vertexData[ index++ ] = thisNode.vertexCords.getMinX();//x

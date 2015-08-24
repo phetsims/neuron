@@ -216,7 +216,7 @@ define( function( require ) {
           xPos: this.modelViewTransform.modelToViewX( particle.positionX ),
           yPos: this.modelViewTransform.modelToViewY( particle.positionY ),
           color: particle.getType() === ParticleType.SODIUM_ION ? RED_COLOR_BUFFER_DATA : GREEN_COLOR_BUFFER_DATA,
-          opacity: Math.sqrt( particle.opaqueness ) // for demo purposes, opacity is pushed toward higher end - TODO: Change model opacity values if this behavior is permanently desired.
+          opacity: Math.sqrt( particle.opacity ) // for demo purposes, opacity is pushed toward higher end - TODO: Change model opacity values if this behavior is permanently desired.
         } );
       }
     },

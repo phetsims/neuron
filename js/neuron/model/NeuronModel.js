@@ -100,9 +100,9 @@ define( function( require ) {
   // occur before a notification is sent out.
   var MEMBRANE_POTENTIAL_CHANGE_THRESHOLD = 0.005;
 
-  // Default values of opaqueness for newly created particles.
-  var FOREGROUND_PARTICLE_DEFAULT_OPAQUENESS = 0.25;
-  var BACKGROUND_PARTICLE_DEFAULT_OPAQUENESS = 0.10; // default alpha in Java was 0.05, which isn't visible in the canvas so slightly increasing to 0.10
+  // Default values of opacity for newly created particles.
+  var FOREGROUND_PARTICLE_DEFAULT_OPACITY = 0.25;
+  var BACKGROUND_PARTICLE_DEFAULT_OPACITY = 0.10; // default alpha in Java was 0.05, which isn't visible in the canvas so slightly increasing to 0.10
 
   /**
    * Main constructor for NeuronModel, which contains much of the model logic for the sim.
@@ -655,12 +655,12 @@ define( function( require ) {
         else {
           thisModel.positionParticleOutsideMembrane( newParticle );
         }
-        // Set the opaqueness.
+        // Set the opacity.
         if ( Math.random() >= 0.5 ) { // replaced for nextBoolean
-          newParticle.setOpaqueness( FOREGROUND_PARTICLE_DEFAULT_OPAQUENESS );
+          newParticle.setOpacity( FOREGROUND_PARTICLE_DEFAULT_OPACITY );
         }
         else {
-          newParticle.setOpaqueness( BACKGROUND_PARTICLE_DEFAULT_OPAQUENESS );
+          newParticle.setOpacity( BACKGROUND_PARTICLE_DEFAULT_OPACITY );
         }
       } );
     },
@@ -676,7 +676,7 @@ define( function( require ) {
       var newParticle = null;
       for ( var i = 0; i < numberToAdd; i++ ) {
         newParticle = this.createBackgroundParticle( particleType );
-        newParticle.setOpaqueness( FOREGROUND_PARTICLE_DEFAULT_OPAQUENESS );
+        newParticle.setOpacity( FOREGROUND_PARTICLE_DEFAULT_OPACITY );
         captureZone.assignNewParticleLocation( newParticle );
       }
     },

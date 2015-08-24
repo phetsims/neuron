@@ -23,13 +23,13 @@ define( function( require ) {
   function TimedFadeInStrategy( fadeTime ) {
     this.fadeTime = fadeTime;
     this.fadeCountdownTimer = fadeTime;
-    this.opaquenessTarget = 1;
+    this.opacityTarget = 1;
   }
 
   return inherit( FadeStrategy, TimedFadeInStrategy, {
     //@Override
-    updateOpaqueness: function( fadableModelElement, dt ) {
-      fadableModelElement.setOpaqueness( Math.min( (1 - this.fadeCountdownTimer / this.fadeTime) * this.opaquenessTarget, 1 ) );
+    updateOpacity: function( fadableModelElement, dt ) {
+      fadableModelElement.setOpacity( Math.min( (1 - this.fadeCountdownTimer / this.fadeTime) * this.opacityTarget, 1 ) );
       this.fadeCountdownTimer -= dt;
       if ( this.fadeCountdownTimer < 0 ) {
         this.fadeCountdownTimer = 0;

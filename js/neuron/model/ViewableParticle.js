@@ -47,8 +47,8 @@ define( function( require ) {
     getRepresentationColor: function() {
       throw new Error( 'getRepresentationColor should be implemented in descendant classes.' );
     },
-    getOpaqueness: function() {
-      throw new Error( 'getOpaqueness should be implemented in descendant classes.' );
+    getOpacity: function() {
+      throw new Error( 'getOpacity should be implemented in descendant classes.' );
     }
 
   } );

@@ -40,7 +40,7 @@ define( function( require ) {
       thisNode.translate( modelViewTransform.modelToViewPosition( new Vector2( x, y ) ) );
     }
 
-    function updateRepresentation( newOpaqueness ) {
+    function updateRepresentation( newOpacity ) {
 
       var size;
       var representationShape;
@@ -67,11 +67,11 @@ define( function( require ) {
 
       representation.setShape( representationShape );
       representation.fill = particle.getRepresentationColor();
-      thisNode.setOpacity( newOpaqueness );
+      thisNode.setOpacity( newOpacity );
     }
 
     updateOffset( particle.getPositionX(), particle.getPositionY() );
-    updateRepresentation( particle.getOpaqueness() );
+    updateRepresentation( particle.getOpacity() );
   }
 
   return inherit( Node, ParticleNode, {} );

@@ -335,7 +335,7 @@ define( function( require ) {
         particleDataEntry.yPos = zoomedYPos;
         particleDataEntry.radius = zoomedRadius;
         particleDataEntry.type = particle.getType();
-        particleDataEntry.opacity = particle.getOpaqueness();
+        particleDataEntry.opacity = particle.getOpacity();
         assert && assert( this.numActiveParticles < MAX_PARTICLES - 1 );
         this.numActiveParticles = Math.min( this.numActiveParticles + 1, MAX_PARTICLES );
       }

@@ -122,7 +122,7 @@ define( function( require ) {
       var traveledDistance = Math.abs( this.maxVelocity * dt );
 
       if ( this.channelHasBeenEntered ) {
-        fadableModelElement.setOpaqueness( 1 );
+        fadableModelElement.setOpacity( 1 );
       }
       else {
         fadableModelElement.setFadeStrategy( new TimedFadeAwayStrategy( 0.002 ) );

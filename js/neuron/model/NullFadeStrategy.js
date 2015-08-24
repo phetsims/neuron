@@ -20,7 +20,7 @@ define( function( require ) {
 
   return inherit( FadeStrategy, NullFadeStrategy, {
       //@Override
-      updateOpaqueness: function( fadableModelElement, dt ) {
+      updateOpacity: function( fadableModelElement, dt ) {
         // Does nothing.
       }
     },

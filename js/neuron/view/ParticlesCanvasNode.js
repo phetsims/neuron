@@ -78,7 +78,7 @@ define( function( require ) {
           context.lineWidth = 0.2;
           context.strokeStyle = canvasStrokeStyle;
           particles.forEach( function( particle ) {
-            context.globalAlpha = particle.getOpaqueness();
+            context.globalAlpha = particle.getOpacity();
             context.beginPath();
             var x = thisNode.modelViewTransform.modelToViewX( particle.getPositionX() );
             var y = thisNode.modelViewTransform.modelToViewY( particle.getPositionY() );
@@ -95,7 +95,7 @@ define( function( require ) {
           context.lineWidth = 0.2;
           context.strokeStyle = canvasStrokeStyle;
           particles.forEach( function( particle ) {
-            context.globalAlpha = particle.getOpaqueness();
+            context.globalAlpha = particle.getOpacity();
             context.beginPath();
             var x = thisNode.modelViewTransform.modelToViewX( particle.getPositionX() );
             var y = thisNode.modelViewTransform.modelToViewY( particle.getPositionY() );
