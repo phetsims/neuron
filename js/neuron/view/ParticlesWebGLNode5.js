@@ -101,9 +101,8 @@ define( function( require ) {
       var gl = drawable.gl;
 
       // TODO: This helped make the particles fade better.  Found on the web, need to document.
-      gl.enable( gl.BLEND );
       gl.blendFunc( gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA );
-
+      gl.enable( gl.BLEND );
 
       // vertex shader
       var vertexShaderSource = [
