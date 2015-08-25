@@ -72,11 +72,6 @@ define( function( require ) {
       context.lineWidth = 1;
 
       var particlePos;
-      var i = 0;
-      var j = 0;
-
-      var particlesPerColumn = 1;
-      var particlesPerRow = 1;
 
       // create the image for sodium ions
       context.lineWidth = Math.floor( PARTICLE_IMAGE_SIZE * 0.1 );
