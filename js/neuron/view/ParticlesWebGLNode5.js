@@ -100,10 +100,6 @@ define( function( require ) {
     initializeWebGLDrawable: function( drawable ) {
       var gl = drawable.gl;
 
-      // TODO: This helped make the particles fade better.  Found on the web, need to document.
-      gl.blendFunc( gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA );
-      gl.enable( gl.BLEND );
-
       // vertex shader
       var vertexShaderSource = [
         'attribute vec2 aPosition;',
@@ -285,11 +281,6 @@ define( function( require ) {
       gl.bindTexture( gl.TEXTURE_2D, drawable.texture );
       gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE );
       gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE );
-
-      // The alpha is not pre-multiplied in the generated canvas image.  This results in white patch in the place
-      // of transparent rectangle if this next step isn't done.
-      // TODO: This doesn't seem to do anything in some incarnations of the particle canvas, so test if it's needed and remove if not.
-      gl.pixelStorei( gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true );
 
       // Texture filtering, see http://learningwebgl.com/blog/?p=571
       gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR );
