@@ -75,7 +75,7 @@ define( function( require ) {
       context.lineWidth = 1;
 
       var particlePos;
-      context.lineWidth = Math.floor( PARTICLE_IMAGE_SIZE * 0.1 );
+      context.lineWidth = Math.floor( PARTICLE_IMAGE_SIZE * 0.15 );
       context.strokeStyle = Color.BLACK.getCanvasStyle();
       context.lineJoin = 'round';
 
