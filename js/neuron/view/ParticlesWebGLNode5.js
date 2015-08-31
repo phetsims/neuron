@@ -1,8 +1,8 @@
 // Copyright 2002-2015, University of Colorado Boulder
 
 /**
- * A WebGL Scenery node that is used to render the sodium and potassium particles, a.k.a. atoms, that need to be
- * portrayed in the Neuron simulation.  This node exists an optimization, since representing every particle as an
+ * A WebGL Scenery node that is used to render the sodium and potassium particles, a.k.a. ions, that need to be
+ * portrayed in the Neuron simulation.  This node exists as an optimization, since representing every particle as an
  * individual Scenery node proved to be far too computationally intensive.
  *
  * TODO: Elaborate on the specific approach used if this node is retained.
@@ -17,7 +17,7 @@ define( function( require ) {
   var Bounds2 = require( 'DOT/Bounds2' );
   var inherit = require( 'PHET_CORE/inherit' );
   var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
-  var ParticleTextureMap = require( 'NEURON/neuron/view/ParticleTextureMap2' );
+  var NeuronParticlesTexture = require( 'NEURON/neuron/view/NeuronParticlesTexture' );
   var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
   var ShaderProgram = require( 'SCENERY/util/ShaderProgram' );
   var WebGLNode = require( 'SCENERY/nodes/WebGLNode' );
@@ -50,7 +50,7 @@ define( function( require ) {
     this.neuronModel = neuronModel;
     this.modelViewTransform = modelViewTransform;
     this.viewTransformationMatrix = modelViewTransform.getMatrix();
-    this.particleTextureMap = new ParticleTextureMap( modelViewTransform );
+    this.particleTextureMap = new NeuronParticlesTexture( modelViewTransform );
     this.zoomMatrixProperty = zoomMatrixProperty;
     this.particleBounds = bounds;
 

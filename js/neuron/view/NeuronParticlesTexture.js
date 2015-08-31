@@ -1,6 +1,7 @@
-// Copyright 2002-2011, University of Colorado
+// Copyright 2002-2015, University of Colorado Boulder
+
 /**
- * Creates images that can be used as a WebGL texture for the purpose of rendering sodium and potassium ions.
+ * creates particles on a canvas that can used for rendering as a texture using WebGL
  *
  * @author Sharfudeen Ashraf (for Ghent University)
  * @author John Blanco
@@ -25,7 +26,7 @@ define( function( require ) {
    * @param {ModelViewTransform2} modelViewTransform
    * @constructor
    */
-  function ParticleTextureMap( modelViewTransform ) {
+  function NeuronParticlesTexture( modelViewTransform ) {
     this.modelViewTransform = modelViewTransform;
     this.sodiumParticle = new SodiumIon();
     this.potassiumParticle = new PotassiumIon();
@@ -36,7 +37,7 @@ define( function( require ) {
     this.yMargin = this.strokeGapBetweenParticles;
   }
 
-  return inherit( Object, ParticleTextureMap, {
+  return inherit( Object, NeuronParticlesTexture, {
 
     /**
      * TODO: doc
