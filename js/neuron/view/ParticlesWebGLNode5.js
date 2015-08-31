@@ -25,22 +25,20 @@ define( function( require ) {
 
   // constants
   var MAX_PARTICLES = 2000; // several trials were run and peak number of particles was 1841, so this value should be safe
-  var PRINT_DATA_URL_OF_SPRITE_SHEET = true; // very useful for debugging issues with the sprite sheet texture
   var VERTICES_PER_PARTICLE = 4; // basically one per corner of the rectangle that encloses the particle
-  var POSITION_VALUES_PER_VERTEX = 2; // x and y, z is considered to be always 1
-  var TEXTURE_VALUES_PER_VERTEX = 2; // x and y coordinates within the 2D texture
-  var OPACITY_VALUES_PER_VERTEX = 1; // a single value from 0 to 1
+  var NUM_POSITION_VALUES_PER_VERTEX = 2; // x and y, z is considered to be always 1
+  var NUM_TEXTURE_VALUES_PER_VERTEX = 2; // x and y coordinates within the 2D texture
+  var NUM_OPACITY_VALUES_PER_VERTEX = 1; // a single value from 0 to 1
 
   /**
    * @param {NeuronModel} neuronModel
    * @param {ModelViewTransform2} modelViewTransform
-   * @param {Property.<number>} zoomProperty
    * @param {Property.<Matrix3>} zoomMatrixProperty - a matrix that tracks how zoomed in or out this node is, used to
    * determine whether a given particle needs to be rendered
    * @param {Shape} bounds
    * @constructor
    */
-  function ParticlesWebGLNode( neuronModel, modelViewTransform, zoomProperty, zoomMatrixProperty, bounds ) {
+  function ParticlesWebGLNode( neuronModel, modelViewTransform, zoomMatrixProperty, bounds ) {
     var self = this;
     WebGLNode.call( this, {
       canvasBounds: bounds
@@ -50,17 +48,15 @@ define( function( require ) {
     this.neuronModel = neuronModel;
     this.modelViewTransform = modelViewTransform;
     this.viewTransformationMatrix = modelViewTransform.getMatrix();
-    this.particleTextureMap = new NeuronParticlesTexture( modelViewTransform );
     this.zoomMatrixProperty = zoomMatrixProperty;
     this.particleBounds = bounds;
 
-    // Create the canvas on which particle tiles are drawn and used as a texture.
-    this.particleTextureCanvas = document.createElement( 'canvas' );
-    this.particleCanvasContext = this.particleTextureCanvas.getContext( '2d' );
+    // create the texture for the particles
+    this.particlesTexture = new NeuronParticlesTexture( modelViewTransform );
 
     // Set up some variables for reuse instead of reallocating them with each repaint.  This improves performance.
     this.vertexData = new Float32Array( MAX_PARTICLES * VERTICES_PER_PARTICLE *
-                                        ( POSITION_VALUES_PER_VERTEX + TEXTURE_VALUES_PER_VERTEX + OPACITY_VALUES_PER_VERTEX) );
+                                        ( NUM_POSITION_VALUES_PER_VERTEX + NUM_TEXTURE_VALUES_PER_VERTEX + NUM_OPACITY_VALUES_PER_VERTEX) );
     this.elementData = new Array( MAX_PARTICLES * ( VERTICES_PER_PARTICLE + 2 ) );
     this.texCoords = new Bounds2( 0, 0, 0, 0 ); // The normalized texture coordinates that corresponds to the vertex corners
     this.vertexCords = new Bounds2( 0, 0, 0, 0 );// the rectangle bounds of a particle (used to create 2 triangles)
@@ -158,8 +154,11 @@ define( function( require ) {
       // necessary.
       drawable.uniformSamplerLoc = gl.getUniformLocation( drawable.shaderProgram.program, "uSampler" );
 
-      // create and bind the texture that will be used to render the particles
-      this.createParticleTexture( drawable );
+      // create and the texture that will be used to render the particles
+      this.particlesTexture.initialize( drawable );
+
+      // bind the texture that contains the particle images
+      this.bindTextureImage( drawable, this.particlesTexture.canvas );
     },
 
     /**
@@ -194,7 +193,7 @@ define( function( require ) {
         }
 
         // Get the texture coordinates.  For performance reasons, this method updates pre-allocated values.
-        this.particleTextureMap.getTexCoords( particleDatum.type, this.tilePosVector, this.texCoords );
+        this.particlesTexture.getTexCoords( particleDatum.type, this.tilePosVector, this.texCoords );
 
         // Add the vertices, which essentially represent the four corners that enclose the particle.
         for ( var j = 0; j < VERTICES_PER_PARTICLE; j++ ) {
@@ -230,13 +229,13 @@ define( function( require ) {
 
       // Set up the attributes that will be passed into the vertex shader.
       var elementSize = Float32Array.BYTES_PER_ELEMENT;
-      var elementsPerVertex = POSITION_VALUES_PER_VERTEX + TEXTURE_VALUES_PER_VERTEX + OPACITY_VALUES_PER_VERTEX;
+      var elementsPerVertex = NUM_POSITION_VALUES_PER_VERTEX + NUM_TEXTURE_VALUES_PER_VERTEX + NUM_OPACITY_VALUES_PER_VERTEX;
       var stride = elementSize * elementsPerVertex;
       gl.vertexAttribPointer( shaderProgram.attributeLocations.aPosition, 2, gl.FLOAT, false, stride, 0 );
       gl.vertexAttribPointer( shaderProgram.attributeLocations.aTextureCoordinate, 2, gl.FLOAT, false, stride,
-        elementSize * TEXTURE_VALUES_PER_VERTEX );
+        elementSize * NUM_TEXTURE_VALUES_PER_VERTEX );
       gl.vertexAttribPointer( shaderProgram.attributeLocations.aOpacity, 1, gl.FLOAT, false, stride,
-        elementSize * ( POSITION_VALUES_PER_VERTEX + TEXTURE_VALUES_PER_VERTEX ) );
+        elementSize * ( NUM_POSITION_VALUES_PER_VERTEX + NUM_TEXTURE_VALUES_PER_VERTEX ) );
 
       // Load the element data into the GPU.
       gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, drawable.elementBuffer );
@@ -257,25 +256,10 @@ define( function( require ) {
     },
 
     /**
-     * Create the texture that is used to render the individual particles.  This is generally called during WebGL node
-     * initialization.  This also binds the texture.
-     */
-    createParticleTexture: function( drawable ) {
-      this.particleCanvasContext.clearRect( 0, 0, this.particleTextureCanvas.width, this.particleTextureCanvas.height );
-      this.particleTextureMap.updateSpriteSheetDimensions();
-      this.particleTextureMap.calculateAndAssignCanvasDimensions( this.particleTextureCanvas );
-      this.particleTextureMap.createTiles( this.particleCanvasContext );
-      if ( PRINT_DATA_URL_OF_SPRITE_SHEET ) {
-        console.log( 'this.particleTextureCanvas.toDataURL() = ' + this.particleTextureCanvas.toDataURL() );
-      }
-      this.bindTextureImage( drawable );
-    },
-
-    /**
      * bind the canvas that contains the particle images as a texture
      * @param drawable
      */
-    bindTextureImage: function( drawable ) {
+    bindTextureImage: function( drawable, canvas ) {
       var gl = drawable.gl;
 
       gl.bindTexture( gl.TEXTURE_2D, drawable.texture );
@@ -287,7 +271,7 @@ define( function( require ) {
       gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST );
 
       // ship the texture data to the GPU
-      gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.particleTextureCanvas );
+      gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, canvas );
 
       // generate a mipmap for better handling of zoom in/out
       gl.generateMipmap( gl.TEXTURE_2D );

@@ -21,23 +21,44 @@ define( function( require ) {
 
   // constants
   var PARTICLE_IMAGE_SIZE = 24; // height and width in pixels of the particle images created
+  var PRINT_DATA_URL_OF_SPRITE_SHEET = true; // very useful for debugging issues with the sprite sheet texture
 
   /**
    * @param {ModelViewTransform2} modelViewTransform
    * @constructor
    */
   function NeuronParticlesTexture( modelViewTransform ) {
-    this.modelViewTransform = modelViewTransform;
-    this.sodiumParticle = new SodiumIon();
-    this.potassiumParticle = new PotassiumIon();
-    this.strokeGapBetweenParticles = 4; // empirically determined
+    this.modelViewTransform = modelViewTransform; // @private
+    this.sodiumParticle = new SodiumIon(); // @private
+    this.potassiumParticle = new PotassiumIon(); // @private
+    this.strokeGapBetweenParticles = 4;  // @private - empirically determined
+
+    // create the canvas upon which the particle images will be drawn
+    this.canvas = document.createElement( 'canvas' );
+    this.canvasContext = this.canvas.getContext( '2d' );
 
     // Start building the tiles after a gap so the strokes don't overlap
     this.xMargin = this.strokeGapBetweenParticles;
     this.yMargin = this.strokeGapBetweenParticles;
+
+    // Note: This must be initialize with a drawable before it can be used, see docs for the methods below.
   }
 
   return inherit( Object, NeuronParticlesTexture, {
+
+    /**
+     * Create the texture that is used to render the individual particles.  This is generally called during WebGL node
+     * initialization.
+     */
+    initialize: function( drawable ) {
+      this.canvasContext.clearRect( 0, 0, this.canvas.width, this.canvas.height );
+      this.updateSpriteSheetDimensions();
+      this.calculateAndAssignCanvasDimensions( this.canvas );
+      this.createTiles( this.canvasContext );
+      if ( PRINT_DATA_URL_OF_SPRITE_SHEET ) {
+        console.log( 'this.canvas..toDataURL() = ' + this.canvas.toDataURL() );
+      }
+    },
 
     /**
      * TODO: doc

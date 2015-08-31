@@ -158,7 +158,6 @@ define( function( require ) {
       var particlesWebGLNode = new ParticlesWebGLNode(
         thisView.neuronModel,
         thisView.mvt,
-        zoomProperty,
         zoomMatrixProperty,
         worldNodeClipArea.bounds.dilated( estimatedMaxParticleWidth / 2 )
       );
