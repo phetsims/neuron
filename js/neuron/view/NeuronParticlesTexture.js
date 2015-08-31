@@ -15,9 +15,6 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
   var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
-  var PotassiumIon = require( 'NEURON/neuron/model/PotassiumIon' );
-  var SodiumIon = require( 'NEURON/neuron/model/SodiumIon' );
-  var Util = require( 'SCENERY/util/Util' );
   var Vector2 = require( 'DOT/Vector2' );
 
   // constants
