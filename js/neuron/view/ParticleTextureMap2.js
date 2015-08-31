@@ -19,7 +19,7 @@ define( function( require ) {
   var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
 
   // constants
-  var PARTICLE_IMAGE_SIZE = 32; // height and width in pixels of the particle images created
+  var PARTICLE_IMAGE_SIZE = 24; // height and width in pixels of the particle images created
 
   /**
    * @param {ModelViewTransform2} modelViewTransform
@@ -59,8 +59,11 @@ define( function( require ) {
     },
 
     calculateAndAssignCanvasDimensions: function( canvas ) {
-      this.canvasWidth = canvas.width = Util.toPowerOf2( this.totalWidth );
-      this.canvasHeight = canvas.height = Util.toPowerOf2( this.totalHeight );
+
+      // the canvas size must be a square power of 2 so that mipmapping will work
+      var length = Math.max( Util.toPowerOf2( this.totalWidth ), Util.toPowerOf2( this.totalHeight ) );
+      this.canvasWidth = canvas.width = length;
+      this.canvasHeight = canvas.height = length;
     },
 
     /**
@@ -72,26 +75,24 @@ define( function( require ) {
       context.lineWidth = 1;
 
       var particlePos;
-
-      // create the image for sodium ions
       context.lineWidth = Math.floor( PARTICLE_IMAGE_SIZE * 0.1 );
       context.strokeStyle = Color.BLACK.getCanvasStyle();
+      context.lineJoin = 'round';
+
+      // create the image for sodium ions
       context.fillStyle = this.sodiumParticle.getRepresentationColor().getCanvasStyle();
       context.beginPath();
-      particlePos = this.tilePostAt( this.sodiumParticle.getType() );
+      particlePos = this.getTilePosition( this.sodiumParticle.getType() );
       context.arc( particlePos.x, particlePos.y, PARTICLE_IMAGE_SIZE / 2, 0, 2 * Math.PI, false );
       context.fill();
       context.stroke();
 
       // create the image for potassium ions
       // TODO: if lineWidth is the same when this is worked out, eliminate redundant setting here.
-      context.lineWidth = Math.floor( PARTICLE_IMAGE_SIZE * 0.1 );
-      particlePos = this.tilePostAt( this.potassiumParticle.getType() );
+      particlePos = this.getTilePosition( this.potassiumParticle.getType() );
       var x = particlePos.x;
       var y = particlePos.y;
-      context.strokeStyle = Color.BLACK.getCanvasStyle();
       context.fillStyle = this.potassiumParticle.getRepresentationColor().getCanvasStyle();
-      context.lineJoin = 'round';
       context.beginPath();
       context.moveTo( x - PARTICLE_IMAGE_SIZE / 2, y );
       context.lineTo( x, y - PARTICLE_IMAGE_SIZE / 2 );
@@ -105,10 +106,10 @@ define( function( require ) {
     /**
      * calculates the center position of the tile for the given type
      * @param {ParticleType.String} particleType
-     * @param {Vector2} posVector - vector where calcluated values are placed, prevents allocation if provided
+     * @param {Vector2} posVector - vector where calculated values are placed, prevents allocation if provided
      * @private
      */
-    tilePostAt: function( particleType, posVector ) {
+    getTilePosition: function( particleType, posVector ) {
 
       // allocate a vector if none was provided
       posVector = posVector || new Vector2();
@@ -133,16 +134,16 @@ define( function( require ) {
      */
     getTexCoords: function( particleType, posVector, coords ) {
       var tileRadius = PARTICLE_IMAGE_SIZE / 2;
-      var tilePost = this.tilePostAt( particleType, posVector );
+      var tilePosition = this.getTilePosition( particleType, posVector );
       tileRadius += this.strokeGapBetweenParticles / 2;
       coords = coords || new Bounds2( 0, 0, 0, 0 );
 
       // Particle Pos is at center. get the left corder, substract the radius and normalize the value by
       // dividing it by canvasWidth, the Tex Coords needs to be on the range of 0..1
-      coords.setMinX( (tilePost.x - tileRadius) / this.canvasWidth );
-      coords.setMinY( (tilePost.y - tileRadius) / this.canvasHeight );
-      coords.setMaxX( (tilePost.x + tileRadius) / this.canvasWidth );
-      coords.setMaxY( (tilePost.y + tileRadius) / this.canvasHeight );
+      coords.setMinX( ( tilePosition.x - tileRadius ) / this.canvasWidth );
+      coords.setMinY( ( tilePosition.y - tileRadius ) / this.canvasHeight );
+      coords.setMaxX(  (tilePosition.x + tileRadius ) / this.canvasWidth );
+      coords.setMaxY( ( tilePosition.y + tileRadius ) / this.canvasHeight );
 
       return coords;
     }
