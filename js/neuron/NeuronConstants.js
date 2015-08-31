@@ -55,5 +55,4 @@ define( function( require ) {
   if ( assert ) { Object.freeze( NeuronConstants ); }
 
   return NeuronConstants;
-} )
-;
+} );

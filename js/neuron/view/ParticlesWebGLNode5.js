@@ -154,9 +154,6 @@ define( function( require ) {
       // necessary.
       drawable.uniformSamplerLoc = gl.getUniformLocation( drawable.shaderProgram.program, "uSampler" );
 
-      // create and the texture that will be used to render the particles
-      this.particlesTexture.initialize( drawable );
-
       // bind the texture that contains the particle images
       this.bindTextureImage( drawable, this.particlesTexture.canvas );
     },
@@ -186,10 +183,10 @@ define( function( require ) {
         // TODO: I (jblanco) am not entirely sure why this is needed in order to look right.  This should be investigated if retained.
         var adjustedParticleRadius;
         if ( particleDatum.type === ParticleType.SODIUM_ION ){
-          adjustedParticleRadius = particleDatum.radius * 1.5;
+          adjustedParticleRadius = particleDatum.radius * 1.9;
         }
         else if ( particleDatum.type === ParticleType.POTASSIUM_ION ){
-          adjustedParticleRadius = particleDatum.radius * 1.5;
+          adjustedParticleRadius = particleDatum.radius * 2.1;
         }
 
         // Get the texture coordinates.  For performance reasons, this method updates pre-allocated values.

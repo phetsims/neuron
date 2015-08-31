@@ -10,17 +10,20 @@ define( function( require ) {
   'use strict';
 
   // modules
-  var inherit = require( 'PHET_CORE/inherit' );
-  var PotassiumIon = require( 'NEURON/neuron/model/PotassiumIon' );
-  var SodiumIon = require( 'NEURON/neuron/model/SodiumIon' );
-  var Vector2 = require( 'DOT/Vector2' );
   var Bounds2 = require( 'DOT/Bounds2' );
   var Color = require( 'SCENERY/util/Color' );
-  var Util = require( 'SCENERY/util/Util' );
+  var inherit = require( 'PHET_CORE/inherit' );
+  var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
   var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
+  var PotassiumIon = require( 'NEURON/neuron/model/PotassiumIon' );
+  var SodiumIon = require( 'NEURON/neuron/model/SodiumIon' );
+  var Util = require( 'SCENERY/util/Util' );
+  var Vector2 = require( 'DOT/Vector2' );
 
   // constants
-  var PARTICLE_IMAGE_SIZE = 24; // height and width in pixels of the particle images created
+  var CANVAS_LENGTH = 128; // width and height of the canvas, must be a power of 2 so that mipmapping can be used
+  var MARGIN = CANVAS_LENGTH * 0.1; // space around the particles
+  var STROKE_WIDTH = CANVAS_LENGTH / 32;
   var PRINT_DATA_URL_OF_SPRITE_SHEET = true; // very useful for debugging issues with the sprite sheet texture
 
   /**
@@ -29,97 +32,61 @@ define( function( require ) {
    */
   function NeuronParticlesTexture( modelViewTransform ) {
     this.modelViewTransform = modelViewTransform; // @private
-    this.sodiumParticle = new SodiumIon(); // @private
-    this.potassiumParticle = new PotassiumIon(); // @private
     this.strokeGapBetweenParticles = 4;  // @private - empirically determined
 
     // create the canvas upon which the particle images will be drawn
     this.canvas = document.createElement( 'canvas' );
+    this.canvas.width = CANVAS_LENGTH;
+    this.canvas.height = CANVAS_LENGTH;
     this.canvasContext = this.canvas.getContext( '2d' );
 
-    // Start building the tiles after a gap so the strokes don't overlap
-    this.xMargin = this.strokeGapBetweenParticles;
-    this.yMargin = this.strokeGapBetweenParticles;
+    // create the particle images on the canvas
+    this.createParticleImages( this.canvasContext );
 
-    // Note: This must be initialize with a drawable before it can be used, see docs for the methods below.
+    // for debugging
+    if ( PRINT_DATA_URL_OF_SPRITE_SHEET ) {
+      console.log( 'this.canvas..toDataURL() = ' + this.canvas.toDataURL() );
+    }
   }
 
   return inherit( Object, NeuronParticlesTexture, {
 
     /**
-     * Create the texture that is used to render the individual particles.  This is generally called during WebGL node
-     * initialization.
-     */
-    initialize: function( drawable ) {
-      this.canvasContext.clearRect( 0, 0, this.canvas.width, this.canvas.height );
-      this.updateSpriteSheetDimensions();
-      this.calculateAndAssignCanvasDimensions( this.canvas );
-      this.createTiles( this.canvasContext );
-      if ( PRINT_DATA_URL_OF_SPRITE_SHEET ) {
-        console.log( 'this.canvas..toDataURL() = ' + this.canvas.toDataURL() );
-      }
-    },
-
-    /**
-     * TODO: doc
-     */
-    updateSpriteSheetDimensions: function() {
-
-      var numParticleTypes = 2;
-
-      this.potassiumTileHeightOffset = this.yMargin + PARTICLE_IMAGE_SIZE + this.strokeGapBetweenParticles;
-
-      this.totalHeight = this.yMargin * 2;
-      this.totalHeight += numParticleTypes * PARTICLE_IMAGE_SIZE;
-      this.totalHeight += ( numParticleTypes - 1 ) * this.strokeGapBetweenParticles;
-
-      this.totalWidth = 2 * this.xMargin;
-      this.totalWidth += PARTICLE_IMAGE_SIZE;
-
-      this.canvasWidth = 0;
-      this.canvasHeight = 0;
-    },
-
-    calculateAndAssignCanvasDimensions: function( canvas ) {
-
-      // the canvas size must be a square power of 2 so that mipmapping will work
-      var length = Math.max( Util.toPowerOf2( this.totalWidth ), Util.toPowerOf2( this.totalHeight ) );
-      this.canvasWidth = canvas.width = length;
-      this.canvasHeight = canvas.height = length;
-    },
-
-    /**
-     * Create a 'tile' for each particle types on the provide canvas.
+     * Draw the particles on the provided canvas.
      * @param {Canvas.context} context
      */
-    createTiles: function( context ) {
-      context.strokeStyle = Color.BLACK.getCanvasStyle();
-      context.lineWidth = 1;
+    createParticleImages: function( context ) {
 
-      var particlePos;
-      context.lineWidth = Math.floor( PARTICLE_IMAGE_SIZE * 0.15 );
+      // clear the canvas
+      this.canvasContext.clearRect( 0, 0, this.canvas.width, this.canvas.height );
+
+      // initialize some of the attributes that are shared by all particles
       context.strokeStyle = Color.BLACK.getCanvasStyle();
+      context.lineWidth = STROKE_WIDTH;
       context.lineJoin = 'round';
 
+      var particlePos;
+
       // create the image for sodium ions
-      context.fillStyle = this.sodiumParticle.getRepresentationColor().getCanvasStyle();
+      var sodiumParticleRadius = ( CANVAS_LENGTH / 2 - 2 * MARGIN ) / 2;
+      context.fillStyle = NeuronConstants.SODIUM_COLOR.getCanvasStyle();
       context.beginPath();
-      particlePos = this.getTilePosition( this.sodiumParticle.getType() );
-      context.arc( particlePos.x, particlePos.y, PARTICLE_IMAGE_SIZE / 2, 0, 2 * Math.PI, false );
+      particlePos = this.getTilePosition( ParticleType.SODIUM_ION, particlePos );
+      context.arc( particlePos.x, particlePos.y, sodiumParticleRadius, 0, 2 * Math.PI, false );
       context.fill();
       context.stroke();
 
       // create the image for potassium ions
-      // TODO: if lineWidth is the same when this is worked out, eliminate redundant setting here.
-      particlePos = this.getTilePosition( this.potassiumParticle.getType() );
+      var potassiumParticleWidth = CANVAS_LENGTH / 2 - 2 * MARGIN;
+      particlePos = this.getTilePosition( ParticleType.POTASSIUM_ION, particlePos );
       var x = particlePos.x;
       var y = particlePos.y;
-      context.fillStyle = this.potassiumParticle.getRepresentationColor().getCanvasStyle();
+      context.fillStyle = NeuronConstants.POTASSIUM_COLOR.getCanvasStyle();
       context.beginPath();
-      context.moveTo( x - PARTICLE_IMAGE_SIZE / 2, y );
-      context.lineTo( x, y - PARTICLE_IMAGE_SIZE / 2 );
-      context.lineTo( x + PARTICLE_IMAGE_SIZE / 2, y );
-      context.lineTo( x, y + PARTICLE_IMAGE_SIZE / 2 );
+      context.moveTo( x - potassiumParticleWidth / 2, y );
+      context.lineTo( x, y - potassiumParticleWidth / 2 );
+      context.lineTo( x + potassiumParticleWidth / 2, y );
+      context.lineTo( x, y + potassiumParticleWidth / 2 );
       context.closePath();
       context.fill();
       context.stroke();
@@ -127,7 +94,7 @@ define( function( require ) {
 
     /**
      * calculates the center position of the tile for the given type
-     * @param {ParticleType.String} particleType
+     * @param {ParticleType} particleType
      * @param {Vector2} posVector - vector where calculated values are placed, prevents allocation if provided
      * @private
      */
@@ -137,35 +104,34 @@ define( function( require ) {
       posVector = posVector || new Vector2();
 
       // calculate the center position
-      posVector.x = this.xMargin + PARTICLE_IMAGE_SIZE / 2;
-      posVector.y = PARTICLE_IMAGE_SIZE / 2 + this.yMargin;
+      posVector.x = CANVAS_LENGTH / 4;
+      posVector.y = CANVAS_LENGTH / 4;
       if ( particleType === ParticleType.POTASSIUM_ION ) {
         //The Potassium Tiles are arranged after Sodium
-        posVector.y = posVector.y + this.potassiumTileHeightOffset;
+        posVector.y = posVector.y + CANVAS_LENGTH / 2;
       }
 
       return posVector;
     },
 
     /**
-     * Get the Tile's normalized texture coordinates
+     * get the tile's normalized texture coordinates
      * @param {ParticleType.String} particleType
      * @param {Vector2} posVector
      * @param {Bounds2} coords
      * @returns {Bounds2}
+     * @public
      */
     getTexCoords: function( particleType, posVector, coords ) {
-      var tileRadius = PARTICLE_IMAGE_SIZE / 2;
-      var tilePosition = this.getTilePosition( particleType, posVector );
-      tileRadius += this.strokeGapBetweenParticles / 2;
       coords = coords || new Bounds2( 0, 0, 0, 0 );
+      var tilePosition = this.getTilePosition( particleType, posVector );
+      var tileRadius = CANVAS_LENGTH / 4;
 
-      // Particle Pos is at center. get the left corder, substract the radius and normalize the value by
-      // dividing it by canvasWidth, the Tex Coords needs to be on the range of 0..1
-      coords.setMinX( ( tilePosition.x - tileRadius ) / this.canvasWidth );
-      coords.setMinY( ( tilePosition.y - tileRadius ) / this.canvasHeight );
-      coords.setMaxX(  (tilePosition.x + tileRadius ) / this.canvasWidth );
-      coords.setMaxY( ( tilePosition.y + tileRadius ) / this.canvasHeight );
+      // Set the normalized bounds within the texture for the requested particle type.
+      coords.setMinX( ( tilePosition.x - tileRadius ) / this.canvas.width );
+      coords.setMinY( ( tilePosition.y - tileRadius ) / this.canvas.height );
+      coords.setMaxX(  (tilePosition.x + tileRadius ) / this.canvas.width );
+      coords.setMaxY( ( tilePosition.y + tileRadius ) / this.canvas.height );
 
       return coords;
     }
