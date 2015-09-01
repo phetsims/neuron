@@ -14,7 +14,7 @@ define( function( require ) {
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
   var Color = require( 'SCENERY/util/Color' );
 
-  var clockFrameRate = 15;
+  var clockFrameRate = 60;
   var minActionPotentialClockDT = (1 / clockFrameRate) / 3000;
   var maxActionPotentialClockDT = (1 / clockFrameRate) / 1000;
 

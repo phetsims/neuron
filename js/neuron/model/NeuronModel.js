@@ -312,8 +312,8 @@ define( function( require ) {
       // modified.
       this.axonMembrane.stepInTime( dt );
 
-      // This is a step forward in time.  Update the value of the
-      // membrane potential by stepping the Hodgkins-Huxley model.
+      // This is a step forward in time.  Update the value of the membrane potential by stepping the Hodgkins-Huxley
+      // model.
       this.hodgkinHuxleyModel.stepInTime( dt );
 
       // There is a bit of a threshold on sending out notifications of membrane voltage changes, since otherwise the

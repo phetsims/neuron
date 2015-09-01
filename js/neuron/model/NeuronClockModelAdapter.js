@@ -2,7 +2,8 @@
 
 /**
  * The clock for this simulation, which provide support for normal operation, play and pause, stepping backwards in
- * time, and playback of previously recorded data.
+ * time, and playback of previously recorded data.  Because the neuron simulation depicts action potentials far more
+ * slowly than they occur in real live, this class adapts the real clock time to a slower rate when clocking the model.
  * <p/>
  * Note: The whole approach of using explicit clocks and clock adapters is a holdover from PhET's Java days, and is
  * present in this sim because the sim was ported from a Java version.  Use of this technique is not recommended for
@@ -21,16 +22,15 @@ define( function( require ) {
   var EventTimer = require( 'PHET_CORE/EventTimer' );
 
   // Constant Clock internally used
-  var DEFAULT_FRAMES_PER_SECOND = 30.0;
+  var DEFAULT_FRAMES_PER_SECOND = 60.0;
 
   /**
-   * @constructor
-   * Creates a NeuronClock based on a number of requested frames per second.
-   * This uses the same value for elapsed simulation time, and should be used for simulations
-   * that run in real time (e.g. one sim time second equals one wall clock second)
-   * @param {NeuronModel} model (whose simulation timing is controlled by this adapter, Note:- The Adapter is generic and doesn't have any dependency on the model it controls)
+   * Creates a NeuronClockModelAdapter based on a number of requested frames per second.
+   * @param {NeuronModel} model - model whose simulation timing is controlled by this adapter, Note - the Adapter is
+   * generic and doesn't have any dependency on the model it controls
    * @param {number} framesPerSecond the number of frames per second
    * @param {number} dt constant simulation time change between ticks
+   * @constructor
    */
   function NeuronClockModelAdapter( model, framesPerSecond, dt ) {
 

@@ -22,10 +22,9 @@ define( function( require ) {
   var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
 
   /**
-   Amount of time used for each iteration of the model.  This is fixed,
-   and when the model is stepped it breaks whether time step is presented
-   into units of this duration.  This is needed because below a certain
-   time value the model doesn't work - it becomes unstable.
+   * Amount of time used for each iteration of the model.  This is fixed, and when the model is stepped it breaks
+   * whether time step is presented into units of this duration.  This is needed because below a certain time value the
+   * model doesn't work - it becomes unstable.
    */
   var INTERNAL_TIME_STEP = 0.005; // In milliseconds, not seconds.
   var MAX_DELAY = 0.001; // In seconds of simulation time.
@@ -108,11 +107,10 @@ define( function( require ) {
     },
 
     stepInTime: function( dt ) {
-      var modelIterationsToRun = Math.floor( (dt * 1000) / INTERNAL_TIME_STEP );
-      this.timeRemainder += (dt * 1000) % INTERNAL_TIME_STEP;
+      var modelIterationsToRun = Math.floor( ( dt * 1000 ) / INTERNAL_TIME_STEP );
+      this.timeRemainder += ( dt * 1000 ) % INTERNAL_TIME_STEP;
       if ( this.timeRemainder >= INTERNAL_TIME_STEP ) {
-        // Add an additional iteration and reset the time remainder
-        // accumulation.  This is kind of like a leap year.
+        // Add an additional iteration and reset the time remainder accumulation.  This is kind of like a leap year.
         modelIterationsToRun += 1;
         this.timeRemainder -= INTERNAL_TIME_STEP;
       }
