@@ -31,7 +31,7 @@ define( function( require ) {
   var Path = require( 'SCENERY/nodes/Path' );
   var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   var AxonBodyNode = require( 'NEURON/neuron/view/AxonBodyNode' );
-  var ParticlesWebGLNode = require( 'NEURON/neuron/view/ParticlesWebGLNode5' );
+  var ParticlesWebGLNode = require( 'NEURON/neuron/view/ParticlesWebGLNode' );
   var AxonCrossSectionNode = require( 'NEURON/neuron/view/AxonCrossSectionNode' );
   var ConcentrationReadoutLayerNode = require( 'NEURON/neuron/view/ConcentrationReadoutLayerNode' );
   var MembraneChannelGateCanvasNode = require( 'NEURON/neuron/view/MembraneChannelGateCanvasNode' );
