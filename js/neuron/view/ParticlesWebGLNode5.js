@@ -5,10 +5,11 @@
  * portrayed in the Neuron simulation.  This node exists as an optimization, since representing every particle as an
  * individual Scenery node proved to be far too computationally intensive.
  *
- * TODO: Elaborate on the specific approach used if this node is retained.
+ * In this node, particles are rendered using a texture that is created on a canvas.  The texture exists as a separate
+ * class.
  *
- * @author Sharfudeen Ashraf (for Ghent University)
  * @author John Blanco
+ * @author Sharfudeen Ashraf (for Ghent University)
  */
 define( function( require ) {
   'use strict';
@@ -26,9 +27,9 @@ define( function( require ) {
   // constants
   var MAX_PARTICLES = 2000; // several trials were run and peak number of particles was 1841, so this value should be safe
   var VERTICES_PER_PARTICLE = 4; // basically one per corner of the rectangle that encloses the particle
-  var NUM_POSITION_VALUES_PER_VERTEX = 2; // x and y, z is considered to be always 1
-  var NUM_TEXTURE_VALUES_PER_VERTEX = 2; // x and y coordinates within the 2D texture
-  var NUM_OPACITY_VALUES_PER_VERTEX = 1; // a single value from 0 to 1
+  var POSITION_VALUES_PER_VERTEX = 2; // x and y, z is considered to be always 1
+  var TEXTURE_VALUES_PER_VERTEX = 2; // x and y coordinates within the 2D texture
+  var OPACITY_VALUES_PER_VERTEX = 1; // a single value from 0 to 1
 
   /**
    * @param {NeuronModel} neuronModel
@@ -45,27 +46,27 @@ define( function( require ) {
     } );
 
     // Keep references to the things that needed in order to render the particles.
-    this.neuronModel = neuronModel;
-    this.modelViewTransform = modelViewTransform;
-    this.viewTransformationMatrix = modelViewTransform.getMatrix();
-    this.zoomMatrixProperty = zoomMatrixProperty;
-    this.particleBounds = bounds;
+    this.neuronModel = neuronModel; // @private
+    this.modelViewTransform = modelViewTransform; // @private
+    this.viewTransformationMatrix = modelViewTransform.getMatrix(); // @private
+    this.zoomMatrixProperty = zoomMatrixProperty; // @private
+    this.particleBounds = bounds; // @private
 
-    // create the texture for the particles
-    this.particlesTexture = new NeuronParticlesTexture( modelViewTransform );
+    // Create the texture for the particles.
+    this.particlesTexture = new NeuronParticlesTexture( modelViewTransform ); // @private
 
-    // Set up some variables for reuse instead of reallocating them with each repaint.  This improves performance.
+    // @private - pre-allocated arrays and values that are reused for better performance
     this.vertexData = new Float32Array( MAX_PARTICLES * VERTICES_PER_PARTICLE *
-                                        ( NUM_POSITION_VALUES_PER_VERTEX + NUM_TEXTURE_VALUES_PER_VERTEX + NUM_OPACITY_VALUES_PER_VERTEX) );
+                                        ( POSITION_VALUES_PER_VERTEX + TEXTURE_VALUES_PER_VERTEX + OPACITY_VALUES_PER_VERTEX) );
     this.elementData = new Array( MAX_PARTICLES * ( VERTICES_PER_PARTICLE + 2 ) );
     this.texCoords = new Bounds2( 0, 0, 0, 0 ); // The normalized texture coordinates that corresponds to the vertex corners
     this.vertexCords = new Bounds2( 0, 0, 0, 0 );// the rectangle bounds of a particle (used to create 2 triangles)
     this.tilePosVector = new Vector2();
     this.particleViewPosition = new Vector2();
-
-    // For better performance, an array of particle data objects is allocated now, and their values are updated rather
-    // than discarded and reallocated.
     this.particleData = new Array( MAX_PARTICLES );
+
+    // For better performance, the array of particle data objects is initialized here and the values updated rather
+    // than reallocated during each update.
     for ( var i = 0; i < MAX_PARTICLES; i++ ) {
       this.particleData[ i ] = {
         xPos: 0,
@@ -92,6 +93,7 @@ define( function( require ) {
      * Initialization routine called by the base class that sets up the vertex and fragment shaders and does other
      * initialization.
      * @param {WebGLNodeDrawable} drawable
+     * @public
      */
     initializeWebGLDrawable: function( drawable ) {
       var gl = drawable.gl;
@@ -133,10 +135,7 @@ define( function( require ) {
         //'  gl_FragColor = vec4( 0, 0, 0, 1 );',
         //'  gl_FragColor = vec4( 0, 1, 0, 0.1 );',
         '  gl_FragColor = texture2D( uSampler, vTextureCoordinate );',
-        //'  if ( gl_FragColor.a > 0.0 ){',
-        //'    gl_FragColor.a = vOpacity;',
-        //'  }',
-        '  gl_FragColor.a *= vOpacity;', // suggested by JO instead of the 'if' clause
+        '  gl_FragColor.a *= vOpacity;',
         '}'
       ].join( '\n' );
 
@@ -179,7 +178,7 @@ define( function( require ) {
         // convenience var
         var particleDatum = this.particleData[ i ];
 
-        // Tweak Alert!  The radii of the particles are adjust here in order to look correct.
+        // Tweak Alert!  The radii of the particles are adjusted here in order to look correct.
         // TODO: I (jblanco) am not entirely sure why this is needed in order to look right.  This should be investigated if retained.
         var adjustedParticleRadius;
         if ( particleDatum.type === ParticleType.SODIUM_ION ){
@@ -190,7 +189,7 @@ define( function( require ) {
         }
 
         // Get the texture coordinates.  For performance reasons, this method updates pre-allocated values.
-        this.particlesTexture.getTexCoords( particleDatum.type, this.tilePosVector, this.texCoords );
+        this.texCoords = this.particlesTexture.getTexCoords( particleDatum.type, this.tilePosVector, this.texCoords );
 
         // Add the vertices, which essentially represent the four corners that enclose the particle.
         for ( var j = 0; j < VERTICES_PER_PARTICLE; j++ ) {
@@ -226,13 +225,13 @@ define( function( require ) {
 
       // Set up the attributes that will be passed into the vertex shader.
       var elementSize = Float32Array.BYTES_PER_ELEMENT;
-      var elementsPerVertex = NUM_POSITION_VALUES_PER_VERTEX + NUM_TEXTURE_VALUES_PER_VERTEX + NUM_OPACITY_VALUES_PER_VERTEX;
+      var elementsPerVertex = POSITION_VALUES_PER_VERTEX + TEXTURE_VALUES_PER_VERTEX + OPACITY_VALUES_PER_VERTEX;
       var stride = elementSize * elementsPerVertex;
       gl.vertexAttribPointer( shaderProgram.attributeLocations.aPosition, 2, gl.FLOAT, false, stride, 0 );
       gl.vertexAttribPointer( shaderProgram.attributeLocations.aTextureCoordinate, 2, gl.FLOAT, false, stride,
-        elementSize * NUM_TEXTURE_VALUES_PER_VERTEX );
+        elementSize * TEXTURE_VALUES_PER_VERTEX );
       gl.vertexAttribPointer( shaderProgram.attributeLocations.aOpacity, 1, gl.FLOAT, false, stride,
-        elementSize * ( NUM_POSITION_VALUES_PER_VERTEX + NUM_TEXTURE_VALUES_PER_VERTEX ) );
+        elementSize * ( POSITION_VALUES_PER_VERTEX + TEXTURE_VALUES_PER_VERTEX ) );
 
       // Load the element data into the GPU.
       gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, drawable.elementBuffer );
