@@ -61,6 +61,12 @@ define( function( require ) {
   return inherit( PropertySet, NeuronClockModelAdapter, {
 
     step: function( dt ) {
+
+      // If the step is huge, it probably means that the screen was hidden for a while, so just ignore it.
+      if ( dt > ( 1 / DEFAULT_FRAMES_PER_SECOND ) * 50 ){
+        return;
+      }
+
       if ( this.playing ) {
         this.eventTimer.step( dt );
       }
