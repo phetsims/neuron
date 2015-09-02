@@ -19,9 +19,9 @@ define( function( require ) {
 
   // constants
   var BACKGROUND_COLOR = new Color( 204, 102, 255 );
-  var BACKGROUND_STROKE = { stroke: BACKGROUND_COLOR, lineWidth: 10, lineCap: 'round', lineJoin: 'round' };
+  var BACKGROUND_OPTIONS = { stroke: BACKGROUND_COLOR, lineWidth: 10, lineCap: 'round', lineJoin: 'round', boundsMethod: 'none' };
   var FOREGROUND_COLOR = Color.YELLOW;
-  var FOREGROUND_STROKE = { stroke: FOREGROUND_COLOR, lineWidth: 5, lineCap: 'round', lineJoin: 'round' };
+  var FOREGROUND_OPTIONS = { stroke: FOREGROUND_COLOR, lineWidth: 5, lineCap: 'round', lineJoin: 'round',  boundsMethod: 'none'  };
 
   /**
    * The node that will represent the traveling action potential.
@@ -34,8 +34,8 @@ define( function( require ) {
     var thisNode = this;
     Node.call( thisNode );
 
-    var background = new Path( new Shape(), BACKGROUND_STROKE );
-    var foreground = new Path( new Shape(), FOREGROUND_STROKE );
+    var background = new Path( new Shape(), BACKGROUND_OPTIONS );
+    var foreground = new Path( new Shape(), FOREGROUND_OPTIONS );
 
     var bounds2 = new Bounds2( 0, 0, 0, 0 );
 
@@ -44,8 +44,8 @@ define( function( require ) {
     }
 
     // Skip bounds computation to improve performance
-    background.computeShapeBounds = computeShapeBounds;
-    foreground.computeShapeBounds = computeShapeBounds;
+    //background.computeShapeBounds = computeShapeBounds;
+    //foreground.computeShapeBounds = computeShapeBounds;
 
     thisNode.addChild( background );
     thisNode.addChild( foreground );
