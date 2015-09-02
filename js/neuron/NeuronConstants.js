@@ -15,8 +15,8 @@ define( function( require ) {
   var Color = require( 'SCENERY/util/Color' );
 
   var clockFrameRate = 60;
-  var minActionPotentialClockDT = (1 / clockFrameRate) / 3000;
-  var maxActionPotentialClockDT = (1 / clockFrameRate) / 1000;
+  var minActionPotentialClockDT = ( 1 / clockFrameRate ) / 3000;
+  var maxActionPotentialClockDT = ( 1 / clockFrameRate ) / 1000;
 
   var NeuronConstants = {
 
