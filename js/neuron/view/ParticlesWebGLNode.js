@@ -59,11 +59,13 @@ define( function( require ) {
     this.vertexData = new Float32Array( MAX_PARTICLES * VERTICES_PER_PARTICLE *
                                         ( POSITION_VALUES_PER_VERTEX + TEXTURE_VALUES_PER_VERTEX + OPACITY_VALUES_PER_VERTEX) );
     this.elementData = new Array( MAX_PARTICLES * ( VERTICES_PER_PARTICLE + 2 ) );
-    this.texCoords = new Bounds2( 0, 0, 0, 0 ); // The normalized texture coordinates that corresponds to the vertex corners
-    this.vertexCords = new Bounds2( 0, 0, 0, 0 );// the rectangle bounds of a particle (used to create 2 triangles)
     this.tilePosVector = new Vector2();
     this.particleViewPosition = new Vector2();
     this.particleData = new Array( MAX_PARTICLES );
+
+    // pre-calculate the texture coordinates for the two different particle types
+    this.sodiumTextureCoords = this.particlesTexture.getTexCoords( ParticleType.SODIUM_ION );
+    this.potassiumTextureCoords = this.particlesTexture.getTexCoords( ParticleType.POTASSIUM_ION );
 
     // For better performance, the array of particle data objects is initialized here and the values updated rather
     // than reallocated during each update.
@@ -181,30 +183,64 @@ define( function( require ) {
         // Tweak Alert!  The radii of the particles are adjusted here in order to look correct.
         // TODO: I (jblanco) am not entirely sure why this is needed in order to look right.  This should be investigated if retained.
         var adjustedParticleRadius;
+        var textureCoordinates;
         if ( particleDatum.type === ParticleType.SODIUM_ION ){
           adjustedParticleRadius = particleDatum.radius * 1.9;
+          textureCoordinates = this.sodiumTextureCoords;
         }
         else if ( particleDatum.type === ParticleType.POTASSIUM_ION ){
           adjustedParticleRadius = particleDatum.radius * 2.1;
+          textureCoordinates = this.potassiumTextureCoords;
         }
 
-        // Get the texture coordinates.  For performance reasons, this method updates pre-allocated values.
-        this.texCoords = this.particlesTexture.getTexCoords( particleDatum.type, this.tilePosVector, this.texCoords );
+        //-------------------------------------------------------------------------------------------------------------
+        // Add the vertex data.  Though WebGL uses 3 component vectors, this only assigns x and y values because z is
+        // assumed to be 1.  This is not done in a loop in order to get optimal performance.
+        //-------------------------------------------------------------------------------------------------------------
 
-        // Add the vertices, which essentially represent the four corners that enclose the particle.
-        for ( var j = 0; j < VERTICES_PER_PARTICLE; j++ ) {
+        // upper left vertex position
+        this.vertexData[ vertexDataIndex++ ] = particleDatum.xPos - adjustedParticleRadius;
+        this.vertexData[ vertexDataIndex++ ] = particleDatum.yPos - adjustedParticleRadius;
 
-          // vertex, which is a 2-component vector (z is assumed to be 1)
-          this.vertexData[ vertexDataIndex++ ] = particleDatum.xPos + adjustedParticleRadius * ( j < 2 ? -1 : 1 );
-          this.vertexData[ vertexDataIndex++ ] = particleDatum.yPos + adjustedParticleRadius * ( j % 2 === 0 ? -1 : 1 );
+        // texture coordinate, which is a 2-component vector
+        this.vertexData[ vertexDataIndex++ ] = textureCoordinates.minX; // x texture coordinate
+        this.vertexData[ vertexDataIndex++ ] = textureCoordinates.minY; // y texture coordinate
 
-          // texture coordinate, which is a 2-component vector
-          this.vertexData[ vertexDataIndex++ ] = j < 2 ? this.texCoords.minX : this.texCoords.maxX; // x texture coordinate
-          this.vertexData[ vertexDataIndex++ ] = j % 2 === 0 ? this.texCoords.minY : this.texCoords.maxY; // y texture coordinate
+        // opacity, which is a single value
+        this.vertexData[ vertexDataIndex++ ] = particleDatum.opacity;
 
-          // opacity, which is a single value
-          this.vertexData[ vertexDataIndex++ ] = particleDatum.opacity;
-        }
+        // lower left vertex position
+        this.vertexData[ vertexDataIndex++ ] = particleDatum.xPos - adjustedParticleRadius;
+        this.vertexData[ vertexDataIndex++ ] = particleDatum.yPos + adjustedParticleRadius;
+
+        // texture coordinate, which is a 2-component vector
+        this.vertexData[ vertexDataIndex++ ] = textureCoordinates.minX; // x texture coordinate
+        this.vertexData[ vertexDataIndex++ ] = textureCoordinates.maxY; // y texture coordinate
+
+        // opacity, which is a single value
+        this.vertexData[ vertexDataIndex++ ] = particleDatum.opacity;
+
+        // upper right vertex position
+        this.vertexData[ vertexDataIndex++ ] = particleDatum.xPos + adjustedParticleRadius;
+        this.vertexData[ vertexDataIndex++ ] = particleDatum.yPos - adjustedParticleRadius;
+
+        // texture coordinate, which is a 2-component vector
+        this.vertexData[ vertexDataIndex++ ] = textureCoordinates.maxX; // x texture coordinate
+        this.vertexData[ vertexDataIndex++ ] = textureCoordinates.minY; // y texture coordinate
+
+        // opacity, which is a single value
+        this.vertexData[ vertexDataIndex++ ] = particleDatum.opacity;
+
+        // lower right vertex position
+        this.vertexData[ vertexDataIndex++ ] = particleDatum.xPos + adjustedParticleRadius;
+        this.vertexData[ vertexDataIndex++ ] = particleDatum.yPos + adjustedParticleRadius;
+
+        // texture coordinate, which is a 2-component vector
+        this.vertexData[ vertexDataIndex++ ] = textureCoordinates.maxX; // x texture coordinate
+        this.vertexData[ vertexDataIndex++ ] = textureCoordinates.maxY; // y texture coordinate
+
+        // opacity, which is a single value
+        this.vertexData[ vertexDataIndex++ ] = particleDatum.opacity;
 
         // Add the element indices.  This is done so that we can create 'degenerate triangles' and thus have
         // discontinuities in the triangle strip, thus creating separate rectangles.

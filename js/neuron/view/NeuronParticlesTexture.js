@@ -92,17 +92,13 @@ define( function( require ) {
     /**
      * calculates the center position of the tile for the given type
      * @param {ParticleType} particleType
-     * @param {Vector2} posVector - vector where calculated values are placed, prevents allocation if provided
      * @private
      */
-    getTilePosition: function( particleType, posVector ) {
+    getTilePosition: function( particleType ) {
 
       // allocate a vector if none was provided
-      posVector = posVector || new Vector2();
+      var posVector = new Vector2( CANVAS_LENGTH / 4, CANVAS_LENGTH / 4 );
 
-      // calculate the center position
-      posVector.x = CANVAS_LENGTH / 4;
-      posVector.y = CANVAS_LENGTH / 4;
       if ( particleType === ParticleType.POTASSIUM_ION ) {
         //The Potassium Tiles are arranged after Sodium
         posVector.y = posVector.y + CANVAS_LENGTH / 2;
@@ -113,22 +109,20 @@ define( function( require ) {
 
     /**
      * get the tile's normalized texture coordinates
-     * @param {ParticleType.String} particleType
-     * @param {Vector2} posVector
-     * @param {Bounds2} coords
+     * @param {ParticleType} particleType
      * @returns {Bounds2}
      * @public
      */
-    getTexCoords: function( particleType, posVector, coords ) {
-      coords = coords || new Bounds2( 0, 0, 0, 0 );
-      var tilePosition = this.getTilePosition( particleType, posVector );
+    getTexCoords: function( particleType ) {
+      var coords = new Bounds2( 0, 0, 0, 0 );
+      var tileCenterPosition = this.getTilePosition( particleType );
       var tileRadius = CANVAS_LENGTH / 4;
 
       // Set the normalized bounds within the texture for the requested particle type.
-      coords.setMinX( ( tilePosition.x - tileRadius ) / this.canvas.width );
-      coords.setMinY( ( tilePosition.y - tileRadius ) / this.canvas.height );
-      coords.setMaxX(  (tilePosition.x + tileRadius ) / this.canvas.width );
-      coords.setMaxY( ( tilePosition.y + tileRadius ) / this.canvas.height );
+      coords.setMinX( ( tileCenterPosition.x - tileRadius ) / this.canvas.width );
+      coords.setMinY( ( tileCenterPosition.y - tileRadius ) / this.canvas.height );
+      coords.setMaxX( (tileCenterPosition.x + tileRadius ) / this.canvas.width );
+      coords.setMaxY( ( tileCenterPosition.y + tileRadius ) / this.canvas.height );
 
       return coords;
     }
