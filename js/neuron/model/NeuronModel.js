@@ -166,13 +166,19 @@ define( function( require ) {
       allowStepNavigation: false
     } );
 
-    // Listen to the membrane for events that indicate that a traveling
-    // action potential has arrived at the location of the transverse cross section.
     thisModel.axonMembrane.travelingActionPotentialReachedCrossSectionProperty.lazyLink( function( reached ) {
-      // The action potential has arrived, so stimulate the model
-      // the simulates the action potential voltages and current flows.
       if ( reached ) {
+
+        // The action potential has arrived at the cross section, so stimulate the model the simulates the action
+        // potential voltages and current flows.
         thisModel.hodgkinHuxleyModel.stimulate();
+
+        if ( window.phet.neuron.profiler ){
+          // If enabled, start collecting profiling data, which will automatically be spat out to the console (or as
+          // an alert dialog on iOS) when completed.  The duration value is empirically determined to be the time for
+          // the particles to appear, cross the membrane, and fade out.
+          window.phet.neuron.profiler.startDataAnalysis( 6000 );
+        }
       }
     } );
 
@@ -426,7 +432,7 @@ define( function( require ) {
       // Trigger the event that lets the view know that the particles should be redrawn.
       this.trigger( NeuronConstants.PARTICLES_MOVED_EVENT );
 
-      //If any one channel's state is changed, trigger a channel representation changed event
+      // If any one channel's state is changed, trigger a channel representation changed event
       this.channelRepresentationChanged = false;
       this.channelRepresentationChanged = _.any( this.membraneChannels.getArray(), 'channelStateChanged' );
 

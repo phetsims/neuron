@@ -15,7 +15,6 @@ define( function( require ) {
   var Path = require( 'SCENERY/nodes/Path' );
   var Color = require( 'SCENERY/util/Color' );
   var Shape = require( 'KITE/Shape' );
-  var Bounds2 = require( 'DOT/Bounds2' );
 
   // constants
   var BACKGROUND_COLOR = new Color( 204, 102, 255 );
@@ -36,8 +35,6 @@ define( function( require ) {
 
     var background = new Path( new Shape(), BACKGROUND_OPTIONS );
     var foreground = new Path( new Shape(), FOREGROUND_OPTIONS );
-
-    var bounds2 = new Bounds2( 0, 0, 0, 0 );
 
     thisNode.addChild( background );
     thisNode.addChild( foreground );

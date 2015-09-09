@@ -7,6 +7,7 @@ define( function( require ) {
   'use strict';
 
   // modules
+  var NeuronProfiler = require( 'NEURON/neuron/NeuronProfiler' );
   var NeuronScreen = require( 'NEURON/neuron/NeuronScreen' );
   var Sim = require( 'JOIST/Sim' );
   var SimLauncher = require( 'JOIST/SimLauncher' );
@@ -33,5 +34,11 @@ define( function( require ) {
   SimLauncher.launch( function() {
     var sim = new Sim( simTitle, [ new NeuronScreen() ], simOptions );
     sim.start();
+
+    if ( window.phet.chipper.getQueryParameters( 'neuronProfiler' ) ){
+      // create and hook up the neuron profiler
+      window.phet.neuron = window.phet.neuron || {};
+      window.phet.neuron.profiler = new NeuronProfiler( sim );
+    }
   } );
 } );

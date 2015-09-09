@@ -11,6 +11,7 @@
  * <p/>
  * @author Chris Malley (cmalley@pixelzoom.com)
  * @author Sharfudeen Ashraf (for Ghent University)
+ * @author John Blanco
  */
 
 define( function( require ) {
