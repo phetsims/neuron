@@ -39,14 +39,6 @@ define( function( require ) {
 
     var bounds2 = new Bounds2( 0, 0, 0, 0 );
 
-    function computeShapeBounds() {
-      return bounds2;
-    }
-
-    // Skip bounds computation to improve performance
-    //background.computeShapeBounds = computeShapeBounds;
-    //foreground.computeShapeBounds = computeShapeBounds;
-
     thisNode.addChild( background );
     thisNode.addChild( foreground );
 
