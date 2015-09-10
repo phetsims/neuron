@@ -46,19 +46,23 @@ define( function( require ) {
     // Concentration readouts.
     var sodiumExteriorConcentrationReadout = new Text( "", {
       font: new PhetFont( { size: READ_OUT_FONT_SIZE } ),
-      fill: new SodiumIon().getRepresentationColor()
+      fill: new SodiumIon().getRepresentationColor(),
+      boundsMethod: 'fast'
     } );
     var sodiumInteriorConcentrationReadout = new Text( "", {
       font: new PhetFont( { size: READ_OUT_FONT_SIZE } ),
-      fill: new SodiumIon().getRepresentationColor()
+      fill: new SodiumIon().getRepresentationColor(),
+      boundsMethod: 'fast'
     } );
     var potassiumExteriorConcentrationReadout = new Text( "", {
       font: new PhetFont( { size: READ_OUT_FONT_SIZE } ),
-      fill: new PotassiumIon().getRepresentationColor().darkerColor( 0.5 )
+      fill: new PotassiumIon().getRepresentationColor().darkerColor( 0.5 ),
+      boundsMethod: 'fast'
     } );
     var potassiumInteriorConcentrationReadout = new Text( "", {
       font: new PhetFont( { size: READ_OUT_FONT_SIZE } ),
-      fill: new PotassiumIon().getRepresentationColor().darkerColor( 0.5 )
+      fill: new PotassiumIon().getRepresentationColor().darkerColor( 0.5 ),
+      boundsMethod: 'fast'
     } );
 
     // Add the concentration readouts.
@@ -68,20 +72,14 @@ define( function( require ) {
     thisNode.addChild( potassiumInteriorConcentrationReadout );
 
     function updateConcentrationReadoutValues() {
-
-      var text = createConcentrationReadoutText( sodiumChemicalSymbolString, neuronModel.getSodiumExteriorConcentration() );
-      sodiumExteriorConcentrationReadout.text = text;
-
-      text = createConcentrationReadoutText( sodiumChemicalSymbolString, neuronModel.getSodiumInteriorConcentration() );
-      sodiumInteriorConcentrationReadout.text = text;
-
-      text = createConcentrationReadoutText( potassiumChemicalSymbolString, neuronModel.getPotassiumExteriorConcentration() );
-      potassiumExteriorConcentrationReadout.text = text;
-
-      text = createConcentrationReadoutText( potassiumChemicalSymbolString, neuronModel.getPotassiumInteriorConcentration() );
-      potassiumInteriorConcentrationReadout.text = text;
-
-
+      sodiumExteriorConcentrationReadout.text =
+        createConcentrationReadoutText( sodiumChemicalSymbolString, neuronModel.getSodiumExteriorConcentration() );
+      sodiumInteriorConcentrationReadout.text =
+        createConcentrationReadoutText( sodiumChemicalSymbolString, neuronModel.getSodiumInteriorConcentration() );
+      potassiumExteriorConcentrationReadout.text =
+        createConcentrationReadoutText( potassiumChemicalSymbolString, neuronModel.getPotassiumExteriorConcentration() );
+      potassiumInteriorConcentrationReadout.text =
+        createConcentrationReadoutText( potassiumChemicalSymbolString, neuronModel.getPotassiumInteriorConcentration() );
     }
 
     function createConcentrationReadoutText( label, value ) {
