@@ -18,7 +18,7 @@ define( function( require ) {
   var Screen = require( 'JOIST/Screen' );
 
   // strings
-  var neuronSimString = require( 'string!NEURON/neuron.name' );
+  var neuronSimString = require( 'string!NEURON/neuron.title' );
 
   /**
    * Creates the model and view for the NeuronScreen
