@@ -98,7 +98,9 @@ define( function( require ) {
 
     axonModel.chargesShownProperty.link( function( chargesShown ) {
       thisNode.visible = chargesShown;
-      updateRepresentation();
+      if ( chargesShown ) {
+        updateRepresentation();
+      }
     } );
   }
 
