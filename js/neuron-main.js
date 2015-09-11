@@ -24,20 +24,13 @@ define( function( require ) {
     }
   };
 
-  // Appending '?dev' to the URL will enable developer-only features.
-  if ( phet.chipper.getQueryParameter( 'dev' ) ) {
-    simOptions = _.extend( {
-      // add dev-specific options here
-    }, simOptions );
-  }
-
   SimLauncher.launch( function() {
     var sim = new Sim( simTitle, [ new NeuronScreen() ], simOptions );
     sim.start();
 
-    if ( window.phet.chipper.getQueryParameters( 'neuronProfiler' ) ){
+    window.phet.neuron = window.phet.neuron || {};
+    if ( window.phet.chipper.getQueryParameters().hasOwnProperty( 'neuronProfiler' ) ) {
       // create and hook up the neuron profiler
-      window.phet.neuron = window.phet.neuron || {};
       window.phet.neuron.profiler = new NeuronProfiler( sim );
     }
   } );
