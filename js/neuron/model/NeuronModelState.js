@@ -48,7 +48,6 @@ define( function( require ) {
 
     var thisNeuronModelState = this;
     thisNeuronModelState.axonMembraneState = neuronModel.getAxonMembrane().getState();
-
     thisNeuronModelState.membranePotential = neuronModel.getMembranePotential();
     thisNeuronModelState.sodiumExteriorConcentration = neuronModel.getSodiumExteriorConcentration();
     thisNeuronModelState.sodiumInteriorConcentration = neuronModel.getSodiumInteriorConcentration();

@@ -51,6 +51,7 @@ define( function( require ) {
   var GRID_TICK_TEXT_FONT = new PhetFont( 8 );
   var TIME_SPAN = 25; // In seconds.
   var MAX_PANEL_WIDTH = 554;
+  var MIN_DISTANCE_SQUARED_BETWEEN_POINTS = 0.01;
 
   // This value sets the frequency of chart updates, which helps to reduce
   // the processor consumption.
@@ -76,6 +77,8 @@ define( function( require ) {
     thisChart.dataSeries = new XYDataSeries( { color: PhetColorScheme.RED_COLORBLIND } );
     thisChart.domain = [ 0, TIME_SPAN ];
     thisChart.range = [ -100, 100 ];
+    thisChart.mostRecentXValue;
+    thisChart.mostRecentYValue;
 
     // Create the root node for the plot.
     var plotNode = new Node();
@@ -119,8 +122,6 @@ define( function( require ) {
     }
 
     plotNode.addChild( plotGrid );
-    var chartContentNode = new Node();
-    plotNode.addChild( chartContentNode );
 
     neuronClockModelAdapter.registerStepCallback( thisChart.step.bind( thisChart ) );
 
@@ -190,28 +191,27 @@ define( function( require ) {
     thisChart.chartMvt = ModelViewTransform2.createRectangleInvertedYMapping( new Bounds2( this.domain[ 0 ], this.range[ 0 ],
       this.domain[ 1 ], this.range[ 1 ] ), new Bounds2( 0, 0, chartDimension.width, chartDimension.height ), 1, 1 );
 
-    var graphLinesShape = new Shape();
-    var graphNode = new Path( graphLinesShape, {
+    var dataLineShape = new Shape();
+    var dataLineNode = new Path( dataLineShape, {
       stroke: thisChart.dataSeries.color,
       boundsMethod: 'none' // so that this can be changed without a lot of processing burden, disable the bounds calculation
     } );
-    chartContentNode.addChild( graphNode );
+    plotNode.addChild( dataLineNode );
 
     thisChart.dataSeries.addDataSeriesListener( function( x, y, xPrevious, yPrevious ) {
       if ( xPrevious && yPrevious && (xPrevious !== 0 || yPrevious !== 0 ) ) {
-        graphLinesShape.moveTo( thisChart.chartMvt.modelToViewX( xPrevious ), thisChart.chartMvt.modelToViewY( yPrevious ) );
-        graphLinesShape.lineTo( thisChart.chartMvt.modelToViewX( x ), thisChart.chartMvt.modelToViewY( y ) );
+        dataLineShape.moveTo( thisChart.chartMvt.modelToViewX( xPrevious ), thisChart.chartMvt.modelToViewY( yPrevious ) );
+        dataLineShape.lineTo( thisChart.chartMvt.modelToViewX( x ), thisChart.chartMvt.modelToViewY( y ) );
 
         //The Path assumes that the shape is immutable once supplied,so set the path.shape to null
         //and reset the shape again to make the update work
-        graphNode.shape = null;
-        graphNode.shape = graphLinesShape;
+        dataLineNode.shape = null;
+        dataLineNode.shape = dataLineShape;
       }
       thisChart.dataSeries.on( 'cleared', function() {
-        graphLinesShape = new Shape();
-        graphNode.shape = graphLinesShape;
+        dataLineShape = new Shape();
+        dataLineNode.shape = dataLineShape;
       } );
-
     } );
 
     this.chartCursor = new ChartCursor( thisChart );
@@ -238,7 +238,7 @@ define( function( require ) {
     var plotAndYLabel = new HBox( {
       children: [ chartYAxisLabelNode, plotNode ],
       spacing: xSpace,
-      top: Math.max( chartContentNode.height, clearChartButton.height ) + 5
+      top: Math.max( dataLineNode.height, clearChartButton.height ) + 5
     } );
     var panelContents = new Node();
     chartTitleNode.centerX = plotAndYLabel.width / 2;
@@ -276,29 +276,40 @@ define( function( require ) {
      * @param update  - Controls if graph should be refreshed on the screen.
      */
     addDataPoint: function( time, voltage ) {
+      var firstDataPoint = false;
       if ( this.dataSeries.length === 0 ) {
-        // This is the first data point added since the last time the
-        // chart was cleared or since it was created.  Record the time
-        // index for future reference.
+        // This is the first data point added since the last time the chart was cleared or since it was created. Record
+        // the time index for future reference.
         this.timeIndexOfFirstDataPt = time;
+        firstDataPoint = true;
       }
 
-      // If the chart isn't full, add the data point to the data series.
-      // Note that internally we work in millivolts, not volts.
+      // compute the x and y valus that will be added to the data set if the necessary conditions are met
+      var xValue = time - this.timeIndexOfFirstDataPt;
+      var yValue = voltage * 1000; // this chart uses millivolts internally
+
+      // Calculate the distance from the most recently added point so that we can add as few points as possible and
+      // still get a reasonable looking graph.  This is done as an optimization.
+      var distanceFromLastPointSquared = Number.POSITIVE_INFINITY;
+      if ( !firstDataPoint ) {
+        distanceFromLastPointSquared = Math.pow( xValue - this.mostRecentXValue, 2 ) +
+                                       Math.pow( yValue - this.mostRecentYValue, 2 );
+      }
+
+      // Add the data point if it is in range, if it is sufficiently far from the previous data point, and if the
+      // chart isn't full.
       assert && assert( time - this.timeIndexOfFirstDataPt >= 0 );
-      if ( time - this.timeIndexOfFirstDataPt <= TIME_SPAN ) {
-        this.dataSeries.addPoint( time - this.timeIndexOfFirstDataPt, voltage * 1000 );
+      if ( time - this.timeIndexOfFirstDataPt <= TIME_SPAN && distanceFromLastPointSquared > MIN_DISTANCE_SQUARED_BETWEEN_POINTS ) {
+        this.dataSeries.addPoint( xValue, yValue );
+        this.mostRecentXValue = xValue;
+        this.mostRecentYValue = yValue;
         this.chartIsFull = false;
       }
-      else if ( !this.chartIsFull ) {
-        // This is the first data point to be received that is outside of
-        // the chart's range.  Add it anyway so that there is no gap
-        // in the data shown at the end of the chart.
-        this.dataSeries.addPoint( time - this.timeIndexOfFirstDataPt, voltage * 1000 );
+      else if ( time - this.timeIndexOfFirstDataPt > TIME_SPAN && !this.chartIsFull ) {
+        // This is the first data point to be received that is outside of the chart's X range.  Add it anyway so that
+        // there is no gap in the data shown at the end of the chart.
+        this.dataSeries.addPoint( TIME_SPAN, yValue );
         this.chartIsFull = true;
-      }
-      else {
-        console.log( "MembranePotential Chart Warning: Attempt to add data to full chart, ignoring." );
       }
     },
 
