@@ -16,11 +16,11 @@ define( function( require ) {
   var TimedFadeAwayStrategy = require( 'NEURON/neuron/model/TimedFadeAwayStrategy' );
 
   // constants
-  var CLOCK_TICKS_BEFORE_MOTION_UPDATE = 5;
-  var CLOCK_TICKS_BEFORE_VELOCITY_UPDATE = CLOCK_TICKS_BEFORE_MOTION_UPDATE * 10;
-  var MOTION_UPDATE_PERIOD = NeuronConstants.DEFAULT_ACTION_POTENTIAL_CLOCK_DT * CLOCK_TICKS_BEFORE_MOTION_UPDATE;
+  var CLOCK_TICKS_BEFORE_POSITION_UPDATE = 5;
+  var CLOCK_TICKS_BEFORE_VELOCITY_UPDATE = CLOCK_TICKS_BEFORE_POSITION_UPDATE * 20;
+  var POSITION_UPDATE_PERIOD = NeuronConstants.DEFAULT_ACTION_POTENTIAL_CLOCK_DT * CLOCK_TICKS_BEFORE_POSITION_UPDATE;
   var VELOCITY_UPDATE_PERIOD = NeuronConstants.DEFAULT_ACTION_POTENTIAL_CLOCK_DT * CLOCK_TICKS_BEFORE_VELOCITY_UPDATE;
-  var MIN_VELOCITY = 500;  // In nanometers per second of sim time.
+  var MIN_VELOCITY = 1000;  // In nanometers per second of sim time.
   var MAX_VELOCITY = 5000; // In nanometers per second of sim time.
 
   var RAND = {
@@ -44,9 +44,8 @@ define( function( require ) {
     this.preFadeCountdownTimer = preFadeTime;
     this.fadeOutDuration = fadeOutDuration;
 
-    // Set up random offsets so that all the particles using this motion
-    // strategy don't all get updated at the same time.
-    this.motionUpdateCountdownTimer = RAND.nextInt( CLOCK_TICKS_BEFORE_MOTION_UPDATE ) * NeuronConstants.DEFAULT_ACTION_POTENTIAL_CLOCK_DT;
+    // Set up random offsets so that all the particles using this motion strategy don't all get updated at the same time.
+    this.motionUpdateCountdownTimer = RAND.nextInt( CLOCK_TICKS_BEFORE_POSITION_UPDATE ) * NeuronConstants.DEFAULT_ACTION_POTENTIAL_CLOCK_DT;
     this.velocityUpdateCountdownTimer = RAND.nextInt( CLOCK_TICKS_BEFORE_VELOCITY_UPDATE ) * NeuronConstants.DEFAULT_ACTION_POTENTIAL_CLOCK_DT;
 
     this.velocityX = 0;
@@ -64,10 +63,10 @@ define( function( require ) {
       if ( this.motionUpdateCountdownTimer <= 0 ) {
         // Time to update the motion.
         movableModelElement.setPosition(
-          movableModelElement.getPositionX() + this.velocityX * MOTION_UPDATE_PERIOD,
-          movableModelElement.getPositionY() + this.velocityY * MOTION_UPDATE_PERIOD );
+          movableModelElement.getPositionX() + this.velocityX * POSITION_UPDATE_PERIOD,
+          movableModelElement.getPositionY() + this.velocityY * POSITION_UPDATE_PERIOD );
 
-        this.motionUpdateCountdownTimer = MOTION_UPDATE_PERIOD;
+        this.motionUpdateCountdownTimer = POSITION_UPDATE_PERIOD;
       }
 
       this.velocityUpdateCountdownTimer -= dt;
@@ -85,6 +84,7 @@ define( function( require ) {
         }
       }
     },
+
     updateVelocity: function( currentPositionX, currentPositionY ) {
       // Create a velocity vector that causes this to move away from the "away point".
       var awayAngle = Math.atan2( currentPositionY - this.awayPoint.y,
@@ -92,10 +92,7 @@ define( function( require ) {
       var newScalerVelocity = MIN_VELOCITY + Math.random() * ( MAX_VELOCITY - MIN_VELOCITY );
       this.velocityX = newScalerVelocity * Math.cos( awayAngle );
       this.velocityY = newScalerVelocity * Math.sin( awayAngle );
-
-
     }
-
   } );
 } );
 
