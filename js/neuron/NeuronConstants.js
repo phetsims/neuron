@@ -1,10 +1,10 @@
 // Copyright 2002-2011, University of Colorado
 /**
- * NeuronConstants is a collection of constants that configure global properties.
- * If you change something here, it will change *everywhere* in this simulation.
+ * NeuronConstants is a collection of constants that configure global properties. If you change something here, it will
+ * change *everywhere* in this simulation.
  *
- * @author Chris Malley (cmalley@pixelzoom.com)
  * @author Sharfudeen Ashraf (for Ghent University)
+ * @author John Blanco
  */
 define( function( require ) {
   'use strict';
@@ -36,7 +36,6 @@ define( function( require ) {
     MEMBRANE_THICKNESS: 4, // In nanometers, obtained from web research.
     DEFAULT_DIAMETER: 150, // In nanometers.
     SCREEN_BACKGROUND: '#ccfefa',
-    CLOCK_FRAME_RATE: clockFrameRate, // fps, frames per second (wall time)
 
     // Set up the clock ranges for the various modules.  Note that for this
     // sim the clock rates are often several orders of magnitude slower than

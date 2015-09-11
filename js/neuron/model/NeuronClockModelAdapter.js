@@ -1,4 +1,4 @@
-// Copyright 2002-2014, University of Colorado Boulder
+// Copyright 2002-2015, University of Colorado Boulder
 
 /**
  * The clock for this simulation, which provide support for normal operation, play and pause, stepping backwards in
@@ -20,28 +20,23 @@ define( function( require ) {
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
   var PropertySet = require( 'AXON/PropertySet' );
-  var EventTimer = require( 'PHET_CORE/EventTimer' );
 
-  // Constant Clock internally used
-  var DEFAULT_FRAMES_PER_SECOND = 60.0;
+  // the following constants could easily be turned into options if there was a need to reuse and thus generalize
+  // this class.
+  var TIME_ADJUSTMENT_FACTOR = 7.32E-4; // in seconds, applied to the incoming dt values to scale it up or down
+  var SINGLE_STEP_TIME = ( 1 / 60 ) * TIME_ADJUSTMENT_FACTOR; // used for single stepping, based on assumed frame rate of 60 fps
 
+  // TODO: Get rid of unused params in constructor
   /**
-   * Creates a NeuronClockModelAdapter based on a number of requested frames per second.
+   * Creates a NeuronClockModelAdapter.
    * @param {NeuronModel} model - model whose simulation timing is controlled by this adapter, Note - the Adapter is
    * generic and doesn't have any dependency on the model it controls
-   * @param {number} framesPerSecond the number of frames per second
-   * @param {number} dt constant simulation time change between ticks
    * @constructor
    */
-  function NeuronClockModelAdapter( model, framesPerSecond, dt ) {
+  function NeuronClockModelAdapter( model ) {
 
-    var thisModel = this;
-    thisModel.model = model;
-    //delay desired wall time change between ticks
-    thisModel.delay = 1000 / framesPerSecond;
-    thisModel.simulationTimeChange = dt;
-    thisModel.lastSimulationTime = 0.0;
-    thisModel.simulationTime = 0.0;
+    var self = this;
+    self.model = model;
 
     PropertySet.call( this, {
         playing: true, // linked to playPause button
@@ -49,33 +44,23 @@ define( function( require ) {
       }
     );
 
-    thisModel.stepCallbacks = [];
-    thisModel.resetCallBacks = [];
-    // The clock for this simulation.
-    // The simulation time change (dt) on each clock tick is constant,
-    // regardless of when (in wall time) the ticks actually happen.
-    this.eventTimer = new EventTimer( new EventTimer.ConstantEventModel( DEFAULT_FRAMES_PER_SECOND ), function( timeElapsed ) {
-      thisModel.constantStep( timeElapsed );
-    } );
+    self.stepCallbacks = [];
+    self.resetCallBacks = [];
   }
 
   return inherit( PropertySet, NeuronClockModelAdapter, {
 
     step: function( dt ) {
 
-      // If the step is huge, it probably means that the screen was hidden for a while, so just ignore it.
-      if ( dt > ( 1 / DEFAULT_FRAMES_PER_SECOND ) * 50 ){
+      // If the step is large, it probably means that the screen was hidden for a while, so just ignore it.
+      if ( dt > 1000 ) {
+        // TODO: Delete this log statement once clock changes are debugged.
+        console.log( 'skipped a dt, value = ', dt );
         return;
       }
 
       if ( this.playing ) {
-        this.eventTimer.step( dt );
-      }
-    },
-
-    constantStep: function( timeElapsed ) {
-      if ( this.playing ) {
-        this.tick( this.simulationTimeChange );
+        this.tick( dt * TIME_ADJUSTMENT_FACTOR * this.speed );
       }
     },
 
@@ -112,10 +97,9 @@ define( function( require ) {
      * Update the clock, updating the wall time and possibly simulation time.
      */
     tick: function( simulationTimeChange ) {
-      this.setSimulationTimeNoUpdate( this.simulationTime + simulationTimeChange );
       //fire step event callback
       for ( var i = 0; i < this.stepCallbacks.length; i++ ) {
-        this.stepCallbacks[ i ]( this.getSimulationTimeChange() );
+        this.stepCallbacks[ i ]( simulationTimeChange );
       }
     },
 
@@ -128,26 +112,6 @@ define( function( require ) {
       }
     },
 
-    /**
-     * Gets the constant simulation time change (dt) between ticks.
-     * @return dt
-     */
-    getDt: function() {
-      this.getSimulationTimeChange();//This method uses Constant Time Strategy (The strategy interface itself is not exposed as in Java) Ashraf
-    },
-
-    getSimulationTimeChange: function( dt ) {
-      return this.simulationTime - this.lastSimulationTime;
-    },
-
-    /**
-     * Determine how much simulation time should pass if the clock is paused, and the user presses 'frame advance'
-     * @return the simulation time.
-     */
-    getSimulationTimeChangeForPausedClock: function() {
-      return this.simulationTimeChange;
-    },
-
     setSimulationTimeNoUpdate: function( simulationTime ) {
       this.lastSimulationTime = this.simulationTime;
       this.simulationTime = simulationTime;
@@ -157,14 +121,14 @@ define( function( require ) {
      * Advance the clock by the tickOnceTimeChange.
      */
     stepClockWhilePaused: function() {
-      this.tick( this.getSimulationTimeChangeForPausedClock() );
+      this.tick( SINGLE_STEP_TIME );
     },
 
     /**
      * Move the clock backwards by the tickOnceTimeChange.
      */
     stepClockBackWhilePaused: function() {
-      this.tick( -this.getSimulationTimeChangeForPausedClock() );
+      this.tick( -SINGLE_STEP_TIME );
     }
   } );
 } );

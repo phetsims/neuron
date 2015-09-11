@@ -28,8 +28,7 @@ define( function( require ) {
     var neuronModel = new NeuronModel();
     // NeuronModelAdapter intercepts the default Step function and provides "constant" clock and record Playback
     // features to NeuronModel, see NeuronClockModelAdapter
-    var neuronClockModelAdapter = new NeuronClockModelAdapter( neuronModel, NeuronConstants.CLOCK_FRAME_RATE,
-      NeuronConstants.DEFAULT_ACTION_POTENTIAL_CLOCK_DT );
+    var neuronClockModelAdapter = new NeuronClockModelAdapter( neuronModel );
 
     Screen.call( this, neuronSimString, null /* no icon, single-screen sim */,
       function() { return neuronClockModelAdapter; },
