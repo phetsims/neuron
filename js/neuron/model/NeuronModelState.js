@@ -55,17 +55,21 @@ define( function( require ) {
     thisNeuronModelState.potassiumExteriorConcentration = neuronModel.getPotassiumExteriorConcentration();
     thisNeuronModelState.potassiumInteriorConcentration = neuronModel.getPotassiumInteriorConcentration();
 
+    // use c-style loops below for better performance
+
+    var i;
     thisNeuronModelState.membraneChannelStateMap = map();
-    neuronModel.membraneChannels.forEach( function( membraneChannel ) {
+    for ( i = 0; i < neuronModel.membraneChannels.length; i++ ) {
+      var membraneChannel = neuronModel.membraneChannels.get( i );
       thisNeuronModelState.membraneChannelStateMap.put( membraneChannel, membraneChannel.getState() );
-    } );
+    }
 
     thisNeuronModelState.particlePlaybackMementos = [];
 
-    neuronModel.transientParticles.forEach( function( particle ) {
-      thisNeuronModelState.particlePlaybackMementos.push( particle.getPlaybackMemento() );
-    } );
-
+    for ( i = 0; i < neuronModel.transientParticles.length; i++ ) {
+      var transientParticle = neuronModel.transientParticles.get( i );
+      thisNeuronModelState.particlePlaybackMementos.push( transientParticle.getPlaybackMemento() );
+    }
   }
 
   return inherit( Object, NeuronModelState, {

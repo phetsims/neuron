@@ -1,6 +1,6 @@
 // Copyright 2002-2011, University of Colorado
 /**
- * The dynamic parts of the Membrane Channels, namely the Gate, Channel expansion, and string, are rendered directly on
+ * The dynamic parts of the Membrane Channels, namely the gate, channel expansion, and string, are rendered directly on
  * a single canvas for optimal performance.
  *
  * @author John Blanco
@@ -60,7 +60,7 @@ define( function( require ) {
 
     thisNode.edgeNodeBounds = computeEdgeBounds( thisNode.membraneChannels.get( 0 ) );
 
-    //Profiler found too many color instance being created during rendering, so cache it
+    //Profiler found too many color instance being created during rendering, so cache them
     this.channelColors = {};
     this.channelColors[ MembraneChannelTypes.SODIUM_GATED_CHANNEL ] = NeuronConstants.SODIUM_COLOR.colorUtilsDarker( 0.2 ).getCanvasStyle();
     this.channelColors[ MembraneChannelTypes.SODIUM_LEAKAGE_CHANNEL ] = Color.interpolateRGBA( NeuronConstants.SODIUM_COLOR, Color.YELLOW, 0.5 ).colorUtilsDarker( 0.15 ).getCanvasStyle();
@@ -83,7 +83,7 @@ define( function( require ) {
     this.edgeGateBallColors[ MembraneChannelTypes.SODIUM_GATED_CHANNEL ] = NeuronConstants.SODIUM_COLOR.colorUtilsDarker( 0.3 ).getCanvasStyle();
     this.edgeGateStringColor = Color.BLACK.getCanvasStyle();
 
-    //Each iteration during Channel rendering updates the same local variable,This is done to avoid new vector creation
+    // Each iteration during Channel rendering updates the same local variable,This is done to avoid new vector creation
     this.transformedChannelLocation = new Vector2();
     this.viewTransformationMatrix = thisNode.mvt.getMatrix();
 
@@ -178,13 +178,11 @@ define( function( require ) {
         context.translate( transformedChannelSize.width / 2 + edgeNodeBounds.width / 2, 0 );
         drawEdge( context, membraneChannelModel );
         context.restore();
-
       }
 
+      this.membraneChannels.getArray().forEach( function( membraneChannelModel ) {
 
-      this.membraneChannels.forEach( function( membraneChannelModel ) {
-
-        //Avoid creating new Vectors and use the multiplyVector2 since it doesnt create new vectors
+        // Avoid creating new Vectors and use the multiplyVector2 since it doesnt create new vectors
         transformedChannelLocation.x = membraneChannelModel.getCenterLocation().x;
         transformedChannelLocation.y = membraneChannelModel.getCenterLocation().y;
         viewTransformationMatrix.multiplyVector2( transformedChannelLocation );
@@ -216,7 +214,6 @@ define( function( require ) {
         context.closePath();
         context.fill();
         context.restore();
-
 
         // If this membrane channel has an inactivation gate, update it.
         if ( membraneChannelModel.getHasInactivationGate() ) {
@@ -266,10 +263,6 @@ define( function( require ) {
         updateEdgeShapes( context, edgeNodeBounds, membraneChannelModel );
 
       } );
-
     }
-
   } );
-
-
 } );
