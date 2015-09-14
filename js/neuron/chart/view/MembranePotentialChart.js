@@ -196,6 +196,7 @@ define( function( require ) {
       stroke: thisChart.dataSeries.color,
       boundsMethod: 'none' // so that this can be changed without a lot of processing burden, disable the bounds calculation
     } );
+
     plotNode.addChild( dataLineNode );
 
     thisChart.dataSeries.addDataSeriesListener( function( x, y, xPrevious, yPrevious ) {
@@ -205,11 +206,11 @@ define( function( require ) {
         dataLineNode.setShape( dataLineShape );
       }
     } );
-    //
-    //thisChart.dataSeries.on( 'cleared', function() {
-    //  dataLineShape = new Shape();
-    //  dataLineNode.setShape( dataLineShape );
-    //} );
+
+    thisChart.dataSeries.on( 'cleared', function() {
+      dataLineShape = new Shape();
+      dataLineNode.setShape( dataLineShape );
+    } );
 
     this.chartCursor = new ChartCursor( thisChart );
     plotNode.addChild( this.chartCursor );
@@ -274,7 +275,7 @@ define( function( require ) {
      */
     addDataPoint: function( time, voltage ) {
       var firstDataPoint = false;
-      if ( this.dataSeries.length === 0 ) {
+      if ( this.dataSeries.getLength() === 0 ) {
         // This is the first data point added since the last time the chart was cleared or since it was created. Record
         // the time index for future reference.
         this.timeIndexOfFirstDataPt = time;
@@ -293,8 +294,8 @@ define( function( require ) {
                                        Math.pow( yValue - this.mostRecentYValue, 2 );
       }
 
-      // Add the data point if it is in range, if it is sufficiently far from the previous data point, and if the
-      // chart isn't full.
+      // Add the data point if it is in range, if it is sufficiently far from the previous data point, and if the chart
+      // isn't full.
       assert && assert( time - this.timeIndexOfFirstDataPt >= 0 );
       if ( time - this.timeIndexOfFirstDataPt <= TIME_SPAN && distanceFromLastPointSquared > MIN_DISTANCE_SQUARED_BETWEEN_POINTS ) {
         this.dataSeries.addPoint( xValue, yValue );
@@ -317,8 +318,8 @@ define( function( require ) {
      */
     getLastTimeValue: function() {
       var timeOfLastDataPoint = 0;
-      if ( this.dataSeries.length > 0 ) {
-        timeOfLastDataPoint = this.dataSeries.getX( this.dataSeries.length - 1 );
+      if ( this.dataSeries.getLength() > 0 ) {
+        timeOfLastDataPoint = this.dataSeries.getX( this.dataSeries.getLength() - 1 );
       }
       return timeOfLastDataPoint;
     },
@@ -368,7 +369,7 @@ define( function( require ) {
       // the cursor should be seen.
       var timeOnChart = ( this.neuronModel.getTime() - this.neuronModel.getMinRecordedTime() ) * 1000;
       var isCurrentTimeOnChart = ( timeOnChart >= 0 ) && ( timeOnChart <= TIME_SPAN );
-      var dataExists = this.dataSeries.length > 0;
+      var dataExists = this.dataSeries.getLength() > 0;
       var chartCursorVisible = isCurrentTimeOnChart && dataExists;
       this.chartCursor.setVisible( chartCursorVisible );
     },
