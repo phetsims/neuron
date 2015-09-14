@@ -55,10 +55,9 @@ define( function( require ) {
 
   // This value sets the frequency of chart updates, which helps to reduce
   // the processor consumption.
-  var UPDATE_PERIOD = NeuronConstants.DEFAULT_ACTION_POTENTIAL_CLOCK_DT; // In seconds
+  var UPDATE_PERIOD = NeuronConstants.DEFAULT_ACTION_POTENTIAL_CLOCK_DT; // In seconds of sim time (not wall time)
 
   /**
-   *
    * @param {Dimension2} chartDimension
    * @param {NeuronClockModelAdapter }neuronClockModelAdapter
    * @constructor
@@ -74,11 +73,14 @@ define( function( require ) {
     thisChart.updateCountdownTimer = 0; // Init to zero so that an update occurs right away.
     thisChart.timeIndexOfFirstDataPt = 0;
     thisChart.playingWhenDragStarted = true;
-    thisChart.dataSeries = new XYDataSeries( { color: PhetColorScheme.RED_COLORBLIND } );
+    thisChart.dataSeries = new XYDataSeries( {
+      color: PhetColorScheme.RED_COLORBLIND,
+      maxPoints: 500 // empirically determined
+    } );
     thisChart.domain = [ 0, TIME_SPAN ];
     thisChart.range = [ -100, 100 ];
-    thisChart.mostRecentXValue;
-    thisChart.mostRecentYValue;
+    thisChart.mostRecentXValue = 0;
+    thisChart.mostRecentYValue = 0;
 
     // Create the root node for the plot.
     var plotNode = new Node();
@@ -86,9 +88,8 @@ define( function( require ) {
     var numVerticalGridLines = 25;
     var numHorizontalGridLines = 8;
 
-    // create a function to generate Horizontal Labels (The dot.LinearFunction returns a map function which can be used
-    // to get the appropriate Label value based on the index of Vertical Line)
-
+    // create a function to generate horizontal labels (The dot.LinearFunction returns a map function which can be used
+    // to get the appropriate label value based on the index of each vertical line).
     var domainMap = new dot.LinearFunction( 0, numVerticalGridLines, this.domain[ 0 ], this.domain[ 1 ] );
 
     //To create Vertical Labels
@@ -96,13 +97,12 @@ define( function( require ) {
     var rangeMap = new dot.LinearFunction( 0, numHorizontalGridLines, this.range[ 1 ], this.range[ 0 ] );
 
     var gridShape = new Shape();
-    var plotGrid = new Path( gridShape, { stroke: 'gray', lineWidth: 0.6 } );
 
     //vertical grid lines
     for ( var i = 0; i < numVerticalGridLines + 1; i++ ) {
       gridShape.moveTo( i * chartDimension.width / numVerticalGridLines, 0 );
       gridShape.lineTo( i * chartDimension.width / numVerticalGridLines, chartDimension.height );
-      plotGrid.addChild( new Text( domainMap( i ), {
+      plotNode.addChild( new Text( domainMap( i ), {
         font: GRID_TICK_TEXT_FONT,
         //Text controls need to aligned to each grid line based on the line's orientation.
         centerX: i * chartDimension.width / numVerticalGridLines,
@@ -114,14 +114,14 @@ define( function( require ) {
     for ( i = 0; i < numHorizontalGridLines + 1; i++ ) {
       gridShape.moveTo( 0, i * chartDimension.height / numHorizontalGridLines );
       gridShape.lineTo( chartDimension.width, i * chartDimension.height / numHorizontalGridLines );
-      plotGrid.addChild( new Text( rangeMap( i ), {
+      plotNode.addChild( new Text( rangeMap( i ), {
         font: GRID_TICK_TEXT_FONT,
         centerY: i * chartDimension.height / numHorizontalGridLines,
         right: -6
       } ) );
     }
 
-    plotNode.addChild( plotGrid );
+    plotNode.addChild( new Path( gridShape, { stroke: 'gray', lineWidth: 0.6, boundsMethod: 'none' } ) );
 
     neuronClockModelAdapter.registerStepCallback( thisChart.step.bind( thisChart ) );
 
@@ -202,17 +202,14 @@ define( function( require ) {
       if ( xPrevious && yPrevious && (xPrevious !== 0 || yPrevious !== 0 ) ) {
         dataLineShape.moveTo( thisChart.chartMvt.modelToViewX( xPrevious ), thisChart.chartMvt.modelToViewY( yPrevious ) );
         dataLineShape.lineTo( thisChart.chartMvt.modelToViewX( x ), thisChart.chartMvt.modelToViewY( y ) );
-
-        //The Path assumes that the shape is immutable once supplied,so set the path.shape to null
-        //and reset the shape again to make the update work
-        dataLineNode.shape = null;
-        dataLineNode.shape = dataLineShape;
+        dataLineNode.setShape( dataLineShape );
       }
-      thisChart.dataSeries.on( 'cleared', function() {
-        dataLineShape = new Shape();
-        dataLineNode.shape = dataLineShape;
-      } );
     } );
+    //
+    //thisChart.dataSeries.on( 'cleared', function() {
+    //  dataLineShape = new Shape();
+    //  dataLineNode.setShape( dataLineShape );
+    //} );
 
     this.chartCursor = new ChartCursor( thisChart );
     plotNode.addChild( this.chartCursor );
@@ -238,7 +235,7 @@ define( function( require ) {
     var plotAndYLabel = new HBox( {
       children: [ chartYAxisLabelNode, plotNode ],
       spacing: xSpace,
-      top: Math.max( dataLineNode.height, clearChartButton.height ) + 5
+      top: Math.max( chartTitleNode.height, clearChartButton.height )
     } );
     var panelContents = new Node();
     chartTitleNode.centerX = plotAndYLabel.width / 2;
@@ -330,10 +327,9 @@ define( function( require ) {
      * Update the chart based on the current time and the model that is being
      * monitored.
      *
-     * @param {number} simulationTimeChange
+     * @param {number} simulationTimeChange - in seconds
      */
     step: function( simulationTimeChange ) {
-
       if ( this.neuronModel.isRecord() ) {
         if ( !this.chartIsFull && simulationTimeChange > 0 ) {
           this.updateCountdownTimer -= simulationTimeChange;
@@ -354,7 +350,6 @@ define( function( require ) {
           this.neuronModel.setModeLive();
         }
       }
-
     },
 
     clearChart: function() {

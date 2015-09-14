@@ -56,6 +56,7 @@ define( function( require ) {
   var MIN_ZOOM = 0.7;
   var MAX_ZOOM = 6;
   var DEFAULT_ZOOM = 1.0;
+  var CHART_HEIGHT = 100; // in screen coordinates, empirically determined
 
   /**
    * Constructor for the NeuronView
@@ -291,8 +292,7 @@ define( function( require ) {
       concentrationReadoutLayerNode.visible = concentrationVisible;
     } );
 
-    var chartHeight = 100;
-    var membranePotentialChartNode = new MembranePotentialChart( new Dimension2( worldNodeClipArea.bounds.width - 60, chartHeight ), neuronClockModelAdapter );
+    var membranePotentialChartNode = new MembranePotentialChart( new Dimension2( worldNodeClipArea.bounds.width - 60, CHART_HEIGHT ), neuronClockModelAdapter );
     membranePotentialChartNode.left = worldNodeClipArea.bounds.left;
     membranePotentialChartNode.bottom = clipAreaBounds.maxY;
     thisView.addChild( membranePotentialChartNode );

@@ -43,9 +43,9 @@ define( function( require ) {
     // The history of data points that have been recorded from the model.
     thisModel.recordHistory = new ObservableArray();
 
-    thisModel.recordMode = new Record( this ); //samples data from the mode and stores it
-    thisModel.playbackMode = new Playback( this ); //plays back recorded data
-    thisModel.liveMode = new Live( this ); //runs the model without recording it
+    thisModel.recordMode = new Record( this ); // @private - samples data from the mode and stores it
+    thisModel.playbackMode = new Playback( this ); // @private - plays back recorded data
+    thisModel.liveMode = new Live( this ); // @private - runs the model without recording it
 
     thisModel.timeProperty.link( function() {
       thisModel.updateRecordPlayBack();
