@@ -201,7 +201,6 @@ define( function( require ) {
 
     thisChart.dataSeries.addDataSeriesListener( function( x, y, xPrevious, yPrevious ) {
       if ( xPrevious && yPrevious && (xPrevious !== 0 || yPrevious !== 0 ) ) {
-        dataLineShape.moveTo( thisChart.chartMvt.modelToViewX( xPrevious ), thisChart.chartMvt.modelToViewY( yPrevious ) );
         dataLineShape.lineTo( thisChart.chartMvt.modelToViewX( x ), thisChart.chartMvt.modelToViewY( y ) );
         dataLineNode.setShape( dataLineShape );
       }
@@ -282,7 +281,7 @@ define( function( require ) {
         firstDataPoint = true;
       }
 
-      // compute the x and y valus that will be added to the data set if the necessary conditions are met
+      // compute the x and y values that will be added to the data set if the necessary conditions are met
       var xValue = time - this.timeIndexOfFirstDataPt;
       var yValue = voltage * 1000; // this chart uses millivolts internally
 

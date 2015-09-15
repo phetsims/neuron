@@ -16,8 +16,7 @@ define( function( require ) {
   var Vector2 = require( 'DOT/Vector2' );
   var SimpleDragHandler = require( 'SCENERY/input/SimpleDragHandler' );
   var Util = require( 'DOT/Util' );
-  var Shape = require( 'KITE/Shape' );
-  var Path = require( 'SCENERY/nodes/Path' );
+  var Rectangle = require( 'SCENERY/nodes/Rectangle' );
   var GrippyIndentNode = require( 'NEURON/neuron/chart/view/GrippyIndentNode' );
 
   // constants
@@ -40,9 +39,8 @@ define( function( require ) {
     // at 0 in the y direction.
     var width = membranePotentialChart.chartDimension.width * WIDTH_PROPORTION;
     var height = bottomOfPlotArea.y - topOfPlotArea.y;
-    var rectShape = new Shape().rect( -width / 2, 0, width, height );
 
-    Path.call( thisChartCursor, rectShape, {
+    Rectangle.call( thisChartCursor, -width / 2, 0, width, height, 0, 0, {
       cursor: "e-resize",
       fill: CURSOR_FILL_COLOR,
       stroke: CURSOR_STROKE_COLOR,
@@ -97,8 +95,7 @@ define( function( require ) {
 
     thisChartCursor.addInputListener( chartCursorDragHandler );
 
-    // Add the indentations that are intended to convey the idea of
-    // "gripability".
+    // Add the indentations that are intended to convey the idea of "gripability".
     var indentSpacing = 0.05 * height;
     var grippyIndent1 = new GrippyIndentNode( width / 2, CURSOR_FILL_COLOR );
     grippyIndent1.translate( 0, height / 2 - indentSpacing );
@@ -111,7 +108,5 @@ define( function( require ) {
     thisChartCursor.addChild( grippyIndent3 );
   }
 
-  return inherit( Path, ChartCursor, {} );
-
-
+  return inherit( Rectangle, ChartCursor, {} );
 } );
