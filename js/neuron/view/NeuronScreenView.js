@@ -70,6 +70,7 @@ define( function( require ) {
     thisView.neuronModel = neuronClockModelAdapter.model; // model is neuron model TODO: It seems weird that the model is pulled out of the clock adapter.  What's with that?  Should be fixed.
     ScreenView.call( thisView, { layoutBounds: new Bounds2( 0, 0, 834, 504 ) } );
     var viewPortPosition = new Vector2( thisView.layoutBounds.width * 0.40, thisView.layoutBounds.height - 255 );
+
     // Set up the model-canvas transform.
     thisView.mvt = ModelViewTransform2.createSinglePointScaleInvertedYMapping(
       Vector2.ZERO, viewPortPosition,
@@ -99,6 +100,7 @@ define( function( require ) {
     ) );
 
     // Create and add the layers in the desired order.
+    // TODO: Can I get rid of the intermediate nodes here?
     var axonBodyLayer = new Node();
     var axonCrossSectionLayer = new Node();
     var channelLayer = new Node();

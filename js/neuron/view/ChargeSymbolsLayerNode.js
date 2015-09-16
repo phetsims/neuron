@@ -16,7 +16,7 @@ define( function( require ) {
   var ChargeSymbolNode = require( 'NEURON/neuron/view/ChargeSymbolNode' );
 
   // Max size of the charge symbols, tweak as needed.
-  var MAX_CHARGE_SYMBOL_SIZE = 5;
+  var MAX_CHARGE_SYMBOL_SIZE = 10;
 
   /**
    * @param {NeuronModel} neuronModel
@@ -27,6 +27,10 @@ define( function( require ) {
 
     Node.call( this );
     var chargeSymbolLayer = this;
+
+    neuronModel.chargesShownProperty.link( function( chargesShown ) {
+      chargeSymbolLayer.visible = chargesShown;
+    } );
 
     /**
      * Add the change symbols to the canvas.  These are added by going through
@@ -44,11 +48,13 @@ define( function( require ) {
       }
     }
 
-    // function to add a pair of complementary charge symbols, one inside the membrane and one outside
     var outerChargeSymbol = new ChargeSymbolNode( neuronModel, MAX_CHARGE_SYMBOL_SIZE, 0.1, true );
     var innerChargeSymbol = new ChargeSymbolNode( neuronModel, MAX_CHARGE_SYMBOL_SIZE, 0.1, false );
+
+    // function to add a pair of complementary charge symbols, one inside the membrane and one outside
     function addChargeSymbolPair( channel1, channel2 ) {
 
+      // TODO: Removed commented code once this approach is proven.
       //var outerChargeSymbol;
       //var innerChargeSymbol;
       var innerSymbolLocation = new Vector2();
@@ -72,9 +78,7 @@ define( function( require ) {
     }
 
     /**
-     * Calculate the locations of the charge symbols and set the two provided
-     * points accordingly.
-     *
+     * Calculate the locations of the charge symbols and set the two provided points accordingly.
      * @param {Vector2} p1
      * @param {Vector2} p2
      * @param {Vector2} neuronCenter
@@ -126,10 +130,8 @@ define( function( require ) {
       }
     }
 
-
     addChargeSymbols();
   }
-
 
   return inherit( Node, ChargeSymbolsLayerNode );
 

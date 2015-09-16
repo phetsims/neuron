@@ -20,10 +20,10 @@ define( function( require ) {
   var EDGE_STROKE = 0.3;
   var EDGE_COLOR = new Color( 255, 102, 0 );
   var FILL_COLOR = Color.WHITE;
-  var ZERO_BOUNDS = new Bounds2( 0, 0, 0, 0 );
+  var UNSCALED_SYMBOL_WIDTH = 30;
+  var FIXED_BOUNDS = new Bounds2( -UNSCALED_SYMBOL_WIDTH / 2, -UNSCALED_SYMBOL_WIDTH / 2, UNSCALED_SYMBOL_WIDTH / 2, UNSCALED_SYMBOL_WIDTH / 2 );
 
   // basic, unscaled shapes for the minus and plus signs
-  var UNSCALED_SYMBOL_WIDTH = 30;
   var UNSCALED_THICKNESS = UNSCALED_SYMBOL_WIDTH * 0.4;
   var UNSCALED_MINUS_SIGN_SHAPE = Shape.rect(
     -UNSCALED_SYMBOL_WIDTH / 2,
@@ -62,9 +62,6 @@ define( function( require ) {
       stroke: EDGE_COLOR
     } );
 
-    // override bounds computation for better performance
-    this.computeShapeBounds = function() { return ZERO_BOUNDS; };
-
     // pre-allocate a matrix to use for scaling
     var scalingMatrix = Matrix3.scaling( 1, 1 );
 
@@ -95,13 +92,17 @@ define( function( require ) {
     } );
 
     axonModel.chargesShownProperty.link( function( chargesShown ) {
-      thisNode.visible = chargesShown;
       if ( chargesShown ) {
         updateRepresentation();
       }
     } );
   }
 
-  return inherit( Path, ChargeSymbolNode );
+  return inherit( Path, ChargeSymbolNode, {
+    computeShapeBounds: function() {
+      // override bounds computation for better performance
+      return FIXED_BOUNDS;
+    }
+  } );
 } );
 
