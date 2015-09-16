@@ -9,20 +9,43 @@ define( function( require ) {
   'use strict';
 
   // modules
+  var Bounds2 = require( 'DOT/Bounds2' );
+  var Matrix3 = require( 'DOT/Matrix3' );
+  var Color = require( 'SCENERY/util/Color' );
   var inherit = require( 'PHET_CORE/inherit' );
   var Node = require( 'SCENERY/nodes/Node' );
   var Path = require( 'SCENERY/nodes/Path' );
-  var Color = require( 'SCENERY/util/Color' );
   var Shape = require( 'KITE/Shape' );
-  var Bounds2 = require( 'DOT/Bounds2' );
 
   // constants
   var EDGE_STROKE = 0.3;
   var EDGE_COLOR = new Color( 255, 102, 0 );
   var FILL_COLOR = Color.WHITE;
-  // Factor that controls the thickness of the plus and minus sign, must be
-  // less than 1.
-  var THICKNESS_FACTOR = 0.4;
+  var ZERO_BOUNDS = new Bounds2( 0, 0, 0, 0 );
+
+  // basic, unscaled shapes for the minus and plus signs
+  var UNSCALED_SYMBOL_WIDTH = 30;
+  var UNSCALED_THICKNESS = UNSCALED_SYMBOL_WIDTH * 0.4;
+  var UNSCALED_MINUS_SIGN_SHAPE = Shape.rect(
+    -UNSCALED_SYMBOL_WIDTH / 2,
+    -UNSCALED_THICKNESS / 2,
+    UNSCALED_SYMBOL_WIDTH,
+    UNSCALED_THICKNESS
+  );
+  var UNSCALED_PLUS_SIGN_SHAPE = new Shape()
+    .moveTo( -UNSCALED_SYMBOL_WIDTH / 2, -UNSCALED_THICKNESS / 2 )
+    .lineTo( -UNSCALED_SYMBOL_WIDTH / 2, UNSCALED_THICKNESS / 2 )
+    .lineTo( -UNSCALED_THICKNESS / 2, UNSCALED_THICKNESS / 2 )
+    .lineTo( -UNSCALED_THICKNESS / 2, UNSCALED_SYMBOL_WIDTH / 2 )
+    .lineTo( UNSCALED_THICKNESS / 2, UNSCALED_SYMBOL_WIDTH / 2 )
+    .lineTo( UNSCALED_THICKNESS / 2, UNSCALED_THICKNESS / 2 )
+    .lineTo( UNSCALED_SYMBOL_WIDTH / 2, UNSCALED_THICKNESS / 2 )
+    .lineTo( UNSCALED_SYMBOL_WIDTH / 2, -UNSCALED_THICKNESS / 2 )
+    .lineTo( UNSCALED_THICKNESS / 2, -UNSCALED_THICKNESS / 2 )
+    .lineTo( UNSCALED_THICKNESS / 2, -UNSCALED_SYMBOL_WIDTH / 2 )
+    .lineTo( -UNSCALED_THICKNESS / 2, -UNSCALED_SYMBOL_WIDTH / 2 )
+    .lineTo( -UNSCALED_THICKNESS / 2, -UNSCALED_THICKNESS / 2 )
+    .close();
 
   /**
    *
@@ -37,57 +60,38 @@ define( function( require ) {
     Node.call( thisNode );
 
     // Create the shape that represents this particle.
-    var representation = new Path( new Shape(), { fill: FILL_COLOR, lineWidth: EDGE_STROKE, stroke: EDGE_COLOR } );
+    var representation = new Path( new Shape(), {
+      fill: FILL_COLOR,
+      lineWidth: EDGE_STROKE,
+      stroke: EDGE_COLOR
+    } );
 
-    // Skip bounds computation to improve performance
-    var bounds = new Bounds2( 0, 0, 0, 0 );
+    // override bounds computation for better performance
+    representation.computeShapeBounds = function() { return ZERO_BOUNDS; };
 
-    function computeShapeBounds() {
-      return bounds;
+    // pre-allocate a matrix to use for scaling
+    var scalingMatrix = Matrix3.scaling( 1, 1 );
+
+    // function to return the appropriate symbol size and shape based on the given membrane potential
+    function getSymbolShape() {
+      var membranePotential = axonModel.getMembranePotential();
+      var scale = ( maxWidth / UNSCALED_SYMBOL_WIDTH ) * ( membranePotential / maxPotential );
+      var shape;
+      if ( ( membranePotential > 0 && !polarityReversed ) ||
+           ( membranePotential < 0 && polarityReversed ) ) {
+        shape = UNSCALED_PLUS_SIGN_SHAPE;
+      }
+      else {
+        shape = UNSCALED_MINUS_SIGN_SHAPE;
+      }
+      scalingMatrix.setToScale( scale, scale );
+      return shape.transformed( scalingMatrix );
     }
 
-    representation.computeShapeBounds = computeShapeBounds;
     thisNode.addChild( representation );
 
     function updateRepresentation() {
-      var width = maxWidth * Math.abs( (axonModel.getMembranePotential() / maxPotential) );
-      var drawPlusSymbol = (axonModel.getMembranePotential() > 0 && !polarityReversed) ||
-                           (axonModel.getMembranePotential() < 0 && polarityReversed);
-      if ( drawPlusSymbol ) {
-        representation.setShape( drawPlusSign( width ) );
-      }
-      else {
-        representation.setShape( drawMinusSign( width ) );
-      }
-    }
-
-    function drawPlusSign( width ) {
-      var path = new Shape();
-      path.computeShapeBounds = computeShapeBounds;
-      var thickness = width * THICKNESS_FACTOR;
-      var halfThickness = thickness / 2;
-      var halfWidth = width / 2;
-      path.moveTo( -halfWidth, -halfThickness );
-      path.lineTo( -halfWidth, halfThickness );
-      path.lineTo( -halfThickness, halfThickness );
-      path.lineTo( -halfThickness, halfWidth );
-      path.lineTo( halfThickness, halfWidth );
-      path.lineTo( halfThickness, halfThickness );
-      path.lineTo( halfWidth, halfThickness );
-      path.lineTo( halfWidth, -halfThickness );
-      path.lineTo( halfThickness, -halfThickness );
-      path.lineTo( halfThickness, -halfWidth );
-      path.lineTo( -halfThickness, -halfWidth );
-      path.lineTo( -halfThickness, -halfThickness );
-      path.close();
-      return path;
-    }
-
-    function drawMinusSign( width ) {
-      var height = width * THICKNESS_FACTOR;
-      var rect = new Shape().rect( -width / 2, -height / 2, width, height );
-      rect.computeShapeBounds = computeShapeBounds;
-      return rect;
+      representation.setShape( getSymbolShape() );
     }
 
     axonModel.membranePotentialProperty.link( function( membranePotential ) {

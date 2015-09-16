@@ -14,7 +14,6 @@ define( function( require ) {
   var NeuronModel = require( 'NEURON/neuron/model/NeuronModel' );
   var NeuronScreenView = require( 'NEURON/neuron/view/NeuronScreenView' );
   var NeuronClockModelAdapter = require( 'NEURON/neuron/model/NeuronClockModelAdapter' );
-  var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
   var Screen = require( 'JOIST/Screen' );
 
   // strings
