@@ -45,21 +45,20 @@ define( function( require ) {
     }
 
     // function to add a pair of complementary charge symbols, one inside the membrane and one outside
-    var outerChargeSymbol = new ChargeSymbolNode( neuronModel, MAX_CHARGE_SYMBOL_SIZE, 0.1, false );
-    var innerChargeSymbol = new ChargeSymbolNode( neuronModel, MAX_CHARGE_SYMBOL_SIZE, 0.1, true );
+    var outerChargeSymbol = new ChargeSymbolNode( neuronModel, MAX_CHARGE_SYMBOL_SIZE, 0.1, true );
+    var innerChargeSymbol = new ChargeSymbolNode( neuronModel, MAX_CHARGE_SYMBOL_SIZE, 0.1, false );
     function addChargeSymbolPair( channel1, channel2 ) {
 
       //var outerChargeSymbol;
       //var innerChargeSymbol;
       var innerSymbolLocation = new Vector2();
       var outerSymbolLocation = new Vector2();
-      var neuronCenterPoint = new Vector2( 0, 0 );  // Assumes center of neuron at (0, 0).
       var outerSymbolParentNode = new Node();
       outerSymbolParentNode.addChild( outerChargeSymbol );
       var innerSymbolParentNode = new Node();
       innerSymbolParentNode.addChild( innerChargeSymbol );
 
-      calcChargeSymbolLocations( channel1.getCenterLocation(), channel2.getCenterLocation(), neuronCenterPoint, outerSymbolLocation, innerSymbolLocation );
+      calcChargeSymbolLocations( channel1.getCenterLocation(), channel2.getCenterLocation(), Vector2.ZERO, outerSymbolLocation, innerSymbolLocation );
       //outerChargeSymbol = new ChargeSymbolNode( neuronModel, MAX_CHARGE_SYMBOL_SIZE, 0.1, false );
       //outerChargeSymbol.setTranslation( mvt.modelToViewPosition( innerSymbolLocation ) );
       outerSymbolParentNode.setTranslation( mvt.modelToViewPosition( outerSymbolLocation ) );
@@ -78,7 +77,7 @@ define( function( require ) {
      *
      * @param {Vector2} p1
      * @param {Vector2} p2
-     * @param {Vector2} center
+     * @param {Vector2} neuronCenter
      * @param {Vector2} outerPoint //out parameter
      * @param {Vector2} innerPoint //out parameter
      */
@@ -100,7 +99,6 @@ define( function( require ) {
       outerPoint.setXY( outsideRadius * Math.cos( angle ), outsideRadius * Math.sin( angle ) );
       innerPoint.setXY( insideRadius * Math.cos( angle ), insideRadius * Math.sin( angle ) );
     }
-
 
     /**
      * Sort the provided list of membrane channels such that they proceed in

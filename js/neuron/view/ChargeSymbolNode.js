@@ -13,7 +13,6 @@ define( function( require ) {
   var Matrix3 = require( 'DOT/Matrix3' );
   var Color = require( 'SCENERY/util/Color' );
   var inherit = require( 'PHET_CORE/inherit' );
-  var Node = require( 'SCENERY/nodes/Node' );
   var Path = require( 'SCENERY/nodes/Path' );
   var Shape = require( 'KITE/Shape' );
 
@@ -57,17 +56,14 @@ define( function( require ) {
    */
   function ChargeSymbolNode( axonModel, maxWidth, maxPotential, polarityReversed ) {
     var thisNode = this;
-    Node.call( thisNode );
-
-    // Create the shape that represents this particle.
-    var representation = new Path( new Shape(), {
+    Path.call( thisNode, new Shape(), {
       fill: FILL_COLOR,
       lineWidth: EDGE_STROKE,
       stroke: EDGE_COLOR
     } );
 
     // override bounds computation for better performance
-    representation.computeShapeBounds = function() { return ZERO_BOUNDS; };
+    this.computeShapeBounds = function() { return ZERO_BOUNDS; };
 
     // pre-allocate a matrix to use for scaling
     var scalingMatrix = Matrix3.scaling( 1, 1 );
@@ -88,13 +84,11 @@ define( function( require ) {
       return shape.transformed( scalingMatrix );
     }
 
-    thisNode.addChild( representation );
-
     function updateRepresentation() {
-      representation.setShape( getSymbolShape() );
+      thisNode.setShape( getSymbolShape() );
     }
 
-    axonModel.membranePotentialProperty.link( function( membranePotential ) {
+    axonModel.membranePotentialProperty.link( function() {
       if ( axonModel.chargesShown ) {
         updateRepresentation();
       }
@@ -108,6 +102,6 @@ define( function( require ) {
     } );
   }
 
-  return inherit( Node, ChargeSymbolNode );
+  return inherit( Path, ChargeSymbolNode );
 } );
 
