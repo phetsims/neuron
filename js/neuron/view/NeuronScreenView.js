@@ -294,11 +294,6 @@ define( function( require ) {
       concentrationReadoutLayerNode.visible = concentrationVisible;
     } );
 
-    var membranePotentialChartNode = new MembranePotentialChart( new Dimension2( worldNodeClipArea.bounds.width - 60, CHART_HEIGHT ), neuronClockModelAdapter );
-    membranePotentialChartNode.left = worldNodeClipArea.bounds.left;
-    membranePotentialChartNode.bottom = clipAreaBounds.maxY;
-    thisView.addChild( membranePotentialChartNode );
-
     var simSpeedControlPanel = new SimSpeedControlPanel( neuronClockModelAdapter.speedProperty );
     simSpeedControlPanel.left = thisView.layoutBounds.minX + leftPadding;
     simSpeedControlPanel.centerY = centerYForLowerControls;
@@ -308,6 +303,12 @@ define( function( require ) {
     this.addChild( zoomControl );
     zoomControl.top = clipAreaBounds.y;
     zoomControl.left = this.layoutBounds.minX + leftPadding;
+
+    var membranePotentialChartNode = new MembranePotentialChart( new Dimension2( worldNodeClipArea.bounds.width - 60, CHART_HEIGHT ), neuronClockModelAdapter );
+    membranePotentialChartNode.layerSplit = true;
+    membranePotentialChartNode.left = worldNodeClipArea.bounds.left;
+    membranePotentialChartNode.bottom = clipAreaBounds.maxY;
+    thisView.addChild( membranePotentialChartNode );
   }
 
   return inherit( ScreenView, NeuronView );

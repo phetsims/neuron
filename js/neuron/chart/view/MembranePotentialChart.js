@@ -235,7 +235,8 @@ define( function( require ) {
     var plotAndYLabel = new HBox( {
       children: [ chartYAxisLabelNode, plotNode ],
       spacing: xSpace,
-      top: Math.max( chartTitleNode.height, clearChartButton.height )
+      top: Math.max( chartTitleNode.height, clearChartButton.height ),
+      resize: false
     } );
     var panelContents = new Node();
     chartTitleNode.centerX = plotAndYLabel.width / 2;
@@ -250,14 +251,15 @@ define( function( require ) {
     panelContents.addChild( chartXAxisLabelNode );
 
     // put everything in a panel
-    Panel.call( this, panelContents, {
+    this.addChild( new Panel( panelContents, {
         fill: 'white',
         xMargin: xMargin + adjustMargin,
         yMargin: 6,
         lineWidth: 1,
-        cornerRadius: 2
+        cornerRadius: 2,
+        resize: false
       }
-    );
+    ) );
 
     thisChart.neuronModel.potentialChartVisibleProperty.link( function( chartVisible ) {
       thisChart.visible = chartVisible;
@@ -265,12 +267,12 @@ define( function( require ) {
   }
 
   return inherit( Panel, MembranePotentialChart, {
+
     /**
      * Add a data point to the graph.
-     *
      * @param time    - Time in milliseconds.
      * @param voltage - Voltage in volts.
-     * @param update  - Controls if graph should be refreshed on the screen.
+     * @public
      */
     addDataPoint: function( time, voltage ) {
       var firstDataPoint = false;
@@ -373,9 +375,7 @@ define( function( require ) {
       this.chartCursor.setVisible( chartCursorVisible );
     },
 
-    /**
-     * called on every step dt
-     */
+    // @private - update the position of the chart cursor
     updateChartCursor: function() {
       this.updateChartCursorVisibility();
       if ( this.chartCursor.isVisible() ) {
@@ -404,6 +404,7 @@ define( function( require ) {
       this.updateChartCursorPos();
       this.updateChartCursorVisibility();
     },
+
     /**
      * Used to control the play/pause state of clock, since grabbing the cursor causes the clock to pause.
      * @param {boolean} playing
