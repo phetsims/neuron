@@ -50,7 +50,6 @@ define( function( require ) {
     this.lingerCountdownTimer = 0;
     this.shape = null;
     this.updateShape(); // Also create an initialize Shape
-
   }
 
   return inherit( PropertySet, TravelingActionPotential, {

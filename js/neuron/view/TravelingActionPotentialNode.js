@@ -18,9 +18,9 @@ define( function( require ) {
 
   // constants
   var BACKGROUND_COLOR = new Color( 204, 102, 255 );
-  var BACKGROUND_OPTIONS = { stroke: BACKGROUND_COLOR, lineWidth: 10, lineCap: 'round', lineJoin: 'round', boundsMethod: 'none' };
+  var BACKGROUND_OPTIONS = { stroke: BACKGROUND_COLOR, lineWidth: 10, lineCap: 'round', lineJoin: 'round', boundsMethod: 'unstroked' };
   var FOREGROUND_COLOR = Color.YELLOW;
-  var FOREGROUND_OPTIONS = { stroke: FOREGROUND_COLOR, lineWidth: 5, lineCap: 'round', lineJoin: 'round',  boundsMethod: 'none'  };
+  var FOREGROUND_OPTIONS = { stroke: FOREGROUND_COLOR, lineWidth: 5, lineCap: 'round', lineJoin: 'round',  boundsMethod: 'unstroked'  };
 
   /**
    * The node that will represent the traveling action potential.
@@ -31,7 +31,7 @@ define( function( require ) {
   function TravelingActionPotentialNode( travelingActionPotential, mvt ) {
 
     var thisNode = this;
-    Node.call( thisNode );
+    Node.call( thisNode, { layerSplit: false } );
 
     var background = new Path( new Shape(), BACKGROUND_OPTIONS );
     var foreground = new Path( new Shape(), FOREGROUND_OPTIONS );
@@ -45,7 +45,7 @@ define( function( require ) {
       background.setShape( transformedShape );
     }
 
-    travelingActionPotential.shapeChangedProperty.link( function( shapeChanged ) {
+    travelingActionPotential.shapeChangedProperty.link( function() {
       updateShape();
     } );
   }
