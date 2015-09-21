@@ -28,7 +28,7 @@ define( function( require ) {
 
   // Constants that control aspects of the concentration readout.
   var CONCENTRATION_READOUT_NUM_PLACES = 5;
-  var READ_OUT_FONT_SIZE = 16;
+  var READ_OUT_FONT_SIZE = 14;
 
   /**
    *
@@ -84,15 +84,12 @@ define( function( require ) {
 
     function createConcentrationReadoutText( label, value ) {
       var valueText = Util.toFixed( value, CONCENTRATION_READOUT_NUM_PLACES );
-      //  var valueText = CONCENTRATION_READOUT_FORMATTER.format( Math.round( value,  ) );
       return StringUtils.format( concentrationReadoutPattern0label1value2unitsString, label, valueText, unitsmMString );
-
     }
 
-    function positionConcentrationReadoutPositions() {
-      // Set the exterior cell readouts to be next to the button but
-      // aligned on the right side.
-      // The Java version uses the Stimulate Button Position a a reference.Since in HTML version the button
+    function updateConcentrationReadoutPositions() {
+      // Set the exterior cell readouts to be next to the button but aligned on the right side. The Java version uses
+      // the "Stimulate" button position a a reference.  Since in the HTML version the button
       // is positioned at the bottom, the code now uses the following bounds as a reference.
       var referenceBounds = new Bounds2( 30, 20, 70, 40 ); // Approximation
 
@@ -131,19 +128,17 @@ define( function( require ) {
       sodiumInteriorConcentrationReadout.y = potassiumInteriorConcentrationReadout.bottom + 15;
     }
 
-    positionConcentrationReadoutPositions();
+    updateConcentrationReadoutPositions();
     updateConcentrationReadoutValues();
 
     zoomProperty.link( function( zoomvalue ) {
-
       if ( neuronModel.concentrationReadoutVisible ) {
-        positionConcentrationReadoutPositions();
+        updateConcentrationReadoutPositions();
       }
-
     } );
 
     neuronModel.concentrationReadoutVisibleProperty.link( function() {
-      positionConcentrationReadoutPositions();
+      updateConcentrationReadoutPositions();
     } );
 
     neuronModel.concentrationChangedProperty.link( function( concentrationChanged ) {
