@@ -287,7 +287,8 @@ define( function( require ) {
     } );
     this.addChild( resetAllButton );
 
-    var concentrationReadoutLayerNode = new ConcentrationReadoutLayerNode( thisView.neuronModel, zoomProperty, zoomableNode, axonCrossSectionNode );
+    var concentrationReadoutLayerNode = new ConcentrationReadoutLayerNode( thisView.neuronModel, zoomProperty,
+      zoomableNode, worldNodeClipArea.bounds, axonCrossSectionNode );
     this.addChild( concentrationReadoutLayerNode );
 
     thisView.neuronModel.concentrationReadoutVisibleProperty.link( function( concentrationVisible ) {

@@ -31,14 +31,14 @@ define( function( require ) {
   var READ_OUT_FONT_SIZE = 14;
 
   /**
-   *
    * @param {NeuronModel} neuronModel
    * @param {Property.<number>} zoomProperty
    * @param {Node} zoomableRootNode
+   * @param {Bounds2} viewPortBounds
    * @param {AxonCrossSectionNode} axonCrossSectionNode
    * @constructor
    */
-  function ConcentrationReadoutLayerNode( neuronModel, zoomProperty, zoomableRootNode, axonCrossSectionNode ) {
+  function ConcentrationReadoutLayerNode( neuronModel, zoomProperty, zoomableRootNode, viewPortBounds, axonCrossSectionNode ) {
 
     var thisNode = this;
     Node.call( thisNode );
@@ -88,44 +88,25 @@ define( function( require ) {
     }
 
     function updateConcentrationReadoutPositions() {
-      // Set the exterior cell readouts to be next to the button but aligned on the right side. The Java version uses
-      // the "Stimulate" button position a a reference.  Since in the HTML version the button
-      // is positioned at the bottom, the code now uses the following bounds as a reference.
-      var referenceBounds = new Bounds2( 30, 20, 70, 40 ); // Approximation
 
-      var maxExteriorReadoutWidth = Math.max( potassiumExteriorConcentrationReadout.bounds.width, sodiumExteriorConcentrationReadout.bounds.width );
-      potassiumExteriorConcentrationReadout.x = referenceBounds.maxX + maxExteriorReadoutWidth - potassiumExteriorConcentrationReadout.bounds.width + 4;
-      potassiumExteriorConcentrationReadout.y = referenceBounds.y;
+      var maxExteriorReadoutWidth = Math.max( potassiumExteriorConcentrationReadout.bounds.width,
+        sodiumExteriorConcentrationReadout.bounds.width );
 
-      //Place it below
-      sodiumExteriorConcentrationReadout.x = referenceBounds.maxX + maxExteriorReadoutWidth - sodiumExteriorConcentrationReadout.bounds.width + 4;
-      sodiumExteriorConcentrationReadout.y = referenceBounds.bottom;
+      // Place the exterior readouts in the upper left of the view port.
+      potassiumExteriorConcentrationReadout.left = viewPortBounds.minX + maxExteriorReadoutWidth -
+                                                   potassiumExteriorConcentrationReadout.bounds.width + 4;
+      potassiumExteriorConcentrationReadout.top = viewPortBounds.minY + 4;
+      sodiumExteriorConcentrationReadout.top = potassiumExteriorConcentrationReadout.bottom;
+      sodiumExteriorConcentrationReadout.right = potassiumExteriorConcentrationReadout.right;
 
-      // Set the interior cell readouts to be in a location that will always
-      // be in the cell regardless of how zoomed out or in it is.
+      // Place the interior readout in a place where it can be seen whether or not the chart is showing and doesn't
+      // overlap with the membrane of the neuron.  The Y position calculation is empirically determined.
+      var yOffset = 180 - ( 10 * Math.pow( zoomProperty.value - 4, 2 ) );  // Empirically determined.
 
-
-      var topCenterOfMembrane = new Vector2( axonCrossSectionNode.centerX, axonCrossSectionNode.minY );
-
-      // Note: The following is a bit dodgey, and there may be a better way.
-      // The intent is to find the top of the membrane in screen coordinates
-      // and then position the readouts some fixed distance below it.  This
-      // turns out to be a bit difficult when the user can zoom in and out,
-      // since the location of the top of the membrane changes, as does the
-      // apparent thickness of the membrane.  To get this to work, it was
-      // necessary to get the transform of the node that does the zooming,
-      // use it, and fudge the offset a bit based on the scale factor.
-      // Complicated, no doubt, but it works (at least for now).  If there
-      // is some easier way then, by all means, implement it.
-
-      var yOffset = 140 + zoomableRootNode.getScaleVector().x * 9;  // Empirically determined.
-
-      // topCenterOfMembrane = axonCrossSectionNode.localToGlobalPoint( topCenterOfMembrane );
-      var maxReadoutWidth = Math.max( potassiumInteriorConcentrationReadout.width, sodiumInteriorConcentrationReadout.getBounds().width );
-      potassiumInteriorConcentrationReadout.x = topCenterOfMembrane.x - maxReadoutWidth / 2;
-      potassiumInteriorConcentrationReadout.y = topCenterOfMembrane.y + yOffset;
-      sodiumInteriorConcentrationReadout.x = potassiumInteriorConcentrationReadout.x;
-      sodiumInteriorConcentrationReadout.y = potassiumInteriorConcentrationReadout.bottom + 15;
+      potassiumInteriorConcentrationReadout.centerX = axonCrossSectionNode.centerX;
+      potassiumInteriorConcentrationReadout.top = viewPortBounds.y + yOffset;
+      sodiumInteriorConcentrationReadout.top = potassiumInteriorConcentrationReadout.bottom;
+      sodiumInteriorConcentrationReadout.right = potassiumInteriorConcentrationReadout.right;
     }
 
     updateConcentrationReadoutPositions();
