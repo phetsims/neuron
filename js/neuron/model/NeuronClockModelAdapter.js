@@ -53,9 +53,7 @@ define( function( require ) {
     step: function( dt ) {
 
       // If the step is large, it probably means that the screen was hidden for a while, so just ignore it.
-      if ( dt > 1000 ) {
-        // TODO: Delete this log statement once clock changes are debugged.
-        console.log( 'skipped a dt, value = ', dt );
+      if ( dt > 1 ) {
         return;
       }
 
