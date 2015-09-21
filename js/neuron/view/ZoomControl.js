@@ -75,6 +75,10 @@ define( function( require ) {
       zoomProperty.set( Util.clamp( zoomProperty.value - 0.1, minZoom, maxZoom ) );
     } );
 
+    // Temporarily set the zoom to a value that puts the knob roughly half way up so that the initial layout of the
+    // VBox will work.
+    var originalZoomValue = zoomProperty.value;
+    zoomProperty.set( 4 );
 
     // vertical panel
     VBox.call( this, {
@@ -84,9 +88,8 @@ define( function( require ) {
       spacing: 12
     } );
 
-    // Spacing is not even, because the rotation of horizontal slider into vertical doesn't center the thumb in the track
-    minusButton.top = zoomSlider.bottom + 4;
-
+    // restore the zoom to its original value
+    zoomProperty.set( originalZoomValue );
   }
 
   return inherit( VBox, ZoomControl );
