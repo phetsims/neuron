@@ -23,23 +23,24 @@ define( function( require ) {
 
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
-  var Node = require( 'SCENERY/nodes/Node' );
   var Bounds2 = require( 'DOT/Bounds2' );
+  var ChartCursor = require( 'NEURON/neuron/chart/view/ChartCursor' );
+  var DataLineCanvasNode = require( 'NEURON/neuron/chart/view/DataLineCanvasNode' );
+  var dot = require( 'DOT/dot' );
+  var HBox = require( 'SCENERY/nodes/HBox' );
+  var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
+  var Node = require( 'SCENERY/nodes/Node' );
   var Panel = require( 'SUN/Panel' );
   var Path = require( 'SCENERY/nodes/Path' );
   var PhetColorScheme = require( 'SCENERY_PHET/PhetColorScheme' );
-  var Shape = require( 'KITE/Shape' );
-  var HBox = require( 'SCENERY/nodes/HBox' );
-  var Text = require( 'SCENERY/nodes/Text' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
-  var TextPushButton = require( 'SUN/buttons/TextPushButton' );
-  var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   var RectangularPushButton = require( 'SUN/buttons/RectangularPushButton' );
-  var dot = require( 'DOT/dot' );
-  var XYDataSeries = require( 'GRIDDLE/XYDataSeries' );
-  var ChartCursor = require( 'NEURON/neuron/chart/view/ChartCursor' );
+  var Shape = require( 'KITE/Shape' );
+  var Text = require( 'SCENERY/nodes/Text' );
+  var TextPushButton = require( 'SUN/buttons/TextPushButton' );
   var Util = require( 'DOT/Util' );
+  var XYDataSeries = require( 'GRIDDLE/XYDataSeries' );
 
   // strings
   var chartTitleString = require( 'string!NEURON/chartTitle' );
@@ -92,13 +93,13 @@ define( function( require ) {
     // to get the appropriate label value based on the index of each vertical line).
     var domainMap = new dot.LinearFunction( 0, numVerticalGridLines, this.domain[ 0 ], this.domain[ 1 ] );
 
-    //To create Vertical Labels
+    // To create Vertical Labels
     // Example:- for the value of 3 it returns a value of -50 and for 5 it returns 0 (because range is -100 to 100)
     var rangeMap = new dot.LinearFunction( 0, numHorizontalGridLines, this.range[ 1 ], this.range[ 0 ] );
 
     var gridShape = new Shape();
 
-    //vertical grid lines
+    // vertical grid lines
     for ( var i = 0; i < numVerticalGridLines + 1; i++ ) {
       gridShape.moveTo( i * chartDimension.width / numVerticalGridLines, 0 );
       gridShape.lineTo( i * chartDimension.width / numVerticalGridLines, chartDimension.height );
@@ -110,7 +111,7 @@ define( function( require ) {
       } ) );
     }
 
-    //horizontal grid lines
+    // horizontal grid lines
     for ( i = 0; i < numHorizontalGridLines + 1; i++ ) {
       gridShape.moveTo( 0, i * chartDimension.height / numHorizontalGridLines );
       gridShape.lineTo( chartDimension.width, i * chartDimension.height / numHorizontalGridLines );
@@ -191,26 +192,11 @@ define( function( require ) {
     thisChart.chartMvt = ModelViewTransform2.createRectangleInvertedYMapping( new Bounds2( this.domain[ 0 ], this.range[ 0 ],
       this.domain[ 1 ], this.range[ 1 ] ), new Bounds2( 0, 0, chartDimension.width, chartDimension.height ), 1, 1 );
 
-    var dataLineShape = new Shape();
-    var dataLineNode = new Path( dataLineShape, {
-      stroke: thisChart.dataSeries.color,
-      boundsMethod: 'none' // so that this can be changed without a lot of processing burden, disable the bounds calculation
-    } );
-
+    // create and add the node that will represent the data line on the chart
+    var dataLineNode = new DataLineCanvasNode( chartDimension.width, chartDimension.height, thisChart.dataSeries, this.chartMvt );
     plotNode.addChild( dataLineNode );
 
-    thisChart.dataSeries.addDataSeriesListener( function( x, y, xPrevious, yPrevious ) {
-      if ( xPrevious && yPrevious && (xPrevious !== 0 || yPrevious !== 0 ) ) {
-        dataLineShape.lineTo( thisChart.chartMvt.modelToViewX( x ), thisChart.chartMvt.modelToViewY( y ) );
-        dataLineNode.setShape( dataLineShape );
-      }
-    } );
-
-    thisChart.dataSeries.on( 'cleared', function() {
-      dataLineShape = new Shape();
-      dataLineNode.setShape( dataLineShape );
-    } );
-
+    // add the cursor that shows the time value of the neuron state
     this.chartCursor = new ChartCursor( thisChart );
     plotNode.addChild( this.chartCursor );
 
