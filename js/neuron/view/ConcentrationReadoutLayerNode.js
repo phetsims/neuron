@@ -13,12 +13,10 @@ define( function( require ) {
   var Node = require( 'SCENERY/nodes/Node' );
   var Text = require( 'SCENERY/nodes/Text' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
-  var Vector2 = require( 'DOT/Vector2' );
   var PotassiumIon = require( 'NEURON/neuron/model/PotassiumIon' );
   var SodiumIon = require( 'NEURON/neuron/model/SodiumIon' );
   var StringUtils = require( 'PHETCOMMON/util/StringUtils' );
   var Util = require( 'DOT/Util' );
-  var Bounds2 = require( 'DOT/Bounds2' );
 
   // strings
   var concentrationReadoutPattern0label1value2unitsString = require( 'string!NEURON/concentrationReadoutPattern.0label.1value.2units' );
