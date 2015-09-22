@@ -58,8 +58,6 @@ define( function( require ) {
     this.vertexData = new Float32Array( MAX_PARTICLES * VERTICES_PER_PARTICLE *
                                         ( POSITION_VALUES_PER_VERTEX + TEXTURE_VALUES_PER_VERTEX + OPACITY_VALUES_PER_VERTEX) );
     this.elementData = new Array( MAX_PARTICLES * ( VERTICES_PER_PARTICLE + 2 ) );
-    this.tilePosVector = new Vector2();
-    this.particleViewPosition = new Vector2();
     this.particleData = new Array( MAX_PARTICLES );
 
     // pre-calculate the texture coordinates for the two different particle types
@@ -82,10 +80,13 @@ define( function( require ) {
     // initial update
     this.updateParticleData();
 
-    // Monitor a property that indicates when a particle state has changed and initiate a redraw.
+    // monitor a property that indicates when a particle state has changed and initiate a redraw
     neuronModel.on( NeuronConstants.PARTICLES_MOVED_EVENT, function() {
       self.invalidatePaint();
     } );
+
+    // monitor a property that indicates when the zoom level and changes and initiate a redraw
+    zoomMatrixProperty.link( function() { self.invalidatePaint() } );
   }
 
   return inherit( WebGLNode, ParticlesWebGLNode, {
