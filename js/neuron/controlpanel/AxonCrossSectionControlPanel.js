@@ -40,7 +40,7 @@ define( function( require ) {
    * @param {NeuronModel}  neuronModel
    * @constructor
    */
-  function AxonCrossSectionControlPanel( neuronModel ) {
+  function AxonCrossSectionControlPanel( neuronModel, options ) {
     var maxButtonTextWidth = 100; // empirically determined
 
     // Scale and fit the ButtonText within panel's bounds
@@ -70,16 +70,19 @@ define( function( require ) {
 
     // vertical panel
     Panel.call( this, new VBox( {
-      children: crossSectionControlContents,
-      align: 'left',
-      spacing: 7
-    } ), {
+        children: crossSectionControlContents,
+        align: 'left',
+        spacing: 7
+      } ),
       // panel options
-      fill: NeuronConstants.CONTROL_PANEL_BACKGROUND,
-      stroke: NeuronConstants.CONTROL_PANEL_STROKE,
-      xMargin: 8,
-      yMargin: 10
-    } );
+      _.extend( {
+        fill: NeuronConstants.CONTROL_PANEL_BACKGROUND,
+        stroke: NeuronConstants.CONTROL_PANEL_STROKE,
+        xMargin: 8,
+        yMargin: 10,
+        align: 'left'
+      }, options )
+    );
 
     neuronModel.stimulusLockoutProperty.link( function( stimulusLockout ) {
       // When stimulation is locked out, we also lock out the

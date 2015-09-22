@@ -271,7 +271,9 @@ define( function( require ) {
     ionsAndChannelsLegendPanel.right = panelLeftPos;
     ionsAndChannelsLegendPanel.top = clipAreaBounds.y;
 
-    var axonCrossSectionControlPanel = new AxonCrossSectionControlPanel( thisView.neuronModel );
+    var axonCrossSectionControlPanel = new AxonCrossSectionControlPanel( thisView.neuronModel, {
+      minWidth: ionsAndChannelsLegendPanel.width
+    } );
     this.addChild( axonCrossSectionControlPanel );
     axonCrossSectionControlPanel.centerX = ionsAndChannelsLegendPanel.centerX;
     axonCrossSectionControlPanel.top = ionsAndChannelsLegendPanel.bottom + 20;
