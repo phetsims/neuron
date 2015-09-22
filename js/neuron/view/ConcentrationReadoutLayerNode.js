@@ -42,6 +42,7 @@ define( function( require ) {
 
     var thisNode = this;
     Node.call( thisNode );
+    this.zoomableRootNode = zoomableRootNode;
 
     // Concentration readouts.
     var sodiumExteriorConcentrationReadout = new Text( "", {
@@ -101,7 +102,7 @@ define( function( require ) {
 
       // Place the interior readout in a place where it can be seen whether or not the chart is showing and doesn't
       // overlap with the membrane of the neuron.  The Y position calculation is empirically determined.
-      var yOffset = 180 - ( 10 * Math.pow( zoomProperty.value - 4, 2 ) );  // Empirically determined.
+      var yOffset = 80 + thisNode.zoomableRootNode.transform.transformY( 80 ) * 0.5;  // Empirically determined.
 
       potassiumInteriorConcentrationReadout.centerX = axonCrossSectionNode.centerX;
       potassiumInteriorConcentrationReadout.top = viewPortBounds.y + yOffset;
