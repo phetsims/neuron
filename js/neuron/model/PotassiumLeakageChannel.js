@@ -27,7 +27,7 @@ define( function( require ) {
   var BASE_COLOR = Color.interpolateRGBA( NeuronConstants.POTASSIUM_COLOR, new Color( 0, 200, 255 ), 0.6 );
   var DEFAULT_PARTICLE_VELOCITY = 5000; // In nanometers per sec of sim time.
 
-  // Constants that define the rate and variability of particle capture.
+  // constants that define the rate and variability of particle capture.
   var MIN_INTER_PARTICLE_CAPTURE_TIME = 0.002; // In seconds of sim time.
   var MAX_INTER_PARTICLE_CAPTURE_TIME = 0.004; // In seconds of sim time.
 

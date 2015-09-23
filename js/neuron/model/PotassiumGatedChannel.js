@@ -24,7 +24,7 @@ define( function( require ) {
   var CHANNEL_HEIGHT = NeuronConstants.MEMBRANE_THICKNESS * 1.2; // In nanometers.
   var CHANNEL_WIDTH = NeuronConstants.MEMBRANE_THICKNESS * 0.50; // In nanometers.
 
-  // Constants that control the rate at which this channel will capture ions
+  // constants that control the rate at which this channel will capture ions
   // when it is open.  Smaller numbers here will increase the capture rate
   // and thus make the flow appear to be faster.
   var MIN_INTER_CAPTURE_TIME = 0.00005; // In seconds of sim time.

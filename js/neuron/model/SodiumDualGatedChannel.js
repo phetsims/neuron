@@ -51,7 +51,7 @@ define( function( require ) {
   var INACTIVE_TO_RESETTING_TIME = 0.001; // In seconds of sim time.
   var RESETTING_TO_IDLE_TIME = 0.001; // In seconds of sim time.
 
-// Constants that control the rate at which this channel will capture ions
+// constants that control the rate at which this channel will capture ions
 // when it is open.  Smaller numbers here will increase the capture rate
 // and thus make the flow appear to be faster.
   var MIN_INTER_CAPTURE_TIME = 0.00002; // In seconds of sim time.

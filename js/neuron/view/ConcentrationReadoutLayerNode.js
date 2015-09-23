@@ -24,7 +24,7 @@ define( function( require ) {
   var sodiumChemicalSymbolString = require( 'string!NEURON/sodiumChemicalSymbol' );
   var unitsmMString = require( 'string!NEURON/units.mM' );
 
-  // Constants that control aspects of the concentration readout.
+  // constants that control aspects of the concentration readout.
   var CONCENTRATION_READOUT_NUM_PLACES = 5;
   var READ_OUT_FONT_SIZE = 14;
 
