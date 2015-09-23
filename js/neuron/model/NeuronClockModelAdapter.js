@@ -24,7 +24,8 @@ define( function( require ) {
   // the following constants could easily be turned into options if there was a need to reuse and thus generalize
   // this class.
   var TIME_ADJUSTMENT_FACTOR = 7.32E-4; // in seconds, applied to the incoming dt values to scale it up or down
-  var SINGLE_STEP_TIME = ( 1 / 60 ) * TIME_ADJUSTMENT_FACTOR; // used for single stepping, based on assumed frame rate of 60 fps
+  var NOMINAL_TICK_TIME = ( 1 / 60 ) * TIME_ADJUSTMENT_FACTOR; // used for single stepping, based on assumed frame rate of 60 fps
+  var TICKS_PER_SINGLE_STEP = 4;
 
   // TODO: Get rid of unused params in constructor
   /**
@@ -119,14 +120,14 @@ define( function( require ) {
      * Advance the clock by the tickOnceTimeChange.
      */
     stepClockWhilePaused: function() {
-      this.tick( SINGLE_STEP_TIME );
+      _.times( TICKS_PER_SINGLE_STEP, function() { this.tick( NOMINAL_TICK_TIME ) }, this );
     },
 
     /**
      * Move the clock backwards by the tickOnceTimeChange.
      */
     stepClockBackWhilePaused: function() {
-      this.tick( -SINGLE_STEP_TIME );
+      _.times( TICKS_PER_SINGLE_STEP, function() { this.tick( -NOMINAL_TICK_TIME ) }, this );
     }
   } );
 } );
