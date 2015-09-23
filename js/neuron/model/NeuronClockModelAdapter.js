@@ -120,14 +120,14 @@ define( function( require ) {
      * Advance the clock by the tickOnceTimeChange.
      */
     stepClockWhilePaused: function() {
-      _.times( TICKS_PER_SINGLE_STEP, function() { this.tick( NOMINAL_TICK_TIME ) }, this );
+      _.times( TICKS_PER_SINGLE_STEP, function() { this.tick( NOMINAL_TICK_TIME ); }, this );
     },
 
     /**
      * Move the clock backwards by the tickOnceTimeChange.
      */
     stepClockBackWhilePaused: function() {
-      _.times( TICKS_PER_SINGLE_STEP, function() { this.tick( -NOMINAL_TICK_TIME ) }, this );
+      _.times( TICKS_PER_SINGLE_STEP, function() { this.tick( -NOMINAL_TICK_TIME ); }, this );
     }
 
   } );

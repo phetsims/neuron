@@ -21,7 +21,6 @@ define( function( require ) {
   var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
   var ShaderProgram = require( 'SCENERY/util/ShaderProgram' );
   var WebGLNode = require( 'SCENERY/nodes/WebGLNode' );
-  var Vector2 = require( 'DOT/Vector2' );
 
   // constants
   var MAX_PARTICLES = 2000; // several trials were run and peak number of particles was 1841, so this value should be safe
@@ -86,7 +85,7 @@ define( function( require ) {
     } );
 
     // monitor a property that indicates when the zoom level and changes and initiate a redraw
-    zoomMatrixProperty.link( function() { self.invalidatePaint() } );
+    zoomMatrixProperty.link( function() { self.invalidatePaint(); } );
   }
 
   return inherit( WebGLNode, ParticlesWebGLNode, {
