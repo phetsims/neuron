@@ -39,6 +39,7 @@ define( function( require ) {
   }
 
   return inherit( WebGLLayer, TextureInterleavedShaderWebGlLayer, {
+
     /**
      * A new attribute aTexCoord is introduced which extracts the texture
      * coordinates from the buffer data and passes to fragment shader.
@@ -141,5 +142,6 @@ define( function( require ) {
 
       }
     }
+
   } );
 } );

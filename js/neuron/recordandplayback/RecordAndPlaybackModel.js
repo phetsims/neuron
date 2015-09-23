@@ -165,6 +165,7 @@ define( function( require ) {
         this.setPlaybackState( this.getPlaybackState().getState() ); //Sets the model state to reflect the current playback index.
       }
     },
+
     /**
      * This method should popuplate the model + view of the application with the data from the specified state.
      * This state was obtained through playing back or stepping the recorded history.
@@ -174,9 +175,11 @@ define( function( require ) {
     setPlaybackState: function( state ) {
       throw new Error( 'setPlaybackState should be implemented in descendant classes.' );
     },
+
     getNumRecordedPoints: function() {
       return this.recordHistory.length;
     },
+
     startRecording: function() {
       this.setModeRecord();
       this.setPlaying( true );
@@ -186,7 +189,6 @@ define( function( require ) {
       this.recordHistory.clear();
       this.setTime( 0.0 );//For some reason, time has to be reset to 0.0 here, or charts don't clear in motion-series on first press of clear button
       this.historyCleared = !this.historyCleared;
-
     },
 
     /**
@@ -219,11 +221,10 @@ define( function( require ) {
       }
 
       return sortedHistory[ 0 ];
-
     },
+
     //Estimates what DT should be by the spacing of the data points.
     //This should provide some support for non-equal spaced samples, but other algorithms may be better
-
     getPlaybackDT: function() {
       if ( this.getNumRecordedPoints() === 0 ) { return 0; }
       else if ( this.getNumRecordedPoints() === 1 ) { return this.recordHistory.get( 0 ).getTime(); }
@@ -239,15 +240,16 @@ define( function( require ) {
       this.setPlaybackSpeed( speed );
       this.setRecord( false );
     },
+
     rewind: function() {
       this.setTime( this.getMinRecordedTime() );
     },
+
     /**
      * @param{DataPoint} point
      */
     addRecordedPoint: function( point ) {
       this.recordHistory.add( point );
-
     },
 
     /**
@@ -255,7 +257,6 @@ define( function( require ) {
      */
     removeHistoryPoint: function( point ) {
       this.recordHistory.remove( this.recordHistory[ point ] );
-
     },
 
     setPlaybackSpeed: function( speed ) {
@@ -278,6 +279,7 @@ define( function( require ) {
 
       }
     },
+
     clearHistoryRemainder: function() {
       this.historyRemainderCleared = false;
       var keep = [];
@@ -301,5 +303,6 @@ define( function( require ) {
       this.setRecord( true );
       this.setPlaying( false );
     }
+
   } );
 } );

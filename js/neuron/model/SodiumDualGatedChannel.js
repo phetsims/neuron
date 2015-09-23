@@ -79,11 +79,9 @@ define( function( require ) {
     thisChannel.setExteriorCaptureZone( new PieSliceShapedCaptureZone( thisChannel.getCenterLocation(), CHANNEL_WIDTH * 5, 0, Math.PI * 0.7 ) );
     thisChannel.reset();
     thisChannel.channelColor = NeuronConstants.SODIUM_COLOR.colorUtilsDarker( 0.2 );
-
   }
 
   return inherit( GatedChannel, SodiumDualGatedChannel, {
-
 
     stepInTime: function( dt ) {
       // The Membrane Channel Node observed centerLocation,openness and inactivation
@@ -105,7 +103,6 @@ define( function( require ) {
         console.log( "Sodium Dual  Channel Normalized conductance out of range, = " + normalizedConductance );
         assert && assert( false );
       }
-
 
       // Update the state.
       switch( this.gateState ) {
@@ -211,15 +208,19 @@ define( function( require ) {
     getChannelColor: function() {
       return this.channelColor;
     },
+
     getEdgeColor: function() {
       return NeuronConstants.SODIUM_COLOR;
     },
+
     getParticleTypeToCapture: function() {
       return ParticleType.SODIUM_ION;
     },
+
     updateStaggerDelay: function() {
       this.staggerDelay = Math.random() * MAX_STAGGER_DELAY;
     },
+
     //@Override
     chooseCrossingDirection: function() {
       return MembraneCrossingDirection.OUT_TO_IN;
@@ -229,6 +230,7 @@ define( function( require ) {
     getHasInactivationGate: function() {
       return true;
     },
+
     //@Override
     moveParticleThroughNeuronMembrane: function( particle, maxVelocity ) {
       particle.setMotionStrategy( new DualGateChannelTraversalMotionStrategy( this, particle.getPositionX(), particle.getPositionY() ) );
@@ -238,14 +240,14 @@ define( function( require ) {
       assert && assert( normalizedConductance >= 0 && normalizedConductance <= 1 );
       return 1 - Math.pow( normalizedConductance - 1, 20 );
     },
+
     calculateNormalizedConductance: function() {
       return Math.min( Math.abs( this.hodgkinHuxleyModel.get_delayed_m3h( this.staggerDelay ) ) / M3H_WHEN_FULLY_OPEN, 1 );
-
     },
+
     getChannelType: function() {
       return MembraneChannelTypes.SODIUM_GATED_CHANNEL;
     }
 
   } );
-
 } );

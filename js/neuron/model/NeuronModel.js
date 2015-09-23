@@ -277,6 +277,7 @@ define( function( require ) {
   }
 
   return inherit( RecordAndPlaybackModel, NeuronModel, {
+
     /**
      * dispatched from NeuronClockModelAdapter's step function
      * @param {number} dt - delta time, in seconds

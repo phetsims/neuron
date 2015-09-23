@@ -56,6 +56,7 @@ define( function( require ) {
   }
 
   return inherit( GatedChannel, PotassiumGatedChannel, {
+
     stepInTime: function( dt ) {
       var prevOpenness = this.openness;
       var prevInActivationAmt = this.inactivationAmt;
@@ -86,6 +87,7 @@ define( function( require ) {
 
       this.notifyIfMembraneStateChanged( prevOpenness, prevInActivationAmt );
     },
+
     //@Override
     reset: function() {
       GatedChannel.prototype.reset.call( this );
@@ -94,18 +96,23 @@ define( function( require ) {
       this.setMinInterCaptureTime( MIN_INTER_CAPTURE_TIME );
       this.setMaxInterCaptureTime( MAX_INTER_CAPTURE_TIME );
     },
+
     getChannelColor: function() {
       return this.channelColor;
     },
+
     getEdgeColor: function() {
       return NeuronConstants.POTASSIUM_COLOR;
     },
+
     getParticleTypeToCapture: function() {
       return ParticleType.POTASSIUM_ION;
     },
+
     chooseCrossingDirection: function() {
       return MembraneCrossingDirection.IN_TO_OUT;
     },
+
     getChannelType: function() {
       return MembraneChannelTypes.POTASSIUM_GATED_CHANNEL;
     }

@@ -21,16 +21,16 @@ define( function( require ) {
     this.recordAndPlaybackModel = recordAndPlaybackModel;
   }
 
-  return inherit( Mode, Live,
-    {
-      step: function( simulationTimeChange ) {
-        this.recordAndPlaybackModel.setTime( this.recordAndPlaybackModel.getTime() + simulationTimeChange );
-        this.recordAndPlaybackModel.stepInTime( simulationTimeChange );
-      },
-      toString: function() {
-        return "Live";
-      }
+  return inherit( Mode, Live, {
+
+    step: function( simulationTimeChange ) {
+      this.recordAndPlaybackModel.setTime( this.recordAndPlaybackModel.getTime() + simulationTimeChange );
+      this.recordAndPlaybackModel.stepInTime( simulationTimeChange );
+    },
+
+    toString: function() {
+      return "Live";
     }
-  )
-    ;
+
+  } );
 } );

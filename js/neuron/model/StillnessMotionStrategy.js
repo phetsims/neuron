@@ -18,10 +18,12 @@ define( function( require ) {
   function StillnessMotionStrategy() {}
 
   return inherit( MotionStrategy, StillnessMotionStrategy, {
+
       move: function( movableModelElement, fadableModelElement, dt ) {
         // Does nothing, since the object is not moving.
       }
     },
+
     //static.
     {
       getInstance: function() {

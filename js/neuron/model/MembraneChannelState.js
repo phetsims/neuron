@@ -29,12 +29,14 @@ define( function( require ) {
   }
 
   return inherit( Object, MembraneChannelState, {
+
     getOpenness: function() {
       return this.openness;
     },
+
     getInactivationAmt: function() {
       return this.inactivationAmt;
     }
-  } );
 
+  } );
 } );

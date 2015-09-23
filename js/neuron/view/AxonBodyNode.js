@@ -74,10 +74,7 @@ define( function( require ) {
         travelingActionPotentialNode = null;
       }
     } );
-
   }
 
-
   return inherit( Node, AxonBodyNode );
-} )
-;
+} );

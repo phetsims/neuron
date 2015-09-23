@@ -54,7 +54,6 @@ define( function( require ) {
 
   return inherit( PropertySet, TravelingActionPotential, {
 
-
     /**
      * Step this model component forward by the specified time.  This will
      * update the shape such that it will appear to move down the axon
@@ -137,9 +136,11 @@ define( function( require ) {
 
       this.shapeChangedProperty.set( !this.shapeChangedProperty.get() );
     },
+
     getShape: function() {
       return this.shape;
     },
+
     /**
      * Set the state from a (probably previously captured) version of
      * the internal state.
@@ -157,7 +158,6 @@ define( function( require ) {
     getState: function() {
       return new TravelingActionPotentialState( this.travelTimeCountdownTimer, this.lingerCountdownTimer );
     }
-
 
   } );
 } );

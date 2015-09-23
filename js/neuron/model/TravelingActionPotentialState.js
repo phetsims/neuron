@@ -24,6 +24,7 @@ define( function( require ) {
   }
 
   return inherit( Object, TravelingActionPotentialState, {
+
     getLingerCountdownTimer: function() {
       return this.lingerCountdownTimer;
     },
@@ -31,6 +32,6 @@ define( function( require ) {
     getTravelTimeCountdownTimer: function() {
       return this.travelTimeCountdownTimer;
     }
-  } );
 
+  } );
 } );

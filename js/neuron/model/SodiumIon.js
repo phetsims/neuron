@@ -31,8 +31,8 @@ define( function( require ) {
     getRepresentationColor: function() {
       return NeuronConstants.SODIUM_COLOR;
     }
-  } );
 
+  } );
 } );
 
 

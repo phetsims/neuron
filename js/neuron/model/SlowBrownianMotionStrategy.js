@@ -61,15 +61,19 @@ define( function( require ) {
         this.timeUntilNextJump = this.generateNewJumpTime();
       }
     },
+
     generateNewJumpTime: function() {
       return MIN_TIME_TO_NEXT_JUMP + Math.random() * (MAX_TIME_TO_NEXT_JUMP - MIN_TIME_TO_NEXT_JUMP);
     },
+
     generateNewJumpDistance: function() {
       return MIN_JUMP_DISTANCE + Math.random() * (MAX_JUMP_DISTANCE - MIN_JUMP_DISTANCE);
     },
+
     generateNewJumpAngle: function() {
       return Math.random() * Math.PI * 2;
     }
+
   } );
 } );
 

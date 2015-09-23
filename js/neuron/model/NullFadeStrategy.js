@@ -19,11 +19,14 @@ define( function( require ) {
   function NullFadeStrategy() {}
 
   return inherit( FadeStrategy, NullFadeStrategy, {
+
       //@Override
       updateOpacity: function( fadableModelElement, dt ) {
         // Does nothing.
       }
+
     },
+
     //static.
     {
       getInstance: function() {

@@ -112,6 +112,7 @@ define( function( require ) {
       }
 
     },
+
     /**
      * The rotated channel rect was getting calculated for every particle.This method does it only
      * once (This is done for performance reasons - Ashraf)
@@ -122,19 +123,23 @@ define( function( require ) {
       var rotationTransform = Matrix3.rotationAround( this.rotationalAngle, this.centerLocation.x, this.centerLocation.y );
       this.rotatedChannelRect = channelRect.transformed( rotationTransform );
     },
+
     // Reset the channel.
     reset: function() {
       this.captureCountdownTimer = Number.POSITIVE_INFINITY;
     },
+
     // Returns a boolean value that says whether or not the channel should be considered open.
     isOpen: function() {
       // The threshold values used here are empirically determined, and can
       // be changed if necessary.
       return (this.openness > 0.2 && this.inactivationAmt < 0.7);
     },
+
     getParticleTypeToCapture: function() {
       throw new Error( 'getParticleTypeToCapture should be implemented in descendant classes.' );
     },
+
     // Determine whether the provided point is inside the channel.
     isPointInChannel: function( x, y ) {
       return this.rotatedChannelRect.containsCoordinates( x, y );
@@ -154,12 +159,15 @@ define( function( require ) {
     getOverallSize: function() {
       return this.overallSize;
     },
+
     getInactivationAmt: function() {
       return this.inactivationAmt;
     },
+
     getCenterLocation: function() {
       return this.centerLocation;
     },
+
     /**
      * Choose the direction of crossing for the next particle to cross the
      * membrane.  If particles only cross in one direction, this will always
@@ -169,6 +177,7 @@ define( function( require ) {
     chooseCrossingDirection: function() {
       throw new Error( 'chooseCrossingDirection should be implemented in descendant classes.' );
     },
+
     /**
      * Start or restart the countdown timer which is used to time the event
      * where a particle is captured for movement across the membrane.  A
@@ -192,12 +201,15 @@ define( function( require ) {
           this.chooseCrossingDirection() );
       }
     },
+
     getChannelColor: function() {
       return Color.MAGENTA;
     },
+
     getEdgeColor: function() {
       return PhetColorScheme.RED_COLORBLIND;
     },
+
     //@protected
     setParticleVelocity: function( particleVelocity ) {
       this.particleVelocity = particleVelocity;
@@ -206,32 +218,40 @@ define( function( require ) {
     getParticleVelocity: function() {
       return this.particleVelocity;
     },
+
     //@protected
     setInteriorCaptureZone: function( captureZone ) {
       this.interiorCaptureZone = captureZone;
     },
+
     getInteriorCaptureZone: function() {
       return this.interiorCaptureZone;
     },
+
     //@protected
     setExteriorCaptureZone: function( captureZone ) {
       this.exteriorCaptureZone = captureZone;
     },
+
     getExteriorCaptureZone: function() {
       return this.exteriorCaptureZone;
     },
+
     //@protected
     setMinInterCaptureTime: function( minInterCaptureTime ) {
       this.minInterCaptureTime = minInterCaptureTime;
     },
+
     //@protected
     setMaxInterCaptureTime: function( maxInterCaptureTime ) {
       this.maxInterCaptureTime = maxInterCaptureTime;
     },
+
     //@protected
     getCaptureCountdownTimer: function() {
       return this.captureCountdownTimer;
     },
+
     getMaxInterCaptureTime: function() {
       return this.maxInterCaptureTime;
     },
@@ -247,22 +267,27 @@ define( function( require ) {
     getHasInactivationGate: function() {
       return false;
     },
+
     //convenience method
     setInactivationAmt: function( inactivationAmt ) {
       this.inactivationAmt = inactivationAmt;
     },
+
     //convenience method
     getOpenness: function() {
       return this.openness;
     },
+
     setOpenness: function( openness ) {
       this.openness = openness;
     },
+
     setRotationalAngle: function( rotationalAngle ) {
       this.rotationalAngle = rotationalAngle;
       this.interiorCaptureZone.setRotationalAngle( rotationalAngle );
       this.exteriorCaptureZone.setRotationalAngle( rotationalAngle );
     },
+
     getRotationalAngle: function() {
       return this.rotationalAngle;
     },
@@ -274,6 +299,7 @@ define( function( require ) {
         this.exteriorCaptureZone.setOriginPoint( newCenterLocation );
       }
     },
+
     /**
      * Set the motion strategy for a particle that will cause the particle to
      * traverse the channel.  This version is the one that implements the
@@ -285,6 +311,7 @@ define( function( require ) {
     moveParticleThroughNeuronMembrane: function( particle, maxVelocity ) {
       particle.setMotionStrategy( new TraverseChannelAndFadeMotionStrategy( this, particle.getPositionX(), particle.getPositionY(), maxVelocity ) );
     },
+
     /**
      * Get the state of this membrane channel as needed for support of record-
      * and-playback functionality.  Note that this is not the complete state
@@ -293,7 +320,6 @@ define( function( require ) {
     getState: function() {
       return new MembraneChannelState( this );
     },
-
 
     // The Membrane Channel Node observed centerLocation,openness and inactivation
     // properties separately.This resulted in too many updates to node and degraded the performance.This method checks

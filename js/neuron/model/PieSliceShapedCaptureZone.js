@@ -97,5 +97,4 @@ define( function( require ) {
       return new Shape().arc( this.originPoint.x, this.originPoint.y, this.radius, startAngle, endAngle, true );// ARC2D.PIE startPoint and endPoint is internally added to arc's path
     }
   } );
-} )
-;
+} );

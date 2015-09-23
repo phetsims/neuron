@@ -67,6 +67,7 @@ define( function( require ) {
   }
 
   return inherit( AbstractLeakChannel, SodiumLeakageChannel, {
+
     stepInTime: function( dt ) {
       var prevOpenness = this.openness;
       var prevInActivationAmt = this.inactivationAmt;
@@ -91,15 +92,19 @@ define( function( require ) {
 
       this.notifyIfMembraneStateChanged( prevOpenness, prevInActivationAmt );
     },
+
     getChannelColor: function() {
       return this.channelColor;
     },
+
     getEdgeColor: function() {
       return BASE_COLOR;
     },
+
     getParticleTypeToCapture: function() {
       return ParticleType.SODIUM_ION;
     },
+
     //@Override
     chooseCrossingDirection: function() {
       var result = MembraneCrossingDirection.OUT_TO_IN;
@@ -149,5 +154,6 @@ define( function( require ) {
         }
       }
     }
+
   } );
 } );

@@ -46,7 +46,6 @@ define( function( require ) {
     /**
      * A method that paints the data line on the canvas.  For maximum performance, this adds points to the end of an
      * existing line when possible rather than redrawing the entire line with each update.
-     *
      * @param wrapper
      * @protected
      * @override

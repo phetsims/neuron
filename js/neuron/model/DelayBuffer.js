@@ -48,6 +48,7 @@ define( function( require ) {
   }
 
   return inherit( Object, DelayBuffer, {
+
     addValue: function( value, deltaTime ) {
       this.delayElements[ this.head ].setValueAndTime( value, deltaTime );
       this.head = (this.head + 1) % this.numEntries;
@@ -161,5 +162,4 @@ define( function( require ) {
       this.filling = true;
     }
   } );
-
 } );

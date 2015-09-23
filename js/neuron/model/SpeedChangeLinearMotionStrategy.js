@@ -31,6 +31,7 @@ define( function( require ) {
   }
 
   return inherit( MotionStrategy, SpeedChangeLinearMotionStrategy, {
+
     move: function( movable, fadableModelElement, dt ) {
       movable.setPosition( movable.getPositionX() + this.velocityVectorX * dt,
         movable.getPositionY() + this.velocityVectorY * dt );
@@ -40,10 +41,10 @@ define( function( require ) {
           // Scale the speed.
           this.velocityVectorX = this.velocityVectorX * this.speedScaleFactor;
           this.velocityVectorY = this.velocityVectorY * this.speedScaleFactor;
-
         }
       }
     }
+
   } );
 } );
 

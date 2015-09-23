@@ -27,6 +27,7 @@ define( function( require ) {
   }
 
   return inherit( FadeStrategy, TimedFadeInStrategy, {
+
     //@Override
     updateOpacity: function( fadableModelElement, dt ) {
       fadableModelElement.setOpacity( Math.min( (1 - this.fadeCountdownTimer / this.fadeTime) * this.opacityTarget, 1 ) );
@@ -39,5 +40,4 @@ define( function( require ) {
     }
 
   } );
-
 } );

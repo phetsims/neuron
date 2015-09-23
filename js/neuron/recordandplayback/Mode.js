@@ -19,11 +19,14 @@ define( function( require ) {
   function Mode() {}
 
   return inherit( PropertySet, Mode, {
+
     step: function( simulationTimeChange ) {
       throw new Error( 'step should be implemented in descendant classes.' );
     },
+
     toString: function() {
       throw new Error( 'toString should be implemented in descendant classes.' );
     }
+
   } );
 } );

@@ -93,6 +93,7 @@ define( function( require ) {
       this.velocityX = newScalerVelocity * Math.cos( awayAngle );
       this.velocityY = newScalerVelocity * Math.sin( awayAngle );
     }
+
   } );
 } );
 

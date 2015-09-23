@@ -289,8 +289,6 @@ define( function( require ) {
       }
 
     }
-
   } );
-
 } );
 

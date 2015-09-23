@@ -270,5 +270,6 @@ define( function( require ) {
           transformedEdgeNodeSize, membraneChannelModel );
       } );
     }
+
   } );
 } );

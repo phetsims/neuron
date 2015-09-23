@@ -24,11 +24,13 @@ define( function( require ) {
   }
 
   return inherit( MotionStrategy, LinearMotionStrategy, {
+
     move: function( movableModelElement, fadableModelElement, dt ) {
       var currentPositionRefX = movableModelElement.getPositionX();
       var currentPositionRefY = movableModelElement.getPositionY();
       movableModelElement.setPosition( currentPositionRefX + this.velocity.x * dt,
         currentPositionRefY + this.velocity.y * dt );
     }
+
   } );
 } );

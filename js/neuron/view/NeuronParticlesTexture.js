@@ -126,5 +126,6 @@ define( function( require ) {
 
       return coords;
     }
+
   } );
 } );

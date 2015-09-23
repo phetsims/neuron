@@ -27,11 +27,12 @@ define( function( require ) {
     getType: function() {
       return ParticleType.POTASSIUM_ION;
     },
+
     getRepresentationColor: function() {
       return NeuronConstants.POTASSIUM_COLOR;
     }
-  } );
 
+  } );
 } );
 
 

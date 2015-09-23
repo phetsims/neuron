@@ -29,6 +29,7 @@ define( function( require ) {
   }
 
   return inherit( Mode, Playback, {
+
     step: function( simulationTimeChange ) {
 
       if ( this.getSpeed() > 0 ) {
@@ -53,15 +54,18 @@ define( function( require ) {
         }
       }
     },
+
     setSpeed: function( speed ) {
       this.speedProperty.set( speed );
     },
+
     getSpeed: function() {
       return this.speedProperty.value;
     },
+
     toString: function() {
       return "Playback";
     }
-  } );
 
+  } );
 } );

@@ -71,9 +71,11 @@ define( function( require ) {
     getPositionX: function() {
       return this.positionX;
     },
+
     getPositionY: function() {
       return this.positionY;
     },
+
     setPosition: function( x, y ) {
       this.positionX = x;
       this.positionY = y;

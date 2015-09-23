@@ -31,6 +31,5 @@ define( function( require ) {
       this.deltaTime = deltaTime;
     }
   } );
-
 } );
 

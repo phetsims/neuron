@@ -32,24 +32,31 @@ define( function( require ) {
   }
 
   return inherit( Object, ParticlePlaybackMemento, {
+
     getPositionX: function() {
       return this.positionX;
     },
+
     getPositionY: function() {
       return this.positionY;
     },
+
     getOpacity: function() {
       return this.opacity;
     },
+
     getParticleType: function() {
       return this.particleType;
     },
+
     getRadius: function() {
       return this.radius;
     },
+
     getRepresentationColor: function() {
       return this.representationColor;
     }
+
   } );
 } );
 

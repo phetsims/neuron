@@ -16,6 +16,7 @@ define( function( require ) {
   function FadeStrategy() {}
 
   return inherit( Object, FadeStrategy, {
+
     /**
      * Fade the associated model element according to the specified amount of
      * time and the nature of the strategy.

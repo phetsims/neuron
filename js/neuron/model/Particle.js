@@ -71,7 +71,6 @@ define( function( require ) {
       }
     },
 
-
     isPositionEqual: function( otherX, otherY ) {
       return this.positionX === otherX && this.positionY === otherY;
     },

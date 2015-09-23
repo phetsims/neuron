@@ -188,11 +188,10 @@ define( function( require ) {
     updateRepresentation();
     updateLocation();
     updateRotation();
-
-
   }
 
   return inherit( Node, MembraneChannelNode, {
+
     /**
      * Add this node to the two specified parent nodes.  This is done in order
      * to achieve a better layering effect that allows particles to look
@@ -206,10 +205,11 @@ define( function( require ) {
       channelLayer.addChild( this.channelLayer );
       edgeLayer.addChild( this.edgeLayer );//Membrane channel maintains its own layer of 2 edge nodes
     },
+
     removeFromCanvas: function( channelLayer, edgeLayer ) {
       channelLayer.removeChild( this.channelLayer );
       edgeLayer.removeChild( this.edgeLayer );
     }
-  } );
 
+  } );
 } );

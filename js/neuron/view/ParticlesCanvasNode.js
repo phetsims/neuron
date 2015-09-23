@@ -114,5 +114,6 @@ define( function( require ) {
       renderParticles( this.neuronModel.transientParticles.getArray() );
       renderParticles( this.neuronModel.playbackParticles.getArray() );
     }
+
   } );
 } );

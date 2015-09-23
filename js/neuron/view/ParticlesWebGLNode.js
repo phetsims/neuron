@@ -314,7 +314,6 @@ define( function( require ) {
       drawable.gl.deleteBuffer( drawable.vertexBuffer );
       drawable.gl.deleteTexture( drawable.texture );
       drawable.gl.deleteBuffer( drawable.elementBuffer );
-
       drawable.shaderProgram = null;
     },
 
@@ -378,5 +377,6 @@ define( function( require ) {
         self.addParticleData( particleArray[ i ] );
       }
     }
+
   } );
 } );

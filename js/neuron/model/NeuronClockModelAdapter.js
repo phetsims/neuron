@@ -129,5 +129,6 @@ define( function( require ) {
     stepClockBackWhilePaused: function() {
       _.times( TICKS_PER_SINGLE_STEP, function() { this.tick( -NOMINAL_TICK_TIME ) }, this );
     }
+
   } );
 } );

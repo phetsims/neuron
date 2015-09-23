@@ -35,6 +35,6 @@ define( function( require ) {
     toString: function() {
       return "time = " + this.time + ", state = " + this.state;
     }
-  } );
 
+  } );
 } );

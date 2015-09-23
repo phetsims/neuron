@@ -58,24 +58,30 @@ define( function( require ) {
   }
 
   return inherit( AbstractLeakChannel, PotassiumLeakageChannel, {
+
     stepInTime: function( dt ) {
       var prevOpenness = this.openness;
       var prevInActivationAmt = this.inactivationAmt;
       AbstractLeakChannel.prototype.stepInTime.call( this, dt );
       this.notifyIfMembraneStateChanged( prevOpenness, prevInActivationAmt );
     },
+
     getChannelColor: function() {
       return this.channelColor;
     },
+
     getEdgeColor: function() {
       return BASE_COLOR;
     },
+
     getParticleTypeToCapture: function() {
       return ParticleType.POTASSIUM_ION;
     },
+
     getChannelType: function() {
       return MembraneChannelTypes.POTASSIUM_LEAKAGE_CHANNEL;
     },
+
     //  @Override
     chooseCrossingDirection: function() {
       // Generally, this channel leaks from in to out, since the

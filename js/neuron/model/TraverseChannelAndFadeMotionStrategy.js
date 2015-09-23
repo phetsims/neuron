@@ -159,8 +159,8 @@ define( function( require ) {
 
       movableModelElement.setPosition( currentPositionRefX + this.velocityVector.x * dt,
         currentPositionRefY + this.velocityVector.y * dt );
-
     },
+
     /**
      * Create the points through which a particle must move when traversing
      * this channel.
@@ -187,6 +187,7 @@ define( function( require ) {
 
       return points;
     },
+
     setCourseForCurrentTraversalPoint: function( currentLocationX, currentLocationY ) {
       if ( this.currentDestinationIndex < this.traversalPoints.length ) {
         var dest = this.traversalPoints[ this.currentDestinationIndex ];
@@ -211,5 +212,4 @@ define( function( require ) {
     }
 
   } );
-} )
-;
+} );

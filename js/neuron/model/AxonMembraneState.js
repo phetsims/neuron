@@ -24,6 +24,7 @@ define( function( require ) {
   }
 
   return inherit( Object, AxonMembraneState, {
+
     /**
      * Return the state of the traveling action potential.  If null, no traveling action potential exists.
      * @return

@@ -27,9 +27,11 @@ define( function( require ) {
     getType: function() {
       throw new Error( 'getType should be implemented in descendant classes.' );
     },
+
     getPositionX: function() {
       throw new Error( 'getPositionX should be implemented in descendant classes.' );
     },
+
     getPositionY: function() {
       throw new Error( 'getPositionY should be implemented in descendant classes.' );
     },
@@ -47,10 +49,10 @@ define( function( require ) {
     getRepresentationColor: function() {
       throw new Error( 'getRepresentationColor should be implemented in descendant classes.' );
     },
+
     getOpacity: function() {
       throw new Error( 'getOpacity should be implemented in descendant classes.' );
     }
 
   } );
-
 } );

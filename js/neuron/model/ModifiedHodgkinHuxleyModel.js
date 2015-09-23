@@ -183,8 +183,9 @@ define( function( require ) {
       }
     },
 
-
-    get_n4: function() { return this.n4; },
+    get_n4: function() {
+      return this.n4;
+    },
 
     /**
      * Get a delayed version of the n^4 amount, which is the variable factor
@@ -387,6 +388,5 @@ define( function( require ) {
     }
 
   } );
-
 } );
 

@@ -99,10 +99,12 @@ define( function( require ) {
   }
 
   return inherit( Path, ChargeSymbolNode, {
+
     computeShapeBounds: function() {
       // override bounds computation for better performance
       return FIXED_BOUNDS;
     }
+
   } );
 } );
 

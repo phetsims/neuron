@@ -24,24 +24,32 @@ define( function( require ) {
   }
 
   return inherit( CaptureZone, NullCaptureZone, {
+
     //see CaptureZone
     getShape: function() {
       return new Shape().ellipse( 0, 0, 0, 0 );
     },
+
     isPointInZone: function( x, y ) {
       return false;
     },
+
     // assign a random point that is somewhere within the shape.
     assignNewParticleLocation: function( particle ) {
       particle.setPosition( 0, 0 );
     },
+
     getOriginPoint: function() {
       return null;
     },
-    setRotationalAngle: function( angle ) {
-    },
-    setOriginPoint: function( centerPoint ) {
-    }
-  } );
 
+    setRotationalAngle: function( angle ) {
+      // necessary to override, but does nothing in this particular subclass
+    },
+
+    setOriginPoint: function( centerPoint ) {
+      // necessary to override, but does nothing in this particular subclass
+    }
+
+  } );
 } );

@@ -72,6 +72,7 @@ define( function( require ) {
   }
 
   return inherit( Object, NeuronModelState, {
+
     getAxonMembraneState: function() {
       return this.axonMembraneState;
     },
