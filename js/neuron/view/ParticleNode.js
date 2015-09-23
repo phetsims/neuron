@@ -31,7 +31,6 @@ define( function( require ) {
     thisNode.particle = particle;
     thisNode.modelViewTransform = modelViewTransform;
 
-
     // Create the initial representation with the aspects that don't change.
     var representation = new Path( new Shape(), { lineWidth: PARTICLE_EDGE_STROKE, stroke: Color.BLACK } );
     thisNode.addChild( representation );

@@ -146,8 +146,6 @@ define( function( require ) {
             // Keep going through the buffer.
             index = index - 1 > 0 ? index - 1 : this.numEntries - 1;
           }
-
-
         }
         delayedValue = this.delayElements[ index ].value;
       }

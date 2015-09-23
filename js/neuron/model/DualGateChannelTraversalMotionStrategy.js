@@ -206,7 +206,6 @@ define( function( require ) {
       // performance reasons and to reduce memory allocation, changing vector constructor function to use object literal
       // http://jsperf.com/object-notation-vs-constructor
 
-
       // Create points that represent the inner and outer mouths of the channel.
       var outerOpeningLocation = { x: ctr.x + Math.cos( channel.getRotationalAngle() ) * r, y: ctr.y + Math.sin( channel.getRotationalAngle() ) * r };
       var innerOpeningLocation = { x: ctr.x - Math.cos( channel.getRotationalAngle() ) * r, y: ctr.y - Math.sin( channel.getRotationalAngle() ) * r };

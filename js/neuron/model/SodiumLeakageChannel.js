@@ -37,7 +37,6 @@ define( function( require ) {
   // testing the Hodgkin-Huxley model.
   var PEAK_NEGATIVE_CURRENT = 3.44;
 
-
   /**
    * @param {number} channelWidth
    * @param {NeuronModel} modelContainingParticles

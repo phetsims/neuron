@@ -16,7 +16,6 @@ define( function( require ) {
   var VerticalAquaRadioButtonGroup = require( 'SUN/VerticalAquaRadioButtonGroup' );
   var Text = require( 'SCENERY/nodes/Text' );
 
-
   // strings - labels for speed radio buttons
   var fastForwardString = require( 'string!NEURON/fastForward' );
   var normalString = require( 'string!NEURON/normal' );
@@ -35,7 +34,6 @@ define( function( require ) {
       { node: new Text( slowMotionString, { font: radioButtonFont } ), property: speedProperty, value: 0.5 }
     ], { radius: 8, spacing: 8 } );
 
-
     Panel.call( this, speedRadioButtonGroup, {
       // panel options
       fill: NeuronConstants.CONTROL_PANEL_BACKGROUND,
@@ -47,5 +45,4 @@ define( function( require ) {
   }
 
   return inherit( Panel, SimSpeedControlPanel );
-
 } );

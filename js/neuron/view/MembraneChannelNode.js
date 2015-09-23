@@ -80,7 +80,6 @@ define( function( require ) {
     var inactivationGateString;
     var edgeColor = membraneChannelModel.getEdgeColor().colorUtilsDarker( 0.3 );
 
-
     if ( membraneChannelModel.getHasInactivationGate() ) {
 
       // Add the ball and string that make up the inactivation gate.
@@ -171,7 +170,6 @@ define( function( require ) {
       }
 
     }
-
 
     function updateLocation() {
       thisNode.channelLayer.translate( mvt.modelToViewPosition( membraneChannelModel.getCenterLocation() ) );

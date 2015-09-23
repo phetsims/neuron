@@ -39,7 +39,6 @@ define( function( require ) {
   // vary a little bit in terms of when they open and close.
   var MAX_STAGGER_DELAY = NeuronConstants.MIN_ACTION_POTENTIAL_CLOCK_DT * 10; // In seconds of sim time.
 
-
   /**
    * @param {NeuronModel} modelContainingParticles
    * @param {ModifiedHodgkinHuxleyModel} hodgkinHuxleyModel

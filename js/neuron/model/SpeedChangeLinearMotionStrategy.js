@@ -47,6 +47,3 @@ define( function( require ) {
 
   } );
 } );
-
-
-

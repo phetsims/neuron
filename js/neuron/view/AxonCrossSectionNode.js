@@ -42,8 +42,6 @@ define( function( require ) {
     thisNode.addChild( outerMembrane );
     var innerMembrane = new Path( innerDiameterCircle, { fill: new Color( 73, 210, 242 ), stroke: Color.BLACK, lineWidth: LINE_WIDTH } );
     thisNode.addChild( innerMembrane );
-
-
   }
 
   return inherit( Node, AxonCrossSectionNode );

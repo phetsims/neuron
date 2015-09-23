@@ -138,8 +138,6 @@ define( function( require ) {
         }
 
         instance.data.drawable.render( this.shaderProgram, this.uniformViewMatrix );
-
-
       }
     }
 

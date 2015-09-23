@@ -133,7 +133,4 @@ define( function( require ) {
   }
 
   return inherit( Panel, IonsAndChannelsLegendPanel );
-
 } );
-
-

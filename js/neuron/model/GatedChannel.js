@@ -33,5 +33,3 @@ define( function( require ) {
 
   } );
 } );
-
-

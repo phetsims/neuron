@@ -27,7 +27,6 @@ define( function( require ) {
   var SIDE_HEIGHT_TO_CHANNEL_HEIGHT_RATIO = 1.3;
   var DEFAULT_PARTICLE_VELOCITY = 40000; // In nanometers per sec of sim time.
 
-
   /**
    * @param  {number} channelWidth
    * @param  {number} channelHeight

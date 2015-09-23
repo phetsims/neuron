@@ -256,5 +256,3 @@ define( function( require ) {
     }
   );
 } );
-
-

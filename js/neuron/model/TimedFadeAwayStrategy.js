@@ -15,7 +15,6 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var FadeStrategy = require( 'NEURON/neuron/model/FadeStrategy' );
 
-
   /**
    * @param {number} fadeTime - time, in seconds of sim time, for this to fade away.
    * @constructor
