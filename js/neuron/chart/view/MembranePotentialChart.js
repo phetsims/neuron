@@ -76,7 +76,7 @@ define( function( require ) {
     thisChart.playingWhenDragStarted = true;
     thisChart.dataSeries = new XYDataSeries( {
       color: PhetColorScheme.RED_COLORBLIND,
-      maxPoints: 500 // empirically determined
+      maxPoints: 750 // empirically determined
     } );
     thisChart.domain = [ 0, TIME_SPAN ];
     thisChart.range = [ -100, 100 ];
