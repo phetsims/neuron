@@ -99,7 +99,7 @@ define( function( require ) {
         // Depict the traveling action potential as a curved line
         // moving down the axon.  Start by calculating the start and
         // end points.
-        var travelAmtFactor = 1 - this.travelTimeCountdownTimer / TRAVELING_TIME;
+        var travelAmtFactor = Math.max( 1 - this.travelTimeCountdownTimer / TRAVELING_TIME, 0 );
         var startPoint = this.axonMembrane.evaluateCurve( this.axonMembrane.getCurveA(), travelAmtFactor );
         var endPoint = this.axonMembrane.evaluateCurve( this.axonMembrane.getCurveB(), travelAmtFactor );
         var midPoint = new Vector2( (startPoint.x + endPoint.x) / 2, (startPoint.y + endPoint.y) / 2 );
