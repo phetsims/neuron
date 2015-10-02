@@ -29,9 +29,11 @@ define( function( require ) {
     sim.start();
 
     window.phet.neuron = window.phet.neuron || {};
+
+    // this sim has some sim-specific profiling that can be done, so set it up if query params dictate
     if ( window.phet.chipper.getQueryParameters().hasOwnProperty( 'neuronProfiler' ) ) {
       // create and hook up the neuron profiler
-      window.phet.neuron.profiler = new NeuronProfiler( sim );
+      window.phet.neuron.profiler = new NeuronProfiler( sim, parseInt( window.phet.chipper.getQueryParameters().neuronProfiler ) );
     }
   } );
 } );

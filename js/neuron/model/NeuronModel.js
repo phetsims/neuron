@@ -173,7 +173,7 @@ define( function( require ) {
         // potential voltages and current flows.
         thisModel.hodgkinHuxleyModel.stimulate();
 
-        if ( window.phet.neuron.profiler ){
+        if ( window.phet.neuron.profiler && window.phet.neuron.profiler.setting === 1 ) {
           // If enabled, start collecting profiling data, which will automatically be spat out to the console (or as
           // an alert dialog on iOS) when completed.  The duration value is empirically determined to be the time for
           // the particles to appear, cross the membrane, and fade out.
@@ -700,6 +700,19 @@ define( function( require ) {
         this.stimulusPulseInitiated = true;
         this.axonMembrane.initiateTravelingActionPotential();
         this.updateStimulusLockoutState();
+        if ( window.phet.neuron.profiler && window.phet.neuron.profiler.setting === 2 ) {
+          // If enabled, start collecting profiling data, which will automatically be spat out to the console (or as
+          // an alert dialog on iOS) when completed.  The duration value is empirically determined to be the time for
+          // the traveling action potential to make it to the cross section.
+          window.phet.neuron.profiler.startDataAnalysis( 3000 );
+        }
+        else if ( window.phet.neuron.profiler && window.phet.neuron.profiler.setting === 3 ) {
+          // If enabled, start collecting profiling data, which will automatically be spat out to the console (or as
+          // an alert dialog on iOS) when completed.  The duration value is empirically determined to be the time for
+          // the traveling action potential to make it to the cross section, the particles to appear, cross the
+          // membrane, and then fade out.
+          window.phet.neuron.profiler.startDataAnalysis( 9500 );
+        }
       }
     },
 

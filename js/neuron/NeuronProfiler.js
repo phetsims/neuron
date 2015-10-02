@@ -13,12 +13,18 @@ define( function( require ) {
   var Util = require( 'DOT/Util' );
 
   /**
-   *
+   * @param sim - reference to the simulation being profiled
+   * @param {number} setting - profiling to be done, values are:
+   *    1=profile from when the traveling action potential reaches cross section until all or most of the dynamically
+   *      created particles are gone
+   *    2=profile from neuron stimulated until traveling action potential reaches the cross section
+   *    3=profile from neuron stimulated until all or most of the dynamically created particles have disappeared
    * @constructor
    */
-  function NeuronProfiler( sim ) {
+  function NeuronProfiler( sim, setting ) {
 
     var self = this;
+    this.setting = setting;
 
     this.frameCount = 0;
     this.dataCollectionInProgress = false; // @private
@@ -33,7 +39,6 @@ define( function( require ) {
         self.frameStartedTimes[ self.frameCount ] = new Date().getTime();
       }
     } );
-
 
     sim.on( 'frameCompleted', function() {
       if ( self.dataCollectionInProgress && self.frameStartedTimes.length !== 0 ) {
@@ -71,13 +76,12 @@ define( function( require ) {
             alert( message );
           }
           else{
-            console.log( '------------------------------' );
+            console.log( '------------ Profiling Result ------------------' );
             console.log( message );
           }
         }
       }
     } );
-
   }
 
   return inherit( Object, NeuronProfiler, {

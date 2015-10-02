@@ -4,7 +4,7 @@
  * The main screen class for the 'Neuron' simulation.  This is where the main model and view instances are created and
  * inserted into the framework.
  *
- * @author Sam Reid (PhET Interactive Simulations)
+ * @author John Blanco (PhET Interactive Simulations)
  */
 define( function( require ) {
   'use strict';
@@ -34,7 +34,6 @@ define( function( require ) {
       function( model ) { return new NeuronScreenView( model ); },
       { backgroundColor: '#ccfefa' }
     );
-
   }
 
   return inherit( Screen, NeuronScreen );
