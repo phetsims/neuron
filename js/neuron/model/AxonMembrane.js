@@ -50,7 +50,7 @@ define( function( require ) {
     thisAxonMembrane.vanishingPoint = new Vector2( BODY_LENGTH * Math.cos( BODY_TILT_ANGLE ), BODY_LENGTH * Math.sin( BODY_TILT_ANGLE ) );
 
     // Find the two points at which the shape will intersect the outer edge of the cross section.
-    var r = thisAxonMembrane.getCrossSectionDiameter() / 2 + thisAxonMembrane.getMembraneThickness() / 2;
+    var r = NeuronConstants.DEFAULT_DIAMETER / 2 + thisAxonMembrane.getMembraneThickness() / 2;
     var theta = BODY_TILT_ANGLE + Math.PI * 0.45; // Multiplier tweaked a bit for improved appearance.
     thisAxonMembrane.intersectionPointA = new Vector2( r * Math.cos( theta ), r * Math.sin( theta ) );
     theta += Math.PI;
@@ -96,13 +96,10 @@ define( function( require ) {
       thisAxonMembrane.cntrlPtB2.y, thisAxonMembrane.intersectionPointB.x, thisAxonMembrane.intersectionPointB.y );
     thisAxonMembrane.axonBodyShape.close();
 
-    // Shape of the cross section of the membrane.	For now, and unless there
-    // is some reason to do otherwise, the center of the cross section is
-    // positioned at the origin.
-
-    var ellipseShape = new Shape().ellipse( 0, 0, NeuronConstants.DEFAULT_DIAMETER / 2, NeuronConstants.DEFAULT_DIAMETER / 2 );
-    thisAxonMembrane.crossSectionEllipseShape = new Shape().ellipse( ellipseShape.x, ellipseShape.y,
-      ellipseShape.bounds.getWidth() / 2, ellipseShape.bounds.getHeight() / 2 );
+    // Shape of the cross section of the membrane.	For now, and unless there is some reason to do otherwise, the center
+    // of the cross section is positioned at the origin.
+    thisAxonMembrane.crossSectionCircleCenter = Vector2.ZERO; // @public
+    thisAxonMembrane.crossSectionCircleRadius = NeuronConstants.DEFAULT_DIAMETER / 2;
 
     // To avoid creating new Vector2 instances during animation, the instances are declared and reused in the
     // evaluateCurve method.

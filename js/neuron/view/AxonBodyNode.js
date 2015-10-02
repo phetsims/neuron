@@ -28,21 +28,22 @@ define( function( require ) {
   /**
    * Constructor for the AxonBodyNode
    * @param {NeuronModel} axonMembraneModel
-   * @param {ModelViewTransform2} transform
+   * @param {ModelViewTransform2} mvt
    * @constructor
    */
-  function AxonBodyNode( axonMembraneModel, transform ) {
+  function AxonBodyNode( axonMembraneModel, mvt ) {
+
     var thisNode = this;
     Node.call( thisNode, {} );
     thisNode.axonMembraneModel = axonMembraneModel;
-    thisNode.mvt = transform;
+    thisNode.mvt = mvt;
 
     // Add the axon body.
     var axonBodyShape = thisNode.mvt.modelToViewShape( axonMembraneModel.axonBodyShape );
     var axonBodyBounds = axonBodyShape.bounds;
-    var crossSectionBounds = thisNode.mvt.modelToViewShape( axonMembraneModel.getCrossSectionEllipseShape() ).bounds;
     var gradientOrigin = new Vector2( axonBodyBounds.getMaxX(), axonBodyBounds.getMaxY() );
-    var gradientExtent = new Vector2( crossSectionBounds.getCenterX(), crossSectionBounds.getY() );
+    var gradientExtent = new Vector2( mvt.modelToViewX( axonMembraneModel.crossSectionCircleCenter.x ),
+      mvt.modelToViewDeltaX( axonMembraneModel.crossSectionCircleRadius ) );
     var axonBodyGradient = new LinearGradient( gradientOrigin.x, gradientOrigin.y, gradientExtent.x, gradientExtent.y );
     axonBodyGradient.addColorStop( 0, AXON_BODY_COLOR.darkerColor( 0.5 ) );
     axonBodyGradient.addColorStop( 1, AXON_BODY_COLOR.brighterColor( 0.5 ) );
