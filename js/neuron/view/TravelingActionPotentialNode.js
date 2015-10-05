@@ -42,7 +42,7 @@ define( function( require ) {
     function updateShape() {
       var shapeDescription = travelingActionPotential.shapeDescription; // convenience var
       var actionPotentialShape;
-      assert && assert( shapeDescription.mode === 'curve' || shapeDescription.mode === 'circle' );
+      assert && assert( shapeDescription.mode === 'curve' || shapeDescription.mode === 'circle', 'unrecognized mode for action potential shape' );
       if ( travelingActionPotential.shapeDescription.mode === 'curve' ) {
         actionPotentialShape = new Shape();
         actionPotentialShape.moveTo(

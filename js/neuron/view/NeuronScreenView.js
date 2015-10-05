@@ -111,7 +111,7 @@ define( function( require ) {
     zoomableNode.addChild( channelLayer );
     zoomableNode.addChild( chargeSymbolLayer );
 
-    var axonBodyNode = new AxonBodyNode( thisView.neuronModel.axonMembrane, thisView.mvt );
+    var axonBodyNode = new AxonBodyNode( thisView.neuronModel.axonMembrane, worldNodeClipArea.bounds, thisView.mvt );
     axonBodyLayer.addChild( axonBodyNode );
     var axonCrossSectionNode = new AxonCrossSectionNode( thisView.neuronModel.axonMembrane, thisView.mvt );
     axonCrossSectionLayer.addChild( axonCrossSectionNode );
@@ -165,10 +165,6 @@ define( function( require ) {
         worldNodeClipArea.bounds.dilated( estimatedMaxParticleWidth / 2 )
       );
 
-      if ( SHOW_PARTICLE_CANVAS_BOUNDS ) {
-        this.addChild( Rectangle.bounds( particlesWebGLNode.bounds, { stroke: 'purple' } ) );
-      }
-
       // The WebGL particles node does its own clipping and zooming since these operations don't work very well when
       // using the stock WebGLNode support, so it isn't added to the zoomable node hierarchy in the scene graph.
       thisView.addChild( particlesWebGLNode );
@@ -184,6 +180,14 @@ define( function( require ) {
       );
       var maskNode = new Path( maskingShape, { stroke: NeuronConstants.SCREEN_BACKGROUND, lineWidth: estimatedMaxParticleWidth } );
       thisView.addChild( maskNode );
+
+      if ( SHOW_PARTICLE_CANVAS_BOUNDS ) {
+        this.addChild( Rectangle.bounds( particlesWebGLNode.bounds, {
+          stroke: 'purple',
+          lineWidth: 2,
+          fill: 'pink'
+        } ) );
+      }
     }
     else {
       var particlesCanvasNode = new ParticlesCanvasNode( thisView.neuronModel, thisView.mvt, worldNodeClipArea );

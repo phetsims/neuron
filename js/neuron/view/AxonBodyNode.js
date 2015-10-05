@@ -18,7 +18,7 @@ define( function( require ) {
   var Color = require( 'SCENERY/util/Color' );
   var Vector2 = require( 'DOT/Vector2' );
   var LinearGradient = require( 'SCENERY/util/LinearGradient' );
-  var TravelingActionPotentialNode = require( 'NEURON/neuron/view/TravelingActionPotentialNode' );
+  var TravelingActionPotentialCanvasNode = require( 'NEURON/neuron/view/TravelingActionPotentialCanvasNode' );
 
   // constants
   var AXON_BODY_COLOR = new Color( 221, 216, 44 );
@@ -28,10 +28,11 @@ define( function( require ) {
   /**
    * Constructor for the AxonBodyNode
    * @param {NeuronModel} axonMembraneModel
+   * @param {Bounds2} viewportBounds - bounds of the viewport where the axon is seen
    * @param {ModelViewTransform2} mvt
    * @constructor
    */
-  function AxonBodyNode( axonMembraneModel, mvt ) {
+  function AxonBodyNode( axonMembraneModel, viewportBounds, mvt ) {
 
     var thisNode = this;
     Node.call( thisNode, {} );
@@ -60,19 +61,18 @@ define( function( require ) {
       thisNode.addChild( new Line( gradientOrigin, gradientExtent ) );
     }
 
-    var travelingActionPotentialNode;
+    var travelingActionPotentialNode = new TravelingActionPotentialCanvasNode( thisNode.mvt, viewportBounds );
+    this.addChild( travelingActionPotentialNode );
 
     thisNode.axonMembraneModel.travelingActionPotentialStartedProperty.link( function( started ) {
       if ( started ) {
-        travelingActionPotentialNode = new TravelingActionPotentialNode( thisNode.axonMembraneModel.travelingActionPotential, thisNode.mvt );
-        thisNode.addChild( travelingActionPotentialNode );
+        travelingActionPotentialNode.travelingActionPotentialStarted( axonMembraneModel.travelingActionPotential );
       }
     } );
 
     thisNode.axonMembraneModel.travelingActionPotentialEndedProperty.link( function( ended ) {
       if ( ended ) {
-        thisNode.removeChild( travelingActionPotentialNode );
-        travelingActionPotentialNode = null;
+        travelingActionPotentialNode.travelingActionPotentialEnded();
       }
     } );
   }
