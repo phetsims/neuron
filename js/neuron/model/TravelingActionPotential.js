@@ -16,7 +16,7 @@ define( function( require ) {
 
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
-  var PropertySet = require( 'AXON/PropertySet' );
+  var Events = require( 'AXON/Events' );
   var Vector2 = require( 'DOT/Vector2' );
   var Shape = require( 'KITE/Shape' );
   var TravelingActionPotentialState = require( 'NEURON/neuron/model/TravelingActionPotentialState' );
@@ -52,15 +52,7 @@ define( function( require ) {
     var thisPotential = this;
     thisPotential.axonMembrane = axonMembrane;
 
-    PropertySet.call( thisPotential, {
-
-        // TODO: These should all be events (I think)
-
-        // Notify the listener that the shape of this model element has  changed.
-        shapeChanged: false,
-
-        // Notify the listener that the cross section has been reached.
-        crossSectionReached: false,
+    Events.call( thisPotential, {
 
         // Notify the listener that this has finished traveling down the membrane and lingering at the cross section.
         lingeringCompleted: false
@@ -95,7 +87,7 @@ define( function( require ) {
     this.updateShapeDescription(); // Also create an initialize Shape
   }
 
-  return inherit( PropertySet, TravelingActionPotential, {
+  return inherit( Events, TravelingActionPotential, {
 
     /**
      * Step this model component forward by the specified time.  This will
@@ -109,16 +101,15 @@ define( function( require ) {
         this.travelTimeCountdownTimer -= dt;
         this.updateShapeDescription();
         if ( this.travelTimeCountdownTimer <= 0 ) {
-          // We've reached the cross section and will now linger
-          // there for a bit.
-          this.crossSectionReachedProperty.set( true );
+          // We've reached the cross section and will now linger there for a bit.
+          this.trigger0( 'crossSectionReached' );
           this.lingerCountdownTimer = LINGER_AT_CROSS_SECTION_TIME;
         }
       }
       else if ( this.lingerCountdownTimer > 0 ) {
         this.lingerCountdownTimer -= dt;
         if ( this.lingerCountdownTimer <= 0 ) {
-          this.lingeringCompletedProperty.set( true );
+          this.trigger0( 'lingeringCompleted' );
         }
         else {
           this.updateShapeDescription();
@@ -167,10 +158,9 @@ define( function( require ) {
         // while it is there.
         var growthFactor = ( 1 - Math.abs( this.lingerCountdownTimer / LINGER_AT_CROSS_SECTION_TIME - 0.5 ) * 2 ) * 0.04 + 1;
         this.shapeDescription.circleRadius = this.axonMembrane.crossSectionCircleRadius * growthFactor;
-        ;
       }
 
-      this.shapeChangedProperty.set( !this.shapeChangedProperty.get() );
+      this.trigger0( 'shapeChanged' );
     },
 
     /**

@@ -130,11 +130,11 @@ define( function( require ) {
         var thisAxonMembrane = this;
         assert && assert( this.travelingActionPotential === null, 'Should not initiate a 2nd traveling action potential before prior one has completed.' );
         this.travelingActionPotential = new TravelingActionPotential( this );
-        this.travelingActionPotential.crossSectionReachedProperty.onValue( true, function() {
+        this.travelingActionPotential.on( 'crossSectionReached', function() {
           thisAxonMembrane.travelingActionPotentialReachedCrossSection = true;
         } );
 
-        this.travelingActionPotential.lingeringCompletedProperty.onValue( true, function() {
+        this.travelingActionPotential.on( 'lingeringCompleted', function() {
           thisAxonMembrane.removeTravelingActionPotential();
         } );
 

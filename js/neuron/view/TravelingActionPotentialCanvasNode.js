@@ -50,7 +50,7 @@ define( function( require ) {
 
       // cause the canvas to get repainted each time the shape of the action potential changes
       this.shapeChangeListener = this.invalidatePaint.bind( this );
-      travelingActionPotential.shapeChangedProperty.link( this.shapeChangeListener );
+      travelingActionPotential.on( 'shapeChanged', this.shapeChangeListener );
     },
 
     /**
@@ -58,8 +58,9 @@ define( function( require ) {
      * @public
      */
     travelingActionPotentialEnded: function() {
-      this.travelingActionPotential.shapeChangedProperty.unlink( this.shapeChangeListener );
+      this.travelingActionPotential.off( 'shapeChanged', this.shapeChangeListener );
       this.travelingActionPotential = null;
+      this.invalidatePaint();
     },
 
     /**
