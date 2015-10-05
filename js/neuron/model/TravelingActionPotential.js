@@ -92,7 +92,6 @@ define( function( require ) {
     }
 
     // create the initial shape
-    this.shape = null;
     this.updateShapeDescription(); // Also create an initialize Shape
   }
 
@@ -119,7 +118,6 @@ define( function( require ) {
       else if ( this.lingerCountdownTimer > 0 ) {
         this.lingerCountdownTimer -= dt;
         if ( this.lingerCountdownTimer <= 0 ) {
-          this.shape = null;
           this.lingeringCompletedProperty.set( true );
         }
         else {
@@ -142,11 +140,8 @@ define( function( require ) {
         // and end points.
         this.shapeDescription.mode = 'curve';
         var travelAmtFactor = Math.max( 1 - this.travelTimeCountdownTimer / TRAVELING_TIME, 0 );
-        var closestPointIndex = Math.round( travelAmtFactor * ( NUM_CURVE_POINTS - 1 ) );
-        //var startPoint = this.axonMembrane.evaluateCurve( this.axonMembrane.getCurveA(), travelAmtFactor );
         calculateInterpolatedPoint( travelAmtFactor, this.upperCurvePoints, this.shapeDescription.startPoint );
         var startPoint = this.shapeDescription.startPoint;
-        //var endPoint = this.axonMembrane.evaluateCurve( this.axonMembrane.getCurveB(), travelAmtFactor );
         calculateInterpolatedPoint( travelAmtFactor, this.lowerCurvePoints, this.shapeDescription.endPoint );
         var endPoint = this.shapeDescription.endPoint;
         this.curveMidPoint.setXY( ( startPoint.x + endPoint.x ) / 2, ( startPoint.y + endPoint.y ) / 2 );
@@ -161,16 +156,6 @@ define( function( require ) {
         this.shapeDescription.controlPoint2.setXY(
           this.curveMidPoint.x + ctrlPoint2Distance * Math.cos( perpendicularAngle - Math.PI / 6 ),
           this.curveMidPoint.y + ctrlPoint2Distance * Math.sin( perpendicularAngle - Math.PI / 6 ) );
-        this.shape = new Shape();
-        this.shape.moveTo( this.shapeDescription.startPoint.x, this.shapeDescription.startPoint.y );
-        this.shape.cubicCurveTo(
-          this.shapeDescription.controlPoint1.x,
-          this.shapeDescription.controlPoint1.y,
-          this.shapeDescription.controlPoint2.x,
-          this.shapeDescription.controlPoint2.y,
-          this.shapeDescription.endPoint.x,
-          this.shapeDescription.endPoint.y
-        );
       }
       else {
         // The action potential is "lingering" at the point of the cross section.  Define the shape as a circle that
@@ -181,20 +166,11 @@ define( function( require ) {
         // Make the shape a little bigger than the cross section so that it can be seen behind it, and have it grow
         // while it is there.
         var growthFactor = ( 1 - Math.abs( this.lingerCountdownTimer / LINGER_AT_CROSS_SECTION_TIME - 0.5 ) * 2 ) * 0.04 + 1;
-        var circleRadius = this.axonMembrane.crossSectionCircleRadius * growthFactor;
-        this.shapeDescription.circleRadius = circleRadius;
-        this.shape = new Shape().circle(
-          this.shapeDescription.circleCenter.x,
-          this.shapeDescription.circleCenter.y,
-          this.shapeDescription.circleRadius
-        );
+        this.shapeDescription.circleRadius = this.axonMembrane.crossSectionCircleRadius * growthFactor;
+        ;
       }
 
       this.shapeChangedProperty.set( !this.shapeChangedProperty.get() );
-    },
-
-    getShape: function() {
-      return this.shape;
     },
 
     /**

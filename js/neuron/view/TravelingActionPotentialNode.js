@@ -23,7 +23,6 @@ define( function( require ) {
   var FOREGROUND_OPTIONS = { stroke: FOREGROUND_COLOR, lineWidth: 5, lineCap: 'round', lineJoin: 'round',  boundsMethod: 'unstroked'  };
 
   /**
-   * The node that will represent the traveling action potential.
    * @param {TravelingActionPotential} travelingActionPotential
    * @param {ModelViewTransform2} mvt
    * @constructor
@@ -39,10 +38,35 @@ define( function( require ) {
     thisNode.addChild( background );
     thisNode.addChild( foreground );
 
+    // function that converts the model information into a shape in the view
     function updateShape() {
-      var transformedShape = mvt.modelToViewShape( travelingActionPotential.getShape() );
-      foreground.setShape( transformedShape );
-      background.setShape( transformedShape );
+      var shapeDescription = travelingActionPotential.shapeDescription; // convenience var
+      var actionPotentialShape;
+      assert && assert( shapeDescription.mode === 'curve' || shapeDescription.mode === 'circle' );
+      if ( travelingActionPotential.shapeDescription.mode === 'curve' ) {
+        actionPotentialShape = new Shape();
+        actionPotentialShape.moveTo(
+          mvt.modelToViewX( shapeDescription.startPoint.x ),
+          mvt.modelToViewY( shapeDescription.startPoint.y )
+        );
+        actionPotentialShape.cubicCurveTo(
+          mvt.modelToViewX( shapeDescription.controlPoint1.x ),
+          mvt.modelToViewY( shapeDescription.controlPoint1.y ),
+          mvt.modelToViewX( shapeDescription.controlPoint2.x ),
+          mvt.modelToViewY( shapeDescription.controlPoint2.y ),
+          mvt.modelToViewX( shapeDescription.endPoint.x ),
+          mvt.modelToViewY( shapeDescription.endPoint.y )
+        );
+      }
+      else {
+        actionPotentialShape = Shape.circle(
+          mvt.modelToViewX( shapeDescription.circleCenter.x ),
+          mvt.modelToViewY( shapeDescription.circleCenter.y ),
+          mvt.modelToViewDeltaX( shapeDescription.circleRadius )
+        )
+      }
+      foreground.setShape( actionPotentialShape );
+      background.setShape( actionPotentialShape );
     }
 
     travelingActionPotential.shapeChangedProperty.link( function() {
