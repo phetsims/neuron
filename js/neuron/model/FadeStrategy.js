@@ -1,4 +1,4 @@
-// Copyright 2002-2011, University of Colorado
+// Copyright 2002-2015, University of Colorado Boulder
 
 /**
  * Abstract base class for fade strategies that can be used to fade model elements in and out

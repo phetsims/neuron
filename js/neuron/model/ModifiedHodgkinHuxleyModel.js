@@ -1,4 +1,4 @@
-// Copyright 2002-2011, University of Colorado
+// Copyright 2002-2015, University of Colorado Boulder
 /**
  * This class is an implementation of the Hodgkin-Huxley model that started
  * from an example taken from the web (see Unfuddle #2121 for more info on

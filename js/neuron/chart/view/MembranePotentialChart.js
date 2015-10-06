@@ -1,4 +1,4 @@
-// Copyright 2002-2011, University of Colorado
+// Copyright 2002-2015, University of Colorado Boulder
 /**
  * Chart for depicting the membrane potential.  This is a Node, and as such
  * is intended for use primarily in the play area.

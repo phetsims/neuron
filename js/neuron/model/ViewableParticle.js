@@ -1,4 +1,4 @@
-// Copyright 2002-2011, University of Colorado
+// Copyright 2002-2015, University of Colorado Boulder
 
 /**
  * Interface for a particle that can be viewed, i.e. displayed to the user.

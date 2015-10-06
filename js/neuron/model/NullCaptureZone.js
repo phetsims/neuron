@@ -1,4 +1,5 @@
-//// Copyright 2002-2011, University of Colorado
+// Copyright 2002-2015, University of Colorado Boulder
+
 /**
  * Class that defines a capture zone that contains nothing.  This is useful
  * when wanting to avoid having to do a bunch of null checks.

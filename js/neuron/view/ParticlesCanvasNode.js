@@ -1,4 +1,4 @@
-// Copyright 2002-2011, University of Colorado
+// Copyright 2002-2015, University of Colorado Boulder
 
 /**
  * For performance reasons, this sim uses a single canvasNode to render all the particles instead of having nodes that
