@@ -32,7 +32,7 @@ define( function( require ) {
     },
 
     toString: function() {
-      return "Record";
+      return 'Record';
     }
 
   } );

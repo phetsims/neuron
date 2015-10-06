@@ -43,22 +43,22 @@ define( function( require ) {
     this.zoomableRootNode = zoomableRootNode;
 
     // Concentration readouts.
-    var sodiumExteriorConcentrationReadout = new Text( "", {
+    var sodiumExteriorConcentrationReadout = new Text( '', {
       font: new PhetFont( { size: READ_OUT_FONT_SIZE } ),
       fill: new SodiumIon().getRepresentationColor(),
       boundsMethod: 'fast'
     } );
-    var sodiumInteriorConcentrationReadout = new Text( "", {
+    var sodiumInteriorConcentrationReadout = new Text( '', {
       font: new PhetFont( { size: READ_OUT_FONT_SIZE } ),
       fill: new SodiumIon().getRepresentationColor(),
       boundsMethod: 'fast'
     } );
-    var potassiumExteriorConcentrationReadout = new Text( "", {
+    var potassiumExteriorConcentrationReadout = new Text( '', {
       font: new PhetFont( { size: READ_OUT_FONT_SIZE } ),
       fill: new PotassiumIon().getRepresentationColor().darkerColor( 0.5 ),
       boundsMethod: 'fast'
     } );
-    var potassiumInteriorConcentrationReadout = new Text( "", {
+    var potassiumInteriorConcentrationReadout = new Text( '', {
       font: new PhetFont( { size: READ_OUT_FONT_SIZE } ),
       fill: new PotassiumIon().getRepresentationColor().darkerColor( 0.5 ),
       boundsMethod: 'fast'

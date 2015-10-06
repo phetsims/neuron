@@ -40,7 +40,7 @@ define( function( require ) {
           membraneChannel = new PotassiumGatedChannel( particleModel, hodgkinHuxleyModel );
           break;
         default:
-          assert && assert( false, "Error: Unrecognized channelType type." );
+          assert && assert( false, 'Error: Unrecognized channelType type.' );
       }
       return membraneChannel;
     }

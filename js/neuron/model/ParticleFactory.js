@@ -32,7 +32,7 @@ define( function( require ) {
           newParticle = new SodiumIon();
           break;
         default:
-          assert && assert( false, "Error: Unrecognized particle type." );
+          assert && assert( false, 'Error: Unrecognized particle type.' );
       }
       return newParticle;
     }

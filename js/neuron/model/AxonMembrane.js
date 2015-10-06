@@ -223,7 +223,7 @@ define( function( require ) {
        */
       evaluateCurve: function( curve, t ) {
         if ( t < 0 || t > 1 ) {
-          throw new Error( "t is out of range: " + t );
+          throw new Error( 't is out of range: ' + t );
         }
         this.linearInterpolation( curve.start, curve.control1, t, this.ab );
         this.linearInterpolation( curve.control1, curve.control2, t, this.bc );

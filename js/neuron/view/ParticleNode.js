@@ -58,7 +58,7 @@ define( function( require ) {
           break;
 
         default:
-          console.log( particle.getType() + " - Warning: No specific shape for this particle type, defaulting to sphere." );
+          console.log( particle.getType() + ' - Warning: No specific shape for this particle type, defaulting to sphere.' );
           var defaultSphereRadius = modelViewTransform.modelToViewDeltaX( particle.getRadius() );
           representationShape = new Shape().ellipse( 0, 0, defaultSphereRadius, defaultSphereRadius );
           break;

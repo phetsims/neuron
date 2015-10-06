@@ -99,7 +99,7 @@ define( function( require ) {
       }
       else {
         // This shouldn't happen, debug it if it does.
-        console.log( "Sodium Dual  Channel Normalized conductance out of range, = " + normalizedConductance );
+        console.log( 'Sodium Dual  Channel Normalized conductance out of range, = ' + normalizedConductance );
         assert && assert( false );
       }
 

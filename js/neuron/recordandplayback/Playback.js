@@ -64,7 +64,7 @@ define( function( require ) {
     },
 
     toString: function() {
-      return "Playback";
+      return 'Playback';
     }
 
   } );

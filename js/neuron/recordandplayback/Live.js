@@ -29,7 +29,7 @@ define( function( require ) {
     },
 
     toString: function() {
-      return "Live";
+      return 'Live';
     }
 
   } );

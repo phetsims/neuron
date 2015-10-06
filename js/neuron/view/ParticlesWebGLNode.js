@@ -152,7 +152,7 @@ define( function( require ) {
       // TODO: I'm totally guessing on the following, based on some examples I've been looking at (jblanco).  Should
       // the uniform go into the ShaderProgram abstraction?  Ashraf doesn't seem to use it at all, so maybe it isn't
       // necessary.
-      drawable.uniformSamplerLoc = gl.getUniformLocation( drawable.shaderProgram.program, "uSampler" );
+      drawable.uniformSamplerLoc = gl.getUniformLocation( drawable.shaderProgram.program, 'uSampler' );
 
       // bind the texture that contains the particle images
       this.bindTextureImage( drawable, this.particlesTexture.canvas );

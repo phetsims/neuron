@@ -858,7 +858,7 @@ define( function( require ) {
       }
       else {
         // Should never happen, debug if it does.
-        assert && assert( "Neuron Model updateSimAndPlaybackParticleVisibility Error: Unrecognized record-and-playback mode." );
+        assert && assert( 'Neuron Model updateSimAndPlaybackParticleVisibility Error: Unrecognized record-and-playback mode.' );
       }
     },
 
@@ -1063,7 +1063,7 @@ define( function( require ) {
         var mcs = state.getMembraneChannelStateMap().get( membraneChannel );
         // Error handling.
         if ( mcs === null ) {
-          assert && assert( " NeuronModel  Error: No state found for membrane channel." );
+          assert && assert( ' NeuronModel  Error: No state found for membrane channel.' );
           return;
         }
         // Restore the state.
