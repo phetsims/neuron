@@ -23,8 +23,7 @@ define( function( require ) {
   // utility function for drawing the shape that depicts the edge or side of a membrane channel
   function drawEdge( context, transformedEdgeNodeSize ) {
 
-    // Instead of passing the transformedEdgeNodeSize,
-    // the update Edge Shape updates the transformedEdgeNodeSize
+    // Instead of passing the transformedEdgeNodeSize, the updateEdgeShape function updates the transformedEdgeNodeSize
     var width = transformedEdgeNodeSize.width;
     var height = transformedEdgeNodeSize.height;
 
@@ -240,8 +239,7 @@ define( function( require ) {
 
           var ballDiameter = thisNode.mvt.modelToViewDeltaX( membraneChannelModel.getChannelSize().width );
 
-          // Redraw the "string" (actually a strand of protein in real life)
-          // that connects the ball to the gate.
+          // Redraw the "string" (actually a strand of protein in real life) that connects the ball to the gate.
           ballConnectionPoint.x = ballPosition.x;
           ballConnectionPoint.y = ballPosition.y;
           var connectorLength = channelCenterBottomPoint.distance( ballConnectionPoint );
