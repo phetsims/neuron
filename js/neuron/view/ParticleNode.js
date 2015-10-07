@@ -44,6 +44,8 @@ define( function( require ) {
       var size;
       var representationShape;
 
+      assert && assert( particle.getType === ParticleType.SODIUM_ION || particle.getType === ParticleType.POTASSIUM_ION );
+
       switch( particle.getType() ) {
         case ParticleType.SODIUM_ION:
           var transformedRadius = modelViewTransform.modelToViewDeltaX( particle.getRadius() );
@@ -58,7 +60,6 @@ define( function( require ) {
           break;
 
         default:
-          console.log( particle.getType() + ' - Warning: No specific shape for this particle type, defaulting to sphere.' );
           var defaultSphereRadius = modelViewTransform.modelToViewDeltaX( particle.getRadius() );
           representationShape = new Shape().ellipse( 0, 0, defaultSphereRadius, defaultSphereRadius );
           break;

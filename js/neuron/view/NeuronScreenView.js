@@ -111,7 +111,14 @@ define( function( require ) {
     zoomableNode.addChild( channelLayer );
     zoomableNode.addChild( chargeSymbolLayer );
 
-    var axonBodyNode = new AxonBodyNode( thisView.neuronModel.axonMembrane, worldNodeClipArea.bounds, thisView.mvt );
+    var dilationFactor = DEFAULT_ZOOM - MIN_ZOOM;
+    var axonBodyNode = new AxonBodyNode(
+      thisView.neuronModel.axonMembrane,
+      worldNodeClipArea.bounds.dilatedXY(
+        worldNodeClipArea.bounds.width * dilationFactor,
+        worldNodeClipArea.bounds.height * dilationFactor ),
+      thisView.mvt
+    );
     axonBodyLayer.addChild( axonBodyNode );
     var axonCrossSectionNode = new AxonCrossSectionNode( thisView.neuronModel.axonMembrane, thisView.mvt );
     axonCrossSectionLayer.addChild( axonCrossSectionNode );

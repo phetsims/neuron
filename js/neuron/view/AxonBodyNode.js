@@ -28,11 +28,12 @@ define( function( require ) {
   /**
    * Constructor for the AxonBodyNode
    * @param {NeuronModel} axonMembraneModel
-   * @param {Bounds2} viewportBounds - bounds of the viewport where the axon is seen
+   * @param {Bounds2} canvasBounds - bounds of the canvas for portraying the action potential, must be large enough
+   * to not get cut off when view is at max zoom out
    * @param {ModelViewTransform2} mvt
    * @constructor
    */
-  function AxonBodyNode( axonMembraneModel, viewportBounds, mvt ) {
+  function AxonBodyNode( axonMembraneModel, canvasBounds, mvt ) {
 
     var thisNode = this;
     Node.call( thisNode, {} );
@@ -61,7 +62,7 @@ define( function( require ) {
       thisNode.addChild( new Line( gradientOrigin, gradientExtent ) );
     }
 
-    var travelingActionPotentialNode = new TravelingActionPotentialCanvasNode( thisNode.mvt, viewportBounds );
+    var travelingActionPotentialNode = new TravelingActionPotentialCanvasNode( thisNode.mvt, canvasBounds );
     this.addChild( travelingActionPotentialNode );
 
     thisNode.axonMembraneModel.travelingActionPotentialStartedProperty.link( function( started ) {
