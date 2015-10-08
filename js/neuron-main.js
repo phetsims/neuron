@@ -20,6 +20,7 @@ define( function( require ) {
       leadDesign: 'Noah Podolefsky, Amanda McGarry',
       softwareDevelopment: 'John Blanco, Sharfudeen Ashraf',
       team: 'Wendy Adams, Fanny (Benay) Bentley, Janet Casagrand, Mike Klymkowsky,\nAriel Paul, Katherine Perkins',
+      qualityAssurance: 'Steele Dalton, Oliver Orejola, Bryan Yoelin',
       thanks: 'Conversion of this simulation to HTML5 was funded in part by the Ghent University.'
     }
   };
