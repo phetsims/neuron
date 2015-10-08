@@ -16,7 +16,7 @@ define( function( require ) {
 
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
-  var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
+  var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
   var NeuronParticlesTexture = require( 'NEURON/neuron/view/NeuronParticlesTexture' );
   var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
   var ShaderProgram = require( 'SCENERY/util/ShaderProgram' );

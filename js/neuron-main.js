@@ -7,8 +7,8 @@ define( function( require ) {
   'use strict';
 
   // modules
-  var NeuronProfiler = require( 'NEURON/neuron/NeuronProfiler' );
-  var NeuronScreen = require( 'NEURON/neuron/NeuronScreen' );
+  var NeuronProfiler = require( 'NEURON/neuron/common/NeuronProfiler' );
+  var NeuronScreen = require( 'NEURON/neuron/view/NeuronScreen' );
   var Sim = require( 'JOIST/Sim' );
   var SimLauncher = require( 'JOIST/SimLauncher' );
 

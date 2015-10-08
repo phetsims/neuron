@@ -15,7 +15,7 @@ define( function( require ) {
   var PropertySet = require( 'AXON/PropertySet' );
   var Vector2 = require( 'DOT/Vector2' );
   var Shape = require( 'KITE/Shape' );
-  var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
+  var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
   var TravelingActionPotential = require( 'NEURON/neuron/model/TravelingActionPotential' );
   var AxonMembraneState = require( 'NEURON/neuron/model/AxonMembraneState' );
   var Cubic = require( 'KITE/segments/Cubic' );

@@ -29,8 +29,8 @@ define( function( require ) {
   var SlowBrownianMotionStrategy = require( 'NEURON/neuron/model/SlowBrownianMotionStrategy' );
   var MembraneCrossingDirection = require( 'NEURON/neuron/model/MembraneCrossingDirection' );
   var TimedFadeInStrategy = require( 'NEURON/neuron/model/TimedFadeInStrategy' );
-  var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
-  var MathUtils = require( 'NEURON/neuron/utils/MathUtils' );
+  var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
+  var MathUtils = require( 'NEURON/neuron/common/MathUtils' );
 
   // Default configuration values.
   var DEFAULT_FOR_SHOW_ALL_IONS = true;

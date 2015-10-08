@@ -24,12 +24,12 @@ define( function( require ) {
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
   var Bounds2 = require( 'DOT/Bounds2' );
-  var ChartCursor = require( 'NEURON/neuron/chart/view/ChartCursor' );
-  var DataLineCanvasNode = require( 'NEURON/neuron/chart/view/DataLineCanvasNode' );
+  var ChartCursor = require( 'NEURON/neuron/view/chart/ChartCursor' );
+  var DataLineCanvasNode = require( 'NEURON/neuron/view/chart/DataLineCanvasNode' );
   var dot = require( 'DOT/dot' );
   var HBox = require( 'SCENERY/nodes/HBox' );
   var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
-  var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
+  var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
   var Node = require( 'SCENERY/nodes/Node' );
   var Panel = require( 'SUN/Panel' );
   var Path = require( 'SCENERY/nodes/Path' );
@@ -54,8 +54,7 @@ define( function( require ) {
   var MAX_PANEL_WIDTH = 554;
   var MIN_DISTANCE_SQUARED_BETWEEN_POINTS = 0.01;
 
-  // This value sets the frequency of chart updates, which helps to reduce
-  // the processor consumption.
+  // This value sets the frequency of chart updates, which helps to reduce the processor consumption.
   var UPDATE_PERIOD = NeuronConstants.DEFAULT_ACTION_POTENTIAL_CLOCK_DT; // In seconds of sim time (not wall time)
 
   /**

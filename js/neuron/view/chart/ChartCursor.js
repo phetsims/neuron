@@ -17,7 +17,7 @@ define( function( require ) {
   var SimpleDragHandler = require( 'SCENERY/input/SimpleDragHandler' );
   var Util = require( 'DOT/Util' );
   var Rectangle = require( 'SCENERY/nodes/Rectangle' );
-  var GrippyIndentNode = require( 'NEURON/neuron/chart/view/GrippyIndentNode' );
+  var GrippyIndentNode = require( 'NEURON/neuron/view/chart/GrippyIndentNode' );
 
   // constants
   var WIDTH_PROPORTION = 0.013; // empirically determined

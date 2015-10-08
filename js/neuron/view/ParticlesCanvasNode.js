@@ -15,7 +15,7 @@ define( function( require ) {
   var CanvasNode = require( 'SCENERY/nodes/CanvasNode' );
   var Color = require( 'SCENERY/util/Color' );
   var inherit = require( 'PHET_CORE/inherit' );
-  var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
+  var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
   var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
 
   /**

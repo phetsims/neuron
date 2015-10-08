@@ -13,7 +13,7 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
   var Particle = require( 'NEURON/neuron/model/Particle' );
-  var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
+  var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
 
   /**
    * @constructor

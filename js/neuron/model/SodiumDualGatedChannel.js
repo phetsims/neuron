@@ -14,12 +14,12 @@ define( function( require ) {
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
   var GatedChannel = require( 'NEURON/neuron/model/GatedChannel' );
-  var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
+  var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
   var PieSliceShapedCaptureZone = require( 'NEURON/neuron/model/PieSliceShapedCaptureZone' );
   var MembraneCrossingDirection = require( 'NEURON/neuron/model/MembraneCrossingDirection' );
   var DualGateChannelTraversalMotionStrategy = require( 'NEURON/neuron/model/DualGateChannelTraversalMotionStrategy' );
   var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
-  var MathUtils = require( 'NEURON/neuron/utils/MathUtils' );
+  var MathUtils = require( 'NEURON/neuron/common/MathUtils' );
   var MembraneChannelTypes = require( 'NEURON/neuron/model/MembraneChannelTypes' );
 
   var CHANNEL_HEIGHT = NeuronConstants.MEMBRANE_THICKNESS * 1.2; // In nanometers.

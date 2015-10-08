@@ -14,9 +14,9 @@ define( function( require ) {
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
   var Color = require( 'SCENERY/util/Color' );
-  var MathUtils = require( 'NEURON/neuron/utils/MathUtils' );
+  var MathUtils = require( 'NEURON/neuron/common/MathUtils' );
   var AbstractLeakChannel = require( 'NEURON/neuron/model/AbstractLeakChannel' );
-  var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
+  var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
   var PieSliceShapedCaptureZone = require( 'NEURON/neuron/model/PieSliceShapedCaptureZone' );
   var MembraneCrossingDirection = require( 'NEURON/neuron/model/MembraneCrossingDirection' );
   var ParticleType = require( 'NEURON/neuron/model/ParticleType' );

@@ -18,12 +18,12 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var Vector2 = require( 'DOT/Vector2' );
   var MotionStrategy = require( 'NEURON/neuron/model/MotionStrategy' );
-  var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
+  var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
   var WanderAwayThenFadeMotionStrategy = require( 'NEURON/neuron/model/WanderAwayThenFadeMotionStrategy' );
   var TimedFadeAwayStrategy = require( 'NEURON/neuron/model/TimedFadeAwayStrategy' );
   var SpeedChangeLinearMotionStrategy = require( 'NEURON/neuron/model/SpeedChangeLinearMotionStrategy' );
   var LinearMotionStrategy = require( 'NEURON/neuron/model/LinearMotionStrategy' );
-  var MathUtils = require( 'NEURON/neuron/utils/MathUtils' );
+  var MathUtils = require( 'NEURON/neuron/common/MathUtils' );
 
   // Threshold at which particles will "bounce" back out of the channel
   // rather than traversing it.

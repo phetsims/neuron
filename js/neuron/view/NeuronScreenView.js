@@ -17,7 +17,7 @@ define( function( require ) {
   var HBox = require( 'SCENERY/nodes/HBox' );
   var Vector2 = require( 'DOT/Vector2' );
   var Bounds2 = require( 'DOT/Bounds2' );
-  var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
+  var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
   var Matrix3 = require( 'DOT/Matrix3' );
   var Shape = require( 'KITE/Shape' );
   var Dimension2 = require( 'DOT/Dimension2' );
@@ -38,10 +38,10 @@ define( function( require ) {
   var ChargeSymbolsLayerNode = require( 'NEURON/neuron/view/ChargeSymbolsLayerNode' );
   var StepBackButton = require( 'SCENERY_PHET/buttons/StepBackButton' );
   var ZoomControl = require( 'NEURON/neuron/view/ZoomControl' );
-  var MembranePotentialChart = require( 'NEURON/neuron/chart/view/MembranePotentialChart' );
-  var IonsAndChannelsLegendPanel = require( 'NEURON/neuron/controlpanel/IonsAndChannelsLegendPanel' );
-  var AxonCrossSectionControlPanel = require( 'NEURON/neuron/controlpanel/AxonCrossSectionControlPanel' );
-  var SimSpeedControlPanel = require( 'NEURON/neuron/controlpanel/SimSpeedControlPanel' );
+  var MembranePotentialChart = require( 'NEURON/neuron/view/chart/MembranePotentialChart' );
+  var IonsAndChannelsLegendPanel = require( 'NEURON/neuron/view/controlpanel/IonsAndChannelsLegendPanel' );
+  var AxonCrossSectionControlPanel = require( 'NEURON/neuron/view/controlpanel/AxonCrossSectionControlPanel' );
+  var SimSpeedControlPanel = require( 'NEURON/neuron/view/controlpanel/SimSpeedControlPanel' );
   var PlayPauseButton = require( 'SCENERY_PHET/buttons/PlayPauseButton' );
   var StepButton = require( 'SCENERY_PHET/buttons/StepButton' );
   var Util = require( 'SCENERY/util/Util' );

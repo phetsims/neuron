@@ -17,7 +17,7 @@ define( function( require ) {
   var Shape = require( 'KITE/Shape' );
   var kite = require( 'KITE/kite' );
   var MembraneChannelTypes = require( 'NEURON/neuron/model/MembraneChannelTypes' );
-  var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
+  var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
   var Color = require( 'SCENERY/util/Color' );
 
   // utility function for drawing the shape that depicts the edge or side of a membrane channel

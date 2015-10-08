@@ -103,5 +103,6 @@ define( function( require ) {
       this.frameEndedTimes.length = 0;
       this.frameProcessingTimes.length = 0;
     }
+
   } );
 } );

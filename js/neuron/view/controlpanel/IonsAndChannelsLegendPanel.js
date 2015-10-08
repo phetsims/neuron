@@ -23,7 +23,7 @@ define( function( require ) {
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
   var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   var MembraneChannelNode = require( 'NEURON/neuron/view/MembraneChannelNode' );
-  var NeuronConstants = require( 'NEURON/neuron/NeuronConstants' );
+  var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
   var ParticleNode = require( 'NEURON/neuron/view/ParticleNode' );
   var PotassiumGatedChannel = require( 'NEURON/neuron/model/PotassiumGatedChannel' );
   var SodiumLeakageChannel = require( 'NEURON/neuron/model/SodiumLeakageChannel' );
