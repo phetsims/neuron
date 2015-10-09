@@ -26,4 +26,8 @@ consistent, but far from perfect in this regard.
 
 Because this simulation consumes a fair amount of computational and graphical resources when an action potential is in
 progress, there are a lot of optimizations.  As of this writing, there is a Web GL node that displays the sodium and
-potassium ions, a canvas node for the membrance channels, and another canvas node for the traveling action potential.
+potassium ions, a canvas node for the membrane channels, and another canvas node for the traveling action potential.
+
+Finally, there is some inconsistency in the quality of the comments.  Many have been edited and cleaned up, but this
+process was time consuming and didn't seem to add a lot of value, so some have been left as they were when the
+simulation was delivered.  Feel free to clean them up as they are encountered during any maintenance work.
