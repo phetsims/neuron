@@ -18,6 +18,7 @@ define( function( require ) {
   var distanceCalculatorVectorRHS = new Vector2();
 
   return {
+
     /**
      * A method to calculate distance by reusing vector instances. This method is created to reduce Vector2 instance
      * allocation during distance calculation.

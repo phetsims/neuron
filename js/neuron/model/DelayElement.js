@@ -26,6 +26,8 @@ define( function( require ) {
   }
 
   return inherit( Object, DelayElement, {
+
+    // @public
     setValueAndTime: function( value, deltaTime ) {
       this.value = value;
       this.deltaTime = deltaTime;

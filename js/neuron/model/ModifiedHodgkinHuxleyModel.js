@@ -1,10 +1,8 @@
 // Copyright 2002-2015, University of Colorado Boulder
 /**
- * This class is an implementation of the Hodgkin-Huxley model that started
- * from an example taken from the web (see Unfuddle #2121 for more info on
- * this) but that was modified significantly to fit the needs of this
- * simulation.  The main change is that the way that the conductance values
- * are calculated is different, and much simpler.
+ * This class is an implementation of the Hodgkin-Huxley model that started from an example taken from the web (see
+ * Unfuddle #2121 for more info on this) but that was modified significantly to fit the needs of this simulation.  The
+ * main change is that the way that the conductance values are calculated is different, and much simpler.
  * <p/>
  * This was used with permission from the original author of the example.
  *
@@ -35,43 +33,43 @@ define( function( require ) {
   function ModifiedHodgkinHuxleyModel() {
 
     var thisModel = this;
-    thisModel.perNaChannels = 100;
-    thisModel.perKChannels = 100;
-    thisModel.elapsedTime = 0;
-    thisModel.timeSinceActionPotential = Number.POSITIVE_INFINITY;
-    thisModel.m3hDelayBuffer = new DelayBuffer( MAX_DELAY, NeuronConstants.MIN_ACTION_POTENTIAL_CLOCK_DT );
-    thisModel.n4DelayBuffer = new DelayBuffer( MAX_DELAY, NeuronConstants.MIN_ACTION_POTENTIAL_CLOCK_DT );
+    thisModel.perNaChannels = 100; // @private
+    thisModel.perKChannels = 100; // @private
+    thisModel.elapsedTime = 0; // @private
+    thisModel.timeSinceActionPotential = Number.POSITIVE_INFINITY; // @private
+    thisModel.m3hDelayBuffer = new DelayBuffer( MAX_DELAY, NeuronConstants.MIN_ACTION_POTENTIAL_CLOCK_DT ); // @private
+    thisModel.n4DelayBuffer = new DelayBuffer( MAX_DELAY, NeuronConstants.MIN_ACTION_POTENTIAL_CLOCK_DT ); // @private
 
-    thisModel.resting_v = 65;// final doesn't change
+    thisModel.resting_v = 65;// @private, final doesn't change
 
     // deltas of voltage-dependent gating parameters
-    thisModel.dn = 0;
-    thisModel.dm = 0;
-    thisModel.dh = 0;
+    thisModel.dn = 0; // @private
+    thisModel.dm = 0; // @private
+    thisModel.dh = 0; // @private
 
-    thisModel.timeRemainder = 0;
+    thisModel.timeRemainder = 0; // @private
 
     // Ek-Er, Ena - Er, Eleak - Er
-    thisModel.vk = 0;
-    thisModel.vna = 0;
-    thisModel.vl = 0;
+    thisModel.vk = 0; // @private
+    thisModel.vna = 0; // @private
+    thisModel.vl = 0; // @private
 
-    thisModel.n4 = 0;
-    thisModel.m3h = 0;
-    thisModel.na_current = 0;
-    thisModel.k_current = 0;
-    thisModel.l_current = 0;
+    thisModel.n4 = 0; // @private
+    thisModel.m3h = 0; // @private
+    thisModel.na_current = 0; // @private
+    thisModel.k_current = 0; // @private
+    thisModel.l_current = 0; // @private
 
-    thisModel.vClampOn = false;
+    thisModel.vClampOn = false; // @private
 
-    thisModel.vClampValue = this.convertV( 0 );
+    thisModel.vClampValue = this.convertV( 0 ); // @private
 
     thisModel.reset();// reset and initialize
-
   }
 
   return inherit( Object, ModifiedHodgkinHuxleyModel, {
 
+    // @public
     reset: function() {
       this.n4DelayBuffer.clear();
       this.m3hDelayBuffer.clear();
@@ -106,6 +104,7 @@ define( function( require ) {
       this.timeSinceActionPotential = Number.POSITIVE_INFINITY;
     },
 
+    // @public
     stepInTime: function( dt ) {
       var modelIterationsToRun = Math.floor( ( dt * 1000 ) / INTERNAL_TIME_STEP );
       this.timeRemainder += ( dt * 1000 ) % INTERNAL_TIME_STEP;
@@ -183,16 +182,18 @@ define( function( require ) {
       }
     },
 
+    // @public
     get_n4: function() {
       return this.n4;
     },
 
     /**
-     * Get a delayed version of the n^4 amount, which is the variable factor
-     * that governs the potassium channel conductance.
+     * Get a delayed version of the n^4 amount, which is the variable factor that governs the potassium channel
+     * conductance.
      *
      * @param delayAmount - Time delay in seconds.
-     * @return
+     * @return {number}
+     * @public
      */
     get_delayed_n4: function( delayAmount ) {
       if ( delayAmount <= 0 ) {
@@ -203,6 +204,7 @@ define( function( require ) {
       }
     },
 
+    // @public
     get_m3h: function() {
       return this.m3h;
     },
@@ -212,7 +214,8 @@ define( function( require ) {
      * that governs the sodium channel conductance.
      *
      * @param delayAmount - Time delay in seconds.
-     * @return
+     * @return {number}
+     * @public
      */
     get_delayed_m3h: function( delayAmount ) {
       var delayedM3h = 0;

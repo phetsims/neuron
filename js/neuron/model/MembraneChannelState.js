@@ -14,7 +14,6 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
 
   /**
-   *
    * @param {MembraneChannel} membraneChannel
    * @constructor
    */
@@ -30,10 +29,12 @@ define( function( require ) {
 
   return inherit( Object, MembraneChannelState, {
 
+    // @public
     getOpenness: function() {
       return this.openness;
     },
 
+    // @public
     getInactivationAmt: function() {
       return this.inactivationAmt;
     }

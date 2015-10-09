@@ -26,6 +26,7 @@ define( function( require ) {
 
   return inherit( MembraneChannel, GatedChannel, {
 
+    // @public
     reset: function() {
       this.setOpenness( 0 );         // Gated channels are assumed to be initially closed...
       this.setInactivationAmt( 0 );  // ...but not inactivated.

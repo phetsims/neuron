@@ -51,6 +51,7 @@ define( function( require ) {
 
   return inherit( PropertySet, NeuronClockModelAdapter, {
 
+    // @public
     step: function( dt ) {
 
       // If the step is large, it probably means that the screen was hidden for a while, so just ignore it.
@@ -63,6 +64,7 @@ define( function( require ) {
       }
     },
 
+    // @public
     reset: function() {
       this.lastSimulationTime = 0.0;
       this.simulationTime = 0.0;
@@ -80,6 +82,7 @@ define( function( require ) {
      * Registers a callback that will be notified when the step simulation occurs
      * Neuron Clock uses specialized real time step simulation
      * @param  callback has a {dt} parameter
+     * @public
      */
     registerStepCallback: function( callback ) {
       this.stepCallbacks.push( callback );
@@ -87,6 +90,7 @@ define( function( require ) {
 
     /**
      * Registers a callback that will be notified when the clock is reset
+     * @public
      */
     registerResetCallback: function( callback ) {
       this.resetCallBacks.push( callback );
@@ -94,6 +98,7 @@ define( function( require ) {
 
     /**
      * Update the clock, updating the wall time and possibly simulation time.
+     * @public
      */
     tick: function( simulationTimeChange ) {
       //fire step event callback

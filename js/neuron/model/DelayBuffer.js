@@ -18,8 +18,8 @@ define( function( require ) {
   var DelayElement = require( 'NEURON/neuron/model/DelayElement' );
   var Util = require( 'DOT/Util' );
 
-  // This value is used to tell if two numbers are different.  It was needed
-  // due to some floating point resolution problems that were occurring.
+  // This value is used to tell if two numbers are different.  It was needed due to some floating point resolution
+  // problems that were occurring.
   var DIFFERENCE_RESOLUTION = 1E-15;
 
   /**
@@ -29,27 +29,28 @@ define( function( require ) {
    */
   function DelayBuffer( maxDelay, minTimeStep ) {
     var thisBuffer = this;
-    thisBuffer.numEntries = Math.ceil( maxDelay / minTimeStep );
-    thisBuffer.filling = false;
-    thisBuffer.allDeltaTimesEqual = true;
-    thisBuffer.previousDeltaTime = -1;
-    thisBuffer.countAtThisDeltaTime = 0;
+    thisBuffer.numEntries = Math.ceil( maxDelay / minTimeStep ); // @private
+    thisBuffer.filling = false; // @private
+    thisBuffer.allDeltaTimesEqual = true; // @private
+    thisBuffer.previousDeltaTime = -1; // @private
+    thisBuffer.countAtThisDeltaTime = 0; // @private
     // Allocate the memory that will be used.
-    thisBuffer.delayElements = new Array( this.numEntries );
+    thisBuffer.delayElements = new Array( this.numEntries ); // @private
 
     _.times( this.numEntries, function( idx ) {
       thisBuffer.delayElements[ idx ] = new DelayElement();
     } );
 
     // Head and tail pointers for FIFO-type behavior.
-    thisBuffer.head = 0;
-    thisBuffer.tail = 0;
+    thisBuffer.head = 0; // @private
+    thisBuffer.tail = 0; // @private
     // Set the initial conditions.
     thisBuffer.clear();
   }
 
   return inherit( Object, DelayBuffer, {
 
+    // @public
     addValue: function( value, deltaTime ) {
       this.delayElements[ this.head ].setValueAndTime( value, deltaTime );
       this.head = (this.head + 1) % this.numEntries;
@@ -94,6 +95,7 @@ define( function( require ) {
       }
     },
 
+    // @public
     getDelayedValue: function( delayAmount ) {
       var delayedValue = 0;
       var index = -1;
@@ -154,6 +156,7 @@ define( function( require ) {
       return delayedValue;
     },
 
+    // @public
     clear: function() {
       this.head = 0;
       this.tail = 0;

@@ -1,7 +1,6 @@
 // Copyright 2002-2014, University of Colorado Boulder
 /**
- * Base class for motion strategies that can be used to set the type of motion
- * for elements within the model.
+ * Base class for motion strategies that can be used to set the type of motion for elements within the model.
  *
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)

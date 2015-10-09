@@ -38,11 +38,9 @@ define( function( require ) {
   var DEFAULT_FOR_CHARGES_SHOWN = false;
   var DEFAULT_FOR_CONCENTRATION_READOUT_SHOWN = false;
 
-  // The following constants define the boundaries for the motion of the
-  // particles.  These boundaries are intended to be outside the view port,
-  // so that it is not apparent to the user that they exist.  We may at some
-  // point want to make these bounds dynamic and set by the view so that the
-  // user never encounters a situation where these can be seen.
+  // The following constants define the boundaries for the motion of the particles.  These boundaries are intended to be
+  // outside the view port, so that it is not apparent to the user that they exist.  We may at some point want to make
+  // these bounds dynamic and set by the view so that the user never encounters a situation where these can be seen.
   var MODEL_HEIGHT = 130; // In nanometers.
   var MODEL_WIDTH = 180; // In nanometers.
   var PARTICLE_BOUNDS = new Shape.rect( -MODEL_WIDTH / 2, -MODEL_HEIGHT / 2, MODEL_WIDTH, MODEL_HEIGHT );
@@ -65,25 +63,20 @@ define( function( require ) {
   var NUM_POTASSIUM_IONS_OUTSIDE_CELL = 60;
   var NUM_POTASSIUM_IONS_INSIDE_CELL = 200;
 
-  // Delay between the values in the HH model to the concentration readouts.
-  // This is needed to make sure that the concentration readouts don't
-  // change before visible potassium or sodium ions have crossed the membrane.
+  // Delay between the values in the HH model to the concentration readouts. This is needed to make sure that the
+  // concentration readouts don't change before visible potassium or sodium ions have crossed the membrane.
   var CONCENTRATION_READOUT_DELAY = 0.001;  // In seconds of sim time.
 
-  // Thresholds for determining whether an action potential should be
-  // considered to be in progress.  These values relate to the rate of flow
-  // through the gated sodium, gated potassium, and combination of the
-  // sodium and potassium leakage.  If the values from the HH model exceed
-  // any of these, and action potential is considered to be in progress.
-  // The values were determined empirically, and different HH models may
-  // require different values here.
+  // Thresholds for determining whether an action potential should be considered to be in progress.  These values relate
+  // to the rate of flow through the gated sodium, gated potassium, and combination of the sodium and potassium leakage.
+  // If the values from the HH model exceed any of these, and action potential is considered to be in progress. The
+  // values were determined empirically, and different HH models may require different values here.
   var POTASSIUM_CURRENT_THRESH_FOR_ACTION_POTENTIAL = 0.001;
   var SODIUM_CURRENT_THRESH_FOR_ACTION_POTENTIAL = 0.001;
   var LEAKAGE_CURRENT_THRESH_FOR_ACTION_POTENTIAL = 0.444;
 
-  // Rates at which concentration changes during action potential.  These
-  // values combined with the conductance at each time step are used to
-  // calculate the concentration changes.
+  // Rates at which concentration changes during action potential.  These values combined with the conductance at each
+  // time step are used to calculate the concentration changes.
   var INTERIOR_CONCENTRATION_CHANGE_RATE_SODIUM = 0.4;
   var EXTERIOR_CONCENTRATION_CHANGE_RATE_SODIUM = 7;
   var INTERIOR_CONCENTRATION_CHANGE_RATE_POTASSIUM = 2.0;
@@ -92,12 +85,10 @@ define( function( require ) {
   // Threshold of significant difference for concentration values.
   var CONCENTRATION_DIFF_THRESHOLD = 0.000001;
 
-  // Rate at which concentration is restored to nominal value.  Higher value
-  // means quicker restoration.
+  // Rate at which concentration is restored to nominal value.  Higher value means quicker restoration.
   var CONCENTRATION_RESTORATION_FACTOR = 1000;
 
-  // Value that controls how much of a change of the membrane potential must
-  // occur before a notification is sent out.
+  // Value that controls how much of a change of the membrane potential must occur before a notification is sent out.
   var MEMBRANE_POTENTIAL_CHANGE_THRESHOLD = 0.005;
 
   // Default values of opacity for newly created particles.

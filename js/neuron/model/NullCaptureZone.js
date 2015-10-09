@@ -1,8 +1,8 @@
 // Copyright 2002-2015, University of Colorado Boulder
 
 /**
- * Class that defines a capture zone that contains nothing.  This is useful
- * when wanting to avoid having to do a bunch of null checks.
+ * Class that defines a capture zone that contains nothing.  This is useful when wanting to avoid having to do a bunch
+ * of null checks.
  *
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)

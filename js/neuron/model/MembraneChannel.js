@@ -355,7 +355,6 @@ define( function( require ) {
      * @public
      */
     setState: function( state ) {
-
       var prevOpenness = this.getOpenness();
       var prevInactivationAmt = this.getInactivationAmt();
       this.setOpenness( state.getOpenness() );

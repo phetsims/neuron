@@ -23,6 +23,7 @@ define( function( require ) {
 
   return inherit( MotionStrategy, LinearMotionStrategy, {
 
+    // @public
     move: function( movableModelElement, fadableModelElement, dt ) {
       var currentPositionRefX = movableModelElement.getPositionX();
       var currentPositionRefY = movableModelElement.getPositionY();
