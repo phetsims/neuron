@@ -47,7 +47,10 @@ define( function( require ) {
     // Shape of the body of the axon.
     thisAxonMembrane.axonBodyShape = new Shape();
     // Points that define the body shape.
-    thisAxonMembrane.vanishingPoint = new Vector2( BODY_LENGTH * Math.cos( BODY_TILT_ANGLE ), BODY_LENGTH * Math.sin( BODY_TILT_ANGLE ) );
+    thisAxonMembrane.vanishingPoint = new Vector2(
+      BODY_LENGTH * Math.cos( BODY_TILT_ANGLE ),
+      BODY_LENGTH * Math.sin( BODY_TILT_ANGLE )
+    );
 
     // Find the two points at which the shape will intersect the outer edge of the cross section.
     var r = NeuronConstants.DEFAULT_DIAMETER / 2 + thisAxonMembrane.getMembraneThickness() / 2;
@@ -84,16 +87,38 @@ define( function( require ) {
       thisAxonMembrane.vanishingPoint.y + ctrlPtRadius * Math.sin( angleToIntersectionPt - 0.25 ) );
 
     // Create the curves that define the boundaries of the body.
-    thisAxonMembrane.curveA = new Cubic( thisAxonMembrane.vanishingPoint, thisAxonMembrane.cntrlPtA2, thisAxonMembrane.cntrlPtA1, thisAxonMembrane.intersectionPointA );
-    thisAxonMembrane.curveB = new Cubic( thisAxonMembrane.vanishingPoint, thisAxonMembrane.cntrlPtB1, thisAxonMembrane.cntrlPtB2, thisAxonMembrane.intersectionPointB );
+    thisAxonMembrane.curveA = new Cubic(
+      thisAxonMembrane.vanishingPoint,
+      thisAxonMembrane.cntrlPtA2,
+      thisAxonMembrane.cntrlPtA1,
+      thisAxonMembrane.intersectionPointA
+    );
+    thisAxonMembrane.curveB = new Cubic(
+      thisAxonMembrane.vanishingPoint,
+      thisAxonMembrane.cntrlPtB1,
+      thisAxonMembrane.cntrlPtB2,
+      thisAxonMembrane.intersectionPointB
+    );
 
     // In order to create the full shape, we reverse one of the curves and the connect the two curves together in
     // order to create the full shape of the axon body.
     thisAxonMembrane.axonBodyShape.moveTo( thisAxonMembrane.intersectionPointA.x, thisAxonMembrane.intersectionPointA.y );
-    thisAxonMembrane.axonBodyShape.cubicCurveTo( thisAxonMembrane.cntrlPtA1.x, thisAxonMembrane.cntrlPtA1.y, thisAxonMembrane.cntrlPtA2.x,
-      thisAxonMembrane.cntrlPtA2.y, thisAxonMembrane.vanishingPoint.x, thisAxonMembrane.vanishingPoint.y );
-    thisAxonMembrane.axonBodyShape.cubicCurveTo( thisAxonMembrane.cntrlPtB1.x, thisAxonMembrane.cntrlPtB1.y, thisAxonMembrane.cntrlPtB2.x,
-      thisAxonMembrane.cntrlPtB2.y, thisAxonMembrane.intersectionPointB.x, thisAxonMembrane.intersectionPointB.y );
+    thisAxonMembrane.axonBodyShape.cubicCurveTo(
+      thisAxonMembrane.cntrlPtA1.x,
+      thisAxonMembrane.cntrlPtA1.y,
+      thisAxonMembrane.cntrlPtA2.x,
+      thisAxonMembrane.cntrlPtA2.y,
+      thisAxonMembrane.vanishingPoint.x,
+      thisAxonMembrane.vanishingPoint.y
+    );
+    thisAxonMembrane.axonBodyShape.cubicCurveTo(
+      thisAxonMembrane.cntrlPtB1.x,
+      thisAxonMembrane.cntrlPtB1.y,
+      thisAxonMembrane.cntrlPtB2.x,
+      thisAxonMembrane.cntrlPtB2.y,
+      thisAxonMembrane.intersectionPointB.x,
+      thisAxonMembrane.intersectionPointB.y
+    );
     thisAxonMembrane.axonBodyShape.close();
 
     // Shape of the cross section of the membrane.	For now, and unless there is some reason to do otherwise, the center

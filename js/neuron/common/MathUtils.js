@@ -1,6 +1,7 @@
 // Copyright 2002-2015, University of Colorado Boulder
+
 /**
- * A utility class - Has methods to do certain math operations without creating new Vector2 instances
+ * A utility class, contains methods to do certain math operations without creating new Vector2 instances
  *
  * @author Sharfudeen Ashraf (for Ghent University)
  */

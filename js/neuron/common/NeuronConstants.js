@@ -37,9 +37,8 @@ define( function( require ) {
     DEFAULT_DIAMETER: 150, // In nanometers.
     SCREEN_BACKGROUND: '#ccfefa',
 
-    // Set up the clock ranges for the various modules.  Note that for this
-    // sim the clock rates are often several orders of magnitude slower than
-    // real time.
+    // Set up the clock ranges for the various modules.  Note that for this sim the clock rates are often several orders
+    // of magnitude slower than real time.
     MIN_ACTION_POTENTIAL_CLOCK_DT: minActionPotentialClockDT,
     MAX_ACTION_POTENTIAL_CLOCK_DT: maxActionPotentialClockDT,
     DEFAULT_ACTION_POTENTIAL_CLOCK_DT: (minActionPotentialClockDT + maxActionPotentialClockDT) * 0.55,

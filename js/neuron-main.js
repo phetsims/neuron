@@ -31,7 +31,9 @@ define( function( require ) {
 
     window.phet.neuron = window.phet.neuron || {};
 
-    // this sim has some sim-specific profiling that can be done, so set it up if query params dictate
+    // This sim has some sim-specific profiling that can be done.  If the query parameter checked below is present,
+    // the profiler is instantiated and made available.  There are several different profiling operations that can be
+    // set through the query parameter, please see the NeuronProfiler.js file for details on these.
     if ( window.phet.chipper.getQueryParameters().hasOwnProperty( 'neuronProfiler' ) ) {
       // create and hook up the neuron profiler
       window.phet.neuron.profiler = new NeuronProfiler( sim, parseInt( window.phet.chipper.getQueryParameters().neuronProfiler ) );

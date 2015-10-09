@@ -1,12 +1,10 @@
 // Copyright 2002-2014, University of Colorado Boulder
 /**
- * A motion strategy for traversing through a dual-gated channel, meaning one
- * that has a gate and an inactivation level.
+ * A motion strategy for traversing through a dual-gated channel, meaning one that has a gate and an inactivation level.
  * <p/>
- * This strategy makes several assumptions about the nature of the dual-gate
- * channel and how it is portrayed.  These assumptions depend both on the
- * model representation and the view representation of the dual-gated channel.
- * If changes are made to either, this class may need to be revised.
+ * This strategy makes several assumptions about the nature of the dual-gate channel and how it is portrayed.  These
+ * assumptions depend both on the model representation and the view representation of the dual-gated channel. If changes
+ * are made to either, this class may need to be revised.
  *
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
@@ -25,12 +23,10 @@ define( function( require ) {
   var LinearMotionStrategy = require( 'NEURON/neuron/model/LinearMotionStrategy' );
   var MathUtils = require( 'NEURON/neuron/common/MathUtils' );
 
-  // Threshold at which particles will "bounce" back out of the channel
-  // rather than traversing it.
+  // Threshold at which particles will "bounce" back out of the channel rather than traversing it.
   var INACTIVATION_BOUNCE_THRESHOLD = 0.5;
 
   /**
-   *
    * @param {MembraneChannel} channel
    * @param {number} startingLocationX
    * @param {number} startingLocationY
@@ -202,19 +198,17 @@ define( function( require ) {
       var ctr = channel.getCenterLocation();
       var r = channel.getChannelSize().height * 0.5;
 
-      // The profiler shows too many vector instances are created from createTravesal method, Since we are dealing with 1000s of particles,for
-      // performance reasons and to reduce memory allocation, changing vector constructor function to use object literal
-      // http://jsperf.com/object-notation-vs-constructor
+      // The profiler shows too many vector instances are created from createTravesal method, Since we are dealing with
+      // 1000s of particles, for performance reasons and to reduce memory allocation, changing vector constructor
+      // function to use object literal http://jsperf.com/object-notation-vs-constructor.
 
       // Create points that represent the inner and outer mouths of the channel.
       var outerOpeningLocation = { x: ctr.x + Math.cos( channel.getRotationalAngle() ) * r, y: ctr.y + Math.sin( channel.getRotationalAngle() ) * r };
       var innerOpeningLocation = { x: ctr.x - Math.cos( channel.getRotationalAngle() ) * r, y: ctr.y - Math.sin( channel.getRotationalAngle() ) * r };
 
-      // Create a point that just above where the inactivation gate would
-      // be if the channel were inactivated.  Since the model doesn't
-      // actually track the location of the inactivation gate (it is left
-      // up to the view), this location is a guess, and may have to be
-      // tweaked in order to work well with the view.
+      // Create a point that just above where the inactivation gate would be if the channel were inactivated.  Since the
+      // model doesn't actually track the location of the inactivation gate (it is left up to the view), this location
+      // is a guess, and may have to be tweaked in order to work well with the view.
       var aboveInactivationGateLocation =
       { x: ctr.x - Math.cos( channel.getRotationalAngle() ) * r * 0.5, y: ctr.y - Math.sin( channel.getRotationalAngle() ) * r * 0.5 };
 
@@ -249,31 +243,25 @@ define( function( require ) {
         this.velocityVector.multiplyScalar( scaleFactor );
       }
       else {
-        // All points have been traversed.  The behavior at this point
-        // depends on whether the channel has an inactivation gate, since
-        // such a gate is depicted on the cell-interior side of the
-        // channel in this sim.  No matter whether such a gate exists or
-        // not, the particle is re-routed a bit in order to create a bit
-        // of a brownian look.  If the gate exists, there are more
-        // limitations to where the particle can go.
+        // All points have been traversed.  The behavior at this point depends on whether the channel has an
+        // inactivation gate, since such a gate is depicted on the cell-interior side of the channel in this sim.  No
+        // matter whether such a gate exists or not, the particle is re-routed a bit in order to create a bit of a
+        // brownian look.  If the gate exists, there are more limitations to where the particle can go.
         if ( this.channel.getHasInactivationGate() ) {
-          // NOTE: The following is tweaked to work with a particular
-          // visual representation of the inactivation gate, and may
-          // need to be changed if that representation is changed.
+          // NOTE: The following is tweaked to work with a particular visual representation of the inactivation gate,
+          // and may need to be changed if that representation is changed.
           var velocityRotationAngle = 0;
           var minRotation = 0;
           var maxRotation = 0;
           if ( Math.random() > 0.3 ) {
-            // Move out to the right (assuming channel is vertical).
-            // The angle at which we can move gets more restricted
+            // Move out to the right (assuming channel is vertical). The angle at which we can move gets more restricted
             // as the inactivation gate closes.
             maxRotation = Math.PI * 0.4;
             angularRange = ( 1 - this.channel.getInactivationAmt() ) * Math.PI * 0.3;
             minRotation = maxRotation - angularRange;
           }
           else {
-            // Move out to the left (assuming channel is vertical).
-            // The angle at which we can move gets more restricted
+            // Move out to the left (assuming channel is vertical). The angle at which we can move gets more restricted
             // as the inactivation gate closes.
             maxRotation = -Math.PI * 0.4;
             angularRange = ( 1 - this.channel.getInactivationAmt() ) * -Math.PI * 0.1;

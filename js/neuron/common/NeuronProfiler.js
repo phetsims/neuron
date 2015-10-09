@@ -66,7 +66,8 @@ define( function( require ) {
 
           // compose the message that will present the data
           var message =
-            'average FPS over previous ' + testDurationInSeconds + ' seconds = ' + Util.toFixed( self.frameCount / ( self.dataCollectionDuration / 1000 ), 2 ) + '\n' +
+            'average FPS over previous ' + testDurationInSeconds + ' seconds = ' +
+            Util.toFixed( self.frameCount / ( self.dataCollectionDuration / 1000 ), 2 ) + '\n' +
             'average frame processing time = ' + Util.toFixed( averageFrameProcessingTime, 2 ) + ' ms\n' +
             'max frame processing time = ' + Util.toFixed( maxFrameProcessingTime, 2 ) + ' ms\n';
 

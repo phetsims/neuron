@@ -36,51 +36,52 @@ define( function( require ) {
   function MembraneChannel( channelWidth, channelHeight, modelContainingParticles ) {
     var thisChannel = this;
     PropertySet.call( thisChannel, {
-      channelStateChanged: false, // if the channel's Openness and ActivationAmt is different from its previous values, flag the
-      // channel's state as changed. The canvas implementation of the Membrane channel node will repaint if any one of the channel's state is found to be have been changed
-      representationChanged: false // All the channel states are  updated at once at the end stepInTime.This was done for performance reasons.
+
+      // If the channel's Openness and ActivationAmt is different from its previous values, flag the channel's state as
+      // changed. The canvas implementation of the membrane channel node will repaint if any one of the channel's state
+      // is found to be have been changed.
+      channelStateChanged: false, // @public
+
+      // All the channel states are updated at once at the end stepInTime. This was done for performance reasons.
+      representationChanged: false // @public
     } );
 
     // position of the channel
-    this.centerLocation = new Vector2();
+    this.centerLocation = new Vector2(); // @public
 
     // Variable that defines how open the channel is. Valid range is 0 to 1, 0 means fully closed, 1 is fully open.
-    this.openness = 0;
+    this.openness = 0; // @public
 
-    // Variable that defines how inactivated the channel is, which is distinct from openness.
-    // Valid range is 0 to 1, 0 means completely active, 1 is completely inactive.
-    this.inactivationAmt = 0;
+    // Variable that defines how inactivated the channel is, which is distinct from openness. Valid range is 0 to 1, 0
+    // means completely active, 1 is completely inactive.
+    this.inactivationAmt = 0; // @public
 
     // Reference to the model that contains that particles that will be moving through this channel.
-    thisChannel.modelContainingParticles = modelContainingParticles;
-    thisChannel.rotationalAngle = 0; // In radians.
+    this.modelContainingParticles = modelContainingParticles; // @protected
+    this.rotationalAngle = 0; // @public, in radians
 
     // Size of channel interior, i.e. where the atoms pass through.
-    thisChannel.channelSize = new Dimension2( channelWidth, channelHeight );
-    thisChannel.overallSize = new Dimension2( channelWidth * 2.1, channelHeight * SIDE_HEIGHT_TO_CHANNEL_HEIGHT_RATIO );
+    this.channelSize = new Dimension2( channelWidth, channelHeight ); // @public
+    this.overallSize = new Dimension2( channelWidth * 2.1, channelHeight * SIDE_HEIGHT_TO_CHANNEL_HEIGHT_RATIO ); // @public
 
-    // Capture zones, which is where particles can be captured by this
-    // channel.  There are two, one for inside the cell and one for outside.
-    // There is generally no enforcement of which is which, so it is the
-    // developer's responsibility to position the channel appropriately on the
-    // cell membrane.
+    // Capture zones, which is where particles can be captured by this channel.  There are two, one for inside the cell
+    // and one for outside. There is generally no enforcement of which is which, so it is the developer's responsibility
+    // to position the channel appropriately on the cell membrane.
 
-    // Set the initial capture zone, which is a shape that represents the
-    // space from which particles may be captured.  If null is returned, this
-    // channel has no capture zone.
-    this.interiorCaptureZone = new NullCaptureZone();
-    this.exteriorCaptureZone = new NullCaptureZone();
+    // Set the initial capture zone, which is a shape that represents the space from which particles may be captured.
+    // If null is returned, this channel has no capture zone.
+    this.interiorCaptureZone = new NullCaptureZone(); // @private
+    this.exteriorCaptureZone = new NullCaptureZone(); // @private
 
-    // Time values that control how often this channel requests an ion to move
-    // through it.  These are initialized here to values that will cause the
-    // channel to never request any ions and must be set by the descendant
-    // classes in order to make capture events occur.
-    this.captureCountdownTimer = Number.POSITIVE_INFINITY;
-    this.minInterCaptureTime = Number.POSITIVE_INFINITY;
-    this.maxInterCaptureTime = Number.POSITIVE_INFINITY;
+    // Time values that control how often this channel requests an ion to move through it.  These are initialized here
+    // to values that will cause the channel to never request any ions and must be set by the descendant classes in
+    // order to make capture events occur.
+    this.captureCountdownTimer = Number.POSITIVE_INFINITY; // @private
+    this.minInterCaptureTime = Number.POSITIVE_INFINITY; // @protected
+    this.maxInterCaptureTime = Number.POSITIVE_INFINITY; // @private
 
     // Velocity for particles that move through this channel.
-    this.particleVelocity = DEFAULT_PARTICLE_VELOCITY;
+    this.particleVelocity = DEFAULT_PARTICLE_VELOCITY; // @private
 
     // Perform the initial update the shape of the channel rectangle.
     this.updateChannelRect();
@@ -91,6 +92,7 @@ define( function( require ) {
     /**
      * Implements the time-dependent behavior of the channel.
      * @param dt - Amount of time step, in milliseconds.
+     * @public
      */
     stepInTime: function( dt ) {
       if ( this.captureCountdownTimer !== Number.POSITIVE_INFINITY ) {
@@ -115,6 +117,7 @@ define( function( require ) {
     /**
      * The rotated channel rect was getting calculated for every particle.This method does it only
      * once (This is done for performance reasons - Ashraf)
+     * @private
      */
     updateChannelRect: function() {
       var channelRect = new Rectangle( this.centerLocation.x - this.channelSize.height / 2,
@@ -128,64 +131,69 @@ define( function( require ) {
       this.captureCountdownTimer = Number.POSITIVE_INFINITY;
     },
 
-    // Returns a boolean value that says whether or not the channel should be considered open.
+    /**
+     * Returns a boolean value that says whether or not the channel should be considered open.
+     * @private
+     */
     isOpen: function() {
-      // The threshold values used here are empirically determined, and can
-      // be changed if necessary.
+      // The threshold values used here are empirically determined, and can be changed if necessary.
       return (this.openness > 0.2 && this.inactivationAmt < 0.7);
     },
 
+    // @protected
     getParticleTypeToCapture: function() {
       throw new Error( 'getParticleTypeToCapture should be implemented in descendant classes.' );
     },
 
-    // Determine whether the provided point is inside the channel.
+    /**
+     * Determine whether the provided point is inside the channel.
+     * @public
+     */
     isPointInChannel: function( x, y ) {
       return this.rotatedChannelRect.containsCoordinates( x, y );
     },
 
+    // @public
     getChannelSize: function() {
       return this.channelSize;
     },
 
     /**
-     *
-     * Get the overall 2D size of the channel, which includes both the part
-     * that the particles travel through as well as the edges.
-     *
-     * @return
+     * Get the overall 2D size of the channel, which includes both the part that the particles travel through as well as
+     * the edges.
+     * @public
      */
     getOverallSize: function() {
       return this.overallSize;
     },
 
+    // @public
     getInactivationAmt: function() {
       return this.inactivationAmt;
     },
 
+    // @public
     getCenterLocation: function() {
       return this.centerLocation;
     },
 
     /**
-     * Choose the direction of crossing for the next particle to cross the
-     * membrane.  If particles only cross in one direction, this will always
-     * return the same thing.  If they can vary, this can return a different
-     * value.
+     * Choose the direction of crossing for the next particle to cross the membrane.  If particles only cross in one
+     * direction, this will always return the same thing.  If they can vary, this can return a different value.
+     * @public
      */
     chooseCrossingDirection: function() {
       throw new Error( 'chooseCrossingDirection should be implemented in descendant classes.' );
     },
 
     /**
-     * Start or restart the countdown timer which is used to time the event
-     * where a particle is captured for movement across the membrane.  A
-     * boolean parameter controls whether a particle capture should occur
-     * immediately in addition to setting this timer.
+     * Start or restart the countdown timer which is used to time the event where a particle is captured for movement
+     * across the membrane.  A boolean parameter controls whether a particle capture should occur immediately in
+     * addition to setting this timer.
      *
-     * @param captureNow - Indicates whether a capture should be initiated
-     * now in addition to resetting the timer.  This is often set to true
-     * kicking of a cycle of particle captures.
+     * @param captureNow - Indicates whether a capture should be initiated now in addition to resetting the timer.  This
+     * is often set to true kicking of a cycle of particle captures.
+     * @public
      */
     restartCaptureCountdownTimer: function( captureNow ) {
       if ( this.minInterCaptureTime !== Number.POSITIVE_INFINITY && this.maxInterCaptureTime !== Number.POSITIVE_INFINITY ) {
@@ -201,10 +209,12 @@ define( function( require ) {
       }
     },
 
+    // @public
     getChannelColor: function() {
       return Color.MAGENTA;
     },
 
+    // @public
     getEdgeColor: function() {
       return PhetColorScheme.RED_COLORBLIND;
     },
@@ -214,15 +224,17 @@ define( function( require ) {
       this.particleVelocity = particleVelocity;
     },
 
+    // @protected
     getParticleVelocity: function() {
       return this.particleVelocity;
     },
 
-    //@protected
+    // @protected
     setInteriorCaptureZone: function( captureZone ) {
       this.interiorCaptureZone = captureZone;
     },
 
+    // @public
     getInteriorCaptureZone: function() {
       return this.interiorCaptureZone;
     },
@@ -232,6 +244,7 @@ define( function( require ) {
       this.exteriorCaptureZone = captureZone;
     },
 
+    // @public
     getExteriorCaptureZone: function() {
       return this.exteriorCaptureZone;
     },
@@ -251,6 +264,7 @@ define( function( require ) {
       return this.captureCountdownTimer;
     },
 
+    // @public
     getMaxInterCaptureTime: function() {
       return this.maxInterCaptureTime;
     },
@@ -260,37 +274,40 @@ define( function( require ) {
      * gate.  Most of the channels in this sim do not have these, so the
      * default is to return false.  This should be overridden in subclasses
      * that add inactivation gates to the channels.
-     *
-     * @return
+     * @public
      */
     getHasInactivationGate: function() {
       return false;
     },
 
-    //convenience method
+    // @protected, convenience method
     setInactivationAmt: function( inactivationAmt ) {
       this.inactivationAmt = inactivationAmt;
     },
 
-    //convenience method
+    // @protected, convenience method
     getOpenness: function() {
       return this.openness;
     },
 
+    // @protected, convenience method
     setOpenness: function( openness ) {
       this.openness = openness;
     },
 
+    // @public
     setRotationalAngle: function( rotationalAngle ) {
       this.rotationalAngle = rotationalAngle;
       this.interiorCaptureZone.setRotationalAngle( rotationalAngle );
       this.exteriorCaptureZone.setRotationalAngle( rotationalAngle );
     },
 
+    // @public
     getRotationalAngle: function() {
       return this.rotationalAngle;
     },
 
+    // @public
     setCenterLocation: function( newCenterLocation ) {
       if ( !newCenterLocation.equals( this.centerLocation ) ) {
         this.centerLocation = newCenterLocation;
@@ -306,6 +323,7 @@ define( function( require ) {
      *
      * @param particle
      * @param maxVelocity
+     * @public
      */
     moveParticleThroughNeuronMembrane: function( particle, maxVelocity ) {
       particle.setMotionStrategy( new TraverseChannelAndFadeMotionStrategy( this, particle.getPositionX(), particle.getPositionY(), maxVelocity ) );
@@ -315,24 +333,26 @@ define( function( require ) {
      * Get the state of this membrane channel as needed for support of record-
      * and-playback functionality.  Note that this is not the complete state
      * of a membrane channel, just enough to support playback.
+     * @public
      */
     getState: function() {
       return new MembraneChannelState( this );
     },
 
-    // The Membrane Channel Node observed centerLocation,openness and inactivation
-    // properties separately.This resulted in too many updates to node and degraded the performance.This method checks
-    // notifies a change in state if one of these properties change.
+    /**
+     * The Membrane Channel Node observed centerLocation, openness and inactivation properties separately.  This
+     * resulted in too many updates to node and degraded the performance.This method checks notifies a change in state
+     * if one of these properties change.
+     * @param prevOpenness
+     * @param prevInActivationAmt
+     */
     notifyIfMembraneStateChanged: function( prevOpenness, prevInActivationAmt ) {
-      this.channelStateChanged = false;
-      if ( prevOpenness !== this.openness || prevInActivationAmt !== this.inactivationAmt ) {
-        this.channelStateChanged = true;
-      }
+      this.channelStateChanged = prevOpenness !== this.openness || prevInActivationAmt !== this.inactivationAmt;
     },
 
     /**
-     * Set the state of a membrane channel.  This is generally used in support
-     * of the record-and-playback functionality.
+     * Set the state of a membrane channel.  This is generally used in support of the record-and-playback functionality.
+     * @public
      */
     setState: function( state ) {
 
@@ -343,6 +363,7 @@ define( function( require ) {
       this.notifyIfMembraneStateChanged( prevOpenness, prevInactivationAmt );
     },
 
+    // @public
     getChannelType: function() {
       throw new Error( 'getChannelType should be implemented in descendant classes.' );
     }

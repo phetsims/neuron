@@ -1,7 +1,7 @@
 // Copyright 2002-2015, University of Colorado Boulder
 /**
- * Abstract base class for all of the leak channels, which are the channels through which ions pass in/out
- * independent of the action potentials.
+ * Abstract base class for all of the leak channels, which are the channels through which ions pass in/out independent
+ * of the action potentials.
  *
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)

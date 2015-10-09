@@ -1,8 +1,7 @@
 // Copyright 2002-2014, University of Colorado Boulder
 /**
- * A simple motion strategy for moving in a straight line.  This was created
- * primarily for testing and, if it is no longer used, can be removed.
- *
+ * A simple motion strategy for moving in a straight line.  This was created primarily for testing and, if it is no
+ * longer used, can be removed.
  *
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
@@ -15,7 +14,6 @@ define( function( require ) {
   var MotionStrategy = require( 'NEURON/neuron/model/MotionStrategy' );
 
   /**
-   *
    * @param {Vector2} velocity
    * @constructor
    */
