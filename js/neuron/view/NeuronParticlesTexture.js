@@ -21,7 +21,7 @@ define( function( require ) {
   var CANVAS_LENGTH = 128; // width and height of the canvas, must be a power of 2 so that mipmapping can be used
   var MARGIN = CANVAS_LENGTH * 0.1; // space around the particles
   var STROKE_WIDTH = CANVAS_LENGTH / 32;
-  var PRINT_DATA_URL_OF_SPRITE_SHEET = true; // very useful for debugging issues with the sprite sheet texture
+  var PRINT_DATA_URL_OF_SPRITE_SHEET = false; // very useful for debugging issues with the sprite sheet texture
 
   /**
    * @param {ModelViewTransform2} modelViewTransform
