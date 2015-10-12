@@ -26,10 +26,13 @@ define( function( require ) {
   };
 
   SimLauncher.launch( function() {
+
+    // create a namespace for sim-specific globals
+    window.phet.neuron = window.phet.neuron || {};
+
+    // create and start the sim
     var sim = new Sim( simTitle, [ new NeuronScreen() ], simOptions );
     sim.start();
-
-    window.phet.neuron = window.phet.neuron || {};
 
     // This sim has some sim-specific profiling that can be done.  If the query parameter checked below is present,
     // the profiler is instantiated and made available.  There are several different profiling operations that can be
