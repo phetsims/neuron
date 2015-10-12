@@ -208,9 +208,8 @@ define( function( require ) {
     }
 
     var recordPlayButtons = [];
-    var playingProperty = new Property( true );
+    var playingProperty = neuronClockModelAdapter.playingProperty; // convenience variable
     var playPauseButton = new PlayPauseButton( playingProperty, { radius: 25 } );
-    playingProperty.linkAttribute( neuronClockModelAdapter, 'playing' );
 
     // Allow Step Back only if the user has initiated a StimulusPulse at least once. Stepping back without initiating a
     // stimulus results in the accumulation of negative delta time values in DelayBuffer which causes undesired
