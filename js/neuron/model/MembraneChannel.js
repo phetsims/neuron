@@ -340,9 +340,9 @@ define( function( require ) {
     },
 
     /**
-     * The Membrane Channel Node observed centerLocation, openness and inactivation properties separately.  This
-     * resulted in too many updates to node and degraded the performance.This method checks notifies a change in state
-     * if one of these properties change.
+     * This method triggers a notification that the state of the membrane channel has changed.  This was done as an
+     * optimization, since testing showed that having the view observe the various properties individually was a bit
+     * too costly and caused performance issues.
      * @param prevOpenness
      * @param prevInActivationAmt
      */

@@ -440,6 +440,10 @@ define( function( require ) {
       this.updateSimAndPlaybackParticleVisibility();
     },
 
+    /**
+     * Reset the neuron model.  This should restore everything to the initial state.
+     * @public
+     */
     reset: function() {
 
       // Reset the superclass, which contains the recording state & data.
@@ -451,13 +455,17 @@ define( function( require ) {
       // Remove all existing particles.
       this.removeAllParticles();
 
+      // Reset the HH model.
+      this.hodgkinHuxleyModel.reset();
+
       // Reset all membrane channels.
       this.membraneChannels.forEach( function( membraneChannel ) {
         membraneChannel.reset();
       } );
 
-      // Reset the HH model.
-      this.hodgkinHuxleyModel.reset();
+      // Send notification of membrane channel change to make sure that channels are re-rendered.
+      this.channelRepresentationChanged = false;
+      this.channelRepresentationChanged = _.any( this.membraneChannels.getArray(), 'channelStateChanged' );
 
       // Reset the concentration readout values.
       var concentrationChanged = this.concentrationChanged = false;
@@ -493,8 +501,7 @@ define( function( require ) {
       // Set the visibility of the charge symbols to its initial state.
       this.setChargesShown( DEFAULT_FOR_CHARGES_SHOWN );
 
-      // Set the boolean that controls whether all ions are simulated to its
-      // original state.
+      // Set the boolean that controls whether all ions are simulated to its original state.
       this.setAllIonsSimulated( DEFAULT_FOR_SHOW_ALL_IONS );
 
       // Set the state of the record-and-playback model to be "live" (neither recording nor playing) and unpaused.
@@ -942,10 +949,9 @@ define( function( require ) {
     },
 
     /**
-     * Add the provided channel at the specified rotational location.
-     * Locations are specified in terms of where on the circle of the membrane
-     * they are, with a value of 0 being on the far right, PI/2 on the top,
-     * PI on the far left, etc.
+     * Add the provided channel at the specified rotational location. Locations are specified in terms of where on the
+     * circle of the membrane they are, with a value of 0 being on the far right, PI/2 on the top, PI on the far left,
+     * etc.
      * @param {MembraneChannelTypes}membraneChannelType
      * @param {number} angle
      */
@@ -963,10 +969,9 @@ define( function( require ) {
     },
 
     /**
-     * Get a boolean value that indicates whether the initiation of a new
-     * stimulus (i.e. action potential) is currently locked out.  This is done
-     * to prevent the situation where multiple action potentials are moving
-     * down the membrane at the same time.
+     * Get a boolean value that indicates whether the initiation of a new stimulus (i.e. action potential) is currently
+     * locked out.  This is done to prevent the situation where multiple action potentials are moving down the membrane
+     * at the same time.
      * @return {boolean}
      */
     isStimulusInitiationLockedOut: function() {
@@ -1038,9 +1043,8 @@ define( function( require ) {
     },
 
     /**
-     * Set the playback state, which is the state that is presented to the
-     * user during playback.  The provided state variable defines the state
-     * of the simulation that is being set.
+     * Set the playback state, which is the state that is presented to the user during playback.  The provided state
+     * variable defines the state of the simulation that is being set.
      * @param {NeuronModelState} state
      */
     setPlaybackState: function( state ) {
@@ -1061,9 +1065,8 @@ define( function( require ) {
         membraneChannel.setState( mcs );
       } );
 
-      // Set the state of the playback particles.  This maps the particle
-      // mementos in to the playback particles so that we don't have to
-      // delete and add back a bunch of particles at each step.
+      // Set the state of the playback particles.  This maps the particle mementos in to the playback particles so that
+      // we don't have to delete and add back a bunch of particles at each step.
       var additionalPlaybackParticlesNeeded = state.getPlaybackParticleMementos().length - this.playbackParticles.length;
       var thisModel = this;
       if ( additionalPlaybackParticlesNeeded > 0 ) {

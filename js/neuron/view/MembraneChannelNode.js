@@ -66,7 +66,7 @@ define( function( require ) {
     var rightEdgeNode = createEdgeNode( transformedEdgeNodeSize, membraneChannelModel.getEdgeColor() );
 
     // Create the layers for the channel the edges.  This makes offsets and rotations easier.  See addToCanvas on why
-    // node layer is a instance member.
+    // node layer is an instance member.
     thisNode.channelLayer = new Node();
     thisNode.addChild( thisNode.channelLayer );
     thisNode.channelLayer.addChild( channel );
@@ -104,8 +104,7 @@ define( function( require ) {
       var channelSize = new Dimension2( channelWidth, membraneChannelModel.getChannelSize().height );
       var transformedChannelSize = new Dimension2( Math.abs( mvt.modelToViewDeltaX( channelSize.width ) ), Math.abs( mvt.modelToViewDeltaY( channelSize.height ) ) );
 
-      // Make the node a bit bigger than the channel so that the edges can
-      // be placed over it with no gaps.
+      // Make the node a bit bigger than the channel so that the edges can be placed over it with no gaps.
       var oversizeFactor = 1.2; // was 1.1 in Java
 
       var width = transformedChannelSize.width * oversizeFactor;
@@ -177,7 +176,8 @@ define( function( require ) {
     }
 
     function updateRotation() {
-      // Rotate based on the model element's orientation. (The Java Version rotates and then translates, here the transformation order is reversed Ashraf)
+      // Rotate based on the model element's orientation (the Java Version rotates and then translates, here the
+      // transformation order is reversed - Ashraf).
       thisNode.channelLayer.setRotation( -membraneChannelModel.rotationalAngle + Math.PI / 2 );
       thisNode.edgeLayer.setRotation( -membraneChannelModel.rotationalAngle + Math.PI / 2 );
     }
@@ -191,11 +191,9 @@ define( function( require ) {
   return inherit( Node, MembraneChannelNode, {
 
     /**
-     * Add this node to the two specified parent nodes.  This is done in order
-     * to achieve a better layering effect that allows particles to look
-     * more like they are moving through the channel.  It is not absolutely
-     * necessary to use this method for this node - it can be added to the
-     * canvas like any other PNode, it just won't have the layering.
+     * Add this node to the two specified parent nodes.  This is done in order to achieve a better layering effect that
+     * allows particles to look more like they are moving through the channel.  It is not absolutely necessary to use
+     * this method for this node - it can be added to the canvas like any other PNode, it just won't have the layering.
      * @param channelLayer
      * @param edgeLayer
      */

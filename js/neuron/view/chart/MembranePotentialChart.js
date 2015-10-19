@@ -283,7 +283,6 @@ define( function( require ) {
       // Add the data point if it is in range, if it is sufficiently far from the previous data point, and if the chart
       // isn't full.
       assert && assert( time - this.timeIndexOfFirstDataPt >= 0 );
-      //console.log( 'time-this.timeIndexOfFirstDataPt = ', time - this.timeIndexOfFirstDataPt );
       if ( time - this.timeIndexOfFirstDataPt <= TIME_SPAN && distanceFromLastPointSquared > MIN_DISTANCE_SQUARED_BETWEEN_POINTS ) {
         this.dataSeries.addPoint( xValue, yValue );
         this.mostRecentXValue = xValue;

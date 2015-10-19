@@ -60,26 +60,22 @@ define( function( require ) {
       var prevOpenness = this.openness;
       var prevInActivationAmt = this.inactivationAmt;
       GatedChannel.prototype.stepInTime.call( this, dt );
-      // Update the openness factor based on the state of the HH model.
-      // This is very specific to the model and the type of channel.  Note
-      // the non-linear mapping of conductance to the openness factor for
-      // the channels.  This is to make the gates appear to snap open and
-      // closed more rapidly, which was requested by the IPHY folks after
-      // seeing some demos.
+      // Update the openness factor based on the state of the HH model. This is very specific to the model and the type
+      // of channel.  Note the non-linear mapping of conductance to the openness factor for the channels.  This is to
+      // make the gates appear to snap open and closed more rapidly, which was requested by the IPHY folks after seeing
+      // some demos.
       var normalizedConductance =
         Math.min( Math.abs( this.hodgkinHuxleyModel.get_delayed_n4( this.staggerDelay ) ) / N4_WHEN_FULLY_OPEN, 1 );
       var openness = 1 - Math.pow( normalizedConductance - 1, 2 );
       if ( openness > 0 && openness < 1 ) {
-        // Trim off some digits, otherwise we are continuously making
-        // tiny changes to this value due to internal gyrations of the
-        // HH model.
+        // Trim off some digits, otherwise we are continuously making tiny changes to this value due to internal
+        // gyrations of the HH model.
         openness = MathUtils.round( openness, 2 );
       }
       if ( openness !== this.getOpenness() ) {
         this.setOpenness( openness );
         if ( this.isOpen() && this.getCaptureCountdownTimer() === Number.POSITIVE_INFINITY ) {
-          // We have just transitioned to the open state, so it is time
-          // to start capturing ions.
+          // We have just transitioned to the open state, so it is time to start capturing ions.
           this.restartCaptureCountdownTimer( true );
         }
       }
@@ -90,8 +86,8 @@ define( function( require ) {
     //@Override
     reset: function() {
       GatedChannel.prototype.reset.call( this );
-      // Set up the capture time range, which will be used to control the
-      // rate of particle capture when this gate is open.
+      // Set up the capture time range, which will be used to control the rate of particle capture when this gate is
+      // open.
       this.setMinInterCaptureTime( MIN_INTER_CAPTURE_TIME );
       this.setMaxInterCaptureTime( MAX_INTER_CAPTURE_TIME );
     },
