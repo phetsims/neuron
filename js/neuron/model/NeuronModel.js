@@ -465,7 +465,7 @@ define( function( require ) {
 
       // Send notification of membrane channel change to make sure that channels are re-rendered.
       this.channelRepresentationChanged = false;
-      this.channelRepresentationChanged = _.any( this.membraneChannels.getArray(), 'channelStateChanged' );
+      this.channelRepresentationChanged = true;
 
       // Reset the concentration readout values.
       var concentrationChanged = this.concentrationChanged = false;

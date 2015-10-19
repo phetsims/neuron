@@ -94,6 +94,10 @@ define( function( require ) {
       }
     } );
 
+    window.inval = function() {
+      thisNode.invalidatePaint();
+    }
+
     function computeEdgeBounds( membraneChannelModel ) {
       var edgeNodeWidth = (membraneChannelModel.overallSize.width - membraneChannelModel.channelSize.width) / 2;
       var edgeNodeHeight = membraneChannelModel.overallSize.height;
