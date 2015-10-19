@@ -24,8 +24,13 @@ The simulation was originally ported from Java to HTML5 by an outside contractor
 which is yet another reason that any maintainer is likely to find a bit of a mix of coding styles.  It's fairly
 consistent, but far from perfect in this regard.
 
+When the code was first submitted to PhET, there were a number of places where events were signalled by toggling a
+boolean Property instead of simply triggering an event.  It's hard to say why this was done, but it may just be that
+the original author wasn't familiar with events.  Some of these were changed to be events, but there wasn't a concerted
+effort to change them all, so there may still be some instances of this pattern in the code.
+
 Because this simulation consumes a fair amount of computational and graphical resources when an action potential is in
-progress, there are a lot of optimizations.  As of this writing, there is a Web GL node that displays the sodium and
+progress, there are a lot of optimizations.  As of this writing, there is a WebGL node that displays the sodium and
 potassium ions, a canvas node for the membrane channels, and another canvas node for the traveling action potential.
 
 Finally, there is some inconsistency in the quality of the comments.  Many have been edited and cleaned up, but this
