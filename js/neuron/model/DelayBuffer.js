@@ -97,6 +97,7 @@ define( function( require ) {
 
     // @public
     getDelayedValue: function( delayAmount ) {
+
       var delayedValue = 0;
       var index = -1;
       if ( this.previousDeltaTime <= 0 ) {
@@ -105,13 +106,11 @@ define( function( require ) {
       }
       else if ( this.allDeltaTimesEqual ) {
 
-        // All times in the buffer are equal, so we should be able to
-        // simply index to the appropriate location.  The offset must be
-        // at least 1, since this buffer doesn't hold a non-delayed value.
+        // All times in the buffer are equal, so we should be able to simply index to the appropriate location.  The
+        // offset must be at least 1, since this buffer doesn't hold a non-delayed value.
         var offset = Math.max( Util.roundSymmetric( delayAmount / this.previousDeltaTime ), 1 );
         if ( (this.filling && offset > this.head) || offset > this.numEntries ) {
-          // The caller is asking for data that we don't have yet, so
-          // give them the oldest data available.
+          // The caller is asking for data that we don't have yet, so give them the oldest data available.
           delayedValue = this.delayElements[ this.tail ].value;
         }
         else {
@@ -124,30 +123,26 @@ define( function( require ) {
         }
       }
       else {
-        // There is variation in the delta time values in the buffer, so
-        // we need to go through them, add up the delays, and find the
-        // closest data.
+        // There is variation in the delta time values in the buffer, so we need to go through them, add up the delays,
+        // and find the closest data.
         var delayReached = false;
         index = this.head > 0 ? this.head - 1 : this.numEntries - 1;
         var accumulatedDelay = 0;
         while ( !delayReached ) {
           accumulatedDelay += this.delayElements[ index ].deltaTime;
           if ( accumulatedDelay >= delayAmount ) {
-            // We've found the data.  Note that it may not be the
-            // exact time requested - we're assuming it is close
-            // enough.  Might need to add interpolation some day if
-            // more accuracy is needed.
+            // We've found the data.  Note that it may not be the exact time requested - we're assuming it is close
+            // enough.  Might need to add interpolation some day if more accuracy is needed.
             delayReached = true;
           }
           else if ( index === this.tail ) {
-            // We've gone through all the data and there isn't enough
-            // to obtain the requested delay amount, so return the
-            // oldest that is available.
+            // We've gone through all the data and there isn't enough to obtain the requested delay amount, so return
+            // the oldest that is available.
             delayReached = true;
           }
           else {
             // Keep going through the buffer.
-            index = index - 1 > 0 ? index - 1 : this.numEntries - 1;
+            index = index - 1 >= 0 ? index - 1 : this.numEntries - 1;
           }
         }
         delayedValue = this.delayElements[ index ].value;

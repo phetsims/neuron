@@ -74,7 +74,7 @@ define( function( require ) {
       this.n4DelayBuffer.clear();
       this.m3hDelayBuffer.clear();
 
-      this.cm = 1;// membrane Capacitance
+      this.cm = 1;// membrane capacitance
       this.v = 0;// membrane voltage
       this.vna = -115;
       this.vk = 12;
@@ -94,8 +94,7 @@ define( function( require ) {
       this.bn = 0.125 * Math.exp( this.v / 80 );
       this.an = 0.01 * (this.v + 10) / (Math.exp( (this.v + 10) / 10 ) - 1);
 
-      // voltage-dependent gating paramaters
-      // start these parameters in steady state
+      // voltage-dependent gating parameters - start these parameters in steady state
       this.n = this.an / (this.an + this.bn);
       this.m = this.am / (this.am + this.bm);
       this.h = this.ah / (this.ah + this.bh);
@@ -131,10 +130,8 @@ define( function( require ) {
         this.dm = (this.am * (1 - this.m) - this.bm * this.m) * INTERNAL_TIME_STEP;
         this.dn = (this.an * (1 - this.n) - this.bn * this.n) * INTERNAL_TIME_STEP;
 
-        // Here is where the main change is that makes this a "modified"
-        // version of Hodgkin-Huxley.  Note that the multiplier values
-        // were determined empirically from running the more standard HH
-        // model.
+        // Here is where the main change is that makes this a "modified" version of Hodgkin-Huxley.  Note that the
+        // multiplier values were determined empirically from running the more standard HH model.
 
         // Below, commented out, is the code that a real HH model would use.
         // n4 = n*n*n*n;
