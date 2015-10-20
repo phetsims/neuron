@@ -148,7 +148,6 @@ define( function( require ) {
       concentrationChanged: false,
       stimulusPulseInitiated: false,// observed by Membrane potential chart
       neuronModelPlaybackState: null,
-      channelRepresentationChanged: false, // A change in any one of channel representation triggers a paint call
 
       // Allow Step Back/forward only if the user has initiated a StimulusPulse atleast once. Stepping back
       // without initiating a stimulus results in the accumulation of negative delta time
@@ -425,8 +424,9 @@ define( function( require ) {
       this.trigger( NeuronConstants.PARTICLES_MOVED_EVENT );
 
       // If any one channel's state is changed, trigger a channel representation changed event
-      this.channelRepresentationChanged = false;
-      this.channelRepresentationChanged = _.any( this.membraneChannels.getArray(), 'channelStateChanged' );
+      if ( _.any( this.membraneChannels.getArray(), 'channelStateChanged' ) ) {
+        this.trigger0( 'channelRepresentationChanged' );
+      }
 
       // Return model state after each time step.
       return this.getState();
@@ -464,8 +464,7 @@ define( function( require ) {
       } );
 
       // Send notification of membrane channel change to make sure that channels are re-rendered.
-      this.channelRepresentationChanged = false;
-      this.channelRepresentationChanged = true;
+      this.trigger0( 'channelRepresentationChanged' );
 
       // Reset the concentration readout values.
       var concentrationChanged = this.concentrationChanged = false;
@@ -1097,8 +1096,9 @@ define( function( require ) {
       this.concentrationChanged = true;
 
       // If any one channel's state is changed, trigger a channel representation changed event
-      this.channelRepresentationChanged = false;
-      this.channelRepresentationChanged = _.any( this.membraneChannels.getArray(), 'channelStateChanged' );
+      if ( _.any( this.membraneChannels.getArray(), 'channelStateChanged' ) ) {
+        this.trigger0( 'channelRepresentationChanged' );
+      }
     }
 
   } );

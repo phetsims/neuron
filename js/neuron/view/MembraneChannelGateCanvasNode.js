@@ -88,15 +88,9 @@ define( function( require ) {
     thisNode.membraneChannels = neuronModel.membraneChannels;
     thisNode.mvt = modelViewTransform;
 
-    neuronModel.channelRepresentationChangedProperty.link( function( channelRepresentationChanged ) {
-      if ( channelRepresentationChanged ) {
-        thisNode.invalidatePaint();
-      }
-    } );
-
-    window.inval = function() {
+    neuronModel.on( 'channelRepresentationChanged', function() {
       thisNode.invalidatePaint();
-    }
+    } );
 
     function computeEdgeBounds( membraneChannelModel ) {
       var edgeNodeWidth = (membraneChannelModel.overallSize.width - membraneChannelModel.channelSize.width) / 2;

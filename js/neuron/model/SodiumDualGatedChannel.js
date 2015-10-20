@@ -1,8 +1,7 @@
 // Copyright 2002-2015, University of Colorado Boulder
 /**
- * A gated channel through which sodium passes when the channel is open.  This
- * implementation has two different gates, which is apparently closer to real-
- * life voltage-gated sodium channels.
+ * A gated channel through which sodium passes when the channel is open.  This implementation has two different gates,
+ * which is apparently closer to real- life voltage-gated sodium channels.
  *
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
