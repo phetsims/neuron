@@ -43,10 +43,8 @@ define( function( require ) {
 
   return inherit( CanvasNode, ParticlesCanvasNode, {
 
-    // @param {CanvasContextWrapper} wrapper
-    paintCanvas: function( wrapper ) {
-
-      var context = wrapper.context;
+    // @param {CanvasRenderingContext2D} context
+    paintCanvas: function( context ) {
 
       var thisNode = this;
       var canvasStrokeStyle = Color.BLACK.getCanvasStyle();

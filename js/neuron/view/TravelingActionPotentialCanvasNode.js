@@ -61,12 +61,11 @@ define( function( require ) {
 
     /**
      * Paint the canvas with all of the membrane channels
-     * @param {CanvasContextWrapper} wrapper
+     * @param {CanvasRenderingContext2D} context
      * @override
      * @protected
      */
-    paintCanvas: function( wrapper ) {
-      var context = wrapper.context;
+    paintCanvas: function( context ) {
 
       if ( this.travelingActionPotential === null ) {
         // nothing to show, so just clear the canvas

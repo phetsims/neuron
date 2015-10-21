@@ -46,12 +46,11 @@ define( function( require ) {
     /**
      * A method that paints the data line on the canvas.  For maximum performance, this adds points to the end of an
      * existing line when possible rather than redrawing the entire line with each update.
-     * @param wrapper
+     * @param {CanvasRenderingContext2D} context
      * @protected
      * @override
      */
-    paintCanvas: function( wrapper ) {
-      var context = wrapper.context;
+    paintCanvas: function( context ) {
 
       if ( this.numSegments < this.dataSeries.getLength() - 1 ) {
 

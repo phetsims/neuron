@@ -157,12 +157,11 @@ define( function( require ) {
 
     /**
      * Paint the canvas with all of the membrane channels
-     * @param {CanvasContextWrapper} wrapper
+     * @param {CanvasRenderingContext2D} context
      * @override
      * @protected
      */
-    paintCanvas: function( wrapper ) {
-      var context = wrapper.context;
+    paintCanvas: function( context ) {
       var thisNode = this;
       var edgeNodeBounds = thisNode.edgeNodeBounds;
 
