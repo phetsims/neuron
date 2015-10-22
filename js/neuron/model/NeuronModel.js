@@ -43,7 +43,7 @@ define( function( require ) {
   // these bounds dynamic and set by the view so that the user never encounters a situation where these can be seen.
   var MODEL_HEIGHT = 130; // In nanometers.
   var MODEL_WIDTH = 180; // In nanometers.
-  var PARTICLE_BOUNDS = new Shape.rect( -MODEL_WIDTH / 2, -MODEL_HEIGHT / 2, MODEL_WIDTH, MODEL_HEIGHT );
+  var PARTICLE_BOUNDS = Shape.rect( -MODEL_WIDTH / 2, -MODEL_HEIGHT / 2, MODEL_WIDTH, MODEL_HEIGHT );
 
   // Numbers of the various types of channels that are present on the  membrane.
   var NUM_GATED_SODIUM_CHANNELS = 20;
