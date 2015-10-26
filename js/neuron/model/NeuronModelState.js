@@ -18,7 +18,8 @@ define( function( require ) {
    * @returns {{put: put, get: get}}
    */
   function map() {
-    var keys = [], values = [];
+    var keys = [];
+    var values = [];
 
     return {
       put: function( key, value ) {

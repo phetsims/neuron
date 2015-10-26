@@ -141,7 +141,8 @@ define( function( require ) {
             // inactivation gate, and will need to be changed if the
             // representation of the gate is changed.
             newVelocityVector.multiplyScalar( 0.5 + ( Math.random() * 0.3 ) );
-            var maxRotation, minRotation;
+            var maxRotation;
+            var minRotation;
             if ( Math.random() > 0.3 ) {
               // Move out to the right (assuming channel is vertical).
               // The angle at which we can move gets more restricted
