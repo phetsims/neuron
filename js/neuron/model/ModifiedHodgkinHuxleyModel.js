@@ -1,4 +1,4 @@
-// Copyright 2002-2015, University of Colorado Boulder
+// Copyright 2014-2015, University of Colorado Boulder
 /**
  * This class is an implementation of the Hodgkin-Huxley model that started from an example taken from the web (see
  * Unfuddle #2121 for more info on this) but that was modified significantly to fit the needs of this simulation.  The

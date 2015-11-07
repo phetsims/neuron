@@ -1,4 +1,4 @@
-// Copyright 2002-2014, University of Colorado Boulder
+// Copyright 2014-2015, University of Colorado Boulder
 
 /**
  * A motion strategy for traversing a basic membrane channel (i.e. one that has only one gate) and then fading away.

@@ -1,4 +1,4 @@
-// Copyright 2002-2015, University of Colorado Boulder
+// Copyright 2015, University of Colorado Boulder
 
 /**
  * A WebGL Scenery node that is used to render the sodium and potassium particles, a.k.a. ions, that need to be

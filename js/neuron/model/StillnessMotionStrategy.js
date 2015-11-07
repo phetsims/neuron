@@ -1,4 +1,4 @@
-// Copyright 2002-2014, University of Colorado Boulder
+// Copyright 2014-2015, University of Colorado Boulder
 /**
  * Motion strategy that does not do any motion, i.e. just leaves the model element in the same location.
  *

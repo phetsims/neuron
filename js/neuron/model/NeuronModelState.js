@@ -1,4 +1,4 @@
-// Copyright 2002-2015, University of Colorado Boulder
+// Copyright 2014-2015, University of Colorado Boulder
 /**
  * This class contains state information about the model for a given point in time.  It contains enough information for
  * the playback feature, but not necessarily enough to fully restore the simulation to an arbitrary point in time.

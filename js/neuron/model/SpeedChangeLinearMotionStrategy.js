@@ -1,4 +1,4 @@
-// Copyright 2002-2014, University of Colorado Boulder
+// Copyright 2014-2015, University of Colorado Boulder
 /**
  * This is a very specialized motion strategy that is basically a linear
  * motion but that starts at one speed and then changes to another.  It was

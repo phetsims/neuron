@@ -1,4 +1,4 @@
-// Copyright 2002-2015, University of Colorado Boulder
+// Copyright 2014-2015, University of Colorado Boulder
 /**
  * NeuronConstants is a collection of constants that configure global properties. If you change something here, it will
  * change *everywhere* in this simulation.
