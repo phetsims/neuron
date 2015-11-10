@@ -13,7 +13,7 @@ define( function( require ) {
   var SimLauncher = require( 'JOIST/SimLauncher' );
 
   // strings
-  var simTitle = require( 'string!NEURON/neuron.title' );
+  var neuronTitleString = require( 'string!NEURON/neuron.title' );
 
   var simOptions = {
     credits: {
@@ -31,7 +31,7 @@ define( function( require ) {
     window.phet.neuron = window.phet.neuron || {};
 
     // create and start the sim
-    var sim = new Sim( simTitle, [ new NeuronScreen() ], simOptions );
+    var sim = new Sim( neuronTitleString, [ new NeuronScreen() ], simOptions );
     sim.start();
 
     // This sim has some sim-specific profiling that can be done.  If the query parameter checked below is present,

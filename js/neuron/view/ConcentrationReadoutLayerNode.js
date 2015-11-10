@@ -19,10 +19,10 @@ define( function( require ) {
   var Util = require( 'DOT/Util' );
 
   // strings
-  var concentrationReadoutPattern0label1value2unitsString = require( 'string!NEURON/concentrationReadoutPattern.0label.1value.2units' );
+  var concentrationReadoutPattern0Label1Value2UnitsString = require( 'string!NEURON/concentrationReadoutPattern.0label.1value.2units' );
   var potassiumChemicalSymbolString = require( 'string!NEURON/potassiumChemicalSymbol' );
   var sodiumChemicalSymbolString = require( 'string!NEURON/sodiumChemicalSymbol' );
-  var unitsmMString = require( 'string!NEURON/units.mM' );
+  var unitsMMString = require( 'string!NEURON/units.mM' );
 
   // constants that control aspects of the concentration readout.
   var CONCENTRATION_READOUT_NUM_PLACES = 5;
@@ -83,7 +83,7 @@ define( function( require ) {
 
     function createConcentrationReadoutText( label, value ) {
       var valueText = Util.toFixed( value, CONCENTRATION_READOUT_NUM_PLACES );
-      return StringUtils.format( concentrationReadoutPattern0label1value2unitsString, label, valueText, unitsmMString );
+      return StringUtils.format( concentrationReadoutPattern0Label1Value2UnitsString, label, valueText, unitsMMString );
     }
 
     function updateConcentrationReadoutPositions() {

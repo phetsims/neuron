@@ -17,7 +17,7 @@ define( function( require ) {
   var Screen = require( 'JOIST/Screen' );
 
   // strings
-  var neuronSimString = require( 'string!NEURON/neuron.title' );
+  var neuronTitleString = require( 'string!NEURON/neuron.title' );
 
   /**
    * Creates the model and view for the NeuronScreen
@@ -29,7 +29,7 @@ define( function( require ) {
     // features to NeuronModel, see NeuronClockModelAdapter
     var neuronClockModelAdapter = new NeuronClockModelAdapter( neuronModel );
 
-    Screen.call( this, neuronSimString, null /* no icon, single-screen sim */,
+    Screen.call( this, neuronTitleString, null /* no icon, single-screen sim */,
       function() { return neuronClockModelAdapter; },
       function( model ) { return new NeuronScreenView( model ); },
       { backgroundColor: '#ccfefa' }
