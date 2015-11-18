@@ -22,12 +22,13 @@ define( function( require ) {
   'use strict';
 
   // modules
-  var inherit = require( 'PHET_CORE/inherit' );
   var Bounds2 = require( 'DOT/Bounds2' );
   var ChartCursor = require( 'NEURON/neuron/view/chart/ChartCursor' );
+  var CloseButton = require( 'SCENERY_PHET/buttons/CloseButton' );
   var DataLineCanvasNode = require( 'NEURON/neuron/view/chart/DataLineCanvasNode' );
   var dot = require( 'DOT/dot' );
   var HBox = require( 'SCENERY/nodes/HBox' );
+  var inherit = require( 'PHET_CORE/inherit' );
   var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
   var Node = require( 'SCENERY/nodes/Node' );
@@ -153,20 +154,8 @@ define( function( require ) {
     } );
 
     // close button
-    // TODO: Should go into common code if not already there
-    var closeIconLength = 5;
-    var xIcon = new Path( new Shape()
-        .moveTo( -closeIconLength, -closeIconLength )
-        .lineTo( closeIconLength, closeIconLength )
-        .moveTo( closeIconLength, -closeIconLength )
-        .lineTo( -closeIconLength, closeIconLength ),
-      { stroke: 'white', lineWidth: 2.5 }
-    );
-    var closeButton = new RectangularPushButton( {
-      baseColor: PhetColorScheme.RED_COLORBLIND,
-      content: xIcon,
-      xMargin: 4,
-      yMargin: 4,
+    var closeButton = new CloseButton( {
+      iconLength: 6,
       listener: function() {
         thisChart.neuronModel.potentialChartVisible = false;
       }
