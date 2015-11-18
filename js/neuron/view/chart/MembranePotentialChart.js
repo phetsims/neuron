@@ -150,7 +150,7 @@ define( function( require ) {
     // clear button
     var clearChartButton = new TextPushButton( chartClearString, {
       font: new PhetFont( { size: 12 } ),
-      listener: function() {thisChart.clearChart();}
+      listener: function() { thisChart.clearChart(); }
     } );
 
     // close button

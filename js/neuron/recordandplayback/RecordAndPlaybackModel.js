@@ -40,7 +40,7 @@ define( function( require ) {
 
     thisModel.maxRecordPoints = maxRecordPoints;
 
-    // The history of data points that have been recorded from the model.
+    // @private - the history of data points that have been recorded from the model.
     thisModel.recordHistory = new ObservableArray();
 
     thisModel.recordMode = new Record( this ); // @private - samples data from the mode and stores it
@@ -167,7 +167,7 @@ define( function( require ) {
     },
 
     /**
-     * This method should popuplate the model + view of the application with the data from the specified state.
+     * This method should populate the model + view of the application with the data from the specified state.
      * This state was obtained through playing back or stepping the recorded history.
      *
      * @param state the state to display

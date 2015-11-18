@@ -211,15 +211,15 @@ define( function( require ) {
     var playingProperty = neuronClockModelAdapter.playingProperty; // convenience variable
     var playPauseButton = new PlayPauseButton( playingProperty, { radius: 25 } );
 
-    // Allow Step Back only if the user has initiated a StimulusPulse at least once. Stepping back without initiating a
-    // stimulus results in the accumulation of negative delta time values in DelayBuffer which causes undesired
-    // behavior. If the User pauses while Stimulus in progress, Step back and StepForward action still goes back and
-    // forth ONLY  between stored snapshot states (see PlayBack mode class) The behaviour could reoccur after the User
-    // resets the Sim Status, so the allowStepNavigation is also reset to false
-    var stepBackEnabledProperty = new DerivedProperty(
-      [ playingProperty, thisView.neuronModel.allowStepNavigationProperty ],
-      function( playing, allowStepNavigation ) {
-        return playing || !allowStepNavigation;
+    // Allow step back only if the mode is not playing and if recorded state data exists in the data buffer.  Data
+    // recording is only initiated after the neuron has been stimulated, so if the sim is paused before the neuron was
+    // ever stimulated, backwards stepping will not be possible.
+    var stepBackEnabledProperty = new DerivedProperty( [
+        playingProperty,
+        thisView.neuronModel.timeProperty
+      ],
+      function( playing, time ) {
+        return !playing && time > thisView.neuronModel.getMinRecordedTime() && thisView.neuronModel.getRecordedTimeRange() > 0;
       }
     );
 

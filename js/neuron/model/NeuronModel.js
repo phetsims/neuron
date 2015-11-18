@@ -148,12 +148,6 @@ define( function( require ) {
       concentrationChanged: false,
       stimulusPulseInitiated: false,// observed by Membrane potential chart
       neuronModelPlaybackState: null,
-
-      // Allow Step Back/forward only if the user has initiated a StimulusPulse atleast once. Stepping back
-      // without initiating a stimulus results in the accumulation of negative delta time
-      // values in DelayBuffer which causes undesired behaviour.
-      // see https://github.com/phetsims/neuron/issues/26
-      allowStepNavigation: false
     } );
 
     thisModel.axonMembrane.travelingActionPotentialReachedCrossSectionProperty.lazyLink( function( reached ) {
@@ -260,7 +254,6 @@ define( function( require ) {
     thisModel.stimulusPulseInitiatedProperty.link( function( stimulusPulseInitiated ) {
       if ( stimulusPulseInitiated ) {
         thisModel.startRecording();
-        thisModel.allowStepNavigation = true;
       }
     } );
     this.reset(); // This does initialization
@@ -507,7 +500,6 @@ define( function( require ) {
       this.clearHistory();
       this.setModeLive();
       this.setPlaying( true );
-      this.allowStepNavigation = false;
     },
 
     /**
