@@ -106,7 +106,7 @@ define( function( require ) {
       edgeShape.cubicCurveTo( width / 2, -height / 2, -width / 2, -height / 2, -width / 2, -height / 4 );
       edgeShape.close();
 
-      return edgeShape.computeBounds( new kite.LineStyles( { lineWidth: 0.4 } ) );
+      return edgeShape.getStrokedBounds( new kite.LineStyles( { lineWidth: 0.4 } ) );
     }
 
     thisNode.edgeNodeBounds = computeEdgeBounds( thisNode.membraneChannels.get( 0 ) );
