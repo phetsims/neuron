@@ -147,7 +147,7 @@ define( function( require ) {
       playbackParticlesVisible: false,
       concentrationChanged: false,
       stimulusPulseInitiated: false,// observed by Membrane potential chart
-      neuronModelPlaybackState: null,
+      neuronModelPlaybackState: null
     } );
 
     thisModel.axonMembrane.travelingActionPotentialReachedCrossSectionProperty.lazyLink( function( reached ) {
