@@ -65,16 +65,12 @@ define( function( require ) {
     var travelingActionPotentialNode = new TravelingActionPotentialCanvasNode( thisNode.mvt, canvasBounds );
     this.addChild( travelingActionPotentialNode );
 
-    thisNode.axonMembraneModel.travelingActionPotentialStartedProperty.link( function( started ) {
-      if ( started ) {
-        travelingActionPotentialNode.travelingActionPotentialStarted( axonMembraneModel.travelingActionPotential );
-      }
+    thisNode.axonMembraneModel.on( 'travelingActionPotentialStarted', function() {
+      travelingActionPotentialNode.travelingActionPotentialStarted( axonMembraneModel.travelingActionPotential );
     } );
 
-    thisNode.axonMembraneModel.travelingActionPotentialEndedProperty.link( function( ended ) {
-      if ( ended ) {
+    thisNode.axonMembraneModel.on( 'travelingActionPotentialEnded', function() {
         travelingActionPotentialNode.travelingActionPotentialEnded();
-      }
     } );
   }
 

@@ -84,7 +84,7 @@ define( function( require ) {
       else if ( this.currentDestinationIndex === 1 ) {
         // Currently moving towards the 2nd point, which is in the
         // channel just above where the inactivation gate appears.
-        if ( this.channel.getInactivationAmt() > INACTIVATION_BOUNCE_THRESHOLD ) {
+        if ( this.channel.getInactivationAmount() > INACTIVATION_BOUNCE_THRESHOLD ) {
           // The inactivation threshold has been reached, so we can't
           // finish traversing the channel and need to bounce.  Check
           // whether we've already handled this.
@@ -148,7 +148,7 @@ define( function( require ) {
               // The angle at which we can move gets more restricted
               // as the inactivation gate closes.
               maxRotation = Math.PI * 0.4;
-              angularRange = ( 1 - this.channel.getInactivationAmt() ) * Math.PI * 0.3;
+              angularRange = ( 1 - this.channel.getInactivationAmount() ) * Math.PI * 0.3;
               minRotation = maxRotation - angularRange;
             }
             else {
@@ -156,7 +156,7 @@ define( function( require ) {
               // The angle at which we can move gets more restricted
               // as the inactivation gate closes.
               maxRotation = -Math.PI * 0.4;
-              angularRange = ( 1 - this.channel.getInactivationAmt() ) * -Math.PI * 0.1;
+              angularRange = ( 1 - this.channel.getInactivationAmount() ) * -Math.PI * 0.1;
               minRotation = maxRotation - angularRange;
             }
             newVelocityVector.rotate( minRotation + Math.random() * ( maxRotation - minRotation ) );
@@ -258,14 +258,14 @@ define( function( require ) {
             // Move out to the right (assuming channel is vertical). The angle at which we can move gets more restricted
             // as the inactivation gate closes.
             maxRotation = Math.PI * 0.4;
-            angularRange = ( 1 - this.channel.getInactivationAmt() ) * Math.PI * 0.3;
+            angularRange = ( 1 - this.channel.getInactivationAmount() ) * Math.PI * 0.3;
             minRotation = maxRotation - angularRange;
           }
           else {
             // Move out to the left (assuming channel is vertical). The angle at which we can move gets more restricted
             // as the inactivation gate closes.
             maxRotation = -Math.PI * 0.4;
-            angularRange = ( 1 - this.channel.getInactivationAmt() ) * -Math.PI * 0.1;
+            angularRange = ( 1 - this.channel.getInactivationAmount() ) * -Math.PI * 0.1;
             minRotation = maxRotation - angularRange;
           }
           velocityRotationAngle = minRotation + Math.random() * ( maxRotation - minRotation );

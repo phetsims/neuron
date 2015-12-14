@@ -51,12 +51,7 @@ define( function( require ) {
     var thisPotential = this;
     thisPotential.axonMembrane = axonMembrane;
 
-    Events.call( thisPotential, {
-
-        // Notify the listener that this has finished traveling down the membrane and lingering at the cross section.
-        lingeringCompleted: false
-      }
-    );
+    Events.call( thisPotential );
 
     // @public - describes the shape of the action potential
     this.shapeDescription = {
@@ -163,8 +158,7 @@ define( function( require ) {
     },
 
     /**
-     * Set the state from a (probably previously captured) version of
-     * the internal state.
+     * Set the state from a (probably previously captured) version of the internal state.
      */
     setState: function( state ) {
       this.travelTimeCountdownTimer = state.getTravelTimeCountdownTimer();
@@ -173,8 +167,7 @@ define( function( require ) {
     },
 
     /**
-     * Get the state, generally for use in setting the state later for
-     * some sort of playback.
+     * Get the state, generally for use in setting the state later for some sort of playback.
      */
     getState: function() {
       return new TravelingActionPotentialState( this.travelTimeCountdownTimer, this.lingerCountdownTimer );

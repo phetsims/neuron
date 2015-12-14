@@ -148,8 +148,8 @@ define( function( require ) {
         var channelEdgeConnectionPoint = new Vector2( leftEdgeNode.centerX,
           leftEdgeNode.getBounds().getMaxY() );
         var channelCenterBottomPoint = new Vector2( 0, transformedChannelSize.height / 2 );
-        var angle = -Math.PI / 2 * (1 - membraneChannelModel.getInactivationAmt());
-        var radius = (1 - membraneChannelModel.getInactivationAmt()) * transformedOverallSize.width / 2 + membraneChannelModel.getInactivationAmt() * channelEdgeConnectionPoint.distance( channelCenterBottomPoint );
+        var angle = -Math.PI / 2 * (1 - membraneChannelModel.getInactivationAmount());
+        var radius = (1 - membraneChannelModel.getInactivationAmount()) * transformedOverallSize.width / 2 + membraneChannelModel.getInactivationAmount() * channelEdgeConnectionPoint.distance( channelCenterBottomPoint );
 
         var ballPosition = new Vector2( channelEdgeConnectionPoint.x + Math.cos( angle ) * radius,
           channelEdgeConnectionPoint.y - Math.sin( angle ) * radius );

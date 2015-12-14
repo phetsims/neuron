@@ -107,8 +107,7 @@ define( function( require ) {
     // List of the particles that come and go when the simulation is working in real time.
     thisModel.transientParticles = new ObservableArray();
 
-    // Backup of the transient particles, used to restore them when returning
-    // to live mode after doing playback.
+    // Backup of the transient particles, used to restore them when returning to live mode after doing playback.
     thisModel.transientParticlesBackup = new ObservableArray();
 
     // Particles that are "in the background", meaning that they are always
@@ -150,19 +149,17 @@ define( function( require ) {
       neuronModelPlaybackState: null
     } );
 
-    thisModel.axonMembrane.travelingActionPotentialReachedCrossSectionProperty.lazyLink( function( reached ) {
-      if ( reached ) {
+    thisModel.axonMembrane.on( 'travelingActionPotentialReachedCrossSection', function() {
 
-        // The action potential has arrived at the cross section, so stimulate the model the simulates the action
-        // potential voltages and current flows.
-        thisModel.hodgkinHuxleyModel.stimulate();
+      // The action potential has arrived at the cross section, so stimulate the model the simulates the action
+      // potential voltages and current flows.
+      thisModel.hodgkinHuxleyModel.stimulate();
 
-        if ( window.phet.neuron.profiler && window.phet.neuron.profiler.setting === 1 ) {
-          // If enabled, start collecting profiling data, which will automatically be spat out to the console (or as
-          // an alert dialog on iOS) when completed.  The duration value is empirically determined to be the time for
-          // the particles to appear, cross the membrane, and fade out.
-          window.phet.neuron.profiler.startDataAnalysis( 6000 );
-        }
+      if ( window.phet.neuron.profiler && window.phet.neuron.profiler.setting === 1 ) {
+        // If enabled, start collecting profiling data, which will automatically be spat out to the console (or as
+        // an alert dialog on iOS) when completed.  The duration value is empirically determined to be the time for
+        // the particles to appear, cross the membrane, and fade out.
+        window.phet.neuron.profiler.startDataAnalysis( 6000 );
       }
     } );
 
@@ -291,9 +288,11 @@ define( function( require ) {
     },
 
     /**
-     * Called by the active RecordAndPlayback Model mode, see the RecordAndPlayBackModel step function.
+     * Step the actual mode, which is done by stepping each of the constituent elements of the model.  This is called
+     * by the active RecordAndPlayback Model mode, see the RecordAndPlayBackModel step function.
      * @param {number} dt
      * @returns {NeuronModelState}
+     * @public
      */
     stepInTime: function( dt ) {
 
@@ -503,6 +502,16 @@ define( function( require ) {
     },
 
     /**
+     * Clear the recorded data.
+     * @public
+     * @override
+     */
+    clearHistory: function() {
+      this.transientParticlesBackup.clear();
+      RecordAndPlaybackModel.prototype.clearHistory.call( this );
+    },
+
+    /**
      * Starts a particle of the specified type moving through the
      * specified channel.  If one or more particles of the needed type exist
      * within the capture zone for this channel, one will be chosen and set to
@@ -617,12 +626,14 @@ define( function( require ) {
      * @param {ParticleType.string} particleType
      * @param {CaptureZone} captureZone
      * @return {Particle}
+     * @private
      */
     createTransientParticle: function( particleType, captureZone ) {
       var newParticle = ParticleFactory.createParticle( particleType );
       this.transientParticles.add( newParticle );
       if ( captureZone ) {
-        //To avoid creation of new Vector instances the capture zone updates the particles position
+
+        // to avoid creation of new Vector2 instances the capture zone updates the particles position
         captureZone.assignNewParticleLocation( newParticle );
       }
       var thisModel = this;
@@ -806,33 +817,34 @@ define( function( require ) {
     },
 
     /**
-     * There are two sets of particles in this simulation, one that is used
-     * when actually simulating, and one that is used when playing back.  This
-     * routine updates which set is visible based on state information.
+     * There are two sets of particles in this simulation, one set that is used when actually simulating, and one that
+     * is used when playing back.  This routine updates which set is visible based on state information.
      */
     updateSimAndPlaybackParticleVisibility: function() {
+
       if ( this.isRecord() || this.isLive() ) {
-        // In either of these modes, the simulation particles (as opposed
-        // to the playback particles) should be visible.  Make sure that
-        // this is the case.
+
+        // In either of these modes, the simulation particles (as opposed to the playback particles) should be visible.
+        // Make sure that this is the case.
         if ( this.playbackParticlesVisible ) {
-          // Hide the playback particles.  This is done by removing them  from the model.
+
+          // Hide the playback particles.  This is done by removing them from the model.
           this.playbackParticles.clear();
 
           // Show the simulation particles.
           this.transientParticles.addAll( this.transientParticlesBackup.getArray().slice() );
           this.transientParticlesBackup.clear();
+
           // Update the state variable.
           this.playbackParticlesVisible = false;
         }
       }
       else if ( this.isPlayback() ) {
-        // The playback particles should be showing and the simulation
-        // particles should be hidden.  Make sure that this is the case.
+        // The playback particles should be showing and the simulation particles should be hidden.  Make sure that this
+        // is the case.
         if ( !this.playbackParticlesVisible ) {
-          // Hide the simulation particles.  This is done by making a
-          // backup copy of them (so that they can be added back later)
-          // and then removing them from the model.
+          // Hide the simulation particles.  This is done by making a backup copy of them (so that they can be added
+          // back later) and then removing them from the model.
           this.transientParticlesBackup.addAll( this.transientParticles.getArray().slice() );
           this.transientParticles.clear();
 
@@ -1044,6 +1056,9 @@ define( function( require ) {
       // Set the membrane channel state.
       this.axonMembrane.setState( state.getAxonMembraneState() );
 
+      // Set the state of the Hodgkin-Huxley model.
+      this.hodgkinHuxleyModel.setState( state.getHodgkinHuxleyModelState() );
+
       // Set the states of the membrane channels.
       this.membraneChannels.getArray().forEach( function( membraneChannel ) {
         var mcs = state.getMembraneChannelStateMap().get( membraneChannel );
@@ -1083,8 +1098,7 @@ define( function( require ) {
       this.neuronModelPlaybackState = state;
       this.membranePotential = state.getMembranePotential();
 
-      // For the sake of simplicity, always send out notifications for the
-      // concentration changes.
+      // For the sake of simplicity, always send out notifications for the concentration changes.
       this.concentrationChanged = true;
 
       // If any one channel's state is changed, trigger a channel representation changed event

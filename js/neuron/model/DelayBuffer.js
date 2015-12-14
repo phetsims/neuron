@@ -151,6 +151,20 @@ define( function( require ) {
       return delayedValue;
     },
 
+    // @public - get a copy of this object that retains references to individual delay elements
+    getCopy: function(){
+      var copy = new DelayBuffer( 0, 1 ); // create a new delay buffer, but most of its contents will be overwritten below
+      copy.numEntries = this.numEntries;
+      copy.filling = this.filling;
+      copy.allDeltaTimesEqual = this.allDeltaTimesEqual;
+      copy.previousDeltaTime = this.previousDeltaTime;
+      copy.countAtThisDeltaTime = this.countAtThisDeltaTime;
+      copy.delayElements = this.delayElements.slice();
+      copy.head = 0; // @private
+      copy.tail = 0; // @private
+      return copy;
+    },
+
     // @public
     clear: function() {
       this.head = 0;

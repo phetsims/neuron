@@ -228,8 +228,8 @@ define( function( require ) {
           channelEdgeConnectionPoint.y = edgeNodeBounds.getMaxY();
           channelCenterBottomPoint.x = 0;
           channelCenterBottomPoint.y = transformedChannelSize.height / 2;
-          var angle = -Math.PI / 2 * (1 - membraneChannelModel.getInactivationAmt());
-          var radius = (1 - membraneChannelModel.getInactivationAmt()) * transformedOverallSize.width / 2 + membraneChannelModel.getInactivationAmt() * channelEdgeConnectionPoint.distance( channelCenterBottomPoint );
+          var angle = -Math.PI / 2 * (1 - membraneChannelModel.getInactivationAmount());
+          var radius = (1 - membraneChannelModel.getInactivationAmount()) * transformedOverallSize.width / 2 + membraneChannelModel.getInactivationAmount() * channelEdgeConnectionPoint.distance( channelCenterBottomPoint );
 
           ballPosition.x = channelEdgeConnectionPoint.x + Math.cos( angle ) * radius;
           ballPosition.y = channelEdgeConnectionPoint.y - Math.sin( angle ) * radius;

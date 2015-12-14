@@ -1,9 +1,10 @@
 // Copyright 2014-2015, University of Colorado Boulder
+
 /**
+ * This is the main model base class for sims that support recording and playing back.  This is done by recording
+ * discrete states, then being able to set re-apply them to the model.  This library does not currently provide support
+ * for interpolation between states.
  *
- * This is the main model class for sims that support recording and playing back.  This is done by recording discrete states,
- * then being able to set re-apply them to the model.  This library does not currently provide support for interpolation between states.
- * <p/>
  * This mixture of side-effects and state capturing seems to simplify graphics updating of normal model updating,
  * though it can create additional complexity during playback.
  *
@@ -33,7 +34,6 @@ define( function( require ) {
       historyRemainderCleared: false,
       historyCleared: false,
       mode: null // The current operational mode, valid values are playback, record or live
-
     } );
     var thisModel = this;
     PropertySet.call( thisModel, props );
@@ -61,10 +61,10 @@ define( function( require ) {
      * Update the simulation model (should cause side effects to update the view), returning a snapshot of the state after the update.
      * The returned state could be ignored if the simulation is not in record mode.
      *
-     * @param simulationTimeChange the amount of time to update the simulation (in whatever units the simulation model is using).
+     * @param dt - the amount of time to update the simulation (in whatever units the simulation model is using).
      * @return the updated state, which can be used to restore the model during playback
      */
-    stepInTime: function() {
+    stepInTime: function( dt ) {
       throw new Error( 'stepInTime should be implemented in descendant classes.' );
     },
 

@@ -16,7 +16,6 @@ define( function( require ) {
   var Vector2 = require( 'DOT/Vector2' );
   var Dimension2 = require( 'DOT/Dimension2' );
   var NullCaptureZone = require( 'NEURON/neuron/model/NullCaptureZone' );
-  var MembraneChannelState = require( 'NEURON/neuron/model/MembraneChannelState' );
   var PhetColorScheme = require( 'SCENERY_PHET/PhetColorScheme' );
   var TraverseChannelAndFadeMotionStrategy = require( 'NEURON/neuron/model/TraverseChannelAndFadeMotionStrategy' );
   var Matrix3 = require( 'DOT/Matrix3' );
@@ -54,7 +53,7 @@ define( function( require ) {
 
     // Variable that defines how inactivated the channel is, which is distinct from openness. Valid range is 0 to 1, 0
     // means completely active, 1 is completely inactive.
-    this.inactivationAmt = 0; // @public
+    this.inactivationAmount = 0; // @public
 
     // Reference to the model that contains that particles that will be moving through this channel.
     this.modelContainingParticles = modelContainingParticles; // @protected
@@ -137,7 +136,7 @@ define( function( require ) {
      */
     isOpen: function() {
       // The threshold values used here are empirically determined, and can be changed if necessary.
-      return (this.openness > 0.2 && this.inactivationAmt < 0.7);
+      return (this.openness > 0.2 && this.inactivationAmount < 0.7);
     },
 
     // @protected
@@ -168,8 +167,8 @@ define( function( require ) {
     },
 
     // @public
-    getInactivationAmt: function() {
-      return this.inactivationAmt;
+    getInactivationAmount: function() {
+      return this.inactivationAmount;
     },
 
     // @public
@@ -281,8 +280,8 @@ define( function( require ) {
     },
 
     // @protected, convenience method
-    setInactivationAmt: function( inactivationAmt ) {
-      this.inactivationAmt = inactivationAmt;
+    setInactivationAmount: function( inactivationAmount ) {
+      this.inactivationAmount = inactivationAmount;
     },
 
     // @protected, convenience method
@@ -293,6 +292,11 @@ define( function( require ) {
     // @protected, convenience method
     setOpenness: function( openness ) {
       this.openness = openness;
+    },
+
+    // @protected, convenience method
+    setCaptureCountdownTimer: function( captureCountdownTimer ) {
+      this.captureCountdownTimer = captureCountdownTimer;
     },
 
     // @public
@@ -330,13 +334,32 @@ define( function( require ) {
     },
 
     /**
-     * Get the state of this membrane channel as needed for support of record-
-     * and-playback functionality.  Note that this is not the complete state
-     * of a membrane channel, just enough to support playback.
+     * Get the state of this membrane channel as needed for support of record- and-playback functionality.  Note that
+     * this is may not be the complete state of a membrane channel, just enough to support playback.  This is
+     * overridden in descendant classes if more information is needed.
      * @public
      */
     getState: function() {
-      return new MembraneChannelState( this );
+      return {
+        type: this.getChannelType(), // for checking during state restoration
+        openness: this.openness,
+        inactivationAmount: this.inactivationAmount,
+        captureCountdownTimer: this.captureCountdownTimer
+      };
+    },
+
+    /**
+     * Set the state of a membrane channel.  This is generally used in support of the record-and-playback functionality.
+     * @public
+     */
+    setState: function( state ) {
+      assert && assert( state.type === this.getChannelType(), 'attempt to restore state from incorrect channel type' );
+      var prevOpenness = this.getOpenness();
+      var prevInactivationAmount = this.getInactivationAmount();
+      this.setOpenness( state.openness );
+      this.setInactivationAmount( state.inactivationAmount );
+      this.setCaptureCountdownTimer( state.captureCountdownTimer );
+      this.notifyIfMembraneStateChanged( prevOpenness, prevInactivationAmount );
     },
 
     /**
@@ -347,19 +370,7 @@ define( function( require ) {
      * @param prevInActivationAmt
      */
     notifyIfMembraneStateChanged: function( prevOpenness, prevInActivationAmt ) {
-      this.channelStateChanged = prevOpenness !== this.openness || prevInActivationAmt !== this.inactivationAmt;
-    },
-
-    /**
-     * Set the state of a membrane channel.  This is generally used in support of the record-and-playback functionality.
-     * @public
-     */
-    setState: function( state ) {
-      var prevOpenness = this.getOpenness();
-      var prevInactivationAmt = this.getInactivationAmt();
-      this.setOpenness( state.getOpenness() );
-      this.setInactivationAmt( state.getInactivationAmt() );
-      this.notifyIfMembraneStateChanged( prevOpenness, prevInactivationAmt );
+      this.channelStateChanged = prevOpenness !== this.openness || prevInActivationAmt !== this.inactivationAmount;
     },
 
     // @public

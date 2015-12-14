@@ -35,8 +35,8 @@ define( function( require ) {
       if ( this.getSpeed() > 0 ) {
         // Playing forwards.
         if ( this.recordAndPlaybackModel.getTime() < this.recordAndPlaybackModel.getMaxRecordedTime() ) {
-          this.recordAndPlaybackModel.setTime( this.recordAndPlaybackModel.time + this.getSpeed() * this.recordAndPlaybackModel.getPlaybackDT() );
 
+          this.recordAndPlaybackModel.setTime( this.recordAndPlaybackModel.time + this.getSpeed() * this.recordAndPlaybackModel.getPlaybackDT() );
         }
         else {
           if ( BehaviourModeType.recordAtEndOfPlayback ) {

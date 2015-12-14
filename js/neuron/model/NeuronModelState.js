@@ -47,6 +47,7 @@ define( function( require ) {
 
     var thisNeuronModelState = this;
     thisNeuronModelState.axonMembraneState = neuronModel.getAxonMembrane().getState();
+    thisNeuronModelState.hodgkinHuxleyModelState = neuronModel.hodgkinHuxleyModel.getState();
     thisNeuronModelState.membranePotential = neuronModel.getMembranePotential();
     thisNeuronModelState.sodiumExteriorConcentration = neuronModel.getSodiumExteriorConcentration();
     thisNeuronModelState.sodiumInteriorConcentration = neuronModel.getSodiumInteriorConcentration();
@@ -74,6 +75,10 @@ define( function( require ) {
 
     getAxonMembraneState: function() {
       return this.axonMembraneState;
+    },
+
+    getHodgkinHuxleyModelState: function() {
+      return this.hodgkinHuxleyModelState;
     },
 
     getMembraneChannelStateMap: function() {

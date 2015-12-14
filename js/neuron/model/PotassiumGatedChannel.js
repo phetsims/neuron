@@ -58,7 +58,7 @@ define( function( require ) {
 
     stepInTime: function( dt ) {
       var prevOpenness = this.openness;
-      var prevInActivationAmt = this.inactivationAmt;
+      var prevInActivationAmt = this.inactivationAmount;
       GatedChannel.prototype.stepInTime.call( this, dt );
       // Update the openness factor based on the state of the HH model. This is very specific to the model and the type
       // of channel.  Note the non-linear mapping of conductance to the openness factor for the channels.  This is to

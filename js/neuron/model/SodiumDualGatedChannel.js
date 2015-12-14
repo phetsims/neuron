@@ -83,7 +83,7 @@ define( function( require ) {
       // openness and inactivation.  Handling these separately compromised performance, so a flag was added to mark
       // whether any change occurred, and if so, the view knows to update the representation.
       var prevOpenness = this.openness;
-      var prevInActivationAmt = this.inactivationAmt;
+      var prevInActivationAmt = this.inactivationAmount;
 
       GatedChannel.prototype.stepInTime.call( this, dt );
 
@@ -127,14 +127,14 @@ define( function( require ) {
           break;
 
         case GateState.BECOMING_INACTIVE:
-          if ( this.getInactivationAmt() < FULLY_INACTIVE_DECISION_THRESHOLD ) {
+          if ( this.getInactivationAmount() < FULLY_INACTIVE_DECISION_THRESHOLD ) {
             // Not yet fully inactive - update the level.  Note the non-
             // linear mapping to the conductance amount.
-            this.setInactivationAmt( 1 - Math.pow( normalizedConductance, 7 ) );
+            this.setInactivationAmount( 1 - Math.pow( normalizedConductance, 7 ) );
           }
           else {
             // Fully inactive, move to next state.
-            this.setInactivationAmt( 1 );
+            this.setInactivationAmount( 1 );
             this.gateState = GateState.INACTIVATED;
             this.stateTransitionTimer = INACTIVE_TO_RESETTING_TIME;
           }
@@ -156,12 +156,12 @@ define( function( require ) {
             // the inactivation amount as a function of time is very non- linear.  This is because the IPHY people
             // requested that the "little ball doesn't pop out" until the the gate has closed up.
             this.setOpenness( 1 - Math.pow( this.stateTransitionTimer / RESETTING_TO_IDLE_TIME - 1, 10 ) );
-            this.setInactivationAmt( 1 - Math.pow( this.stateTransitionTimer / RESETTING_TO_IDLE_TIME - 1, 20 ) );
+            this.setInactivationAmount( 1 - Math.pow( this.stateTransitionTimer / RESETTING_TO_IDLE_TIME - 1, 20 ) );
           }
           else {
             // Go back to the idle, or resting, state.
             this.setOpenness( 0 );
-            this.setInactivationAmt( 0 );
+            this.setInactivationAmount( 0 );
             this.updateStaggerDelay();
             this.gateState = GateState.IDLE;
           }
@@ -191,6 +191,24 @@ define( function( require ) {
 
       // Initialize the stagger delay.
       this.updateStaggerDelay();
+    },
+
+    // @public, @override
+    getState: function() {
+      var state = GatedChannel.prototype.getState.call( this );
+      state.inactivationAmount = this.inactivationAmount;
+      state.previousNormalizedConductance = this.previousNormalizedConductance;
+      state.gateState = this.gateState;
+      state.stateTransitionTimer = this.stateTransitionTimer;
+      return state;
+    },
+
+    // @public, @override
+    setState: function( state ) {
+      this.gateState = state.gateState;
+      this.previousNormalizedConductance = state.previousNormalizedConductance;
+      this.stateTransitionTimer = state.stateTransitionTimer;
+      GatedChannel.prototype.setState.call( this, state );
     },
 
     getChannelColor: function() {

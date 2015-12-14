@@ -61,7 +61,7 @@ define( function( require ) {
 
     stepInTime: function( dt ) {
       var prevOpenness = this.openness;
-      var prevInActivationAmt = this.inactivationAmt;
+      var prevInActivationAmt = this.inactivationAmount;
       AbstractLeakChannel.prototype.stepInTime.call( this, dt );
       this.notifyIfMembraneStateChanged( prevOpenness, prevInActivationAmt );
     },
