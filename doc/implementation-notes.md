@@ -33,6 +33,16 @@ Because this simulation consumes a fair amount of computational and graphical re
 progress, there are a lot of optimizations.  As of this writing, there is a WebGL node that displays the sodium and
 potassium ions, a canvas node for the membrane channels, and another canvas node for the traveling action potential.
 
+The code to implement the playback and record feature is a little tricky, so it's worth saying a few words about it.  It
+was originally written in Java, and as such it made heavy use of inheritance.  The key base classes are "Mode" and
+"RecordAndPlaybackModel".  A mode represents the current playback mode, and different modes are switched in and out as
+the playback mode changes.  There are currently three modes: Record, Playback, and Live.  The first two are fairly self
+explanatory, and the third is a mode where the simulation is running and no recording is taking place. (TODO: add more
+detail here).
+
+A simplification to the record-and-playback behavior was made in order to reduce the size of the state date that needed
+to be stored for each step.  
+
 Finally, there is some inconsistency in the quality of the comments.  Many have been edited and cleaned up, but this
 process was time consuming and didn't seem to add a lot of value, so some have been left as they were when the
 simulation was delivered.  Feel free to clean them up as they are encountered during any maintenance work.
