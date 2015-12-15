@@ -43,7 +43,7 @@ define( function( require ) {
     MAX_ACTION_POTENTIAL_CLOCK_DT: maxActionPotentialClockDT,
     DEFAULT_ACTION_POTENTIAL_CLOCK_DT: (minActionPotentialClockDT + maxActionPotentialClockDT) * 0.55,
     TIME_SPAN: 25, // In seconds.
-    DEFAULT_MAX_VELOCITY: 40000,
+    DEFAULT_MAX_VELOCITY: 40000
   };
 
   // verify that enum is immutable, without the runtime penalty in production code
