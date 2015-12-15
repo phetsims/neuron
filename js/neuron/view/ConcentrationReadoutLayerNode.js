@@ -91,19 +91,21 @@ define( function( require ) {
       var maxExteriorReadoutWidth = Math.max( potassiumExteriorConcentrationReadout.bounds.width,
         sodiumExteriorConcentrationReadout.bounds.width );
 
-      // Place the exterior readouts in the upper left of the view port.
+      // Place the exterior readouts to the upper left, just outside of the membrane.  The algorithm for placement was
+      // empirically determined and will need adjustment if anything about the neuron position changes.
+      var exteriorIndicatorYOffset = Math.max( thisNode.zoomableRootNode.transform.transformY( 45 ), 5 );
       potassiumExteriorConcentrationReadout.left = viewPortBounds.minX + maxExteriorReadoutWidth -
                                                    potassiumExteriorConcentrationReadout.bounds.width + 4;
-      potassiumExteriorConcentrationReadout.top = viewPortBounds.minY + 4;
+      potassiumExteriorConcentrationReadout.top = viewPortBounds.minY + exteriorIndicatorYOffset;
       sodiumExteriorConcentrationReadout.top = potassiumExteriorConcentrationReadout.bottom;
       sodiumExteriorConcentrationReadout.right = potassiumExteriorConcentrationReadout.right;
 
       // Place the interior readout in a place where it can be seen whether or not the chart is showing and doesn't
       // overlap with the membrane of the neuron.  The Y position calculation is empirically determined.
-      var yOffset = 80 + thisNode.zoomableRootNode.transform.transformY( 80 ) * 0.5;  // Empirically determined.
+      var interiorIndicatorYOffset = 80 + thisNode.zoomableRootNode.transform.transformY( 80 ) * 0.5;
 
       potassiumInteriorConcentrationReadout.centerX = axonCrossSectionNode.centerX;
-      potassiumInteriorConcentrationReadout.top = viewPortBounds.y + yOffset;
+      potassiumInteriorConcentrationReadout.top = viewPortBounds.y + interiorIndicatorYOffset;
       sodiumInteriorConcentrationReadout.top = potassiumInteriorConcentrationReadout.bottom;
       sodiumInteriorConcentrationReadout.right = potassiumInteriorConcentrationReadout.right;
     }
