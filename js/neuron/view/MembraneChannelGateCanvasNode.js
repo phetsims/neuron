@@ -88,14 +88,15 @@ define( function( require ) {
     thisNode.membraneChannels = neuronModel.membraneChannels;
     thisNode.mvt = modelViewTransform;
 
-    neuronModel.on( 'channelRepresentationChanged', function() {
+    neuronModel.channelRepresentationChanged.addListener( function() {
       thisNode.invalidatePaint();
     } );
 
     function computeEdgeBounds( membraneChannelModel ) {
       var edgeNodeWidth = (membraneChannelModel.overallSize.width - membraneChannelModel.channelSize.width) / 2;
       var edgeNodeHeight = membraneChannelModel.overallSize.height;
-      var transformedEdgeNodeSize = new Dimension2( Math.abs( thisNode.mvt.modelToViewDeltaX( edgeNodeWidth ) ), Math.abs( thisNode.mvt.modelToViewDeltaY( edgeNodeHeight ) ) );
+      var transformedEdgeNodeSize = new Dimension2( Math.abs( thisNode.mvt.modelToViewDeltaX( edgeNodeWidth ) ),
+        Math.abs( thisNode.mvt.modelToViewDeltaY( edgeNodeHeight ) ) );
 
       var width = transformedEdgeNodeSize.width;
       var height = transformedEdgeNodeSize.height;

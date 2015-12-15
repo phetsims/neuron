@@ -80,7 +80,7 @@ define( function( require ) {
     this.updateParticleData();
 
     // monitor a property that indicates when a particle state has changed and initiate a redraw
-    neuronModel.on( NeuronConstants.PARTICLES_MOVED_EVENT, function() {
+    neuronModel.particlesMoved.addListener( function() {
       self.invalidatePaint();
     } );
 

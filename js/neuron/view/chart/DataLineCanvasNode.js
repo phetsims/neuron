@@ -35,7 +35,7 @@ define( function( require ) {
     } );
 
     // cause the data line to be cleared whenever the data series is cleared
-    dataSeries.on( 'cleared', function() {
+    dataSeries.cleared.addListener( function() {
       self.numSegments = 0;
       self.invalidatePaint();
     } );

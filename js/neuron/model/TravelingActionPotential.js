@@ -16,7 +16,7 @@ define( function( require ) {
 
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
-  var Events = require( 'AXON/Events' );
+  var Emitter = require( 'AXON/Emitter' );
   var Vector2 = require( 'DOT/Vector2' );
   var TravelingActionPotentialState = require( 'NEURON/neuron/model/TravelingActionPotentialState' );
 
@@ -51,7 +51,10 @@ define( function( require ) {
     var thisPotential = this;
     thisPotential.axonMembrane = axonMembrane;
 
-    Events.call( thisPotential );
+    // @public - events emitted as the action potential changes
+    this.shapeChanged = new Emitter();
+    this.crossSectionReached = new Emitter();
+    this.lingeringCompleted = new Emitter();
 
     // @public - describes the shape of the action potential
     this.shapeDescription = {
@@ -81,7 +84,7 @@ define( function( require ) {
     this.updateShapeDescription(); // Also create an initialize Shape
   }
 
-  return inherit( Events, TravelingActionPotential, {
+  return inherit( Object, TravelingActionPotential, {
 
     /**
      * Step this model component forward by the specified time.  This will
@@ -96,14 +99,14 @@ define( function( require ) {
         this.updateShapeDescription();
         if ( this.travelTimeCountdownTimer <= 0 ) {
           // We've reached the cross section and will now linger there for a bit.
-          this.trigger0( 'crossSectionReached' );
+          this.crossSectionReached.emit();
           this.lingerCountdownTimer = LINGER_AT_CROSS_SECTION_TIME;
         }
       }
       else if ( this.lingerCountdownTimer > 0 ) {
         this.lingerCountdownTimer -= dt;
         if ( this.lingerCountdownTimer <= 0 ) {
-          this.trigger0( 'lingeringCompleted' );
+          this.lingeringCompleted.emit();
         }
         else {
           this.updateShapeDescription();
@@ -154,7 +157,7 @@ define( function( require ) {
         this.shapeDescription.circleRadius = this.axonMembrane.crossSectionCircleRadius * growthFactor;
       }
 
-      this.trigger0( 'shapeChanged' );
+      this.shapeChanged.emit();
     },
 
     /**

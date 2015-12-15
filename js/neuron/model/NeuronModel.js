@@ -31,6 +31,7 @@ define( function( require ) {
   var TimedFadeInStrategy = require( 'NEURON/neuron/model/TimedFadeInStrategy' );
   var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
   var MathUtils = require( 'NEURON/neuron/common/MathUtils' );
+  var Emitter = require( 'AXON/Emitter' );
 
   // Default configuration values.
   var DEFAULT_FOR_SHOW_ALL_IONS = true;
@@ -104,6 +105,10 @@ define( function( require ) {
     var maxRecordPoints = Math.ceil( NeuronConstants.TIME_SPAN * 1000 / NeuronConstants.MIN_ACTION_POTENTIAL_CLOCK_DT );
     thisModel.axonMembrane = new AxonMembrane();
 
+    // @public - events emitted by this model
+    this.channelRepresentationChanged = new Emitter();
+    this.particlesMoved = new Emitter();
+
     // List of the particles that come and go when the simulation is working in real time.
     thisModel.transientParticles = new ObservableArray();
 
@@ -149,7 +154,7 @@ define( function( require ) {
       neuronModelPlaybackState: null
     } );
 
-    thisModel.axonMembrane.on( 'travelingActionPotentialReachedCrossSection', function() {
+    thisModel.axonMembrane.travelingActionPotentialReachedCrossSection.addListener( function() {
 
       // The action potential has arrived at the cross section, so stimulate the model the simulates the action
       // potential voltages and current flows.
@@ -412,12 +417,12 @@ define( function( require ) {
         this.concentrationChanged = true;
       }
 
-      // Trigger the event that lets the view know that the particles should be redrawn.
-      this.trigger( NeuronConstants.PARTICLES_MOVED_EVENT );
+      // Emit the event that lets the view know that the particles should be redrawn.
+      this.particlesMoved.emit();
 
       // If any one channel's state is changed, trigger a channel representation changed event
       if ( _.any( this.membraneChannels.getArray(), 'channelStateChanged' ) ) {
-        this.trigger0( 'channelRepresentationChanged' );
+        this.channelRepresentationChanged.emit();
       }
 
       // Return model state after each time step.
@@ -456,7 +461,7 @@ define( function( require ) {
       } );
 
       // Send notification of membrane channel change to make sure that channels are re-rendered.
-      this.trigger0( 'channelRepresentationChanged' );
+      this.channelRepresentationChanged.emit();
 
       // Reset the concentration readout values.
       var concentrationChanged = this.concentrationChanged = false;
@@ -855,7 +860,7 @@ define( function( require ) {
         }
 
         // Trigger the event that lets the view know that the particles should be redrawn.
-        this.trigger( NeuronConstants.PARTICLES_MOVED_EVENT );
+        this.particlesMoved.emit();
       }
       else {
         // Should never happen, debug if it does.
@@ -1101,12 +1106,11 @@ define( function( require ) {
       // For the sake of simplicity, always send out notifications for the concentration changes.
       this.concentrationChanged = true;
 
-      // If any one channel's state is changed, trigger a channel representation changed event
+      // If any one channel's state is changed, emit a channel representation changed event
       if ( _.any( this.membraneChannels.getArray(), 'channelStateChanged' ) ) {
-        this.trigger0( 'channelRepresentationChanged' );
+        this.channelRepresentationChanged.emit();
       }
     }
-
   } );
 } );
 

@@ -12,7 +12,7 @@ define( function( require ) {
 
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
-  var Events = require( 'AXON/Events' );
+  var Emitter = require( 'AXON/Emitter' );
   var Vector2 = require( 'DOT/Vector2' );
   var Shape = require( 'KITE/Shape' );
   var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
@@ -31,7 +31,11 @@ define( function( require ) {
 
     var thisAxonMembrane = this;
 
-    Events.call( thisAxonMembrane );
+    // @public - events emitted by instances of this type
+    this.travelingActionPotentialStarted = new Emitter();
+    this.travelingActionPotentialReachedCrossSection = new Emitter();
+    this.lingeringCompleted = new Emitter();
+    this.travelingActionPotentialEnded = new Emitter();
 
     // Traveling action potential that moves down the membrane.
     thisAxonMembrane.travelingActionPotential = null;
@@ -131,7 +135,7 @@ define( function( require ) {
     this.bbcd = new Vector2();
   }
 
-  return inherit( Events, AxonMembrane, {
+  return inherit( Object, AxonMembrane, {
 
       /**
        * Step this model element forward in time by the specified delta.
@@ -151,15 +155,15 @@ define( function( require ) {
         var thisAxonMembrane = this;
         assert && assert( this.travelingActionPotential === null, 'Should not initiate a 2nd traveling action potential before prior one has completed.' );
         this.travelingActionPotential = new TravelingActionPotential( this );
-        this.travelingActionPotential.on( 'crossSectionReached', function() {
-          thisAxonMembrane.trigger0( 'travelingActionPotentialReachedCrossSection' );
+        this.travelingActionPotential.crossSectionReached.addListener( function() {
+          thisAxonMembrane.travelingActionPotentialReachedCrossSection.emit();
         } );
 
-        this.travelingActionPotential.on( 'lingeringCompleted', function() {
+        this.travelingActionPotential.lingeringCompleted.addListener( function() {
           thisAxonMembrane.removeTravelingActionPotential();
         } );
 
-        thisAxonMembrane.trigger0( 'travelingActionPotentialStarted' );
+        thisAxonMembrane.travelingActionPotentialStarted.emit();
       },
 
       /**
@@ -167,7 +171,7 @@ define( function( require ) {
        * longer needed, or for some other reason (such as a reset or jump in the playback state).
        */
       removeTravelingActionPotential: function() {
-        this.trigger0( 'travelingActionPotentialEnded' );
+        this.travelingActionPotentialEnded.emit();
         this.stimulusPulseInitiated = false;
         this.travelingActionPotential = null;
       },
