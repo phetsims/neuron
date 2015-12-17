@@ -32,11 +32,9 @@ define( function( require ) {
 
     step: function( simulationTimeChange ) {
 
-      if ( this.getSpeed() > 0 ) {
-        // Playing forwards.
+      if ( simulationTimeChange > 0 ) {
         if ( this.recordAndPlaybackModel.getTime() < this.recordAndPlaybackModel.getMaxRecordedTime() ) {
-
-          this.recordAndPlaybackModel.setTime( this.recordAndPlaybackModel.time + this.getSpeed() * this.recordAndPlaybackModel.getPlaybackDT() );
+          this.recordAndPlaybackModel.setTime( this.recordAndPlaybackModel.time + simulationTimeChange );
         }
         else {
           if ( BehaviourModeType.recordAtEndOfPlayback ) {
@@ -47,10 +45,9 @@ define( function( require ) {
           }
         }
       }
-      else if ( this.getSpeed() < 0 ) {
-        // Playing backwards.
+      else if ( simulationTimeChange < 0 ) {
         if ( this.recordAndPlaybackModel.getTime() > this.recordAndPlaybackModel.getMinRecordedTime() ) {
-          this.recordAndPlaybackModel.setTime( this.recordAndPlaybackModel.time + this.getSpeed() * this.recordAndPlaybackModel.getPlaybackDT() );
+          this.recordAndPlaybackModel.setTime( this.recordAndPlaybackModel.time + simulationTimeChange );
         }
       }
     },
