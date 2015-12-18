@@ -27,6 +27,7 @@ define( function( require ) {
      * @param {number} otherPosX
      * @param {number} otherPosY
      * @returns {number}
+     * @public
      */
     distanceBetween: function( posX, posY, otherPosX, otherPosY ) {
       distanceCalculatorVectorLHS.x = posX;
@@ -36,6 +37,13 @@ define( function( require ) {
       return distanceCalculatorVectorLHS.distance( distanceCalculatorVectorRHS );
     },
 
+    /**
+     * Rounds to a specific number of places
+     * @param val
+     * @param places
+     * @returns {number}
+     * @public
+     */
     round: function( val, places ) {
       var factor = Math.pow( 10, places );
 

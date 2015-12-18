@@ -44,10 +44,11 @@ define( function( require ) {
     // Create the shape of the axon body
     //-----------------------------------------------------------------------------------------------------------------
 
-    // Shape of the body of the axon.
+    // @public - shape of the body of the axon
     thisAxonMembrane.axonBodyShape = new Shape();
-    // Points that define the body shape.
-    thisAxonMembrane.vanishingPoint = new Vector2(
+
+    // points at which axon membrane would appear to vanish, used in shape creation
+    var vanishingPoint = new Vector2(
       BODY_LENGTH * Math.cos( BODY_TILT_ANGLE ),
       BODY_LENGTH * Math.sin( BODY_TILT_ANGLE )
     );
@@ -55,79 +56,79 @@ define( function( require ) {
     // Find the two points at which the shape will intersect the outer edge of the cross section.
     var r = NeuronConstants.DEFAULT_DIAMETER / 2 + thisAxonMembrane.getMembraneThickness() / 2;
     var theta = BODY_TILT_ANGLE + Math.PI * 0.45; // Multiplier tweaked a bit for improved appearance.
-    thisAxonMembrane.intersectionPointA = new Vector2( r * Math.cos( theta ), r * Math.sin( theta ) );
+    var intersectionPointA = new Vector2( r * Math.cos( theta ), r * Math.sin( theta ) );
     theta += Math.PI;
-    thisAxonMembrane.intersectionPointB = new Vector2( r * Math.cos( theta ), r * Math.sin( theta ) );
+    var intersectionPointB = new Vector2( r * Math.cos( theta ), r * Math.sin( theta ) );
 
     // Define the control points for the two curves.  Note that there is some tweaking in here, so change as needed
     // to get the desired look. If you can figure it out, that is.  Hints: The shape is drawn starting as a curve
     // from the vanishing point to intersection point A, then a line to intersection point B, then as a curve back to
     // the vanishing point.
+    var angleToVanishingPt = Math.atan2(
+      vanishingPoint.y - intersectionPointA.y,
+      vanishingPoint.x - intersectionPointA.x );
+    var controlPtRadius = intersectionPointA.distance( vanishingPoint ) * 0.33;
+    var controlPtA1 = new Vector2(
+      intersectionPointA.x + controlPtRadius * Math.cos( angleToVanishingPt + 0.15 ),
+      intersectionPointA.y + controlPtRadius * Math.sin( angleToVanishingPt + 0.15 ) );
+    controlPtRadius = intersectionPointA.distance( vanishingPoint ) * 0.67;
+    var controlPtA2 = new Vector2(
+      intersectionPointA.x + controlPtRadius * Math.cos( angleToVanishingPt - 0.5 ),
+      intersectionPointA.y + controlPtRadius * Math.sin( angleToVanishingPt - 0.5 ) );
 
-    var angleToVanishingPt = Math.atan2( thisAxonMembrane.vanishingPoint.y - thisAxonMembrane.intersectionPointA.y,
-      thisAxonMembrane.vanishingPoint.x - thisAxonMembrane.intersectionPointA.x );
-    var ctrlPtRadius = thisAxonMembrane.intersectionPointA.distance( thisAxonMembrane.vanishingPoint ) * 0.33;
-    thisAxonMembrane.cntrlPtA1 = new Vector2(
-      thisAxonMembrane.intersectionPointA.x + ctrlPtRadius * Math.cos( angleToVanishingPt + 0.15 ),
-      thisAxonMembrane.intersectionPointA.y + ctrlPtRadius * Math.sin( angleToVanishingPt + 0.15 ) );
-    ctrlPtRadius = thisAxonMembrane.intersectionPointA.distance( thisAxonMembrane.vanishingPoint ) * 0.67;
-    thisAxonMembrane.cntrlPtA2 = new Vector2(
-      thisAxonMembrane.intersectionPointA.x + ctrlPtRadius * Math.cos( angleToVanishingPt - 0.5 ),
-      thisAxonMembrane.intersectionPointA.y + ctrlPtRadius * Math.sin( angleToVanishingPt - 0.5 ) );
+    var angleToIntersectionPt = Math.atan2( intersectionPointB.y - vanishingPoint.y,
+      intersectionPointB.x - intersectionPointB.x );
+    controlPtRadius = intersectionPointB.distance( vanishingPoint ) * 0.33;
+    var controlPtB1 = new Vector2(
+      vanishingPoint.x + controlPtRadius * Math.cos( angleToIntersectionPt + 0.1 ),
+      vanishingPoint.y + controlPtRadius * Math.sin( angleToIntersectionPt + 0.1 ) );
+    controlPtRadius = intersectionPointB.distance( vanishingPoint ) * 0.67;
+    var controlPtB2 = new Vector2(
+      vanishingPoint.x + controlPtRadius * Math.cos( angleToIntersectionPt - 0.25 ),
+      vanishingPoint.y + controlPtRadius * Math.sin( angleToIntersectionPt - 0.25 ) );
 
-    var angleToIntersectionPt = Math.atan2( thisAxonMembrane.intersectionPointB.y - thisAxonMembrane.vanishingPoint.y,
-      thisAxonMembrane.intersectionPointB.x - thisAxonMembrane.intersectionPointB.x );
-    ctrlPtRadius = thisAxonMembrane.intersectionPointB.distance( thisAxonMembrane.vanishingPoint ) * 0.33;
-    thisAxonMembrane.cntrlPtB1 = new Vector2(
-      thisAxonMembrane.vanishingPoint.x + ctrlPtRadius * Math.cos( angleToIntersectionPt + 0.1 ),
-      thisAxonMembrane.vanishingPoint.y + ctrlPtRadius * Math.sin( angleToIntersectionPt + 0.1 ) );
-    ctrlPtRadius = thisAxonMembrane.intersectionPointB.distance( thisAxonMembrane.vanishingPoint ) * 0.67;
-    thisAxonMembrane.cntrlPtB2 = new Vector2(
-      thisAxonMembrane.vanishingPoint.x + ctrlPtRadius * Math.cos( angleToIntersectionPt - 0.25 ),
-      thisAxonMembrane.vanishingPoint.y + ctrlPtRadius * Math.sin( angleToIntersectionPt - 0.25 ) );
-
-    // Create the curves that define the boundaries of the body.
+    // @private - curves that define the boundaries of the body
     thisAxonMembrane.curveA = new Cubic(
-      thisAxonMembrane.vanishingPoint,
-      thisAxonMembrane.cntrlPtA2,
-      thisAxonMembrane.cntrlPtA1,
-      thisAxonMembrane.intersectionPointA
+      vanishingPoint,
+      controlPtA2,
+      controlPtA1,
+      intersectionPointA
     );
     thisAxonMembrane.curveB = new Cubic(
-      thisAxonMembrane.vanishingPoint,
-      thisAxonMembrane.cntrlPtB1,
-      thisAxonMembrane.cntrlPtB2,
-      thisAxonMembrane.intersectionPointB
+      vanishingPoint,
+      controlPtB1,
+      controlPtB2,
+      intersectionPointB
     );
 
     // In order to create the full shape, we reverse one of the curves and the connect the two curves together in
     // order to create the full shape of the axon body.
-    thisAxonMembrane.axonBodyShape.moveTo( thisAxonMembrane.intersectionPointA.x, thisAxonMembrane.intersectionPointA.y );
+    thisAxonMembrane.axonBodyShape.moveTo( intersectionPointA.x, intersectionPointA.y );
     thisAxonMembrane.axonBodyShape.cubicCurveTo(
-      thisAxonMembrane.cntrlPtA1.x,
-      thisAxonMembrane.cntrlPtA1.y,
-      thisAxonMembrane.cntrlPtA2.x,
-      thisAxonMembrane.cntrlPtA2.y,
-      thisAxonMembrane.vanishingPoint.x,
-      thisAxonMembrane.vanishingPoint.y
+      controlPtA1.x,
+      controlPtA1.y,
+      controlPtA2.x,
+      controlPtA2.y,
+      vanishingPoint.x,
+      vanishingPoint.y
     );
     thisAxonMembrane.axonBodyShape.cubicCurveTo(
-      thisAxonMembrane.cntrlPtB1.x,
-      thisAxonMembrane.cntrlPtB1.y,
-      thisAxonMembrane.cntrlPtB2.x,
-      thisAxonMembrane.cntrlPtB2.y,
-      thisAxonMembrane.intersectionPointB.x,
-      thisAxonMembrane.intersectionPointB.y
+      controlPtB1.x,
+      controlPtB1.y,
+      controlPtB2.x,
+      controlPtB2.y,
+      intersectionPointB.x,
+      intersectionPointB.y
     );
     thisAxonMembrane.axonBodyShape.close();
 
-    // Shape of the cross section of the membrane.	For now, and unless there is some reason to do otherwise, the center
-    // of the cross section is positioned at the origin.
-    thisAxonMembrane.crossSectionCircleCenter = Vector2.ZERO; // @public
+    // @public - shape of the cross section of the membrane.	For now, and unless there is some reason to do otherwise,
+    // the center of the cross section is positioned at the origin.
+    thisAxonMembrane.crossSectionCircleCenter = Vector2.ZERO;
     thisAxonMembrane.crossSectionCircleRadius = NeuronConstants.DEFAULT_DIAMETER / 2;
 
-    // To avoid creating new Vector2 instances during animation, the instances are declared and reused in the
-    // evaluateCurve method.
+    // @private - In order to avoid creating new Vector2 instances during animation, these instances are declared and
+    // reused in the evaluateCurve method.
     this.ab = new Vector2();
     this.bc = new Vector2();
     this.cd = new Vector2();
@@ -139,8 +140,8 @@ define( function( require ) {
 
       /**
        * Step this model element forward in time by the specified delta.
-       *
        * @param dt - delta time, in seconds.
+       * @public
        */
       stepInTime: function( dt ) {
         if ( this.travelingActionPotential ) {
@@ -150,6 +151,7 @@ define( function( require ) {
 
       /**
        * Start an action potential that will travel down the length of the membrane toward the transverse cross section.
+       * @public
        */
       initiateTravelingActionPotential: function() {
         var thisAxonMembrane = this;
@@ -169,6 +171,7 @@ define( function( require ) {
       /**
        * Remove the traveling action potential, either because it has reached the cross section and is therefore no
        * longer needed, or for some other reason (such as a reset or jump in the playback state).
+       * @public
        */
       removeTravelingActionPotential: function() {
         this.travelingActionPotentialEnded.emit();
@@ -176,10 +179,12 @@ define( function( require ) {
         this.travelingActionPotential = null;
       },
 
+      // @public
       getState: function() {
         return new AxonMembraneState( this.travelingActionPotential ? this.travelingActionPotential.getState() : null );
       },
 
+      // @public
       setState: function( axonMembraneState ) {
         if ( !axonMembraneState.getTravelingActionPotentialState() && this.travelingActionPotential ) {
           // Get rid of the existing TAP.
@@ -197,25 +202,29 @@ define( function( require ) {
       },
 
       /**
-       * Get the object that defines the current traveling action potential.
-       * Returns null if no action potential is happening.
+       * Get the object that defines the current traveling action potential, null if no action potential is happening.
+       * @public
        */
       getTravelingActionPotential: function() {
         return this.travelingActionPotential;
       },
 
+      // @public
       getMembraneThickness: function() {
         return NeuronConstants.MEMBRANE_THICKNESS;
       },
 
+      // @public
       getCrossSectionDiameter: function() {
         return NeuronConstants.DEFAULT_DIAMETER;
       },
 
+      // @public
       getCrossSectionEllipseShape: function() {
         return this.crossSectionEllipseShape;
       },
 
+      // @public
       reset: function() {
         if ( this.travelingActionPotential ) {
           // Force premature termination of the action potential.
@@ -223,10 +232,12 @@ define( function( require ) {
         }
       },
 
+      // @public
       getCurveA: function() {
         return this.curveA;
       },
 
+      // @public
       getCurveB: function() {
         return this.curveB;
       },
@@ -235,12 +246,13 @@ define( function( require ) {
        * Evaluate the curve in order to locate a point given a distance along the curve.  This uses the DeCasteljau
        * algorithm.
        *
+       * This method was converted from static to instance to prevent circular dependency between Traveling
+       * Potential and AxonMembrane (Ashraf)
+       *
        * @param curve - The Curve Shape that is being evaluated.
        * @param t - proportional distance along the curve from the first control point, must be from 0 to 1.
        * @return point corresponding to the location of the curve at the specified distance.
-       *
-       * This method was converted from static to instance to prevent circular dependency between Traveling
-       * Potential and AxonMembrane (Ashraf)
+       * @public
        */
       evaluateCurve: function( curve, t ) {
         if ( t < 0 || t > 1 ) {

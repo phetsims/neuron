@@ -91,6 +91,7 @@ define( function( require ) {
      * Initiate the collection of data for the specified duration.  Once the specified time has passed, the results
      * will be displayed in a popup dialog.
      * @param {number} duration - in milliseconds
+     * @public
      */
     startDataAnalysis: function( duration ) {
       if ( this.dataCollectionInProgress ){

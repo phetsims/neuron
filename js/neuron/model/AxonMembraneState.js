@@ -28,6 +28,7 @@ define( function( require ) {
     /**
      * Return the state of the traveling action potential.  If null, no traveling action potential exists.
      * @return
+     * @public
      */
     getTravelingActionPotentialState: function() {
       return this.travelingActionPotentialState;
