@@ -13,7 +13,6 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var Mode = require( 'NEURON/neuron/recordandplayback/Mode' );
   var BehaviourModeType = require( 'NEURON/neuron/recordandplayback/BehaviourModeType' );
-  var Property = require( 'AXON/Property' );
 
   /**
    * @param {RecordAndPlaybackModel}recordAndPlaybackModel
@@ -21,11 +20,7 @@ define( function( require ) {
    */
   function Playback( recordAndPlaybackModel ) {
     var thisPlayBack = this;
-    thisPlayBack.speedProperty = new Property( 0 );//1 is full speed; i.e. the time between the original samples
     thisPlayBack.recordAndPlaybackModel = recordAndPlaybackModel;
-    thisPlayBack.speedProperty.lazyLink( function() {
-      thisPlayBack.recordAndPlaybackModel.updateRecordPlayBack();
-    } );
   }
 
   return inherit( Mode, Playback, {
@@ -40,7 +35,7 @@ define( function( require ) {
           if ( BehaviourModeType.recordAtEndOfPlayback ) {
             this.recordAndPlaybackModel.setRecord( true );
           }
-          if ( BehaviourModeType.pauseAtEndOfPlayback ) {
+          else if ( BehaviourModeType.pauseAtEndOfPlayback ) {
             this.recordAndPlaybackModel.setPlaying( false );
           }
         }
@@ -52,17 +47,8 @@ define( function( require ) {
       }
     },
 
-    setSpeed: function( speed ) {
-      this.speedProperty.set( speed );
-    },
-
-    getSpeed: function() {
-      return this.speedProperty.value;
-    },
-
     toString: function() {
       return 'Playback';
     }
-
   } );
 } );

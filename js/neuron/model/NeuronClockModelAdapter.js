@@ -97,11 +97,11 @@ define( function( require ) {
     },
 
     /**
-     * Update the clock, updating the wall time and possibly simulation time.
-     * @public
+     * Perform one 'tick' of the clock, which fires all callbacks with the provided simulation time
+     * @public TODO - is this really public?
      */
     tick: function( simulationTimeChange ) {
-      //fire step event callback
+      // fire step event callback
       for ( var i = 0; i < this.stepCallbacks.length; i++ ) {
         this.stepCallbacks[ i ]( simulationTimeChange );
       }

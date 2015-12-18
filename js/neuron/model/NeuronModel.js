@@ -268,18 +268,10 @@ define( function( require ) {
      * @param {number} dt - delta time, in seconds
      */
     step: function( dt ) {
-      if ( dt < 0 && this.getPlaybackSpeed() > 0 ) {
-        // This is a step backwards in time but the record-and-playback model is not set up for backstepping, so set it
-        // up for that now.
-        this.setPlayback( -1 );  // The -1 indicates playing in reverse.
-        if ( this.getTime() > this.getMaxRecordedTime() ) {
-          this.setTime( this.getMaxRecordedTime() );
-        }
-      }
-      else if ( this.getPlaybackSpeed() < 0 && dt > 0 && this.isPlayback() ) {
-        // This is a step forward in time but the record-and-playback model is set up for backwards stepping, so set it
-        // back to forward stepping.
-        this.setPlayback( 1 );
+
+      if ( dt < 0 ) {
+        // this is a backwards time step, so make sure that we are in the playback mode
+        this.setPlayback();
       }
 
       RecordAndPlaybackModel.prototype.step.call( this, dt );

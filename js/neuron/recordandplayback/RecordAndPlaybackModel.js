@@ -137,10 +137,6 @@ define( function( require ) {
       return this.recordHistory.get( 0 ).getTime();
     },
 
-    getPlaybackSpeed: function() {
-      return this.playbackMode.getSpeed();
-    },
-
     setMode: function( mode ) {
       this.mode = mode;
     },
@@ -232,12 +228,9 @@ define( function( require ) {
     },
 
     /**
-     * Switches to playback mode with the specified playback speed.
-     *
-     * @param speed the speed to use for playback, 1.0 = normal speed
+     * Switches to playback mode.  This is a no-op if already in that mode.
      */
-    setPlayback: function( speed ) {
-      this.setPlaybackSpeed( speed );
+    setPlayback: function() {
       this.setRecord( false );
     },
 
@@ -259,10 +252,6 @@ define( function( require ) {
       this.recordHistory.remove( this.recordHistory[ point ] );
     },
 
-    setPlaybackSpeed: function( speed ) {
-      this.playbackMode.setSpeed( speed );
-    },
-
     /**
      * @param rec
      * use setmode
@@ -272,11 +261,9 @@ define( function( require ) {
         this.clearHistoryRemainder();
         this.handleRecordStartedDuringPlayback();
         this.mode = this.recordMode;
-
       }
       else if ( !rec && this.mode !== this.playbackMode ) {
         this.mode = this.playbackMode;
-
       }
     },
 
@@ -297,7 +284,6 @@ define( function( require ) {
 
     resetAll: function() {
       PropertySet.prototype.reset.call( this );
-      this.setPlaybackSpeed( 1.0 );
       this.clearHistory();
       this.setTime( 0.0 );
       this.setRecord( true );
