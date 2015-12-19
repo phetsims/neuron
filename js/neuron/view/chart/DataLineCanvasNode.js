@@ -62,20 +62,23 @@ define( function( require ) {
 
       // this is optimized to draw little segments on the end if possible, and only do a full redraw when it has to
       if ( this.fullRepaintNeeded ) {
+        this.numSegments = 0;
         if ( this.dataSeries.getLength() > 0 ) {
           context.beginPath();
           context.moveTo( this.mvt.modelToViewX( this.dataSeries.getX( 0 ) ),
             this.mvt.modelToViewY( this.dataSeries.getY( 0 ) ) );
-          for ( var i = 0; i < this.dataSeries.getLength(); i++ ) {
+          for ( var i = 1; i < this.dataSeries.getLength(); i++ ) {
             context.lineTo( this.mvt.modelToViewX( this.dataSeries.getX( i ) ),
               this.mvt.modelToViewY( this.dataSeries.getY( i ) ) );
             context.stroke();
+            this.numSegments++;
           }
         }
-        this.numSegments = this.dataSeries.getLength();
         this.fullRepaintNeeded = false;
       }
       else if ( this.numSegments < this.dataSeries.getLength() - 1 ) {
+
+        // just tack the next segment on to the end of the existing line
 
         if ( this.numSegments === 0 ) {
           // this is the first segment, so start the new path
@@ -98,6 +101,7 @@ define( function( require ) {
 
     notifyResize: function() {
       this.fullRepaintNeeded = true;
+      this.invalidatePaint();
     }
   } );
 } );
