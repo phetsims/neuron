@@ -55,7 +55,7 @@ define( function( require ) {
   var MIN_DISTANCE_SQUARED_BETWEEN_POINTS = 0.01;
 
   // This value sets the frequency of chart updates, which helps to reduce the processor consumption.
-  var UPDATE_PERIOD = NeuronConstants.DEFAULT_ACTION_POTENTIAL_CLOCK_DT; // In seconds of sim time (not wall time)
+  var UPDATE_PERIOD = NeuronConstants.DEFAULT_ACTION_POTENTIAL_CLOCK_DT; // in seconds of sim time (not wall time)
 
   /**
    * @param {Dimension2} chartDimension
@@ -180,8 +180,8 @@ define( function( require ) {
       this.domain[ 1 ], this.range[ 1 ] ), new Bounds2( 0, 0, chartDimension.width, chartDimension.height ), 1, 1 );
 
     // create and add the node that will represent the data line on the chart
-    var dataLineNode = new DataLineCanvasNode( chartDimension.width, chartDimension.height, thisChart.dataSeries, this.chartMvt );
-    plotNode.addChild( dataLineNode );
+    this.dataLineNode = new DataLineCanvasNode( chartDimension.width, chartDimension.height, thisChart.dataSeries, this.chartMvt );
+    plotNode.addChild( this.dataLineNode );
 
     // add the cursor that shows the time value of the neuron state
     this.chartCursor = new ChartCursor( thisChart );
@@ -283,6 +283,11 @@ define( function( require ) {
         this.dataSeries.addPoint( TIME_SPAN, yValue );
         this.chartIsFull = true;
       }
+    },
+
+    notifyResize: function() {
+      // notify the data line that it needs to be fully redrawn
+      this.dataLineNode.notifyResize();
     },
 
     /**
