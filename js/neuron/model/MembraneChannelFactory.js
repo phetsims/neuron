@@ -23,6 +23,7 @@ define( function( require ) {
      * @param {NeuronModel} particleModel
      * @param {HodgkinHuxleyModel} hodgkinHuxleyModel
      * @returns {MembraneChannel}
+     * @public
      */
     createMembraneChannel: function( channelType, particleModel, hodgkinHuxleyModel ) {
       var membraneChannel = null;

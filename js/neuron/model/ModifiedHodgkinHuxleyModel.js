@@ -225,10 +225,12 @@ define( function( require ) {
       return delayedM3h;
     },
 
+    // @public
     getEna: function() {
       return (-1 * (this.vna + this.resting_v));
     },
 
+    // @public
     getEk: function() {
       return (-1 * (this.vk + this.resting_v));
     },
@@ -238,34 +240,42 @@ define( function( require ) {
     // be maintained as part of the object's serializable state.  See https://github.com/phetsims/neuron/issues/92
     // for more information.
 
+    // @public
     get_na_current: function() {
       return -1 * this.na_current;
     },
 
+    // @public
     get_k_current: function() {
       return -1 * this.k_current;
     },
 
+    // @public
     get_l_current: function() {
       return -1 * this.l_current;
     },
 
+    // @public
     getPerNaChannels: function() {
       return this.perNaChannels;
     },
 
+    // @public
     getPerKChannels: function() {
       return this.perKChannels;
     },
 
+    // @public
     get_gk: function() {
       return this.gk;
     },
 
+    // @public
     get_gna: function() {
       return this.gna;
     },
 
+    // @public
     get_gl: function() {
       return this.gl;
     },
@@ -275,57 +285,70 @@ define( function( require ) {
     // convert between internal use of V and the user's expectations
     // the V will be membrane voltage using present day conventions
     // see p. 505 of Hodgkin & Huxley, J Physiol. 1952, 117:500-544
+    // @public
     setV: function( inV ) {
       this.v = -1 * inV - this.resting_v;
     },
 
+    // @public
     getV: function() {
       return -1 * (this.v + this.resting_v);
     },
 
+    // @public
     getRestingV: function() {
       return -1 * this.resting_v;
     },
 
+    // @public
     getCm: function() {
       return this.cm;
     },
 
+    // @public
     getElapsedTime: function() {
       return this.elapsedTime;
     },
 
+    // @public
     resetElapsedTime: function() {
       this.elapsedTime = 0.0;
     },
 
+    // @public
     getN: function() {
       return this.n;
     },
 
+    // @public
     getM: function() {
       return this.m;
     },
 
+    // @public
     getH: function() {
       return this.h;
     },
 
     /**
      * Converts a voltage from the modern convention to the convention used by the program
+     * @private
      */
     convertV: function( voltage ) {
       return (-1 * voltage - this.resting_v);
     },
 
+    // @public
     getVClampOn: function() {
       return this.vClampOn;
     },
 
+    // @public
     get_vClampValue: function() {
       return (-1 * (this.vClampValue + this.resting_v));
     },
 
+    // @public
     getMembraneVoltage: function() {
       // getV() converts the model's v to present day convention
       return this.getV() / 1000;
@@ -380,6 +403,7 @@ define( function( require ) {
      * Stimulate the neuron in a way that simulates a depolarization signal
      * coming to this neuron.  If the neuron is in the correct state, this
      * will trigger an action potential.
+     * @public
      */
     stimulate: function() {
       // Add a fixed amount to the voltage across the membrane.

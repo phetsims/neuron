@@ -24,6 +24,7 @@ define( function( require ) {
      * @param{Movable} movableModelElement
      * @param {IFadable} fadableModelElement
      * @param dt
+     * @public
      */
     move: function( movableModelElement, fadableModelElement, dt ) {
       throw new Error( 'move should be implemented in descendant classes of MotionStrategy.' );

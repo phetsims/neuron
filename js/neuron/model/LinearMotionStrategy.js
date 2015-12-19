@@ -18,7 +18,7 @@ define( function( require ) {
    * @constructor
    */
   function LinearMotionStrategy( velocity ) {
-    this.velocity = velocity;// In nanometers per second of simulation time.
+    this.velocity = velocity; // @private, in nanometers per second of simulation time
   }
 
   return inherit( MotionStrategy, LinearMotionStrategy, {

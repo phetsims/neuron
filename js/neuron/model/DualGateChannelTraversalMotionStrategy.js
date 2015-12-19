@@ -41,15 +41,15 @@ define( function( require ) {
 
     // Holds array of objects with x and y properties (doesn't use vector for performance reasons)
     // http://jsperf.com/object-notation-vs-constructor
-    this.traversalPoints = this.createTraversalPoints( channel, startingLocationX, startingLocationY );
-    this.currentDestinationIndex = 0;
-    this.bouncing = false;
+    this.traversalPoints = this.createTraversalPoints( channel, startingLocationX, startingLocationY ); // @private
+    this.currentDestinationIndex = 0; // @private
+    this.bouncing = false; // @private
     this.setCourseForCurrentTraversalPoint( startingLocationX, startingLocationY );
   }
 
   return inherit( MotionStrategy, DualGateChannelTraversalMotionStrategy, {
 
-    //@Override
+    // @public, @override
     move: function( movableModelElement, fadableModelElement, dt ) {
       assert && assert( this.currentDestinationIndex < this.traversalPoints.length );  // Error checking.
       var angularRange = 0;
@@ -175,11 +175,13 @@ define( function( require ) {
      * @param posX
      * @param posY
      * @param traversalPoint (object literal with x and y properties)
+     * @private
      */
     distanceBetweenPosAndTraversalPoint: function( posX, posY, traversalPoint ) {
       return MathUtils.distanceBetween( posX, posY, traversalPoint.x, traversalPoint.y );
     },
 
+    // @private
     moveBasedOnCurrentVelocity: function( movable, dt ) {
       movable.setPosition( movable.getPositionX() + this.velocityVector.x * dt,
         movable.getPositionY() + this.velocityVector.y * dt );
@@ -193,6 +195,7 @@ define( function( require ) {
      * @param startingLocationX
      * @param startingLocationY
      * @return
+     * @private
      */
     createTraversalPoints: function( channel, startingLocationX, startingLocationY ) {
       var points = [];
@@ -227,6 +230,7 @@ define( function( require ) {
       return points;
     },
 
+    // @private
     setCourseForPoint: function( startLocationX, startLocationY, destination, velocityScaler ) {
       this.velocityVector.setXY( destination.x - startLocationX,
         destination.y - startLocationY );
@@ -235,6 +239,7 @@ define( function( require ) {
 
     },
 
+    // @private
     setCourseForCurrentTraversalPoint: function( currentLocationX, currentLocationY ) {
       var angularRange = 0;
       if ( this.currentDestinationIndex < this.traversalPoints.length ) {

@@ -125,7 +125,7 @@ define( function( require ) {
       this.rotatedChannelRect = channelRect.transformed( rotationTransform );
     },
 
-    // Reset the channel.
+    // @public - reset the channel
     reset: function() {
       this.captureCountdownTimer = Number.POSITIVE_INFINITY;
     },
@@ -189,7 +189,6 @@ define( function( require ) {
      * Start or restart the countdown timer which is used to time the event where a particle is captured for movement
      * across the membrane.  A boolean parameter controls whether a particle capture should occur immediately in
      * addition to setting this timer.
-     *
      * @param captureNow - Indicates whether a capture should be initiated now in addition to resetting the timer.  This
      * is often set to true kicking of a cycle of particle captures.
      * @public
@@ -368,6 +367,7 @@ define( function( require ) {
      * too costly and caused performance issues.
      * @param prevOpenness
      * @param prevInActivationAmt
+     * @public
      */
     notifyIfMembraneStateChanged: function( prevOpenness, prevInActivationAmt ) {
       this.channelStateChanged = prevOpenness !== this.openness || prevInActivationAmt !== this.inactivationAmount;

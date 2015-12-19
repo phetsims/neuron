@@ -21,6 +21,7 @@ define( function( require ) {
      * Fade the associated model element according to the specified amount of time and the nature of the strategy.
      * @param fadableModelElement
      * @param dt
+     * @protected
      */
     updateOpacity: function( fadableModelElement, dt ) {
       throw new Error( 'updateOpacity should be implemented in descendant classes.' );
@@ -29,6 +30,7 @@ define( function( require ) {
     /**
      * Get an indication of whether or not the model element that is associated with this strategy should continue to
      * exist.  This is generally used to figure out when to remove a model element that has faded away.
+     * @public
      */
     shouldContinueExisting: function( fadableModelElement ) {
       return true;
