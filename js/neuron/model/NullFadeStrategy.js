@@ -1,8 +1,6 @@
 // Copyright 2014-2015, University of Colorado Boulder
 /**
- * Fade strategy that does nothing.  Useful for avoiding having to check for
- * null values of fade strategy all the time.
- *
+ * Fade strategy that does nothing.  Useful for avoiding having to check for null values of fade strategy all the time.
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
  */
@@ -20,15 +18,16 @@ define( function( require ) {
 
   return inherit( FadeStrategy, NullFadeStrategy, {
 
-      //@Override
+      // @public, @override
       updateOpacity: function( fadableModelElement, dt ) {
         // Does nothing.
       }
 
     },
 
-    //static.
+    //static
     {
+      // @public
       getInstance: function() {
         if ( !NullFadeStrategy.instance ) {
           // No need to create new instance of NullFadeStrategy , it is stateless

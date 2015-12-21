@@ -33,9 +33,8 @@ define( function( require ) {
     } );
 
     /**
-     * Add the change symbols to the canvas.  These are added by going through
-     * the list of channels and placing two symbols - one intended to be out
-     * of the membrane one one inside of it - between each pair of gates.
+     * Add the change symbols to the canvas.  These are added by going through the list of channels and placing two
+     * symbols - one intended to be out of the membrane one one inside of it - between each pair of gates.
      */
     function addChargeSymbols() {
       // Create a sorted list of the membrane channels in the model.
@@ -86,6 +85,7 @@ define( function( require ) {
      * @param {Vector2} innerPoint //out parameter
      */
     function calcChargeSymbolLocations( p1, p2, neuronCenter, outerPoint, innerPoint ) {
+
       // Find the center point between the given points.
       var center = new Vector2( (p1.x + p2.x) / 2, (p1.y + p2.y) / 2 );
 

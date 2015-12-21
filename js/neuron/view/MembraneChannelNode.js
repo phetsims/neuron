@@ -196,12 +196,14 @@ define( function( require ) {
      * this method for this node - it can be added to the canvas like any other PNode, it just won't have the layering.
      * @param channelLayer
      * @param edgeLayer
+     * @public
      */
     addToCanvas: function( channelLayer, edgeLayer ) {
       channelLayer.addChild( this.channelLayer );
       edgeLayer.addChild( this.edgeLayer );//Membrane channel maintains its own layer of 2 edge nodes
     },
 
+    // @public
     removeFromCanvas: function( channelLayer, edgeLayer ) {
       channelLayer.removeChild( this.channelLayer );
       edgeLayer.removeChild( this.edgeLayer );

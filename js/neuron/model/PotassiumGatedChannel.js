@@ -19,25 +19,22 @@ define( function( require ) {
   var MembraneCrossingDirection = require( 'NEURON/neuron/model/MembraneCrossingDirection' );
   var MathUtils = require( 'NEURON/neuron/common/MathUtils' );
   var MembraneChannelTypes = require( 'NEURON/neuron/model/MembraneChannelTypes' );
-  var Util = require( 'DOT/Util' );
 
   // constants
   var CHANNEL_HEIGHT = NeuronConstants.MEMBRANE_THICKNESS * 1.2; // In nanometers.
   var CHANNEL_WIDTH = NeuronConstants.MEMBRANE_THICKNESS * 0.50; // In nanometers.
 
-  // constants that control the rate at which this channel will capture ions
-  // when it is open.  Smaller numbers here will increase the capture rate
-  // and thus make the flow appear to be faster.
+  // constants that control the rate at which this channel will capture ions when it is open.  Smaller numbers here will
+  // increase the capture rate and thus make the flow appear to be faster.
   var MIN_INTER_CAPTURE_TIME = 0.00005; // In seconds of sim time.
   var MAX_INTER_CAPTURE_TIME = 0.00020; // In seconds of sim time.
 
-  // Constant used when calculating how open this gate should be based on
-  // a value that exists within the Hodgkin-Huxley model.  This was
-  // empirically determined.
+  // Constant used when calculating how open this gate should be based on a value that exists within the Hodgkin-Huxley
+  // model.  This was empirically determined.
   var N4_WHEN_FULLY_OPEN = 0.35;
 
-  // Delay range - used to make the timing of the instances of this gate
-  // vary a little bit in terms of when they open and close.
+  // Delay range - used to make the timing of the instances of this gate vary a little bit in terms of when they open
+  // and close.
   var MAX_STAGGER_DELAY = NeuronConstants.MIN_ACTION_POTENTIAL_CLOCK_DT * 10; // In seconds of sim time.
 
   /**
@@ -57,10 +54,12 @@ define( function( require ) {
 
   return inherit( GatedChannel, PotassiumGatedChannel, {
 
+    // @public
     stepInTime: function( dt ) {
       var prevOpenness = this.openness;
       var prevInActivationAmt = this.inactivationAmount;
       GatedChannel.prototype.stepInTime.call( this, dt );
+
       // Update the openness factor based on the state of the HH model. This is very specific to the model and the type
       // of channel.  Note the non-linear mapping of conductance to the openness factor for the channels.  This is to
       // make the gates appear to snap open and closed more rapidly, which was requested by the IPHY folks after seeing
@@ -84,7 +83,7 @@ define( function( require ) {
       this.notifyIfMembraneStateChanged( prevOpenness, prevInActivationAmt );
     },
 
-    //@Override
+    // @public, @override
     reset: function() {
       GatedChannel.prototype.reset.call( this );
       // Set up the capture time range, which will be used to control the rate of particle capture when this gate is
@@ -93,22 +92,27 @@ define( function( require ) {
       this.setMaxInterCaptureTime( MAX_INTER_CAPTURE_TIME );
     },
 
+    // @public
     getChannelColor: function() {
       return this.channelColor;
     },
 
+    // @public
     getEdgeColor: function() {
       return NeuronConstants.POTASSIUM_COLOR;
     },
 
+    // @public
     getParticleTypeToCapture: function() {
       return ParticleType.POTASSIUM_ION;
     },
 
+    // @public
     chooseCrossingDirection: function() {
       return MembraneCrossingDirection.IN_TO_OUT;
     },
 
+    // @public
     getChannelType: function() {
       return MembraneChannelTypes.POTASSIUM_GATED_CHANNEL;
     }

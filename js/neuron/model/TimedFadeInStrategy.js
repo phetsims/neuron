@@ -21,14 +21,14 @@ define( function( require ) {
    * @constructor
    */
   function TimedFadeInStrategy( fadeTime ) {
-    this.fadeTime = fadeTime;
-    this.fadeCountdownTimer = fadeTime;
-    this.opacityTarget = 1;
+    this.fadeTime = fadeTime; // @private
+    this.fadeCountdownTimer = fadeTime; // @private
+    this.opacityTarget = 1; // @private
   }
 
   return inherit( FadeStrategy, TimedFadeInStrategy, {
 
-    //@Override
+    // @public, @override
     updateOpacity: function( fadableModelElement, dt ) {
       fadableModelElement.setOpacity( Math.min( (1 - this.fadeCountdownTimer / this.fadeTime) * this.opacityTarget, 1 ) );
       this.fadeCountdownTimer -= dt;

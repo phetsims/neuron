@@ -1,10 +1,8 @@
 // Copyright 2014-2015, University of Colorado Boulder
 /**
- * This is a very specialized motion strategy that is basically a linear
- * motion but that starts at one speed and then changes to another.  It was
- * created for a specific application - getting particles to move quickly away
- * from the exit of a channel with an inactivation gate, and then slowing
- * down.  It may have other applications.
+ * This is a very specialized motion strategy that is basically a linear motion but that starts at one speed and then
+ * changes to another.  It was created for a specific application - getting particles to move quickly away from the exit
+ * of a channel with an inactivation gate, and then slowing down.  It may have other applications.
  *
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
@@ -17,7 +15,6 @@ define( function( require ) {
   var MotionStrategy = require( 'NEURON/neuron/model/MotionStrategy' );
 
   /**
-   *
    * @param {Vector2} initialVelocity
    * @param {number} speedScaleFactor
    * @param {number} timeAtFirstSpeed
@@ -32,6 +29,7 @@ define( function( require ) {
 
   return inherit( MotionStrategy, SpeedChangeLinearMotionStrategy, {
 
+    // @public, @override
     move: function( movable, fadableModelElement, dt ) {
       movable.setPosition( movable.getPositionX() + this.velocityVectorX * dt,
         movable.getPositionY() + this.velocityVectorY * dt );

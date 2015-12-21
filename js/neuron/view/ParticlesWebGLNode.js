@@ -161,6 +161,7 @@ define( function( require ) {
      * method that is called by Scenery to repaint this node
      * @param {WebGLDrawable} drawable
      * @param {Matrix3} matrix
+     * @public
      */
     paintWebGLDrawable: function( drawable, matrix ) {
       var gl = drawable.gl;
@@ -288,6 +289,8 @@ define( function( require ) {
     /**
      * bind the canvas that contains the particle images as a texture
      * @param drawable
+     * @param canvas
+     * @private
      */
     bindTextureImage: function( drawable, canvas ) {
       var gl = drawable.gl;
@@ -307,6 +310,7 @@ define( function( require ) {
       gl.generateMipmap( gl.TEXTURE_2D );
     },
 
+    // @private
     disposeWebGLDrawable: function( drawable ) {
       drawable.shaderProgram.dispose();
       drawable.gl.deleteBuffer( drawable.vertexBuffer );
@@ -319,6 +323,7 @@ define( function( require ) {
      * Check if the provided particle is in the current rendering bounds and, if so, create a particle data object and
      * add it to the list that will be converted into vertex data in a subsequent step.
      * @param particle
+     * @private
      */
     addParticleData: function( particle ) {
       var xPos = this.modelViewTransform.modelToViewX( particle.positionX );
@@ -347,6 +352,7 @@ define( function( require ) {
     /**
      * Update the representation shown in the canvas based on the model state.  This is intended to be called any time
      * one or more particles move in a given time step, which means once per frame or less.
+     * @private
      */
     updateParticleData: function() {
       var self = this;

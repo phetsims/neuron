@@ -100,6 +100,7 @@ define( function( require ) {
 
   return inherit( Path, ChargeSymbolNode, {
 
+    // @public, @override
     computeShapeBounds: function() {
       // override bounds computation for better performance
       return FIXED_BOUNDS;

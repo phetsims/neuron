@@ -17,7 +17,6 @@ define( function( require ) {
   var CaptureZone = require( 'NEURON/neuron/model/CaptureZone' );
 
   /**
-   *
    * @constructor
    */
   function NullCaptureZone() {
@@ -26,28 +25,32 @@ define( function( require ) {
 
   return inherit( CaptureZone, NullCaptureZone, {
 
-    //see CaptureZone
+    // @public
     getShape: function() {
       return new Shape().ellipse( 0, 0, 0, 0 );
     },
 
+    // @public
     isPointInZone: function( x, y ) {
       return false;
     },
 
-    // assign a random point that is somewhere within the shape.
+    // @public - assign a random point that is somewhere within the shape.
     assignNewParticleLocation: function( particle ) {
       particle.setPosition( 0, 0 );
     },
 
+    // @public
     getOriginPoint: function() {
       return null;
     },
 
+    // @public
     setRotationalAngle: function( angle ) {
       // necessary to override, but does nothing in this particular subclass
     },
 
+    // @public
     setOriginPoint: function( centerPoint ) {
       // necessary to override, but does nothing in this particular subclass
     }

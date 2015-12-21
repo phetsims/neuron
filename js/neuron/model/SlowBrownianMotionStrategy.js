@@ -1,10 +1,9 @@
 // Copyright 2014-2015, University of Colorado Boulder
 
 /**
- * A motion strategy for showing some slow Brownian motion, which is basically
- * just an occasional small jump from its initial location to a new nearby
- * location and then back.  This is intended to create noticeable but
- * non-distracting motion that doesn't consume much processor time.
+ * A motion strategy for showing some slow Brownian motion, which is basically just an occasional small jump from its
+ * initial location to a new nearby location and then back.  This is intended to create noticeable but non-distracting
+ * motion that doesn't consume much processor time.
  *
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
@@ -24,7 +23,6 @@ define( function( require ) {
   var MAX_TIME_TO_NEXT_JUMP = 0.0015;  // In seconds of sim time, not wall time.
 
   /**
-   *
    * @param {number} initialLocationX
    * @param {number} initialLocationY
    * @constructor
@@ -39,7 +37,7 @@ define( function( require ) {
 
   return inherit( MotionStrategy, SlowBrownianMotionStrategy, {
 
-    //@Override
+    // @public, @override
     move: function( movableModelElement, fadableModelElement, dt ) {
       this.timeUntilNextJump -= dt;
       if ( this.timeUntilNextJump <= 0 ) {
@@ -62,14 +60,17 @@ define( function( require ) {
       }
     },
 
+    // @private
     generateNewJumpTime: function() {
       return MIN_TIME_TO_NEXT_JUMP + Math.random() * (MAX_TIME_TO_NEXT_JUMP - MIN_TIME_TO_NEXT_JUMP);
     },
 
+    // @private
     generateNewJumpDistance: function() {
       return MIN_JUMP_DISTANCE + Math.random() * (MAX_JUMP_DISTANCE - MIN_JUMP_DISTANCE);
     },
 
+    // @private
     generateNewJumpAngle: function() {
       return Math.random() * Math.PI * 2;
     }

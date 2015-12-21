@@ -46,3 +46,6 @@ to be stored for each step.
 Finally, there is some inconsistency in the quality of the comments.  Many have been edited and cleaned up, but this
 process was time consuming and didn't seem to add a lot of value, so some have been left as they were when the
 simulation was delivered.  Feel free to clean them up as they are encountered during any maintenance work.
+
+There are some places where toggling properties are used that should probably be events instead, but time did not
+allow the refactoring.

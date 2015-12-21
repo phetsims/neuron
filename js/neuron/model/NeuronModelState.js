@@ -13,8 +13,8 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
 
   /*
-   * JavaScript object dictionary only supports String as keys,but the channel's state are stored
-   * against Membrane Channel object(key). This "map" utility  supports this functionality by allowing any object to be used as key.
+   * JavaScript object dictionary only supports String as keys, but the channel's state are stored against Membrane
+   * Channel object(key). This "map" utility supports this functionality by allowing any object to be used as key.
    * @returns {{put: put, get: get}}
    */
   function map() {
@@ -39,13 +39,14 @@ define( function( require ) {
   }
 
   /**
-   *
    * @param {NeuronModel} neuronModel
    * @constructor
    */
   function NeuronModelState( neuronModel ) {
 
     var thisNeuronModelState = this;
+
+    // @private, accessed via getter methods
     thisNeuronModelState.axonMembraneState = neuronModel.getAxonMembrane().getState();
     thisNeuronModelState.hodgkinHuxleyModelState = neuronModel.hodgkinHuxleyModel.getState();
     thisNeuronModelState.membranePotential = neuronModel.getMembranePotential();
@@ -73,38 +74,47 @@ define( function( require ) {
 
   return inherit( Object, NeuronModelState, {
 
+    // @public
     getAxonMembraneState: function() {
       return this.axonMembraneState;
     },
 
+    // @public
     getHodgkinHuxleyModelState: function() {
       return this.hodgkinHuxleyModelState;
     },
 
+    // @public
     getMembraneChannelStateMap: function() {
       return this.membraneChannelStateMap;
     },
 
+    // @public
     getPlaybackParticleMementos: function() {
       return this.particlePlaybackMementos;
     },
 
+    // @public
     getMembranePotential: function() {
       return this.membranePotential;
     },
 
+    // @public
     getSodiumInteriorConcentration: function() {
       return this.sodiumInteriorConcentration;
     },
 
+    // @public
     getSodiumExteriorConcentration: function() {
       return this.sodiumExteriorConcentration;
     },
 
+    // @public
     getPotassiumInteriorConcentration: function() {
       return this.potassiumInteriorConcentration;
     },
 
+    // @public
     getPotassiumExteriorConcentration: function() {
       return this.potassiumExteriorConcentration;
     }

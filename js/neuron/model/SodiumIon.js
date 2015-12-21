@@ -15,7 +15,6 @@ define( function( require ) {
   var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
 
   /**
-   *
    * @constructor
    */
   function SodiumIon() {
@@ -24,10 +23,12 @@ define( function( require ) {
 
   return inherit( Particle, SodiumIon, {
 
+    // @public, @override
     getType: function() {
       return ParticleType.SODIUM_ION;
     },
 
+    // @public, @override
     getRepresentationColor: function() {
       return NeuronConstants.SODIUM_COLOR;
     }

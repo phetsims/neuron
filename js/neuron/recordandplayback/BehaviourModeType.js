@@ -1,8 +1,6 @@
 // Copyright 2014-2015, University of Colorado Boulder
 /**
- *
  * Behavior modes that were decided upon after testing
-
  * @author John Blanco
  * @author Sam Reid (PhET Interactive Simulations)
  * @author Sharfudeen Ashraf (for Ghent University)

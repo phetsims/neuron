@@ -20,9 +20,7 @@ define( function( require ) {
 
   /**
    * Construct a playback particle.
-   *
-   * @param {Particle} particle - Real particle from which this playback particle
-   * should be constructed.
+   * @param {Particle} particle - Real particle from which this playback particle should be constructed.
    * @constructor
    */
   function PlaybackParticle( particle ) {
@@ -33,6 +31,7 @@ define( function( require ) {
       appearanceChanged: false
     } );
 
+    // @private, accessed through methods defined below
     this.positionX = particle.getPositionX();
     this.positionY = particle.getPositionY();
     this.opacity = particle.getOpacity();
@@ -68,31 +67,38 @@ define( function( require ) {
       }
     },
 
+    // @public
     getPositionX: function() {
       return this.positionX;
     },
 
+    // @public
     getPositionY: function() {
       return this.positionY;
     },
 
+    // @public
     setPosition: function( x, y ) {
       this.positionX = x;
       this.positionY = y;
     },
 
+    // @public
     getRepresentationColor: function() {
       return this.representationColor;
     },
 
+    // @public
     getOpacity: function() {
       return this.opacity;
     },
 
+    // @public
     getRadius: function() {
       return this.radius;
     },
 
+    // @public
     getType: function() {
       return this.particleType;
     }

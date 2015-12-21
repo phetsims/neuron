@@ -19,7 +19,6 @@ define( function( require ) {
   var MathUtils = require( 'NEURON/neuron/common/MathUtils' );
 
   /**
-   *
    * @param {MembraneChannel} channel
    * @param {number} startingLocationX
    * @param {number} startingLocationY
@@ -46,7 +45,7 @@ define( function( require ) {
 
   return inherit( MotionStrategy, TraverseChannelAndFadeMotionStrategy, {
 
-    //@Override
+    // @public, @override
     move: function( movableModelElement, fadableModelElement, dt ) {
 
       var currentPositionRefX = movableModelElement.getPositionX();
@@ -105,12 +104,11 @@ define( function( require ) {
     },
 
     /**
-     * The directional movement of the particle is guided by a set of predefined traversal points.
-     * When a Particle  is near one of the traversal points, its direction and velocity is recalculated based
-     * on the next traversal point's location (setCourseForCurrentTraversalPoint method)
-     * When the particle goes back in time frame, the "currentDestinationIndex" which is the pointer to
-     * the traversal points array needs to be decremented and when the traversal index reaches zero, original starting location needs to be used for finding the reverse direction.
-     *
+     * The directional movement of the particle is guided by a set of predefined traversal points.  When a particle
+     * reaches one of the traversal points, its direction and velocity is recalculated based on the next traversal
+     * point's location.  When the particle goes back in time, the "currentDestinationIndex" which is the pointer to the
+     * traversal points array needs to be decremented and when the traversal index reaches zero, original starting
+     * location needs to be used for finding the reverse direction.
      * @param {Particle} movableModelElement
      * @param {Particle} fadableModelElement
      * @param {number} dt
@@ -154,7 +152,6 @@ define( function( require ) {
           fadableModelElement.continueExistingProperty.value = false;
           return;
         }
-
       }
 
       movableModelElement.setPosition( currentPositionRefX + this.velocityVector.x * dt,
@@ -164,10 +161,7 @@ define( function( require ) {
     /**
      * Create the points through which a particle must move when traversing
      * this channel.
-     *
-     * @param channel
-     * @param startingLocation
-     * @return
+     * @private
      */
     createTraversalPoints: function( channel, startingLocationX, startingLocationY ) {
       var points = [];
@@ -188,6 +182,7 @@ define( function( require ) {
       return points;
     },
 
+    // @private
     setCourseForCurrentTraversalPoint: function( currentLocationX, currentLocationY ) {
       if ( this.currentDestinationIndex < this.traversalPoints.length ) {
         var dest = this.traversalPoints[ this.currentDestinationIndex ];
@@ -203,9 +198,10 @@ define( function( require ) {
     },
 
     /**
-     * @param xPos
-     * @param yPos
+     * @param posX
+     * @param posY
      * @param traversalPoint (object literal with x and y properties)
+     * @private
      */
     distanceBetweenPosAndTraversalPoint: function( posX, posY, traversalPoint ) {
       return MathUtils.distanceBetween( posX, posY, traversalPoint.x, traversalPoint.y );

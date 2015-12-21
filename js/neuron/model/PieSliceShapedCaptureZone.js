@@ -52,32 +52,36 @@ define( function( require ) {
 
   return inherit( CaptureZone, PieSliceShapedCaptureZone, {
 
-    //@Override
+    // @public, @override
     getShape: function() {
       return this.zoneShape;
     },
 
+    // @public
     isPointInZone: function( x, y ) {
       pointZoneCheckPoint.x = x;
       pointZoneCheckPoint.y = y;
       return this.zoneShape.containsPoint( pointZoneCheckPoint );
     },
 
+    // @public
     setRotationalAngle: function( angle ) {
       this.rotationAngle = angle;
       this.updateShape();
     },
 
+    // @public
     setOriginPoint: function( center ) {
       this.originPoint = center;
       this.updateShape();
     },
 
+    // @public
     getOriginPoint: function() {
       return this.originPoint;
     },
 
-    // assign a random point that is somewhere within the shape.
+    // @public, assign a random point that is somewhere within the shape.
     assignNewParticleLocation: function( particle ) {
       var placementAngle = this.rotationAngle + this.fixedRotationalOffset + (Math.random() - 0.5) * this.angleOfExtent;
       var distanceFromOrigin = this.radius * 0.9;
@@ -86,14 +90,12 @@ define( function( require ) {
       particle.setPosition( xPos, yPos );
     },
 
-    //Derivation function for originPoint and rotation properties
-    // see CaptureZone
+    // @public
     updateShape: function() {
 
       var startAngle = (this.fixedRotationalOffset + this.rotationAngle + this.angleOfExtent / 2) - this.angleOfExtent;
       startAngle = DotUtil.moduloBetweenDown( startAngle, 0, Math.PI * 2 );
       var endAngle = DotUtil.moduloBetweenDown( this.angleOfExtent, 0, Math.PI * 2 );
-
       return new Shape().arc( this.originPoint.x, this.originPoint.y, this.radius, startAngle, endAngle, true );// ARC2D.PIE startPoint and endPoint is internally added to arc's path
     }
   } );

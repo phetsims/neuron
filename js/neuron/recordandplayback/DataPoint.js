@@ -18,20 +18,23 @@ define( function( require ) {
    * @constructor
    */
   function DataPoint( time, state ) {
-    this.time = time; // The  time at which the state occurred
-    this.state = state;
+    this.time = time; // @private
+    this.state = state; // @private
   }
 
   return inherit( Object, DataPoint, {
 
+    // @public
     getTime: function() {
       return this.time;
     },
 
+    // @public
     getState: function() {
       return this.state;
     },
 
+    // @public
     toString: function() {
       return 'time = ' + this.time + ', state = ' + this.state;
     }

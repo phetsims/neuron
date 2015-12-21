@@ -24,11 +24,11 @@ define( function( require ) {
 
   /**
    * @param {number} maxRecordPoints
-   * @param {Object} props
+   * @param {Object} properties
    * @constructor
    */
-  function RecordAndPlaybackModel( maxRecordPoints, props ) {
-    props = _.extend( props, {
+  function RecordAndPlaybackModel( maxRecordPoints, properties ) {
+    properties = _.extend( properties, {
       playing: true, // True if playing, false if paused
       time: 0, // Current time of recording or playback
       historyRemainderCleared: false,
@@ -36,7 +36,7 @@ define( function( require ) {
       mode: null // The current operational mode, valid values are playback, record or live
     } );
     var thisModel = this;
-    PropertySet.call( thisModel, props );
+    PropertySet.call( thisModel, properties );
 
     thisModel.maxRecordPoints = maxRecordPoints;
 

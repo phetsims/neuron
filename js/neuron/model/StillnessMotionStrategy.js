@@ -19,6 +19,7 @@ define( function( require ) {
 
   return inherit( MotionStrategy, StillnessMotionStrategy, {
 
+      // @public, @override
       move: function( movableModelElement, fadableModelElement, dt ) {
         // Does nothing, since the object is not moving.
       }
@@ -26,6 +27,7 @@ define( function( require ) {
 
     //static.
     {
+      // @public
       getInstance: function() {
         if ( !StillnessMotionStrategy.instance ) {
           // No need to create new instance of StillnessMotionStrategy , it is stateless

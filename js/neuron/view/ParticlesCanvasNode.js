@@ -42,7 +42,11 @@ define( function( require ) {
 
   return inherit( CanvasNode, ParticlesCanvasNode, {
 
-    // @param {CanvasRenderingContext2D} context
+    /**
+     * @param {CanvasRenderingContext2D} context
+     * @override
+     * @public
+     */
     paintCanvas: function( context ) {
 
       var thisNode = this;

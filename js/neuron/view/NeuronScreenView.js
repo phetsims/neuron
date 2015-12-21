@@ -59,9 +59,8 @@ define( function( require ) {
   var CHART_HEIGHT = 100; // in screen coordinates, empirically determined
 
   /**
-   * Constructor for the NeuronView
-   * @param {NeuronClockModelAdapter} neuronClockModelAdapter - holds the NeuronModel which uses specialized real time constant clock
-   * The clock adapter calculates the appropriate real time dt and dispatches it to the actual model
+   * @param {NeuronClockModelAdapter} neuronClockModelAdapter - holds the NeuronModel which uses specialized real time
+   * constant clock. The clock adapter calculates the appropriate real time dt and dispatches it to the actual model.
    * @constructor
    */
   function NeuronView( neuronClockModelAdapter ) {

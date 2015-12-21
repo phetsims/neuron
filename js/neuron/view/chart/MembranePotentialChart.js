@@ -2,18 +2,17 @@
 /**
  * Chart for depicting the membrane potential.  This is a Node, and as such
  * is intended for use primarily in the play area.
- * <p/>
+ *
  * Originally, this chart was designed to scroll once there was enough data
  * the fill the chart half way, but this turned out to be too CPU intensive,
  * so it was changed to draw one line of data across the screen and then stop.
  * The user can clear the chart and trigger another action potential to start
  * recording data again.
- * <p/>
+ *
  * This chart can also be used to control the record-and-playback state of the
  * model.  This is done so that the window of recorded data in the model matches
  * that shown in the chart, allowing the user to set the model state to any time
  * shown in the chart.
- * <p/>
  *
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
@@ -67,10 +66,11 @@ define( function( require ) {
     var thisChart = this;
     Node.call( thisChart );
 
+    // @private
     thisChart.chartDimension = chartDimension;
     thisChart.clock = neuronClockModelAdapter;
     thisChart.neuronModel = neuronClockModelAdapter.model;
-    thisChart.updateCountdownTimer = 0; // Init to zero so that an update occurs right away.
+    thisChart.updateCountdownTimer = 0; // init to zero so that an update occurs right away
     thisChart.timeIndexOfFirstDataPt = 0;
     thisChart.playingWhenDragStarted = true;
     thisChart.dataSeries = new XYDataSeries( {
@@ -285,6 +285,7 @@ define( function( require ) {
       }
     },
 
+    // @public
     notifyResize: function() {
       // notify the data line that it needs to be fully redrawn
       this.dataLineNode.notifyResize();
@@ -294,6 +295,7 @@ define( function( require ) {
      * Get the last time value in the data series.  This is assumed to be the
      * highest time value, since data points are expected to be added in order
      * of increasing time.  If no data is present, 0 is returned.
+     * @public
      */
     getLastTimeValue: function() {
       var timeOfLastDataPoint = 0;
@@ -304,10 +306,9 @@ define( function( require ) {
     },
 
     /**
-     * Update the chart based on the current time and the model that is being
-     * monitored.
-     *
+     * Update the chart based on the current time and the model that is being monitored.
      * @param {number} simulationTimeChange - in seconds
+     * @public
      */
     step: function( simulationTimeChange ) {
       if ( this.neuronModel.isRecord() ) {
@@ -332,6 +333,7 @@ define( function( require ) {
       }
     },
 
+    // @public
     clearChart: function() {
       this.dataSeries.clear();
       this.chartIsFull = false;
@@ -339,13 +341,12 @@ define( function( require ) {
       this.updateChartCursorVisibility();
     },
 
+    // @private
     updateChartCursorVisibility: function() {
 
-      // Deciding whether or not the chart cursor should be visible is a
-      // little tricky, so I've tried to make the logic very explicit for
-      // easier maintenance.  Basically, any time we are in playback mode
-      // and we are somewhere on the chart, or when stepping and recording,
-      // the cursor should be seen.
+      // Deciding whether or not the chart cursor should be visible is a little tricky, so I've tried to make the logic
+      // very explicit for easier maintenance.  Basically, any time we are in playback mode and we are somewhere on the
+      // chart, or when stepping and recording, the cursor should be seen.
       var timeOnChart = ( this.neuronModel.getTime() - this.neuronModel.getMinRecordedTime() ) * 1000;
       var isCurrentTimeOnChart = ( timeOnChart >= 0 ) && ( timeOnChart <= TIME_SPAN );
       var dataExists = this.dataSeries.getLength() > 0;
@@ -361,23 +362,27 @@ define( function( require ) {
       }
     },
 
+    // @private
     updateChartCursorPos: function() {
       var recordingStartTime = this.neuronModel.getMinRecordedTime();
       var recordingCurrentTime = this.neuronModel.getTime();
       this.moveChartCursorToTime( ( recordingCurrentTime - recordingStartTime ) * 1000 );
     },
 
+    // @private
     moveChartCursorToTime: function( time ) {
       this.chartCursor.x = Util.clamp( this.chartMvt.transformX( time ), 0, this.chartDimension.width );
       this.chartCursor.y = this.chartMvt.transformY( this.range[ 1 ] );
     },
 
+    // @private
     updateOnSimulationReset: function() {
       this.neuronModel.setModeLive();
       this.clearChart();
       this.updateChartCursorVisibility();
     },
 
+    // @private
     updateCursorState: function() {
       this.updateChartCursorPos();
       this.updateChartCursorVisibility();
@@ -386,6 +391,7 @@ define( function( require ) {
     /**
      * Used to control the play/pause state of clock, since grabbing the cursor causes the clock to pause.
      * @param {boolean} playing
+     * @public
      */
     setPlaying: function( playing ) {
       this.clock.playing = playing;

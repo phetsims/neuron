@@ -52,13 +52,14 @@ define( function( require ) {
     thisChannel.setMaxInterCaptureTime( MAX_INTER_PARTICLE_CAPTURE_TIME );
 
     thisChannel.channelColor = BASE_COLOR.colorUtilsDarker( 0.2 );
-    // Start the capture timer now, since leak channels are always
-    // capturing particles.
+
+    // Start the capture timer now, since leak channels are always capturing particles.
     thisChannel.restartCaptureCountdownTimer( false );
   }
 
   return inherit( AbstractLeakChannel, PotassiumLeakageChannel, {
 
+    // @public
     stepInTime: function( dt ) {
       var prevOpenness = this.openness;
       var prevInActivationAmt = this.inactivationAmount;
@@ -66,29 +67,31 @@ define( function( require ) {
       this.notifyIfMembraneStateChanged( prevOpenness, prevInActivationAmt );
     },
 
+    // @public
     getChannelColor: function() {
       return this.channelColor;
     },
 
+    // @public
     getEdgeColor: function() {
       return BASE_COLOR;
     },
 
+    // @public
     getParticleTypeToCapture: function() {
       return ParticleType.POTASSIUM_ION;
     },
 
+    // @public
     getChannelType: function() {
       return MembraneChannelTypes.POTASSIUM_LEAKAGE_CHANNEL;
     },
 
-    //  @Override
+    // @public, @override
     chooseCrossingDirection: function() {
-      // Generally, this channel leaks from in to out, since the
-      // concentration of potassium is greater on the inside of the cell.
-      // However, the IPHY people requested that there should occasionally
-      // be some leakage in the other direction for greater realism, hence
-      // the random choice below.
+      // Generally, this channel leaks from in to out, since the concentration of potassium is greater on the inside of
+      // the cell. However, the IPHY people requested that there should occasionally be some leakage in the other
+      // direction for greater realism, hence the random choice below.
       var direction = MembraneCrossingDirection.IN_TO_OUT;
       if ( Math.random() < 0.2 ) {
         direction = MembraneCrossingDirection.OUT_TO_IN;
@@ -97,5 +100,4 @@ define( function( require ) {
     }
 
   } );
-
 } );

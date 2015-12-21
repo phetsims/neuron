@@ -23,11 +23,13 @@ define( function( require ) {
 
   return inherit( Mode, Live, {
 
+    // @public, @override
     step: function( simulationTimeChange ) {
       this.recordAndPlaybackModel.setTime( this.recordAndPlaybackModel.getTime() + simulationTimeChange );
       this.recordAndPlaybackModel.stepInTime( simulationTimeChange );
     },
 
+    // @public, @override
     toString: function() {
       return 'Live';
     }

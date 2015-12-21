@@ -67,6 +67,7 @@ define( function( require ) {
 
   return inherit( AbstractLeakChannel, SodiumLeakageChannel, {
 
+    // @public, @override
     stepInTime: function( dt ) {
       var prevOpenness = this.openness;
       var prevInActivationAmt = this.inactivationAmount;
@@ -92,19 +93,22 @@ define( function( require ) {
       this.notifyIfMembraneStateChanged( prevOpenness, prevInActivationAmt );
     },
 
+    // @public, @override
     getChannelColor: function() {
       return this.channelColor;
     },
 
+    // @public, @override
     getEdgeColor: function() {
       return BASE_COLOR;
     },
 
+    // @public, @override
     getParticleTypeToCapture: function() {
       return ParticleType.SODIUM_ION;
     },
 
-    //@Override
+    // @public, @override
     chooseCrossingDirection: function() {
       var result = MembraneCrossingDirection.OUT_TO_IN;
       if ( this.previousNormalizedLeakCurrent === 0 ) {
@@ -119,16 +123,16 @@ define( function( require ) {
       return result;
     },
 
+    // @public, @override
     getChannelType: function() {
       return MembraneChannelTypes.SODIUM_LEAKAGE_CHANNEL;
     },
 
     /**
-     * Update the rate of particle capture based on the supplied normalized
-     * value.
-     *
-     * @param normalizedRate - A value between 0 and 1 where 0 represents the
-     * minimum capture rate for particles and 1 represents the max.
+     * Update the rate of particle capture based on the supplied normalized value.
+     * @param normalizedRate - A value between 0 and 1 where 0 represents the minimum capture rate for particles and 1
+     * represents the max.
+     * @private
      */
     updateParticleCaptureRate: function( normalizedRate ) {
       if ( normalizedRate <= 0.001 ) {

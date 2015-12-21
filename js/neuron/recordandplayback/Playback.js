@@ -25,6 +25,7 @@ define( function( require ) {
 
   return inherit( Mode, Playback, {
 
+    // @public, @override
     step: function( simulationTimeChange ) {
 
       if ( simulationTimeChange > 0 ) {
@@ -47,6 +48,7 @@ define( function( require ) {
       }
     },
 
+    // @public, @override
     toString: function() {
       return 'Playback';
     }

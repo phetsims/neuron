@@ -20,10 +20,12 @@ define( function( require ) {
 
   return inherit( PropertySet, Mode, {
 
+    // @public
     step: function( simulationTimeChange ) {
       throw new Error( 'step should be implemented in descendant classes.' );
     },
 
+    // @public
     toString: function() {
       throw new Error( 'toString should be implemented in descendant classes.' );
     }

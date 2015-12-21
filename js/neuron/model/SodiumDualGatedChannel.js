@@ -21,6 +21,7 @@ define( function( require ) {
   var MathUtils = require( 'NEURON/neuron/common/MathUtils' );
   var MembraneChannelTypes = require( 'NEURON/neuron/model/MembraneChannelTypes' );
 
+  // constants
   var CHANNEL_HEIGHT = NeuronConstants.MEMBRANE_THICKNESS * 1.2; // In nanometers.
   var CHANNEL_WIDTH = NeuronConstants.MEMBRANE_THICKNESS * 0.50; // In nanometers.
 
@@ -77,6 +78,7 @@ define( function( require ) {
 
   return inherit( GatedChannel, SodiumDualGatedChannel, {
 
+    // @public
     stepInTime: function( dt ) {
 
       // A note to maintainers: originally, several properties were maintained that were observed in the view, such as
@@ -174,7 +176,7 @@ define( function( require ) {
       this.notifyIfMembraneStateChanged( prevOpenness, prevInActivationAmt );
     },
 
-    // @Override
+    // @public, @override
     reset: function() {
       GatedChannel.prototype.reset.call( this );
 
@@ -211,46 +213,53 @@ define( function( require ) {
       GatedChannel.prototype.setState.call( this, state );
     },
 
+    // @public, @override
     getChannelColor: function() {
       return this.channelColor;
     },
 
+    // @public, @override
     getEdgeColor: function() {
       return NeuronConstants.SODIUM_COLOR;
     },
 
+    // @public, @override
     getParticleTypeToCapture: function() {
       return ParticleType.SODIUM_ION;
     },
 
+    // @private
     updateStaggerDelay: function() {
       this.staggerDelay = Math.random() * MAX_STAGGER_DELAY;
     },
 
-    // @Override
+    // @public, @override
     chooseCrossingDirection: function() {
       return MembraneCrossingDirection.OUT_TO_IN;
     },
 
-    // @Override This membrane channel has an inactivation gate.
+    // @public, @override
     getHasInactivationGate: function() {
       return true;
     },
 
-    // @Override
+    // @public, @override
     moveParticleThroughNeuronMembrane: function( particle, maxVelocity ) {
       particle.setMotionStrategy( new DualGateChannelTraversalMotionStrategy( this, particle.getPositionX(), particle.getPositionY() ) );
     },
 
+    // @private
     mapOpennessToNormalizedConductance: function( normalizedConductance ) {
       assert && assert( normalizedConductance >= 0 && normalizedConductance <= 1 );
       return 1 - Math.pow( normalizedConductance - 1, 20 );
     },
 
+    // @private
     calculateNormalizedConductance: function() {
       return Math.min( Math.abs( this.hodgkinHuxleyModel.get_delayed_m3h( this.staggerDelay ) ) / M3H_WHEN_FULLY_OPEN, 1 );
     },
 
+    // @public, @override
     getChannelType: function() {
       return MembraneChannelTypes.SODIUM_GATED_CHANNEL;
     }

@@ -41,7 +41,6 @@ define( function( require ) {
       xMargin: 8,
       yMargin: 6
     } );
-
   }
 
   return inherit( Panel, SimSpeedControlPanel );

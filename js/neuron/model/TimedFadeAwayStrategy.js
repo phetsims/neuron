@@ -20,19 +20,19 @@ define( function( require ) {
    * @constructor
    */
   function TimedFadeAwayStrategy( fadeTime ) {
-    this.fadeTime = fadeTime;
-    this.fadeCountdownTimer = fadeTime;
+    this.fadeTime = fadeTime; // @private
+    this.fadeCountdownTimer = fadeTime;  // @private
   }
 
   return inherit( FadeStrategy, TimedFadeAwayStrategy, {
 
-    //@Override
+    // @public, @override
     updateOpacity: function( fadableModelElement, dt ) {
       fadableModelElement.setOpacity( Math.min( Math.max( this.fadeCountdownTimer / this.fadeTime, 0 ), fadableModelElement.getOpacity() ) );
       this.fadeCountdownTimer -= dt;
     },
 
-    //@Override
+    // @public, @override
     shouldContinueExisting: function( fadeableModelElement ) {
       return fadeableModelElement.getOpacity() > 0;
     }

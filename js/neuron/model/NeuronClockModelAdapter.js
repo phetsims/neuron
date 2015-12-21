@@ -4,16 +4,15 @@
  * The clock for this simulation, which provide support for normal operation, play and pause, stepping backwards in
  * time, and playback of previously recorded data.  Because the neuron simulation depicts action potentials far more
  * slowly than they occur in real live, this class adapts the real clock time to a slower rate when clocking the model.
- * <p/>
+ *
  * Note: The whole approach of using explicit clocks and clock adapters is a holdover from PhET's Java days, and is
  * present in this sim because the sim was ported from a Java version.  Use of this technique is not recommended for
  * new HTML5/JavaScript simulations.
- * <p/>
+ *
  * @author Chris Malley (cmalley@pixelzoom.com)
  * @author Sharfudeen Ashraf (for Ghent University)
  * @author John Blanco
  */
-
 define( function( require ) {
   'use strict';
 
@@ -27,11 +26,10 @@ define( function( require ) {
   var NOMINAL_TICK_TIME = ( 1 / 60 ) * TIME_ADJUSTMENT_FACTOR; // used for single stepping, based on assumed frame rate of 60 fps
   var TICKS_PER_SINGLE_STEP = 4;
 
-  // TODO: Get rid of unused params in constructor
   /**
    * Creates a NeuronClockModelAdapter.
-   * @param {NeuronModel} model - model whose simulation timing is controlled by this adapter, Note - the Adapter is
-   * generic and doesn't have any dependency on the model it controls
+   * @param {NeuronModel} model - model whose simulation timing is controlled by this adapter.  Note that the Adapter is
+   * generic and doesn't have any dependency on the model it controls.
    * @constructor
    */
   function NeuronClockModelAdapter( model ) {
@@ -98,7 +96,7 @@ define( function( require ) {
 
     /**
      * Perform one 'tick' of the clock, which fires all callbacks with the provided simulation time
-     * @public TODO - is this really public?
+     * @private
      */
     tick: function( simulationTimeChange ) {
       // fire step event callback
@@ -107,22 +105,9 @@ define( function( require ) {
       }
     },
 
-    // @private below this line
-
-    fireChanged: function() {
-      var changedCallbacks = this.changedCallbacks.slice( 0 ); // copy to prevent concurrent modification
-      for ( var i = 0; i < changedCallbacks.length; i++ ) {
-        changedCallbacks[ i ]( this );
-      }
-    },
-
-    setSimulationTimeNoUpdate: function( simulationTime ) {
-      this.lastSimulationTime = this.simulationTime;
-      this.simulationTime = simulationTime;
-    },
-
     /**
-     * Advance the clock by the tickOnceTimeChange.
+     * advance the clock by a fixed amount used when stepping manually
+     * @public
      */
     stepClockWhilePaused: function() {
       _.times( TICKS_PER_SINGLE_STEP, function() { this.tick( NOMINAL_TICK_TIME ); }, this );
@@ -130,6 +115,7 @@ define( function( require ) {
 
     /**
      * Move the clock backwards by the tickOnceTimeChange.
+     * @public
      */
     stepClockBackWhilePaused: function() {
       _.times( TICKS_PER_SINGLE_STEP, function() { this.tick( -NOMINAL_TICK_TIME ); }, this );

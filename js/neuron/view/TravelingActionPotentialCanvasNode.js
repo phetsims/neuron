@@ -63,7 +63,7 @@ define( function( require ) {
      * Paint the canvas with all of the membrane channels
      * @param {CanvasRenderingContext2D} context
      * @override
-     * @protected
+     * @public
      */
     paintCanvas: function( context ) {
 

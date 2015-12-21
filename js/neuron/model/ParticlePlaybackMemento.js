@@ -17,7 +17,6 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
 
   /**
-   *
    * @param {Particle} particle
    * @constructor
    */
@@ -28,31 +27,36 @@ define( function( require ) {
     this.particleType = particle.getType();
     this.radius = particle.getRadius();
     this.representationColor = particle.getRepresentationColor();
-
   }
 
   return inherit( Object, ParticlePlaybackMemento, {
 
+    // @public
     getPositionX: function() {
       return this.positionX;
     },
 
+    // @public
     getPositionY: function() {
       return this.positionY;
     },
 
+    // @public
     getOpacity: function() {
       return this.opacity;
     },
 
+    // @public
     getParticleType: function() {
       return this.particleType;
     },
 
+    // @public
     getRadius: function() {
       return this.radius;
     },
 
+    // @public
     getRepresentationColor: function() {
       return this.representationColor;
     }

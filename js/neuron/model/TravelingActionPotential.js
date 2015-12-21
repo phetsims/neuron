@@ -49,7 +49,7 @@ define( function( require ) {
   function TravelingActionPotential( axonMembrane ) {
 
     var thisPotential = this;
-    thisPotential.axonMembrane = axonMembrane;
+    thisPotential.axonMembrane = axonMembrane; // @private
 
     // @public - events emitted as the action potential changes
     this.shapeChanged = new Emitter();
@@ -71,7 +71,7 @@ define( function( require ) {
     this.lingerCountdownTimer = 0; // @private
     this.upperCurvePoints = new Array( NUM_CURVE_POINTS ); // @private
     this.lowerCurvePoints = new Array( NUM_CURVE_POINTS ); // @private
-    this.curveMidPoint = new Vector2(); // @private, preallocated for performance reasons
+    this.curveMidPoint = new Vector2(); // @private, pre-allocated for performance reasons
 
     // Set up the points that will be used to determine the ends of the action potential curve.  These are calculated
     // during construction instead of in real time as a performance optimization.
@@ -87,10 +87,8 @@ define( function( require ) {
   return inherit( Object, TravelingActionPotential, {
 
     /**
-     * Step this model component forward by the specified time.  This will
-     * update the shape such that it will appear to move down the axon
-     * membrane.
-     *
+     * Step this model component forward by the specified time.  This will update the shape such that it will appear to
+     * move down the axon membrane.
      * @param dt
      */
     stepInTime: function( dt ) {
@@ -121,6 +119,7 @@ define( function( require ) {
      * but this turned out to be a lot of work, so ultimately we went with a simpler implementation that makes some
      * assumptions about the axon body shape.  If significant changes are made to the axon body shape, this routine will
      * need to be updated.
+     * @private
      */
     updateShapeDescription: function() {
       if ( this.travelTimeCountdownTimer > 0 ) {
@@ -162,6 +161,7 @@ define( function( require ) {
 
     /**
      * Set the state from a (probably previously captured) version of the internal state.
+     * @public
      */
     setState: function( state ) {
       this.travelTimeCountdownTimer = state.getTravelTimeCountdownTimer();
@@ -171,6 +171,7 @@ define( function( require ) {
 
     /**
      * Get the state, generally for use in setting the state later for some sort of playback.
+     * @public
      */
     getState: function() {
       return new TravelingActionPotentialState( this.travelTimeCountdownTimer, this.lingerCountdownTimer );

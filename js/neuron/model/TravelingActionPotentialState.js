@@ -19,16 +19,18 @@ define( function( require ) {
    * @constructor
    */
   function TravelingActionPotentialState( travelTimeCountdownTimer, lingerCountdownTimer ) {
-    this.travelTimeCountdownTimer = travelTimeCountdownTimer;
-    this.lingerCountdownTimer = lingerCountdownTimer;
+    this.travelTimeCountdownTimer = travelTimeCountdownTimer; // @private
+    this.lingerCountdownTimer = lingerCountdownTimer; // @private
   }
 
   return inherit( Object, TravelingActionPotentialState, {
 
+    // @public
     getLingerCountdownTimer: function() {
       return this.lingerCountdownTimer;
     },
 
+    // @public
     getTravelTimeCountdownTimer: function() {
       return this.travelTimeCountdownTimer;
     }

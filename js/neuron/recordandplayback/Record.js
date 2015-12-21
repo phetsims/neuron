@@ -24,6 +24,7 @@ define( function( require ) {
 
   return inherit( Mode, Record, {
 
+    // @public, @override
     step: function( simulationTimeChange ) {
       this.recordAndPlaybackModel.setTime( this.recordAndPlaybackModel.getTime() + simulationTimeChange );
       var state = this.recordAndPlaybackModel.stepInTime( simulationTimeChange );
@@ -31,6 +32,7 @@ define( function( require ) {
       this.recordAndPlaybackModel.addRecordedPoint( new DataPoint( this.recordAndPlaybackModel.getTime(), state ) );
     },
 
+    // @public, @override
     toString: function() {
       return 'Record';
     }

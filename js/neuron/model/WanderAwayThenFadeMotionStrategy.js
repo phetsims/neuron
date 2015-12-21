@@ -30,13 +30,12 @@ define( function( require ) {
   };
 
   /**
-   * Constructor.
-   *
    * @param {Vector2} awayPoint - Point that should be moved away from.
    * @param {number} currentLocationX - Starting locationX
    * @param {number} currentLocationY - Starting locationY
    * @param {number} preFadeTime     - Time before fade out starts, in sim time
    * @param {number} fadeOutDuration - Time of fade out
+   * @constructor
    */
   function WanderAwayThenFadeMotionStrategy( awayPoint, currentLocationX, currentLocationY, preFadeTime, fadeOutDuration ) {
 
@@ -50,13 +49,14 @@ define( function( require ) {
 
     this.velocityX = 0;
     this.velocityY = 0;
+
     // Set an initial velocity and direction.
     this.updateVelocity( currentLocationX, currentLocationY );
   }
 
   return inherit( MotionStrategy, WanderAwayThenFadeMotionStrategy, {
 
-    //@Override
+    // @public, @override
     move: function( movableModelElement, fadableModelElement, dt ) {
 
       this.motionUpdateCountdownTimer -= dt;
@@ -85,6 +85,7 @@ define( function( require ) {
       }
     },
 
+    // @private
     updateVelocity: function( currentPositionX, currentPositionY ) {
       // Create a velocity vector that causes this to move away from the "away point".
       var awayAngle = Math.atan2( currentPositionY - this.awayPoint.y,

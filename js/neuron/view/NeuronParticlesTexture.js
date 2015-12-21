@@ -51,6 +51,7 @@ define( function( require ) {
     /**
      * Draw the particles on the provided canvas.
      * @param {Canvas.context} context
+     * @private
      */
     createParticleImages: function( context ) {
 

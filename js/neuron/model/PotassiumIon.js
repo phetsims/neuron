@@ -24,10 +24,12 @@ define( function( require ) {
 
   return inherit( Particle, PotassiumIon, {
 
+    // @public
     getType: function() {
       return ParticleType.POTASSIUM_ION;
     },
 
+    // @public
     getRepresentationColor: function() {
       return NeuronConstants.POTASSIUM_COLOR;
     }
