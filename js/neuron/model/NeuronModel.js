@@ -15,7 +15,6 @@ define( function( require ) {
   var Vector2 = require( 'DOT/Vector2' );
   var ObservableArray = require( 'AXON/ObservableArray' );
   var AxonMembrane = require( 'NEURON/neuron/model/AxonMembrane' );
-  var Shape = require( 'KITE/Shape' );
   var ModifiedHodgkinHuxleyModel = require( 'NEURON/neuron/model/ModifiedHodgkinHuxleyModel' );
   var RecordAndPlaybackModel = require( 'NEURON/neuron/recordandplayback/RecordAndPlaybackModel' );
   var MembraneChannelTypes = require( 'NEURON/neuron/model/MembraneChannelTypes' );
@@ -38,12 +37,6 @@ define( function( require ) {
   var DEFAULT_FOR_MEMBRANE_CHART_VISIBILITY = false;
   var DEFAULT_FOR_CHARGES_SHOWN = false;
   var DEFAULT_FOR_CONCENTRATION_READOUT_SHOWN = false;
-
-  // The following constants define the boundaries for the motion of the particles.  These boundaries are intended to be
-  // outside the view port, so that it is not apparent to the user that they exist.  We may at some point want to make
-  // these bounds dynamic and set by the view so that the user never encounters a situation where these can be seen.
-  var MODEL_HEIGHT = 130; // In nanometers.
-  var MODEL_WIDTH = 180; // In nanometers.
 
   // numbers of the various types of channels that are present on the membrane
   var NUM_GATED_SODIUM_CHANNELS = 20;
