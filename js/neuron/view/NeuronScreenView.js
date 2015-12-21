@@ -99,13 +99,11 @@ define( function( require ) {
     ) );
 
     // Create and add the layers in the desired order.
-    // TODO: Can I get rid of the intermediate nodes here?
     var axonBodyLayer = new Node();
     var axonCrossSectionLayer = new Node();
     var channelLayer = new Node();
     var chargeSymbolLayer = new ChargeSymbolsLayerNode( thisView.neuronModel, thisView.mvt );
 
-    zoomableNode.addChild( axonBodyLayer );
     zoomableNode.addChild( axonCrossSectionLayer );
     zoomableNode.addChild( channelLayer );
     zoomableNode.addChild( chargeSymbolLayer );
@@ -118,7 +116,7 @@ define( function( require ) {
         worldNodeClipArea.bounds.height * dilationFactor ),
       thisView.mvt
     );
-    axonBodyLayer.addChild( axonBodyNode );
+    zoomableNode.addChild( axonBodyNode );
     var axonCrossSectionNode = new AxonCrossSectionNode( thisView.neuronModel.axonMembrane, thisView.mvt );
     axonCrossSectionLayer.addChild( axonCrossSectionNode );
 
