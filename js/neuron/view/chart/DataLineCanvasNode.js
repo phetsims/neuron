@@ -29,7 +29,6 @@ define( function( require ) {
     this.dataSeries = dataSeries; // @private
     this.numSegments = 0; // @private, number of line segments that comprise the overall line
     this.mvt = mvt; // @private
-    this.fullRepaintNeeded = false; // @private, used to fully redraw the line if is has been resized
 
     // call super-constructor
     CanvasNode.call( this, { pickable: false, canvasBounds: new Bounds2( 0, 0, width, height ) } );
@@ -57,28 +56,12 @@ define( function( require ) {
      */
     paintCanvas: function( context ) {
 
-      context.strokeStyle = LINE_COLOR;
-      context.lineWidth = LINE_WIDTH;
+      // This is optimized to draw little segments on the end of an already existing line if possible, and only do a
+      // full redraw when necessary.
+      if ( this.numSegments < this.dataSeries.getLength() - 1 ) {
 
-      // this is optimized to draw little segments on the end if possible, and only do a full redraw when it has to
-      if ( this.fullRepaintNeeded ) {
-        this.numSegments = 0;
-        if ( this.dataSeries.getLength() > 0 ) {
-          context.beginPath();
-          context.moveTo( this.mvt.modelToViewX( this.dataSeries.getX( 0 ) ),
-            this.mvt.modelToViewY( this.dataSeries.getY( 0 ) ) );
-          for ( var i = 1; i < this.dataSeries.getLength(); i++ ) {
-            context.lineTo( this.mvt.modelToViewX( this.dataSeries.getX( i ) ),
-              this.mvt.modelToViewY( this.dataSeries.getY( i ) ) );
-            context.stroke();
-            this.numSegments++;
-          }
-        }
-        this.fullRepaintNeeded = false;
-      }
-      else if ( this.numSegments < this.dataSeries.getLength() - 1 ) {
-
-        // just tack the next segment on to the end of the existing line
+        context.strokeStyle = LINE_COLOR;
+        context.lineWidth = LINE_WIDTH;
 
         if ( this.numSegments === 0 ) {
           // this is the first segment, so start the new path
@@ -99,8 +82,14 @@ define( function( require ) {
       }
     },
 
+    /**
+     * Notify this class that a resize has occurred.  This is necessary because of the optimization that only adds new
+     * segments to the line as it grows - if a resize occurs due to the user resizing the window, the canvas is cleared
+     * by Scenery, so without this notification a partial line would be seen by the user.
+     * @public
+     */
     notifyResize: function() {
-      this.fullRepaintNeeded = true;
+      this.numSegments = 0;
       this.invalidatePaint();
     }
   } );
