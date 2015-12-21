@@ -85,7 +85,6 @@ define( function( require ) {
     // @private
     renderParticles: function( particles, context ) {
       var self = this;
-      console.log( 'here I am boss!' );
 
       // group by particle type, this way no need to set the fillStyle for every particle instance
       var particlesGroupedByType = _.groupBy( particles, function( particle ) {
