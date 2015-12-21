@@ -104,6 +104,7 @@ define( function( require ) {
     var channelLayer = new Node();
     var chargeSymbolLayer = new ChargeSymbolsLayerNode( thisView.neuronModel, thisView.mvt );
 
+    zoomableNode.addChild( axonBodyLayer );
     zoomableNode.addChild( axonCrossSectionLayer );
     zoomableNode.addChild( channelLayer );
     zoomableNode.addChild( chargeSymbolLayer );
@@ -116,7 +117,7 @@ define( function( require ) {
         worldNodeClipArea.bounds.height * dilationFactor ),
       thisView.mvt
     );
-    zoomableNode.addChild( axonBodyNode );
+    axonBodyLayer.addChild( axonBodyNode );
     var axonCrossSectionNode = new AxonCrossSectionNode( thisView.neuronModel.axonMembrane, thisView.mvt );
     axonCrossSectionLayer.addChild( axonCrossSectionNode );
 
