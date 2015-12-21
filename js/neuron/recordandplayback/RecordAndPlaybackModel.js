@@ -202,7 +202,7 @@ define( function( require ) {
       var thisModel = this;
       var sortedHistory = this.recordHistory.getArray().slice();
 
-      sortedHistory.sort( function( o1, o2 ) { //todo: binary search?  Or use better heuristics, such as assuming that points are equally spaced?
+      sortedHistory.sort( function( o1, o2 ) {
         return compare( Math.abs( o1.getTime() - thisModel.time ), Math.abs( o2.getTime() - thisModel.time ) );//Though inefficient, this hasn't caused noticeable slowdown during testing
       } );
 

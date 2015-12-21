@@ -129,11 +129,6 @@ define( function( require ) {
         'varying float vOpacity;',
         'uniform sampler2D uSampler;',
         'void main( void ) {',
-        // TODO: I (jblanco) am leaving some commented-out code below for ease of testing, these should be removed
-        // when all the WebGL functionality has been finalized.
-        //'  gl_FragColor = texture2D(uSampler, vec2(0.5, 0.5));',
-        //'  gl_FragColor = vec4( 0, 0, 0, 1 );',
-        //'  gl_FragColor = vec4( 0, 1, 0, 0.1 );',
         '  gl_FragColor = texture2D( uSampler, vTextureCoordinate );',
         '  gl_FragColor.a *= vOpacity;',
         '}'
@@ -180,7 +175,6 @@ define( function( require ) {
         var particleDatum = this.particleData[ i ];
 
         // Tweak Alert!  The radii of the particles are adjusted here in order to look correct.
-        // TODO: I (jblanco) am not entirely sure why this is needed in order to look right.  This should be investigated if retained.
         var adjustedParticleRadius;
         var textureCoordinates;
         if ( particleDatum.type === ParticleType.SODIUM_ION ){

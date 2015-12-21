@@ -66,7 +66,7 @@ define( function( require ) {
   function NeuronView( neuronClockModelAdapter ) {
 
     var thisView = this;
-    thisView.neuronModel = neuronClockModelAdapter.model; // model is neuron model TODO: It seems weird that the model is pulled out of the clock adapter.  What's with that?  Should be fixed.
+    thisView.neuronModel = neuronClockModelAdapter.model; // model is neuron model
     ScreenView.call( thisView, { layoutBounds: new Bounds2( 0, 0, 834, 504 ) } );
     var viewPortPosition = new Vector2( thisView.layoutBounds.width * 0.40, thisView.layoutBounds.height - 255 );
 
@@ -197,9 +197,9 @@ define( function( require ) {
     }
     else {
       var particlesCanvasNode = new ParticlesCanvasNode( thisView.neuronModel, thisView.mvt, worldNodeClipArea );
-      // TODO: Clarify this comment.
-      //WebGL node uses its own scaling whereas Matrix canvas based Particles implementation uses Node's
-      //transform matrix for scaling so add it to the zoomableNode
+
+      // The WebGL node uses its own scaling whereas ParticlesCanvasNode uses the parent node's transform matrix for
+      // scaling, so add it to the root node of the zoomable content (zoomableNode).
       if ( SHOW_PARTICLE_CANVAS_BOUNDS ) {
         this.addChild( Rectangle.bounds( particlesCanvasNode.bounds, { stroke: 'green' } ) );
       }

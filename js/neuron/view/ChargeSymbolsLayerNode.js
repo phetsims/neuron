@@ -53,9 +53,6 @@ define( function( require ) {
     // function to add a pair of complementary charge symbols, one inside the membrane and one outside
     function addChargeSymbolPair( channel1, channel2 ) {
 
-      // TODO: Removed commented code once this approach is proven.
-      //var outerChargeSymbol;
-      //var innerChargeSymbol;
       var innerSymbolLocation = new Vector2();
       var outerSymbolLocation = new Vector2();
       var outerSymbolParentNode = new Node();
@@ -64,15 +61,9 @@ define( function( require ) {
       innerSymbolParentNode.addChild( innerChargeSymbol );
 
       calcChargeSymbolLocations( channel1.getCenterLocation(), channel2.getCenterLocation(), Vector2.ZERO, outerSymbolLocation, innerSymbolLocation );
-      //outerChargeSymbol = new ChargeSymbolNode( neuronModel, MAX_CHARGE_SYMBOL_SIZE, 0.1, false );
-      //outerChargeSymbol.setTranslation( mvt.modelToViewPosition( innerSymbolLocation ) );
       outerSymbolParentNode.setTranslation( mvt.modelToViewPosition( outerSymbolLocation ) );
-      //chargeSymbolLayer.addChild( outerChargeSymbol );
       chargeSymbolLayer.addChild( outerSymbolParentNode );
-      //innerChargeSymbol = new ChargeSymbolNode( neuronModel, MAX_CHARGE_SYMBOL_SIZE, 0.1, true );
-      //innerChargeSymbol.setTranslation( mvt.modelToViewPosition( outerSymbolLocation ) );
       innerSymbolParentNode.setTranslation( mvt.modelToViewPosition( innerSymbolLocation ) );
-      //chargeSymbolLayer.addChild( innerChargeSymbol );
       chargeSymbolLayer.addChild( innerSymbolParentNode );
     }
 
