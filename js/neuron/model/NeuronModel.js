@@ -140,7 +140,11 @@ define( function( require ) {
       playbackParticlesVisible: false, // @private
       concentrationChanged: false, // @public
       stimulusPulseInitiated: false, // @public
-      neuronModelPlaybackState: null // @public
+      neuronModelPlaybackState: null, // @public
+
+      // @public, part of a workaround for an issue with refreshing canvases when nothing is drawn, see
+      // https://github.com/phetsims/neuron/issues/100 and https://github.com/phetsims/scenery/issues/503
+      atLeastOneParticlePresent: false
     } );
 
     // add a listener that will stimulate the HH model then the traveling action potential reaches the cross section
@@ -175,6 +179,11 @@ define( function( require ) {
         // remove the background particles
         thisModel.backgroundParticles.clear();
       }
+
+      // update the property that indicates whether there is at least one particle present
+      thisModel.atLeastOneParticlePresent = ( thisModel.backgroundParticles.length +
+                                              thisModel.transientParticles.length +
+                                              thisModel.playbackParticles.length ) > 0;
     } );
 
     // Define a function to add the initial channels.  The pattern is intended to be such that the potassium and sodium
@@ -414,6 +423,11 @@ define( function( require ) {
       if ( concentrationChanged ) {
         this.concentrationChanged = true;
       }
+
+      // Update the flag that indicates whether these is at least one particle present in the model.
+      this.atLeastOneParticlePresent = ( this.backgroundParticles.length +
+                                         this.transientParticles.length +
+                                         this.playbackParticles.length ) > 0;
 
       // Emit the event that lets the view know that the particles should be redrawn.
       this.particlesMoved.emit();

@@ -92,6 +92,19 @@ define( function( require ) {
     zoomMatrixProperty.lazyLink( function() {
       self.invalidatePaint();
     } );
+
+    /**
+     * There is an issue in Scenery where, if nothing is drawn, whatever was previously drawn stays there.  This was
+     * causing problems in this sim when turning off the "Show All Ions" setting, see
+     * https://github.com/phetsims/neuron/issues/100.  The Scenery issue is
+     * https://github.com/phetsims/scenery/issues/503.  To work around this problem, a property was added to the model
+     * and linked here that can be used to set the node invisible if there are no particles to be rendered.  This can
+     * probably be removed if and when the Scenery issue is addressed.
+     */
+    neuronModel.atLeastOneParticlePresentProperty.lazyLink( function( atLeastOneParticlePresent ) {
+      self.visible = atLeastOneParticlePresent;
+      self.invalidatePaint();
+    } );
   }
 
   return inherit( WebGLNode, ParticlesWebGLNode, {
