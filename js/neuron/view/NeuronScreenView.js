@@ -261,7 +261,7 @@ define( function( require ) {
       centerY: centerYForLowerControls,
       minWidth: 50,
       maxWidth: 200, // empirically determined
-      minHeight: 85
+      minHeight: 65
     } );
 
     this.addChild( stimulateNeuronButton );
