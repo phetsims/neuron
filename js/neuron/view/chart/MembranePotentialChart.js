@@ -149,8 +149,8 @@ define( function( require ) {
     // clear button
     var clearChartButton = new TextPushButton( chartClearString, {
       font: new PhetFont( { size: 12 } ),
-      maxWidth: 150, // empiricially determined
-      minHeight: 30, // empiricially determined
+      maxWidth: 150, // empirically determined
+      minHeight: 30, // empirically determined
       listener: function() { thisChart.clearChart(); }
     } );
 
