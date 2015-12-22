@@ -23,9 +23,17 @@ define( function( require ) {
 
   /**
    * @param {Property.<number>} speedProperty
+   * @param {Object} options
    * @constructor
    */
-  function SimSpeedControlPanel( speedProperty ) {
+  function SimSpeedControlPanel( speedProperty, options ) {
+
+    options = _.extend( {
+      fill: NeuronConstants.CONTROL_PANEL_BACKGROUND,
+      stroke: NeuronConstants.CONTROL_PANEL_STROKE,
+      xMargin: 8,
+      yMargin: 6
+    }, options );
 
     var radioButtonFont = NeuronConstants.CONTROL_PANEL_CONTROL_FONT;
     var speedRadioButtonGroup = new VerticalAquaRadioButtonGroup( [
@@ -34,13 +42,7 @@ define( function( require ) {
       { node: new Text( slowMotionString, { font: radioButtonFont } ), property: speedProperty, value: 0.5 }
     ], { radius: 8, spacing: 8 } );
 
-    Panel.call( this, speedRadioButtonGroup, {
-      // panel options
-      fill: NeuronConstants.CONTROL_PANEL_BACKGROUND,
-      stroke: NeuronConstants.CONTROL_PANEL_STROKE,
-      xMargin: 8,
-      yMargin: 6
-    } );
+    Panel.call( this, speedRadioButtonGroup, options );
   }
 
   return inherit( Panel, SimSpeedControlPanel );

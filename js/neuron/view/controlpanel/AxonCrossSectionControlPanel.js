@@ -38,25 +38,18 @@ define( function( require ) {
 
   /**
    * @param {NeuronModel}  neuronModel
+   * @param {object} options
    * @constructor
    */
   function AxonCrossSectionControlPanel( neuronModel, options ) {
-    var maxButtonTextWidth = 100; // empirically determined
 
-    // Scale and fit the ButtonText within panel's bounds
-    function scaleAndFitTextItem( textItemNode ) {
-      var textNodeScaleFactor = Math.min( 1, maxButtonTextWidth / textItemNode.width );
-      textItemNode.scale( textNodeScaleFactor );
-      return textItemNode;
-    }
-
-    var allIonsSimulatedCheckBox = new CheckBox( scaleAndFitTextItem( new Text( allIonsString, TEXT_OPTIONS ) ), neuronModel.allIonsSimulatedProperty, CHECK_BOX_OPTIONS );
+    var allIonsSimulatedCheckBox = new CheckBox( new Text( allIonsString, TEXT_OPTIONS ), neuronModel.allIonsSimulatedProperty, CHECK_BOX_OPTIONS );
     expandTouchArea( allIonsSimulatedCheckBox );
-    var showChargesCheckBox = new CheckBox( scaleAndFitTextItem( new Text( chargesString, TEXT_OPTIONS ) ), neuronModel.chargesShownProperty, CHECK_BOX_OPTIONS );
+    var showChargesCheckBox = new CheckBox( new Text( chargesString, TEXT_OPTIONS ), neuronModel.chargesShownProperty, CHECK_BOX_OPTIONS );
     expandTouchArea( showChargesCheckBox );
-    var showConcentrationsCheckBox = new CheckBox( scaleAndFitTextItem( new Text( concentrationsString, TEXT_OPTIONS ) ), neuronModel.concentrationReadoutVisibleProperty, CHECK_BOX_OPTIONS );
+    var showConcentrationsCheckBox = new CheckBox( new Text( concentrationsString, TEXT_OPTIONS ), neuronModel.concentrationReadoutVisibleProperty, CHECK_BOX_OPTIONS );
     expandTouchArea( showConcentrationsCheckBox );
-    var showPotentialChartCheckBox = new CheckBox( scaleAndFitTextItem( new Text( potentialChartString, TEXT_OPTIONS ) ), neuronModel.potentialChartVisibleProperty, CHECK_BOX_OPTIONS );
+    var showPotentialChartCheckBox = new CheckBox( new Text( potentialChartString, TEXT_OPTIONS ), neuronModel.potentialChartVisibleProperty, CHECK_BOX_OPTIONS );
     expandTouchArea( showPotentialChartCheckBox );
 
     var crossSectionControlContents = [];

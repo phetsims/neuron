@@ -260,7 +260,8 @@ define( function( require ) {
       right: worldNodeClipArea.bounds.maxX,
       centerY: centerYForLowerControls,
       minWidth: 50,
-      minHeight: 65
+      maxWidth: 200, // empirically determined
+      minHeight: 85
     } );
 
     this.addChild( stimulateNeuronButton );
@@ -280,7 +281,8 @@ define( function( require ) {
     ionsAndChannelsLegendPanel.top = clipAreaBounds.y;
 
     var axonCrossSectionControlPanel = new AxonCrossSectionControlPanel( thisView.neuronModel, {
-      minWidth: ionsAndChannelsLegendPanel.width
+      minWidth: ionsAndChannelsLegendPanel.width,
+      maxWidth: ionsAndChannelsLegendPanel.width
     } );
     this.addChild( axonCrossSectionControlPanel );
     axonCrossSectionControlPanel.centerX = ionsAndChannelsLegendPanel.centerX;
@@ -305,9 +307,11 @@ define( function( require ) {
       concentrationReadoutLayerNode.visible = concentrationVisible;
     } );
 
-    var simSpeedControlPanel = new SimSpeedControlPanel( neuronClockModelAdapter.speedProperty );
-    simSpeedControlPanel.left = thisView.layoutBounds.minX + leftPadding;
-    simSpeedControlPanel.centerY = centerYForLowerControls;
+    var simSpeedControlPanel = new SimSpeedControlPanel( neuronClockModelAdapter.speedProperty, {
+      left: thisView.layoutBounds.minX + leftPadding,
+      centerY: centerYForLowerControls,
+      maxWidth: 250 // empirically determined
+    } );
     thisView.addChild( simSpeedControlPanel );
 
     var zoomControl = new ZoomControl( zoomProperty, MIN_ZOOM, MAX_ZOOM );
