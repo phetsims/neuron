@@ -27,7 +27,7 @@ consistent, but far from perfect in this regard.
 When the code was first submitted to PhET, there were a number of places where events were signalled by toggling a
 boolean Property instead of simply triggering an event.  It's hard to say why this was done, but it may just be that
 the original author wasn't familiar with events.  Some of these were changed to be events, but there wasn't a concerted
-effort to change them all, so there may still be some instances of this pattern in the code.
+effort to change them all, so there may still be some instances of this pattern (or perhaps "anti-pattern") in the code.
 
 Because this simulation consumes a fair amount of computational and graphical resources when an action potential is in
 progress, there are a lot of optimizations.  As of this writing, there is a WebGL node that displays the sodium and
@@ -37,15 +37,11 @@ The code to implement the playback and record feature is a little tricky, so it'
 was originally written in Java, and as such it made heavy use of inheritance.  The key base classes are "Mode" and
 "RecordAndPlaybackModel".  A mode represents the current playback mode, and different modes are switched in and out as
 the playback mode changes.  There are currently three modes: Record, Playback, and Live.  The first two are fairly self
-explanatory, and the third is a mode where the simulation is running and no recording is taking place. (TODO: add more
-detail here).
-
-A simplification to the record-and-playback behavior was made in order to reduce the size of the state date that needed
-to be stored for each step.  
+explanatory, and the third is a mode where the simulation is running and no recording is taking place. The mode
+instances are switched in and out as the playback mode changes in order to implement the desired behavior.  This is
+similar to the "State Pattern" often used in OO design, and more information can be found here: 
+https://en.wikipedia.org/wiki/State_pattern. 
 
 Finally, there is some inconsistency in the quality of the comments.  Many have been edited and cleaned up, but this
 process was time consuming and didn't seem to add a lot of value, so some have been left as they were when the
 simulation was delivered.  Feel free to clean them up as they are encountered during any maintenance work.
-
-There are some places where toggling properties are used that should probably be events instead, but time did not
-allow the refactoring.
