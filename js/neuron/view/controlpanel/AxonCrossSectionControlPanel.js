@@ -85,16 +85,9 @@ define( function( require ) {
     );
 
     neuronModel.stimulusLockoutProperty.link( function( stimulusLockout ) {
-      // When stimulation is locked out, we also lock out the
-      // ability to change the "All Ions Simulated" state, since
-      // otherwise ions would have to disappear during an action potential,
-      // which would be tricky.
+      // When stimulation is locked out, we also lock out the ability to change the "All Ions Simulated" state, since
+      // otherwise ions would have to disappear during an action potential, which would be tricky.
       allIonsSimulatedCheckBox.enabled = !neuronModel.isStimulusInitiationLockedOut();
-    } );
-
-    //listen to allIonsSimulatedProperty through allIonsSimulatedCheckBox and invoke  setAllIonsSimulated method on NeuronModel
-    neuronModel.allIonsSimulatedProperty.lazyLink( function( allIonsSimulated ) {
-      neuronModel.setAllIonsSimulated( allIonsSimulated );
     } );
   }
 

@@ -83,8 +83,15 @@ define( function( require ) {
       self.invalidatePaint();
     } );
 
+    // monitor a property that indicates whether all ions are being depicted and initiate a redraw on a change
+    neuronModel.allIonsSimulatedProperty.lazyLink( function() {
+      self.invalidatePaint();
+    } );
+
     // monitor a property that indicates when the zoom level and changes and initiate a redraw
-    zoomMatrixProperty.link( function() { self.invalidatePaint(); } );
+    zoomMatrixProperty.lazyLink( function() {
+      self.invalidatePaint();
+    } );
   }
 
   return inherit( WebGLNode, ParticlesWebGLNode, {
@@ -143,11 +150,6 @@ define( function( require ) {
       drawable.vertexBuffer = gl.createBuffer();
       drawable.elementBuffer = gl.createBuffer();
 
-      // TODO: I'm totally guessing on the following, based on some examples I've been looking at (jblanco).  Should
-      // the uniform go into the ShaderProgram abstraction?  Ashraf doesn't seem to use it at all, so maybe it isn't
-      // necessary.
-      drawable.uniformSamplerLoc = gl.getUniformLocation( drawable.shaderProgram.program, 'uSampler' );
-
       // bind the texture that contains the particle images
       this.bindTextureImage( drawable, this.particlesTexture.canvas );
     },
@@ -177,11 +179,11 @@ define( function( require ) {
         // Tweak Alert!  The radii of the particles are adjusted here in order to look correct.
         var adjustedParticleRadius;
         var textureCoordinates;
-        if ( particleDatum.type === ParticleType.SODIUM_ION ){
+        if ( particleDatum.type === ParticleType.SODIUM_ION ) {
           adjustedParticleRadius = particleDatum.radius * 1.9;
           textureCoordinates = this.sodiumTextureCoords;
         }
-        else if ( particleDatum.type === ParticleType.POTASSIUM_ION ){
+        else if ( particleDatum.type === ParticleType.POTASSIUM_ION ) {
           adjustedParticleRadius = particleDatum.radius * 2.1;
           textureCoordinates = this.potassiumTextureCoords;
         }
@@ -271,8 +273,10 @@ define( function( require ) {
       gl.uniformMatrix3fv( shaderProgram.uniformLocations.uModelViewMatrix, false, matrix.entries );
       gl.uniformMatrix3fv( shaderProgram.uniformLocations.uProjectionMatrix, false, drawable.webGLBlock.projectionMatrixArray );
 
-      // TODO: The following line of code is a guess based on things seen elsewhere.  Should this uniform be in shaderProgram.uniformLocations?
-      gl.uniform1i( drawable.uniformSamplerLoc, 0 );
+      // activate and bind the texture
+      gl.activeTexture( gl.TEXTURE0 );
+      gl.bindTexture( gl.TEXTURE_2D, drawable.texture );
+      gl.uniform1i( shaderProgram.uniformLocations.uSampler, 0 );
 
       // add the element data
       gl.drawElements( gl.TRIANGLE_STRIP, elementDataIndex, gl.UNSIGNED_SHORT, 0 );

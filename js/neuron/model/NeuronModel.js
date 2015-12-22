@@ -158,6 +158,24 @@ define( function( require ) {
       }
     } );
 
+    // add a listener that will add and remove the background or 'bulk' particles based on simulation settings
+    this.allIonsSimulatedProperty.lazyLink( function( allIonsSimulated ) {
+
+      // This should never change while stimulus is locked out, and we depend on the UI to enforce this rule.
+      // Otherwise, background particles could come and go during and action potential or during playback, which would
+      // be hard to handle.
+      assert && assert( !thisModel.isStimulusInitiationLockedOut(), 'all ions setting changed when stimulus was locked out' );
+
+      if ( allIonsSimulated ) {
+
+        // add the background particles
+        thisModel.addInitialBulkParticles();
+      }
+      else {
+        // remove the background particles
+        thisModel.backgroundParticles.clear();
+      }
+    } );
 
     // Define a function to add the initial channels.  The pattern is intended to be such that the potassium and sodium
     // gated channels are right next to each other, with occasional leak channels interspersed.  There should be one or
@@ -319,10 +337,8 @@ define( function( require ) {
         particle.stepInTime( dt );
       } );
 
-      // Adjust the overall potassium and sodium concentration levels based
-      // parameters of the HH model.  This is done solely to provide values
-      // that can be displayed to the user, and are not used for anything
-      // else in the model.
+      // Adjust the overall potassium and sodium concentration levels based parameters of the HH model.  This is done
+      // solely to provide values that can be displayed to the user, and are not used for anything else in the model.
       var concentrationChanged = this.concentrationChanged = false;
       var difference;
       var potassiumConductance = this.hodgkinHuxleyModel.get_delayed_n4( CONCENTRATION_READOUT_DELAY );
@@ -480,8 +496,13 @@ define( function( require ) {
       // Set the visibility of the charge symbols to its initial state.
       this.setChargesShown( DEFAULT_FOR_CHARGES_SHOWN );
 
-      // Set the boolean that controls whether all ions are simulated to its original state.
+      // Set the state of 'all ions simulated'.  If the default is on, cycle it off first to force a change so that
+      // background particles are added.
+      if ( DEFAULT_FOR_SHOW_ALL_IONS === true ) {
+        this.setAllIonsSimulated( false );
+      }
       this.setAllIonsSimulated( DEFAULT_FOR_SHOW_ALL_IONS );
+
 
       // Set the state of the record-and-playback model to be "live" (neither recording nor playing) and unpaused.
       this.clearHistory();
@@ -551,18 +572,7 @@ define( function( require ) {
      * @public
      */
     setAllIonsSimulated: function( allIonsSimulated ) {
-
-      // This can only be changed when the stimulus initiation is not locked out.  Otherwise, particles would come and
-      // go during an action potential, which would be hard to handle and potentially confusing.
-      if ( !this.isStimulusInitiationLockedOut() ) {
-        if ( this.allIonsSimulated ) {
-          // add the bulk particles
-          this.addInitialBulkParticles();
-        }
-        else {
-          this.removeAllParticles();
-        }
-      }
+      this.allIonsSimulated = allIonsSimulated;
     },
 
     /**
