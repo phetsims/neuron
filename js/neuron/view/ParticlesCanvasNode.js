@@ -13,7 +13,6 @@ define( function( require ) {
 
   // modules
   var CanvasNode = require( 'SCENERY/nodes/CanvasNode' );
-  var Color = require( 'SCENERY/util/Color' );
   var inherit = require( 'PHET_CORE/inherit' );
   var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
 
@@ -36,6 +35,24 @@ define( function( require ) {
 
     // Monitor a property that indicates when a particle state has changed and initiate a redraw.
     neuronModel.particlesMoved.addListener( function() {
+      thisNode.invalidatePaint();
+    } );
+
+    // monitor a property that indicates whether all ions are being depicted and initiate a redraw on a change
+    neuronModel.allIonsSimulatedProperty.lazyLink( function() {
+      thisNode.invalidatePaint();
+    } );
+
+    /**
+     * There is an issue in Scenery where, if nothing is drawn, whatever was previously drawn stays there.  This was
+     * causing problems in this sim when turning off the "Show All Ions" setting, see
+     * https://github.com/phetsims/neuron/issues/100.  The Scenery issue is
+     * https://github.com/phetsims/scenery/issues/503.  To work around this problem, a property was added to the model
+     * and linked here that can be used to set the node invisible if there are no particles to be rendered.  This can
+     * probably be removed if and when the Scenery issue is addressed.
+     */
+    neuronModel.atLeastOneParticlePresentProperty.lazyLink( function( atLeastOneParticlePresent ) {
+      thisNode.visible = atLeastOneParticlePresent;
       thisNode.invalidatePaint();
     } );
   }
