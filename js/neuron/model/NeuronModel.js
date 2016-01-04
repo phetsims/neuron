@@ -287,8 +287,15 @@ define( function( require ) {
     step: function( dt ) {
 
       if ( dt < 0 ) {
+
         // this is a backwards time step, so make sure that we are in the playback mode
         this.setPlayback();
+
+        // If the current simulation time is past the end of the max recorded time, set the time to the max recorded
+        // value so that the cursor will appear on the chart (if visible), thus allowing the user to interact with it.
+        if ( this.getTime() > this.getMaxRecordedTime() ) {
+          this.setTime( this.getMaxRecordedTime() );
+        }
       }
 
       RecordAndPlaybackModel.prototype.step.call( this, dt );
