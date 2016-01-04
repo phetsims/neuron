@@ -103,8 +103,8 @@ define( function( require ) {
       return this.mode === this.liveMode;
     },
 
-    setPlaying: function( p ) {
-      this.playing = p;
+    setPlaying: function( playing ) {
+      this.playing = playing;
     },
 
     isPlaying: function() {
