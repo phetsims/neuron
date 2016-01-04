@@ -1,17 +1,14 @@
 // Copyright 2014-2015, University of Colorado Boulder
 /**
- * Chart for depicting the membrane potential.  This is a Node, and as such
- * is intended for use primarily in the play area.
+ * Chart for depicting the membrane potential.  This is a Node, and as such is intended for use primarily in the play
+ * area.
  *
- * Originally, this chart was designed to scroll once there was enough data
- * the fill the chart half way, but this turned out to be too CPU intensive,
- * so it was changed to draw one line of data across the screen and then stop.
- * The user can clear the chart and trigger another action potential to start
- * recording data again.
+ * Originally, this chart was designed to scroll once there was enough data the fill the chart half way, but this
+ * turned out to be too CPU intensive, so it was changed to draw one line of data across the screen and then stop. The
+ * user can clear the chart and trigger another action potential to start recording data again.
  *
- * This chart can also be used to control the record-and-playback state of the
- * model.  This is done so that the window of recorded data in the model matches
- * that shown in the chart, allowing the user to set the model state to any time
+ * This chart can also be used to control the record-and-playback state of the model.  This is done so that the window
+ * of recorded data in the model matches that shown in the chart, allowing the user to set the model state to any time
  * shown in the chart.
  *
  * @author John Blanco
@@ -143,14 +140,14 @@ define( function( require ) {
     // title
     var chartTitleNode = new Text( chartTitleString, {
       font: new PhetFont( { size: 16, weight: 'bold' } ),
+      maxWidth: chartDimension.width * 0.5, // multiplier empirically determined through testing with long strings
       top: 0
     } );
 
     // clear button
     var clearChartButton = new TextPushButton( chartClearString, {
       font: new PhetFont( { size: 12 } ),
-      maxWidth: 150, // empirically determined
-      minHeight: 30, // empirically determined
+      maxWidth: 100, // empirically determined
       listener: function() { thisChart.clearChart(); }
     } );
 
@@ -210,7 +207,7 @@ define( function( require ) {
     var plotAndYLabel = new HBox( {
       children: [ chartYAxisLabelNode, plotNode ],
       spacing: xSpace,
-      top: Math.max( chartTitleNode.height, clearChartButton.height ),
+      top: Math.max( chartTitleNode.height, clearChartButton.height, closeButton.height ),
       resize: false
     } );
     var panelContents = new Node();
