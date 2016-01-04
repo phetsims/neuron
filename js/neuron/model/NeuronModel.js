@@ -517,7 +517,6 @@ define( function( require ) {
       }
       this.setAllIonsSimulated( DEFAULT_FOR_SHOW_ALL_IONS );
 
-
       // Set the state of the record-and-playback model to be "live" (neither recording nor playing) and unpaused.
       this.clearHistory();
       this.setModeLive();
@@ -738,7 +737,7 @@ define( function( require ) {
      * sim, this means whether there is an AP traveling down the membrane or if the flow of ions through the channels at
      * the transverse cross section is enough to be considered part of an AP.
      * @return {boolean}
-     * @private
+     * @public
      */
     isActionPotentialInProgress: function() {
       return this.axonMembrane.getTravelingActionPotential() ||

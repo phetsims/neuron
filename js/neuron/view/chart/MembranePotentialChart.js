@@ -148,7 +148,15 @@ define( function( require ) {
     var clearChartButton = new TextPushButton( chartClearString, {
       font: new PhetFont( { size: 12 } ),
       maxWidth: 100, // empirically determined
-      listener: function() { thisChart.clearChart(); }
+      listener: function() {
+        if ( thisChart.neuronModel.isActionPotentialInProgress() ) {
+          thisChart.neuronModel.setModeRecord();
+        }
+        else {
+          thisChart.neuronModel.setModeLive();
+        }
+        thisChart.clearChart();
+      }
     } );
 
     // close button
