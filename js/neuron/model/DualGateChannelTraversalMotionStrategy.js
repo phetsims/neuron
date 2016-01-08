@@ -172,9 +172,9 @@ define( function( require ) {
     },
 
     /**
-     * @param posX
-     * @param posY
-     * @param traversalPoint (object literal with x and y properties)
+     * @param {number} posX
+     * @param {number} posY
+     * @param {Object} traversalPoint - object literal with x and y properties
      * @private
      */
     distanceBetweenPosAndTraversalPoint: function( posX, posY, traversalPoint ) {
@@ -191,10 +191,10 @@ define( function( require ) {
      * Create the points through which a particle must move when traversing
      * this channel.
      *
-     * @param channel
-     * @param startingLocationX
-     * @param startingLocationY
-     * @return
+     * @param {MembraneChannel} channel
+     * @param {number} startingLocationX
+     * @param {number} startingLocationY
+     * @return {Array.<Vector2>}
      * @private
      */
     createTraversalPoints: function( channel, startingLocationX, startingLocationY ) {

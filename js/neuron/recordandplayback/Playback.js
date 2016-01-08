@@ -15,7 +15,7 @@ define( function( require ) {
   var BehaviourModeType = require( 'NEURON/neuron/recordandplayback/BehaviourModeType' );
 
   /**
-   * @param {RecordAndPlaybackModel}recordAndPlaybackModel
+   * @param {RecordAndPlaybackModel} recordAndPlaybackModel
    * @constructor
    */
   function Playback( recordAndPlaybackModel ) {

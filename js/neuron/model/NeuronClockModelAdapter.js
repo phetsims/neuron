@@ -79,7 +79,7 @@ define( function( require ) {
     /**
      * Registers a callback that will be notified when the step simulation occurs
      * Neuron Clock uses specialized real time step simulation
-     * @param  callback has a {dt} parameter
+     * @param  {function} - callback that has a {dt} parameter
      * @public
      */
     registerStepCallback: function( callback ) {

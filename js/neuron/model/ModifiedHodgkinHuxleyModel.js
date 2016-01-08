@@ -186,7 +186,7 @@ define( function( require ) {
      * Get a delayed version of the n^4 amount, which is the variable factor that governs the potassium channel
      * conductance.
      *
-     * @param delayAmount - Time delay in seconds.
+     * @param {number} delayAmount - time delay in seconds
      * @return {number}
      * @public
      */
@@ -208,7 +208,7 @@ define( function( require ) {
      * Get a delayed version of the m3h amount, which is the variable factor
      * that governs the sodium channel conductance.
      *
-     * @param delayAmount - Time delay in seconds.
+     * @param {number} delayAmount - time delay in seconds
      * @return {number}
      * @public
      */

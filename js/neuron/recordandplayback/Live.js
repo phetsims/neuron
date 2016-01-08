@@ -14,7 +14,7 @@ define( function( require ) {
   var Mode = require( 'NEURON/neuron/recordandplayback/Mode' );
 
   /**
-   * @param {RecordAndPlaybackModel}recordAndPlaybackModel
+   * @param {RecordAndPlaybackModel} recordAndPlaybackModel
    * @constructor
    */
   function Live( recordAndPlaybackModel ) {

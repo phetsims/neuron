@@ -140,7 +140,7 @@ define( function( require ) {
 
       /**
        * Step this model element forward in time by the specified delta.
-       * @param dt - delta time, in seconds.
+       * @param {number} dt - delta time, in seconds.
        * @public
        */
       stepInTime: function( dt ) {
@@ -249,22 +249,22 @@ define( function( require ) {
        * This method was converted from static to instance to prevent circular dependency between Traveling
        * Potential and AxonMembrane (Ashraf)
        *
-       * @param curve - The Curve Shape that is being evaluated.
-       * @param t - proportional distance along the curve from the first control point, must be from 0 to 1.
-       * @return point corresponding to the location of the curve at the specified distance.
+       * @param {Cubic} curve - The curve shape that is being evaluated.
+       * @param {number} proportion - proportional distance along the curve from the first control point, must be from 0 to 1.
+       * @return {Vector2} point corresponding to the location of the curve at the specified distance.
        * @public
        */
-      evaluateCurve: function( curve, t ) {
-        if ( t < 0 || t > 1 ) {
-          throw new Error( 't is out of range: ' + t );
+      evaluateCurve: function( curve, proportion ) {
+        if ( proportion < 0 || proportion > 1 ) {
+          throw new Error( 'proportion is out of range: ' + proportion );
         }
-        this.linearInterpolation( curve.start, curve.control1, t, this.ab );
-        this.linearInterpolation( curve.control1, curve.control2, t, this.bc );
-        this.linearInterpolation( curve.control2, curve.end, t, this.cd );
-        this.linearInterpolation( this.ab, this.bc, t, this.abbc );
-        this.linearInterpolation( this.bc, this.cd, t, this.bbcd );
+        this.linearInterpolation( curve.start, curve.control1, proportion, this.ab );
+        this.linearInterpolation( curve.control1, curve.control2, proportion, this.bc );
+        this.linearInterpolation( curve.control2, curve.end, proportion, this.cd );
+        this.linearInterpolation( this.ab, this.bc, proportion, this.abbc );
+        this.linearInterpolation( this.bc, this.cd, proportion, this.bbcd );
 
-        return this.linearInterpolation( this.abbc, this.bbcd, t );
+        return this.linearInterpolation( this.abbc, this.bbcd, proportion );
       },
 
       /**

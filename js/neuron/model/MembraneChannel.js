@@ -27,8 +27,8 @@ define( function( require ) {
   var DEFAULT_PARTICLE_VELOCITY = 40000; // In nanometers per sec of sim time.
 
   /**
-   * @param  {number} channelWidth
-   * @param  {number} channelHeight
+   * @param {number} channelWidth
+   * @param {number} channelHeight
    * @param {NeuronModel} modelContainingParticles
    * @constructor
    */
@@ -90,7 +90,7 @@ define( function( require ) {
 
     /**
      * Implements the time-dependent behavior of the channel.
-     * @param dt - Amount of time step, in milliseconds.
+     * @param {number} dt - Amount of time step, in milliseconds.
      * @public
      */
     stepInTime: function( dt ) {
@@ -189,8 +189,8 @@ define( function( require ) {
      * Start or restart the countdown timer which is used to time the event where a particle is captured for movement
      * across the membrane.  A boolean parameter controls whether a particle capture should occur immediately in
      * addition to setting this timer.
-     * @param captureNow - Indicates whether a capture should be initiated now in addition to resetting the timer.  This
-     * is often set to true kicking of a cycle of particle captures.
+     * @param {boolean} captureNow - Indicates whether a capture should be initiated now in addition to resetting the
+     * timer.  This is often set to true kicking of a cycle of particle captures.
      * @public
      */
     restartCaptureCountdownTimer: function( captureNow ) {
@@ -320,12 +320,10 @@ define( function( require ) {
     },
 
     /**
-     * Set the motion strategy for a particle that will cause the particle to
-     * traverse the channel.  This version is the one that implements the
-     * behavior for crossing through the neuron membrane.
-     *
-     * @param particle
-     * @param maxVelocity
+     * Set the motion strategy for a particle that will cause the particle to traverse the channel.  This version is the
+     * one that implements the behavior for crossing through the neuron membrane.
+     * @param {Particle} particle
+     * @param {number} maxVelocity
      * @public
      */
     moveParticleThroughNeuronMembrane: function( particle, maxVelocity ) {
@@ -365,8 +363,8 @@ define( function( require ) {
      * This method triggers a notification that the state of the membrane channel has changed.  This was done as an
      * optimization, since testing showed that having the view observe the various properties individually was a bit
      * too costly and caused performance issues.
-     * @param prevOpenness
-     * @param prevInActivationAmt
+     * @param {number} prevOpenness
+     * @param {number} prevInActivationAmt
      * @public
      */
     notifyIfMembraneStateChanged: function( prevOpenness, prevInActivationAmt ) {

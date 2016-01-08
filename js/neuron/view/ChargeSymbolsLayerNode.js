@@ -72,8 +72,8 @@ define( function( require ) {
      * @param {Vector2} p1
      * @param {Vector2} p2
      * @param {Vector2} neuronCenter
-     * @param {Vector2} outerPoint //out parameter
-     * @param {Vector2} innerPoint //out parameter
+     * @param {Vector2} outerPoint // out parameter
+     * @param {Vector2} innerPoint // out parameter
      */
     function calcChargeSymbolLocations( p1, p2, neuronCenter, outerPoint, innerPoint ) {
 
@@ -96,10 +96,8 @@ define( function( require ) {
     }
 
     /**
-     * Sort the provided list of membrane channels such that they proceed in
-     * clockwise order around the membrane.
-     *
-     * @param membraneChannels
+     * Sort the provided list of membrane channels such that they proceed in clockwise order around the membrane.
+     * @param {Array.<MembraneChannel>} membraneChannels
      */
     function sortMembraneChannelList( membraneChannels ) {
       var orderChanged = true;

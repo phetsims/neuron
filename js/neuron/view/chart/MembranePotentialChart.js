@@ -55,7 +55,7 @@ define( function( require ) {
 
   /**
    * @param {Dimension2} chartDimension
-   * @param {NeuronClockModelAdapter }neuronClockModelAdapter
+   * @param {NeuronClockModelAdapter} neuronClockModelAdapter
    * @constructor
    */
   function MembranePotentialChart( chartDimension, neuronClockModelAdapter ) {
@@ -250,8 +250,8 @@ define( function( require ) {
 
     /**
      * Add a data point to the graph.
-     * @param time    - Time in milliseconds.
-     * @param voltage - Voltage in volts.
+     * @param {number} time - time in milliseconds
+     * @param {number} voltage - voltage in volts
      * @public
      */
     addDataPoint: function( time, voltage ) {

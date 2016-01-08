@@ -39,8 +39,8 @@ define( function( require ) {
 
     /**
      * Rounds to a specific number of places
-     * @param val
-     * @param places
+     * @param {number} val
+     * @param {number} places
      * @returns {number}
      * @public
      */
