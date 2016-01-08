@@ -61,7 +61,7 @@ define( function( require ) {
      * Update the simulation model (should cause side effects to update the view), returning a snapshot of the state after the update.
      * The returned state could be ignored if the simulation is not in record mode.
      *
-     * @param dt - the amount of time to update the simulation (in whatever units the simulation model is using).
+     * @param {number} dt - the amount of time to update the simulation (in whatever units the simulation model is using).
      * @return the updated state, which can be used to restore the model during playback
      */
     stepInTime: function( dt ) {
@@ -70,18 +70,17 @@ define( function( require ) {
 
     /**
      * Called by the Animation Loop
-     * @param simulationTimeChange
+     * @param {number} dt
      */
-    step: function( simulationTimeChange ) {
+    step: function( dt ) {
       if ( this.playing ) {
-        this.stepMode( simulationTimeChange );
+        this.stepMode( dt );
       }
     },
 
     /**
      * Steps the currently active mode by the specified amount of time.
-     *
-     * @param dt the amount of time to step the current mode
+     * @param {number} dt - the amount of time to step the current mode
      */
     stepMode: function( dt ) {
       this.mode.step( dt );
@@ -157,16 +156,15 @@ define( function( require ) {
       this.time = t;
       var isPlayBackVal = this.isPlayback();
       var recordPtsLength = this.getNumRecordedPoints();
-      if ( isPlayBackVal && (recordPtsLength > 0) ) {//Only restore state if during playback and state has been recorded
-        this.setPlaybackState( this.getPlaybackState().getState() ); //Sets the model state to reflect the current playback index.
+      if ( isPlayBackVal && ( recordPtsLength > 0) ) { // Only restore state if during playback and state has been recorded
+        this.setPlaybackState( this.getPlaybackState().getState() ); // Sets the model state to reflect the current playback index
       }
     },
 
     /**
      * This method should populate the model + view of the application with the data from the specified state.
      * This state was obtained through playing back or stepping the recorded history.
-     *
-     * @param state the state to display
+     * @param {Object} state - the state to display
      */
     setPlaybackState: function( state ) {
       throw new Error( 'setPlaybackState should be implemented in descendant classes.' );
@@ -239,21 +237,21 @@ define( function( require ) {
     },
 
     /**
-     * @param{DataPoint} point
+     * @param {DataPoint} point
      */
     addRecordedPoint: function( point ) {
       this.recordHistory.add( point );
     },
 
     /**
-     * @param {Number} point index of the item to be removed
+     * @param {number} point index of the item to be removed
      */
     removeHistoryPoint: function( point ) {
       this.recordHistory.remove( this.recordHistory[ point ] );
     },
 
     /**
-     * @param rec
+     * @param {boolean} rec
      * use setmode
      */
     setRecord: function( rec ) {

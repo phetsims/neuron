@@ -550,7 +550,7 @@ define( function( require ) {
      * Note that it is not guaranteed that the particle will make it through the channel, since it is possible that the
      * channel could close before the particle goes through it.
      *
-     * @param {ParticleType.string}particleType
+     * @param {ParticleType.string} particleType
      * @param {MembraneChannel}channel
      * @param {number} maxVelocity
      * @param {MembraneCrossingDirection.string} direction
@@ -570,8 +570,7 @@ define( function( require ) {
       // Make the particle fade in.
       particleToCapture.setFadeStrategy( new TimedFadeInStrategy( 0.0005 ) );
 
-      // Set a motion strategy that will cause this particle to move across
-      // the membrane.
+      // Set a motion strategy that will cause this particle to move across the membrane.
       channel.moveParticleThroughNeuronMembrane( particleToCapture, maxVelocity );
     },
 
@@ -659,8 +658,8 @@ define( function( require ) {
 
     /**
      * Add the specified particles to the model.
-     * @param {ParticleType.string}particleType
-     * @param {ParticlePosition}position
+     * @param {ParticleType.string} particleType
+     * @param {ParticlePosition} position
      * @param {number} numberToAdd
      * @private
      */
@@ -970,7 +969,7 @@ define( function( require ) {
      * Add the provided channel at the specified rotational location. Locations are specified in terms of where on the
      * circle of the membrane they are, with a value of 0 being on the far right, PI/2 on the top, PI on the far left,
      * etc.
-     * @param {MembraneChannelTypes}membraneChannelType
+     * @param {MembraneChannelTypes} membraneChannelType
      * @param {number} angle
      * @private
      */

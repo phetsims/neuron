@@ -44,7 +44,7 @@ define( function( require ) {
 
     /**
      *
-     * @param {ParticlePlaybackMemento}memento
+     * @param {ParticlePlaybackMemento} memento
      */
     restoreFromMemento: function( memento ) {
       this.setPosition( memento.getPositionX(), memento.getPositionY() );

@@ -15,7 +15,7 @@ define( function( require ) {
   var DataPoint = require( 'NEURON/neuron/recordandplayback/DataPoint' );
 
   /**
-   * @param {RecordAndPlaybackModel}recordAndPlaybackModel
+   * @param {RecordAndPlaybackModel} recordAndPlaybackModel
    * @constructor
    */
   function Record( recordAndPlaybackModel ) {

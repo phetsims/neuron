@@ -21,7 +21,6 @@ define( function( require ) {
   var STROKE_LINE_WIDTH = 0.5;
 
   /**
-   *
    * @param {number} diameter
    * @param {Color} baseColor
    * @constructor

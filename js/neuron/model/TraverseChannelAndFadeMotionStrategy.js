@@ -198,9 +198,9 @@ define( function( require ) {
     },
 
     /**
-     * @param posX
-     * @param posY
-     * @param traversalPoint (object literal with x and y properties)
+     * @param {number} posX
+     * @param {number} posY
+     * @param {Object} traversalPoint - and object literal with x and y properties
      * @private
      */
     distanceBetweenPosAndTraversalPoint: function( posX, posY, traversalPoint ) {

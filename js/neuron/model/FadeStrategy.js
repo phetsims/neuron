@@ -19,8 +19,6 @@ define( function( require ) {
 
     /**
      * Fade the associated model element according to the specified amount of time and the nature of the strategy.
-     * @param fadableModelElement
-     * @param dt
      * @protected
      */
     updateOpacity: function( fadableModelElement, dt ) {

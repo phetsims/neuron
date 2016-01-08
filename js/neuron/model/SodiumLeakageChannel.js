@@ -130,8 +130,8 @@ define( function( require ) {
 
     /**
      * Update the rate of particle capture based on the supplied normalized value.
-     * @param normalizedRate - A value between 0 and 1 where 0 represents the minimum capture rate for particles and 1
-     * represents the max.
+     * @param {number} normalizedRate - A value between 0 and 1 where 0 represents the minimum capture rate for
+     * particles and 1 represents the max.
      * @private
      */
     updateParticleCaptureRate: function( normalizedRate ) {

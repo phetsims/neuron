@@ -89,7 +89,7 @@ define( function( require ) {
     /**
      * Step this model component forward by the specified time.  This will update the shape such that it will appear to
      * move down the axon membrane.
-     * @param dt
+     * @param {number} dt
      */
     stepInTime: function( dt ) {
       if ( this.travelTimeCountdownTimer > 0 ) {

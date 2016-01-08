@@ -37,7 +37,7 @@ define( function( require ) {
   };
 
   /**
-   * @param {NeuronModel}  neuronModel
+   * @param {NeuronModel} neuronModel
    * @param {object} options
    * @constructor
    */

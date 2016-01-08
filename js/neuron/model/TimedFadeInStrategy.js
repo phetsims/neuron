@@ -17,7 +17,7 @@ define( function( require ) {
   /**
    * Constructor that assumes full fade in.
    *
-   * @param {number} fadeTime - time, in seconds of sim time, for this to fade in.
+   * @param {number} fadeTime - time, in seconds of sim time, for this to fade in
    * @constructor
    */
   function TimedFadeInStrategy( fadeTime ) {

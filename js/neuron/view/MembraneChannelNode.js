@@ -194,8 +194,6 @@ define( function( require ) {
      * Add this node to the two specified parent nodes.  This is done in order to achieve a better layering effect that
      * allows particles to look more like they are moving through the channel.  It is not absolutely necessary to use
      * this method for this node - it can be added to the canvas like any other PNode, it just won't have the layering.
-     * @param channelLayer
-     * @param edgeLayer
      * @public
      */
     addToCanvas: function( channelLayer, edgeLayer ) {

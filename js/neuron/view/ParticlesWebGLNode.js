@@ -299,8 +299,8 @@ define( function( require ) {
 
     /**
      * bind the canvas that contains the particle images as a texture
-     * @param drawable
-     * @param canvas
+     * @param {Drawable} drawable
+     * @param {Canvas} canvas
      * @private
      */
     bindTextureImage: function( drawable, canvas ) {
@@ -333,7 +333,7 @@ define( function( require ) {
     /**
      * Check if the provided particle is in the current rendering bounds and, if so, create a particle data object and
      * add it to the list that will be converted into vertex data in a subsequent step.
-     * @param particle
+     * @param {Particle} particle
      * @private
      */
     addParticleData: function( particle ) {

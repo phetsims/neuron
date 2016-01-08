@@ -13,7 +13,7 @@ define( function( require ) {
   var Util = require( 'DOT/Util' );
 
   /**
-   * @param sim - reference to the simulation being profiled
+   * @param {Sim} sim - reference to the simulation being profiled
    * @param {number} setting - profiling to be done, values are:
    *    1=profile from when the traveling action potential reaches cross section until all or most of the dynamically
    *      created particles are gone

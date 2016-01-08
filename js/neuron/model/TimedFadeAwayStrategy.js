@@ -16,7 +16,7 @@ define( function( require ) {
   var FadeStrategy = require( 'NEURON/neuron/model/FadeStrategy' );
 
   /**
-   * @param {number} fadeTime - time, in seconds of sim time, for this to fade away.
+   * @param {number} fadeTime - time, in seconds of sim time, for this to fade away
    * @constructor
    */
   function TimedFadeAwayStrategy( fadeTime ) {
