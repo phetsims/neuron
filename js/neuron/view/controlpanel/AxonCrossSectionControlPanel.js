@@ -28,12 +28,12 @@ define( function( require ) {
   // constants
   var CHECK_BOX_OPTIONS = { boxWidth: 15 };
   var TEXT_OPTIONS = { font: new PhetFont( 14 ) };
-  var TOUCH_AREA_EXPAND_X = 10;
-  var TOUCH_AREA_EXPAND_Y = 3;
+  var TOUCH_AREA_X_DILATION = 10;
+  var TOUCH_AREA_Y_DILATION = 3;
 
   // uniformly expands touch area for controls
-  var expandTouchArea = function( node ) {
-    node.touchArea = node.localBounds.dilatedXY( TOUCH_AREA_EXPAND_X, TOUCH_AREA_EXPAND_Y );
+  var dilateTouchArea = function( node ) {
+    node.touchArea = node.localBounds.dilatedXY( TOUCH_AREA_X_DILATION, TOUCH_AREA_Y_DILATION );
   };
 
   /**
@@ -44,13 +44,13 @@ define( function( require ) {
   function AxonCrossSectionControlPanel( neuronModel, options ) {
 
     var allIonsSimulatedCheckBox = new CheckBox( new Text( allIonsString, TEXT_OPTIONS ), neuronModel.allIonsSimulatedProperty, CHECK_BOX_OPTIONS );
-    expandTouchArea( allIonsSimulatedCheckBox );
+    dilateTouchArea( allIonsSimulatedCheckBox );
     var showChargesCheckBox = new CheckBox( new Text( chargesString, TEXT_OPTIONS ), neuronModel.chargesShownProperty, CHECK_BOX_OPTIONS );
-    expandTouchArea( showChargesCheckBox );
+    dilateTouchArea( showChargesCheckBox );
     var showConcentrationsCheckBox = new CheckBox( new Text( concentrationsString, TEXT_OPTIONS ), neuronModel.concentrationReadoutVisibleProperty, CHECK_BOX_OPTIONS );
-    expandTouchArea( showConcentrationsCheckBox );
+    dilateTouchArea( showConcentrationsCheckBox );
     var showPotentialChartCheckBox = new CheckBox( new Text( potentialChartString, TEXT_OPTIONS ), neuronModel.potentialChartVisibleProperty, CHECK_BOX_OPTIONS );
-    expandTouchArea( showPotentialChartCheckBox );
+    dilateTouchArea( showPotentialChartCheckBox );
 
     var crossSectionControlContents = [];
     crossSectionControlContents.push( new Text( showLegendString, {
