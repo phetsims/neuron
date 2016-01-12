@@ -43,7 +43,7 @@ define( function( require ) {
     ], {
       radius: 8,
       spacing: 8,
-      touchXPadding: 5
+      touchAreaXDilation: 5
     } );
 
     Panel.call( this, speedRadioButtonGroup, options );
