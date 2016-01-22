@@ -67,11 +67,7 @@ define( function( require ) {
      */
     paintCanvas: function( context ) {
 
-      if ( this.travelingActionPotential === null ) {
-        // nothing to show, so just clear the canvas
-        context.clearRect( 0, 0, this.localBounds.width, this.localBounds.height );
-      }
-      else {
+      if ( this.travelingActionPotential !== null ) {
         var shapeDescription = this.travelingActionPotential.shapeDescription; // convenience var
         assert && assert( shapeDescription.mode === 'curve' || shapeDescription.mode === 'circle', 'unrecognized mode for action potential shape' );
 
