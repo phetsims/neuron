@@ -27,7 +27,6 @@ define( function( require ) {
 
     var self = this;
     this.dataSeries = dataSeries; // @private
-    this.numSegments = 0; // @private, number of line segments that comprise the overall line
     this.mvt = mvt; // @private
 
     // call super-constructor
@@ -40,7 +39,6 @@ define( function( require ) {
 
     // cause the data line to be cleared whenever the data series is cleared
     dataSeries.cleared.addListener( function() {
-      self.numSegments = 0;
       self.invalidatePaint();
     } );
   }
@@ -56,41 +54,22 @@ define( function( require ) {
      */
     paintCanvas: function( context ) {
 
-      // This is optimized to draw little segments on the end of an already existing line if possible, and only do a
-      // full redraw when necessary.
-      if ( this.numSegments < this.dataSeries.getLength() - 1 ) {
+      context.save();
 
+      if ( this.dataSeries.getLength() >= 2 ) {
         context.strokeStyle = LINE_COLOR;
         context.lineWidth = LINE_WIDTH;
-
-        if ( this.numSegments === 0 ) {
-          // this is the first segment, so start the new path
-          context.beginPath();
-        }
-
-        // draw a segment from the end of the previous segment to the new data point or points
-        while ( this.numSegments < this.dataSeries.getLength() - 1 ) {
-          var endPointX = this.mvt.modelToViewX( this.dataSeries.getX( this.numSegments ) );
-          var endPointY = this.mvt.modelToViewY( this.dataSeries.getY( this.numSegments ) );
-          context.moveTo( endPointX, endPointY );
-          var newEndPointX = this.mvt.modelToViewX( this.dataSeries.getX( this.numSegments + 1 ) );
-          var newEndPointY = this.mvt.modelToViewY( this.dataSeries.getY( this.numSegments + 1 ) );
-          context.lineTo( newEndPointX, newEndPointY );
-          this.numSegments++;
+        context.beginPath();
+        context.moveTo( this.mvt.modelToViewX( this.dataSeries.getX( 0 ) ), this.mvt.modelToViewY( this.dataSeries.getY( 0 ) ) );
+        for ( var i = 1; i < this.dataSeries.getLength(); i++ ) {
+          var endPointX = this.mvt.modelToViewX( this.dataSeries.getX( i ) );
+          var endPointY = this.mvt.modelToViewY( this.dataSeries.getY( i ) );
+          context.lineTo( endPointX, endPointY );
         }
         context.stroke();
       }
-    },
 
-    /**
-     * Notify this class that a resize has occurred.  This is necessary because of the optimization that only adds new
-     * segments to the line as it grows - if a resize occurs due to the user resizing the window, the canvas is cleared
-     * by Scenery, so without this notification a partial line would be seen by the user.
-     * @public
-     */
-    notifyResize: function() {
-      this.numSegments = 0;
-      this.invalidatePaint();
+      context.restore();
     }
   } );
 } );

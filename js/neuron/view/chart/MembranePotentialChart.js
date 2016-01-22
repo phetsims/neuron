@@ -292,12 +292,6 @@ define( function( require ) {
       }
     },
 
-    // @public
-    notifyResize: function() {
-      // notify the data line that it needs to be fully redrawn
-      this.dataLineNode.notifyResize();
-    },
-
     /**
      * Get the last time value in the data series.  This is assumed to be the
      * highest time value, since data points are expected to be added in order

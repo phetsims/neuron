@@ -324,11 +324,6 @@ define( function( require ) {
     membranePotentialChartNode.left = worldNodeClipArea.bounds.left;
     membranePotentialChartNode.bottom = clipAreaBounds.maxY;
     thisView.addChild( membranePotentialChartNode );
-
-    this.on( 'transform', function() {
-      // notify the membrane potential chart that a resize has occurred, necessary to update its data line
-      membranePotentialChartNode.notifyResize();
-    } );
   }
 
   return inherit( ScreenView, NeuronView );
