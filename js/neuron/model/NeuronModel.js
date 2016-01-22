@@ -130,17 +130,16 @@ define( function( require ) {
 
       potentialChartVisible: DEFAULT_FOR_MEMBRANE_CHART_VISIBILITY, // @public
 
-      // @public - a property that controls whether all ions, or just those near membrane, are simulated.
-      allIonsSimulated: DEFAULT_FOR_SHOW_ALL_IONS,
-
+      // @public
       chargesShown: DEFAULT_FOR_CHARGES_SHOWN, // @public
-      concentrationReadoutVisible: DEFAULT_FOR_CONCENTRATION_READOUT_SHOWN, // @public
-      membranePotential: 0, // @public
-      stimulusLockout: false,  // @public
-      playbackParticlesVisible: false, // @private
-      concentrationChanged: false, // @public
-      stimulusPulseInitiated: false, // @public
-      neuronModelPlaybackState: null, // @public
+      concentrationReadoutVisible: DEFAULT_FOR_CONCENTRATION_READOUT_SHOWN,
+      membranePotential: 0,
+      stimulusLockout: false,
+      allIonsSimulated: DEFAULT_FOR_SHOW_ALL_IONS, // controls whether all ions, or just those near membrane, are simulated
+      playbackParticlesVisible: false,
+      concentrationChanged: false,
+      stimulusPulseInitiated: false,
+      neuronModelPlaybackState: null,
 
       // @public, part of a workaround for an issue with refreshing canvases when nothing is drawn, see
       // https://github.com/phetsims/neuron/issues/100 and https://github.com/phetsims/scenery/issues/503
