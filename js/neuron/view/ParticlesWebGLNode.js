@@ -15,6 +15,7 @@ define( function( require ) {
   'use strict';
 
   // modules
+  var ContextLossFailureDialog = require( 'SCENERY_PHET/ContextLossFailureDialog' );
   var inherit = require( 'PHET_CORE/inherit' );
   var NeuronParticlesTexture = require( 'NEURON/neuron/view/NeuronParticlesTexture' );
   var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
@@ -165,6 +166,17 @@ define( function( require ) {
 
       // bind the texture that contains the particle images
       this.bindTextureImage( drawable, this.particlesTexture.canvas );
+
+      // set up a handler for context loss - this will just put up a dialog, better handling may exist eventually
+      gl.canvas.addEventListener( 'webglcontextlost', function( event ) {
+        event.preventDefault();
+
+        new ContextLossFailureDialog().show();
+
+        if ( document.domain === 'phet.colorado.edu' ) {
+          window._gaq && window._gaq.push( [ '_trackEvent', 'WebGL Context Loss', 'neuron' + phet.joist.sim.version, document.URL ] );
+        }
+      } );
     },
 
     /**
