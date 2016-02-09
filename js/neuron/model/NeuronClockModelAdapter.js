@@ -26,6 +26,11 @@ define( function( require ) {
   var NOMINAL_TICK_TIME = ( 1 / 60 ) * TIME_ADJUSTMENT_FACTOR; // used for single stepping, based on assumed frame rate of 60 fps
   var TICKS_PER_SINGLE_STEP = 4;
 
+  // Max time that the simulation model can handle in a single tick.  This was determined through testing the
+  // simulation and is intended to prevent odd looking graphs and incorrect behavior, see
+  // https://github.com/phetsims/neuron/issues/114 and https://github.com/phetsims/neuron/issues/109.
+  var MAX_SIM_TICK_TIME = NOMINAL_TICK_TIME * 10; // empirically determined through testing of the simulation
+
   /**
    * Creates a NeuronClockModelAdapter.
    * @param {NeuronModel} model - model whose simulation timing is controlled by this adapter.  Note that the Adapter is
@@ -38,6 +43,7 @@ define( function( require ) {
     self.model = model;
 
     PropertySet.call( this, {
+        // @public
         playing: true, // linked to playPause button
         speed: 1 // factor controlling simulation clock speed
       }
@@ -45,6 +51,7 @@ define( function( require ) {
 
     self.stepCallbacks = [];
     self.resetCallBacks = [];
+    self.residualTime = 0;
   }
 
   return inherit( PropertySet, NeuronClockModelAdapter, {
@@ -53,12 +60,29 @@ define( function( require ) {
     step: function( dt ) {
 
       // If the step is large, it probably means that the screen was hidden for a while, so just ignore it.
-      if ( dt > 1 ) {
+      if ( dt > 0.5 ) {
         return;
       }
 
       if ( this.playing ) {
-        this.tick( dt * TIME_ADJUSTMENT_FACTOR * this.speed );
+
+        // 'tick' the simulation, adjusting for dt values that are higher than the sim model can handle
+        var simTickTime = dt * TIME_ADJUSTMENT_FACTOR * this.speed;
+        var numTicks = 1;
+        if ( simTickTime > MAX_SIM_TICK_TIME ){
+
+          // this is a larger tick than the sim model can handle, so break it into multiple ticks
+          numTicks = Math.floor( simTickTime / MAX_SIM_TICK_TIME );
+          this.residualTime += simTickTime % MAX_SIM_TICK_TIME;
+          simTickTime = MAX_SIM_TICK_TIME;
+        }
+        if ( this.residualTime >= simTickTime ){
+          numTicks++;
+          this.residualTime = this.residualTime - simTickTime;
+        }
+        for ( var i = 0; i < numTicks; i++ ){
+          this.tick( simTickTime );
+        }
       }
     },
 
