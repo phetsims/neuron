@@ -367,7 +367,7 @@ define( function( require ) {
       }
       else {
         if ( this.potassiumExteriorConcentration !== NOMINAL_POTASSIUM_EXTERIOR_CONCENTRATION ) {
-          difference = Math.abs( this.potassiumExteriorConcentration - NOMINAL_POTASSIUM_EXTERIOR_CONCENTRATION );
+          difference = this.potassiumExteriorConcentration - NOMINAL_POTASSIUM_EXTERIOR_CONCENTRATION;
           if ( difference < CONCENTRATION_DIFF_THRESHOLD ) {
             // Close enough to consider it fully restored.
             this.potassiumExteriorConcentration = NOMINAL_POTASSIUM_EXTERIOR_CONCENTRATION;
@@ -379,7 +379,7 @@ define( function( require ) {
           concentrationChanged = true;
         }
         if ( this.potassiumInteriorConcentration !== NOMINAL_POTASSIUM_INTERIOR_CONCENTRATION ) {
-          difference = Math.abs( this.potassiumInteriorConcentration - NOMINAL_POTASSIUM_INTERIOR_CONCENTRATION );
+          difference = NOMINAL_POTASSIUM_INTERIOR_CONCENTRATION - this.potassiumInteriorConcentration;
           if ( difference < CONCENTRATION_DIFF_THRESHOLD ) {
             // Close enough to consider it fully restored.
             this.potassiumInteriorConcentration = NOMINAL_POTASSIUM_INTERIOR_CONCENTRATION;
@@ -402,7 +402,7 @@ define( function( require ) {
       }
       else {
         if ( this.sodiumExteriorConcentration !== NOMINAL_SODIUM_EXTERIOR_CONCENTRATION ) {
-          difference = Math.abs( this.sodiumExteriorConcentration - NOMINAL_SODIUM_EXTERIOR_CONCENTRATION );
+          difference = NOMINAL_SODIUM_EXTERIOR_CONCENTRATION - this.sodiumExteriorConcentration;
           if ( difference < CONCENTRATION_DIFF_THRESHOLD ) {
             // Close enough to consider it fully restored.
             this.sodiumExteriorConcentration = NOMINAL_SODIUM_EXTERIOR_CONCENTRATION;
@@ -414,7 +414,7 @@ define( function( require ) {
           concentrationChanged = true;
         }
         if ( this.sodiumInteriorConcentration !== NOMINAL_SODIUM_INTERIOR_CONCENTRATION ) {
-          difference = Math.abs( this.sodiumInteriorConcentration - NOMINAL_SODIUM_INTERIOR_CONCENTRATION );
+          difference = this.sodiumInteriorConcentration - NOMINAL_SODIUM_INTERIOR_CONCENTRATION;
           if ( difference < CONCENTRATION_DIFF_THRESHOLD ) {
             // Close enough to consider it fully restored.
             this.sodiumInteriorConcentration = NOMINAL_SODIUM_INTERIOR_CONCENTRATION;
