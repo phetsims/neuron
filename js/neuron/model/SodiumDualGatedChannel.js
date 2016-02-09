@@ -51,8 +51,8 @@ define( function( require ) {
 
   // Constants that control the rate at which this channel will capture ions when it is open.  Smaller numbers here will
   // increase the capture rate and thus make the flow appear to be faster.
-  var MIN_INTER_CAPTURE_TIME = 0.00002; // In seconds of sim time.
-  var MAX_INTER_CAPTURE_TIME = 0.00010; // In seconds of sim time.
+  var MIN_INTER_CAPTURE_TIME = 0.00003; // In seconds of sim time.
+  var MAX_INTER_CAPTURE_TIME = 0.00013; // In seconds of sim time.
 
   // Delay range - used to make the timing of the instances of this gate vary a little bit in terms of when they open
   // and close.

@@ -51,10 +51,10 @@ define( function( require ) {
   var NOMINAL_POTASSIUM_INTERIOR_CONCENTRATION = 140;  // In millimolar (mM)
 
   // numbers of "bulk" ions in and out of the cell when visible
-  var NUM_SODIUM_IONS_OUTSIDE_CELL = 600;
-  var NUM_SODIUM_IONS_INSIDE_CELL = 8;
-  var NUM_POTASSIUM_IONS_OUTSIDE_CELL = 60;
-  var NUM_POTASSIUM_IONS_INSIDE_CELL = 200;
+  var NUM_SODIUM_IONS_OUTSIDE_CELL = 450;
+  var NUM_SODIUM_IONS_INSIDE_CELL = 6;
+  var NUM_POTASSIUM_IONS_OUTSIDE_CELL = 45;
+  var NUM_POTASSIUM_IONS_INSIDE_CELL = 150;
 
   // Define the amount of delay between the values changing in the HH model until the concentration readouts are
   // updated.  This is needed to make sure that the concentration readouts don't change before visible potassium or
@@ -630,9 +630,8 @@ define( function( require ) {
     },
 
     /**
-     * Create a particle of the specified type in the specified capture zone.
-     * In general, this method will be used when a particle is or may soon be
-     * needed to travel through a membrane channel.
+     * Create a particle of the specified type in the specified capture zone. In general, this method will be used when
+     * a particle is or may soon be needed to travel through a membrane channel.
      * @param {ParticleType.string} particleType
      * @param {CaptureZone} captureZone
      * @return {Particle}
