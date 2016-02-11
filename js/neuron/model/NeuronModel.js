@@ -18,6 +18,7 @@ define( function( require ) {
   var ModifiedHodgkinHuxleyModel = require( 'NEURON/neuron/model/ModifiedHodgkinHuxleyModel' );
   var RecordAndPlaybackModel = require( 'NEURON/neuron/recordandplayback/RecordAndPlaybackModel' );
   var MembraneChannelTypes = require( 'NEURON/neuron/model/MembraneChannelTypes' );
+  var neuron = require( 'NEURON/neuron' );
   var NeuronModelState = require( 'NEURON/neuron/model/NeuronModelState' );
   var ParticlePosition = require( 'NEURON/neuron/model/ParticlePosition' );
   var ParticleFactory = require( 'NEURON/neuron/model/ParticleFactory' );
@@ -275,6 +276,8 @@ define( function( require ) {
     } );
     this.reset(); // This does initialization
   }
+
+  neuron.register( 'NeuronModel', NeuronModel );
 
   return inherit( RecordAndPlaybackModel, NeuronModel, {
 

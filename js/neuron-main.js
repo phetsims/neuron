@@ -27,9 +27,6 @@ define( function( require ) {
 
   SimLauncher.launch( function() {
 
-    // create a namespace for sim-specific globals
-    window.phet.neuron = window.phet.neuron || {};
-
     // create and start the sim
     var sim = new Sim( neuronTitleString, [ new NeuronScreen() ], simOptions );
     sim.start();
