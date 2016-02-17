@@ -124,11 +124,18 @@ define( function( require ) {
     } );
 
     neuronModel.concentrationChangedProperty.link( function( concentrationChanged ) {
+      // this is optimized to skip updates if not visible to avoid recalculating bounds
       if ( concentrationChanged && thisNode.isVisible() ) {
         updateConcentrationReadoutValues();
       }
     } );
 
+    // update the readouts when this node transitions from invisible to visible
+    this.on( 'visibility', function( a ) {
+      if ( thisNode.visible ) {
+        updateConcentrationReadoutValues();
+      }
+    } );
   }
 
   return inherit( Node, ConcentrationReadoutLayerNode );
