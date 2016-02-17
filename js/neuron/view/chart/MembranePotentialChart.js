@@ -127,12 +127,12 @@ define( function( require ) {
     } );
 
     thisChart.neuronModel.stimulusPulseInitiatedProperty.link( function( stimulusPulseInitiated ) {
-      if ( stimulusPulseInitiated ) {
-        if ( !thisChart.neuronModel.isPotentialChartVisible() ) {
+      if ( stimulusPulseInitiated && !thisChart.neuronModel.isPotentialChartVisible()  ) {
           // If the chart is not visible, we clear any previous recording.
           thisChart.clearChart();
-        }
-        // Start recording, if it isn't already happening.
+      }
+      if ( stimulusPulseInitiated && !thisChart.chartIsFull ){
+        // initiate recording
         thisChart.neuronModel.startRecording();
       }
     } );
