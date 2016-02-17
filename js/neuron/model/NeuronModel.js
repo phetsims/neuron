@@ -501,7 +501,7 @@ define( function( require ) {
         concentrationChanged = true;
       }
       if ( concentrationChanged ) {
-        this.concentrationChangedProperty.set( true ); // Trigger concentrationReadout change
+        this.concentrationChanged = true; // Trigger concentrationReadout change
       }
 
       // Reset the stimulation lockout.
