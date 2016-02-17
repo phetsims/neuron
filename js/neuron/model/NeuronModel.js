@@ -268,11 +268,6 @@ define( function( require ) {
     thisModel.timeProperty.link( thisModel.updateRecordPlayBack.bind( this ) );
     thisModel.modeProperty.link( thisModel.updateRecordPlayBack.bind( this ) );
 
-    thisModel.stimulusPulseInitiatedProperty.link( function( stimulusPulseInitiated ) {
-      if ( stimulusPulseInitiated ) {
-        thisModel.startRecording();
-      }
-    } );
     this.reset(); // This does initialization
   }
 
@@ -299,8 +294,8 @@ define( function( require ) {
 
       RecordAndPlaybackModel.prototype.step.call( this, dt );
 
-      // If we are currently in playback mode and we have reached the end of
-      // the recorded data, we should automatically switch to record mode.
+      // If we are currently in playback mode and we have reached the end of the recorded data, we should automatically
+      // switch to record mode.
       if ( this.isPlayback() && this.getTime() >= this.getMaxRecordedTime() ) {
         this.setModeRecord();
         this.setPlaying( true );

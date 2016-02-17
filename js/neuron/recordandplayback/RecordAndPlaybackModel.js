@@ -181,7 +181,7 @@ define( function( require ) {
 
     clearHistory: function() {
       this.recordHistory.clear();
-      this.setTime( 0.0 );//For some reason, time has to be reset to 0.0 here, or charts don't clear in motion-series on first press of clear button
+      this.setTime( 0.0 );// for some reason, time has to be reset to 0.0 here, or charts don't clear in motion-series on first press of clear button
       this.historyCleared = !this.historyCleared;
     },
 
