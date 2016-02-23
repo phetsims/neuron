@@ -52,17 +52,15 @@ define( function( require ) {
     this.mouseArea = this.localBounds.dilatedX( 12 );
     this.touchArea = this.localBounds.dilatedX( 12 );
 
+    var pressPoint;
+    var pressTime;
     var chartCursorDragHandler = new SimpleDragHandler( {
-
       allowTouchSnag: true,
-      pressPoint: Vector2.ZERO,
-      pressTime: 0,
       dragCursor: 'e-resize',
 
       start: function( e ) {
-        this.currentPoint = e.currentTarget.globalToParentPoint( e.pointer.point );
-        this.pressPoint = this.currentPoint.copy();
-        this.pressTime = membranePotentialChart.chartMvt.viewToModelPosition( new Vector2( thisChartCursor.x, thisChartCursor.y ) ).x;
+        pressPoint = e.currentTarget.globalToParentPoint( e.pointer.point );
+        pressTime = membranePotentialChart.chartMvt.viewToModelPosition( new Vector2( thisChartCursor.x, thisChartCursor.y ) ).x;
         membranePotentialChart.playingWhenDragStarted = membranePotentialChart.clock.playing;
         if ( membranePotentialChart.playingWhenDragStarted ) {
           // The user must be trying to grab the cursor while the sim is running or while recorded content is being
@@ -76,9 +74,9 @@ define( function( require ) {
           membranePotentialChart.neuronModel.setPlayback( 1 ); // Set into playback mode.
         }
         var dragPoint = e.currentTarget.globalToParentPoint( e.pointer.point );
-        var dx = new Vector2( dragPoint.x - this.pressPoint.x, dragPoint.y - this.pressPoint.y );
+        var dx = new Vector2( dragPoint.x - pressPoint.x, dragPoint.y - pressPoint.y );
         var modelDiff = membranePotentialChart.chartMvt.viewToModelPosition( dx );
-        var recordingTimeIndex = this.pressTime + modelDiff.x;
+        var recordingTimeIndex = pressTime + modelDiff.x;
         recordingTimeIndex = Util.clamp( recordingTimeIndex, 0, membranePotentialChart.getLastTimeValue() );
         var compensatedRecordingTimeIndex = recordingTimeIndex / 1000 + membranePotentialChart.neuronModel.getMinRecordedTime();
         membranePotentialChart.neuronModel.setTime( compensatedRecordingTimeIndex );
