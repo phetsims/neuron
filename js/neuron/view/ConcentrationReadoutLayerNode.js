@@ -114,31 +114,6 @@ define( function( require ) {
     thisNode.addChild( potassiumExteriorConcentrationReadoutRect );
     thisNode.addChild( potassiumInteriorConcentrationReadoutRect );
 
-    // create a function to position the readouts based on the zoom factor
-    function updateConcentrationReadoutPositions() {
-
-      var maxExteriorReadoutWidth = Math.max( potassiumExteriorConcentrationReadoutRect.bounds.width,
-        sodiumExteriorConcentrationReadoutRect.bounds.width );
-
-      // Place the exterior readouts to the upper left, just outside of the membrane.  The algorithm for placement was
-      // empirically determined and will need adjustment if anything about the neuron position changes.
-      var exteriorIndicatorYOffset = Math.max( thisNode.zoomableRootNode.transform.transformY( 45 ), 5 );
-      potassiumExteriorConcentrationReadoutRect.left = viewPortBounds.minX + maxExteriorReadoutWidth -
-                                                       potassiumExteriorConcentrationReadoutRect.bounds.width + 4;
-      potassiumExteriorConcentrationReadoutRect.top = viewPortBounds.minY + exteriorIndicatorYOffset;
-      sodiumExteriorConcentrationReadoutRect.top = potassiumExteriorConcentrationReadoutRect.bottom;
-      sodiumExteriorConcentrationReadoutRect.right = potassiumExteriorConcentrationReadoutRect.right;
-
-      // Place the interior readout in a place where it can be seen whether or not the chart is showing and doesn't
-      // overlap with the membrane of the neuron.  The Y position calculation is empirically determined.
-      var interiorIndicatorYOffset = 80 + thisNode.zoomableRootNode.transform.transformY( 80 ) * 0.5;
-
-      potassiumInteriorConcentrationReadoutRect.centerX = axonCrossSectionNode.centerX;
-      potassiumInteriorConcentrationReadoutRect.top = viewPortBounds.y + interiorIndicatorYOffset;
-      sodiumInteriorConcentrationReadoutRect.top = potassiumInteriorConcentrationReadoutRect.bottom;
-      sodiumInteriorConcentrationReadoutRect.right = potassiumInteriorConcentrationReadoutRect.right;
-    }
-
     // Update the readout positions when the zoom factor or visibility changes.  Visibility is used as an optimization -
     // it prevents making updates when the readouts aren't visible.
     Property.multilink( [ zoomProperty, neuronModel.concentrationReadoutVisibleProperty ], function( zoom, visible ) {
