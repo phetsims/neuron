@@ -39,7 +39,7 @@ define( function( require ) {
    */
   function ParticlesWebGLNode( neuronModel, modelViewTransform, zoomMatrixProperty, bounds ) {
     var self = this;
-    WebGLNode.call( this, {
+    WebGLNode.call( this, ParticlesPainter, {
       canvasBounds: bounds
     } );
 
@@ -108,239 +108,7 @@ define( function( require ) {
     } );
   }
 
-  return inherit( WebGLNode, ParticlesWebGLNode, {
-
-    /**
-     * Initialization routine called by the base class that sets up the vertex and fragment shaders and does other
-     * initialization.
-     * @param {WebGLNodeDrawable} drawable
-     * @public
-     */
-    initializeWebGLDrawable: function( drawable ) {
-      var gl = drawable.gl;
-
-      // vertex shader
-      var vertexShaderSource = [
-        'attribute vec2 aPosition;',
-        'attribute vec2 aTextureCoordinate;',
-        'attribute float aOpacity;',
-        'varying vec2 vTextureCoordinate;',
-        'varying float vOpacity;',
-        'uniform mat3 uModelViewMatrix;',
-        'uniform mat3 uProjectionMatrix;',
-
-        'void main( void ) {',
-        // homogeneous model-view transformation
-        '  vec3 view = uModelViewMatrix * vec3( aPosition.xy, 1 );',
-        // homogeneous map to to normalized device coordinates
-        '  vec3 ndc = uProjectionMatrix * vec3( view.xy, 1 );',
-        // texture coordinate
-        '  vTextureCoordinate = aTextureCoordinate;',
-        // opacity
-        '  vOpacity = aOpacity;',
-        // assume a z value of 1 for the position
-        '  gl_Position = vec4( ndc.xy, 1.0, 1.0 );',
-        '}'
-      ].join( '\n' );
-
-      // fragment shader
-      var fragmentShaderSource = [
-        'precision mediump float;',
-        'varying vec2 vTextureCoordinate;',
-        'varying float vOpacity;',
-        'uniform sampler2D uSampler;',
-        'void main( void ) {',
-        '  gl_FragColor = texture2D( uSampler, vTextureCoordinate );',
-        '  gl_FragColor.a *= vOpacity;',
-        '}'
-      ].join( '\n' );
-
-      drawable.shaderProgram = new ShaderProgram( gl, vertexShaderSource, fragmentShaderSource, {
-        attributes: [ 'aPosition', 'aTextureCoordinate', 'aOpacity' ],
-        uniforms: [ 'uModelViewMatrix', 'uProjectionMatrix' ]
-      } );
-
-      drawable.texture = gl.createTexture();
-      drawable.vertexBuffer = gl.createBuffer();
-      drawable.elementBuffer = gl.createBuffer();
-
-      // bind the texture that contains the particle images
-      this.bindTextureImage( drawable, this.particlesTexture.canvas );
-
-      // set up a handler for context loss - this will just put up a dialog, better handling may exist eventually
-      gl.canvas.addEventListener( 'webglcontextlost', function( event ) {
-        event.preventDefault();
-
-        new ContextLossFailureDialog().show();
-
-        if ( document.domain === 'phet.colorado.edu' ) {
-          window._gaq && window._gaq.push( [ '_trackEvent', 'WebGL Context Loss', 'neuron' + phet.joist.sim.version, document.URL ] );
-        }
-      } );
-    },
-
-    /**
-     * method that is called by Scenery to repaint this node
-     * @param {WebGLDrawable} drawable
-     * @param {Matrix3} matrix
-     * @public
-     */
-    paintWebGLDrawable: function( drawable, matrix ) {
-      var gl = drawable.gl;
-      var shaderProgram = drawable.shaderProgram;
-      var i; // loop index
-
-      this.updateParticleData();
-
-      // Convert particle data to vertices that represent a rectangle plus texture coordinates.
-      var vertexDataIndex = 0;
-      var elementDataIndex = 0;
-      var elementDataValue = 0;
-      for ( i = 0; i < this.numActiveParticles; i++ ) {
-
-        // convenience var
-        var particleDatum = this.particleData[ i ];
-
-        // Tweak Alert!  The radii of the particles are adjusted here in order to look correct.
-        var adjustedParticleRadius;
-        var textureCoordinates;
-        if ( particleDatum.type === ParticleType.SODIUM_ION ) {
-          adjustedParticleRadius = particleDatum.radius * 1.9;
-          textureCoordinates = this.sodiumTextureCoords;
-        }
-        else if ( particleDatum.type === ParticleType.POTASSIUM_ION ) {
-          adjustedParticleRadius = particleDatum.radius * 2.1;
-          textureCoordinates = this.potassiumTextureCoords;
-        }
-
-        //-------------------------------------------------------------------------------------------------------------
-        // Add the vertex data.  Though WebGL uses 3 component vectors, this only assigns x and y values because z is
-        // assumed to be 1.  This is not done in a loop in order to get optimal performance.
-        //-------------------------------------------------------------------------------------------------------------
-
-        // upper left vertex position
-        this.vertexData[ vertexDataIndex++ ] = particleDatum.xPos - adjustedParticleRadius;
-        this.vertexData[ vertexDataIndex++ ] = particleDatum.yPos - adjustedParticleRadius;
-
-        // texture coordinate, which is a 2-component vector
-        this.vertexData[ vertexDataIndex++ ] = textureCoordinates.minX; // x texture coordinate
-        this.vertexData[ vertexDataIndex++ ] = textureCoordinates.minY; // y texture coordinate
-
-        // opacity, which is a single value
-        this.vertexData[ vertexDataIndex++ ] = particleDatum.opacity;
-
-        // lower left vertex position
-        this.vertexData[ vertexDataIndex++ ] = particleDatum.xPos - adjustedParticleRadius;
-        this.vertexData[ vertexDataIndex++ ] = particleDatum.yPos + adjustedParticleRadius;
-
-        // texture coordinate, which is a 2-component vector
-        this.vertexData[ vertexDataIndex++ ] = textureCoordinates.minX; // x texture coordinate
-        this.vertexData[ vertexDataIndex++ ] = textureCoordinates.maxY; // y texture coordinate
-
-        // opacity, which is a single value
-        this.vertexData[ vertexDataIndex++ ] = particleDatum.opacity;
-
-        // upper right vertex position
-        this.vertexData[ vertexDataIndex++ ] = particleDatum.xPos + adjustedParticleRadius;
-        this.vertexData[ vertexDataIndex++ ] = particleDatum.yPos - adjustedParticleRadius;
-
-        // texture coordinate, which is a 2-component vector
-        this.vertexData[ vertexDataIndex++ ] = textureCoordinates.maxX; // x texture coordinate
-        this.vertexData[ vertexDataIndex++ ] = textureCoordinates.minY; // y texture coordinate
-
-        // opacity, which is a single value
-        this.vertexData[ vertexDataIndex++ ] = particleDatum.opacity;
-
-        // lower right vertex position
-        this.vertexData[ vertexDataIndex++ ] = particleDatum.xPos + adjustedParticleRadius;
-        this.vertexData[ vertexDataIndex++ ] = particleDatum.yPos + adjustedParticleRadius;
-
-        // texture coordinate, which is a 2-component vector
-        this.vertexData[ vertexDataIndex++ ] = textureCoordinates.maxX; // x texture coordinate
-        this.vertexData[ vertexDataIndex++ ] = textureCoordinates.maxY; // y texture coordinate
-
-        // opacity, which is a single value
-        this.vertexData[ vertexDataIndex++ ] = particleDatum.opacity;
-
-        // Add the element indices.  This is done so that we can create 'degenerate triangles' and thus have
-        // discontinuities in the triangle strip, thus creating separate rectangles.
-        this.elementData[ elementDataIndex++ ] = elementDataValue++;
-        this.elementData[ elementDataIndex++ ] = elementDataValue++;
-        this.elementData[ elementDataIndex++ ] = elementDataValue++;
-        this.elementData[ elementDataIndex++ ] = elementDataValue;
-        if ( i + 1 < this.numActiveParticles ) {
-          // Add the 'degenerate triangle' that will force a discontinuity in the triangle strip.
-          this.elementData[ elementDataIndex++ ] = elementDataValue++;
-          this.elementData[ elementDataIndex++ ] = elementDataValue;
-        }
-      }
-
-      // Load the vertex data into the GPU.
-      gl.bindBuffer( gl.ARRAY_BUFFER, drawable.vertexBuffer );
-      gl.bufferData( gl.ARRAY_BUFFER, this.vertexData, gl.STATIC_DRAW );
-
-      // Set up the attributes that will be passed into the vertex shader.
-      var elementSize = Float32Array.BYTES_PER_ELEMENT;
-      var elementsPerVertex = POSITION_VALUES_PER_VERTEX + TEXTURE_VALUES_PER_VERTEX + OPACITY_VALUES_PER_VERTEX;
-      var stride = elementSize * elementsPerVertex;
-      gl.vertexAttribPointer( shaderProgram.attributeLocations.aPosition, 2, gl.FLOAT, false, stride, 0 );
-      gl.vertexAttribPointer( shaderProgram.attributeLocations.aTextureCoordinate, 2, gl.FLOAT, false, stride,
-        elementSize * TEXTURE_VALUES_PER_VERTEX );
-      gl.vertexAttribPointer( shaderProgram.attributeLocations.aOpacity, 1, gl.FLOAT, false, stride,
-        elementSize * ( POSITION_VALUES_PER_VERTEX + TEXTURE_VALUES_PER_VERTEX ) );
-
-      // Load the element data into the GPU.
-      gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, drawable.elementBuffer );
-      gl.bufferData( gl.ELEMENT_ARRAY_BUFFER, new Uint16Array( this.elementData ), gl.STATIC_DRAW );
-
-      shaderProgram.use();
-
-      gl.uniformMatrix3fv( shaderProgram.uniformLocations.uModelViewMatrix, false, matrix.entries );
-      gl.uniformMatrix3fv( shaderProgram.uniformLocations.uProjectionMatrix, false, drawable.webGLBlock.projectionMatrixArray );
-
-      // activate and bind the texture
-      gl.activeTexture( gl.TEXTURE0 );
-      gl.bindTexture( gl.TEXTURE_2D, drawable.texture );
-      gl.uniform1i( shaderProgram.uniformLocations.uSampler, 0 );
-
-      // add the element data
-      gl.drawElements( gl.TRIANGLE_STRIP, elementDataIndex, gl.UNSIGNED_SHORT, 0 );
-
-      shaderProgram.unuse();
-    },
-
-    /**
-     * bind the canvas that contains the particle images as a texture
-     * @param {Drawable} drawable
-     * @param {Canvas} canvas
-     * @private
-     */
-    bindTextureImage: function( drawable, canvas ) {
-      var gl = drawable.gl;
-
-      gl.bindTexture( gl.TEXTURE_2D, drawable.texture );
-      gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE );
-      gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE );
-
-      // Texture filtering, see http://learningwebgl.com/blog/?p=571
-      gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR );
-      gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR );
-
-      // ship the texture data to the GPU
-      gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, canvas );
-
-      // generate a mipmap for better handling of zoom in/out
-      gl.generateMipmap( gl.TEXTURE_2D );
-    },
-
-    // @private
-    disposeWebGLDrawable: function( drawable ) {
-      drawable.shaderProgram.dispose();
-      drawable.gl.deleteBuffer( drawable.vertexBuffer );
-      drawable.gl.deleteTexture( drawable.texture );
-      drawable.gl.deleteBuffer( drawable.elementBuffer );
-      drawable.shaderProgram = null;
-    },
+  inherit( WebGLNode, ParticlesWebGLNode, {
 
     /**
      * Check if the provided particle is in the current rendering bounds and, if so, create a particle data object and
@@ -406,4 +174,225 @@ define( function( require ) {
     }
 
   } );
+
+  /**
+   * @constructor
+   *
+   * @param {WebGLRenderingContext} gl
+   * @param {WaveWebGLNode} node
+   */
+  function ParticlesPainter( gl, node ) {
+    this.gl = gl;
+    this.node = node;
+
+    // vertex shader
+    var vertexShaderSource = [
+      'attribute vec2 aPosition;',
+      'attribute vec2 aTextureCoordinate;',
+      'attribute float aOpacity;',
+      'varying vec2 vTextureCoordinate;',
+      'varying float vOpacity;',
+      'uniform mat3 uModelViewMatrix;',
+      'uniform mat3 uProjectionMatrix;',
+
+      'void main( void ) {',
+      // homogeneous model-view transformation
+      '  vec3 view = uModelViewMatrix * vec3( aPosition.xy, 1 );',
+      // homogeneous map to to normalized device coordinates
+      '  vec3 ndc = uProjectionMatrix * vec3( view.xy, 1 );',
+      // texture coordinate
+      '  vTextureCoordinate = aTextureCoordinate;',
+      // opacity
+      '  vOpacity = aOpacity;',
+      // assume a z value of 1 for the position
+      '  gl_Position = vec4( ndc.xy, 1.0, 1.0 );',
+      '}'
+    ].join( '\n' );
+
+    // fragment shader
+    var fragmentShaderSource = [
+      'precision mediump float;',
+      'varying vec2 vTextureCoordinate;',
+      'varying float vOpacity;',
+      'uniform sampler2D uSampler;',
+      'void main( void ) {',
+      '  gl_FragColor = texture2D( uSampler, vTextureCoordinate );',
+      '  gl_FragColor.a *= vOpacity;',
+      '}'
+    ].join( '\n' );
+
+    this.shaderProgram = new ShaderProgram( gl, vertexShaderSource, fragmentShaderSource, {
+      attributes: [ 'aPosition', 'aTextureCoordinate', 'aOpacity' ],
+      uniforms: [ 'uModelViewMatrix', 'uProjectionMatrix' ]
+    } );
+
+    this.texture = gl.createTexture();
+    this.vertexBuffer = gl.createBuffer();
+    this.elementBuffer = gl.createBuffer();
+
+    // bind the texture that contains the particle images
+    gl.bindTexture( gl.TEXTURE_2D, this.texture );
+    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE );
+    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE );
+    // Texture filtering, see http://learningwebgl.com/blog/?p=571
+    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR );
+    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR );
+    // ship the texture data to the GPU
+    gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.node.particlesTexture.canvas );
+
+    // generate a mipmap for better handling of zoom in/out
+    gl.generateMipmap( gl.TEXTURE_2D );
+
+    this.contextLossListener = function( event ) {
+      event.preventDefault();
+
+      new ContextLossFailureDialog().show();
+
+      if ( document.domain === 'phet.colorado.edu' ) {
+        window._gaq && window._gaq.push( [ '_trackEvent', 'WebGL Context Loss', 'neuron' + phet.joist.sim.version, document.URL ] );
+      }
+    };
+
+    // set up a handler for context loss - this will just put up a dialog, better handling may exist eventually
+    gl.canvas.addEventListener( 'webglcontextlost', this.contextLossListener );
+  }
+
+  inherit( Object, ParticlesPainter, {
+    paint: function( modelViewMatrix, projectionMatrix ) {
+      var gl = this.gl;
+      var shaderProgram = this.shaderProgram;
+      var i; // loop index
+
+      this.node.updateParticleData();
+
+      // Convert particle data to vertices that represent a rectangle plus texture coordinates.
+      var vertexDataIndex = 0;
+      var elementDataIndex = 0;
+      var elementDataValue = 0;
+      for ( i = 0; i < this.node.numActiveParticles; i++ ) {
+
+        // convenience var
+        var particleDatum = this.node.particleData[ i ];
+
+        // Tweak Alert!  The radii of the particles are adjusted here in order to look correct.
+        var adjustedParticleRadius;
+        var textureCoordinates;
+        if ( particleDatum.type === ParticleType.SODIUM_ION ) {
+          adjustedParticleRadius = particleDatum.radius * 1.9;
+          textureCoordinates = this.node.sodiumTextureCoords;
+        }
+        else if ( particleDatum.type === ParticleType.POTASSIUM_ION ) {
+          adjustedParticleRadius = particleDatum.radius * 2.1;
+          textureCoordinates = this.node.potassiumTextureCoords;
+        }
+
+        //-------------------------------------------------------------------------------------------------------------
+        // Add the vertex data.  Though WebGL uses 3 component vectors, this only assigns x and y values because z is
+        // assumed to be 1.  This is not done in a loop in order to get optimal performance.
+        //-------------------------------------------------------------------------------------------------------------
+
+        // upper left vertex position
+        this.node.vertexData[ vertexDataIndex++ ] = particleDatum.xPos - adjustedParticleRadius;
+        this.node.vertexData[ vertexDataIndex++ ] = particleDatum.yPos - adjustedParticleRadius;
+
+        // texture coordinate, which is a 2-component vector
+        this.node.vertexData[ vertexDataIndex++ ] = textureCoordinates.minX; // x texture coordinate
+        this.node.vertexData[ vertexDataIndex++ ] = textureCoordinates.minY; // y texture coordinate
+
+        // opacity, which is a single value
+        this.node.vertexData[ vertexDataIndex++ ] = particleDatum.opacity;
+
+        // lower left vertex position
+        this.node.vertexData[ vertexDataIndex++ ] = particleDatum.xPos - adjustedParticleRadius;
+        this.node.vertexData[ vertexDataIndex++ ] = particleDatum.yPos + adjustedParticleRadius;
+
+        // texture coordinate, which is a 2-component vector
+        this.node.vertexData[ vertexDataIndex++ ] = textureCoordinates.minX; // x texture coordinate
+        this.node.vertexData[ vertexDataIndex++ ] = textureCoordinates.maxY; // y texture coordinate
+
+        // opacity, which is a single value
+        this.node.vertexData[ vertexDataIndex++ ] = particleDatum.opacity;
+
+        // upper right vertex position
+        this.node.vertexData[ vertexDataIndex++ ] = particleDatum.xPos + adjustedParticleRadius;
+        this.node.vertexData[ vertexDataIndex++ ] = particleDatum.yPos - adjustedParticleRadius;
+
+        // texture coordinate, which is a 2-component vector
+        this.node.vertexData[ vertexDataIndex++ ] = textureCoordinates.maxX; // x texture coordinate
+        this.node.vertexData[ vertexDataIndex++ ] = textureCoordinates.minY; // y texture coordinate
+
+        // opacity, which is a single value
+        this.node.vertexData[ vertexDataIndex++ ] = particleDatum.opacity;
+
+        // lower right vertex position
+        this.node.vertexData[ vertexDataIndex++ ] = particleDatum.xPos + adjustedParticleRadius;
+        this.node.vertexData[ vertexDataIndex++ ] = particleDatum.yPos + adjustedParticleRadius;
+
+        // texture coordinate, which is a 2-component vector
+        this.node.vertexData[ vertexDataIndex++ ] = textureCoordinates.maxX; // x texture coordinate
+        this.node.vertexData[ vertexDataIndex++ ] = textureCoordinates.maxY; // y texture coordinate
+
+        // opacity, which is a single value
+        this.node.vertexData[ vertexDataIndex++ ] = particleDatum.opacity;
+
+        // Add the element indices.  This is done so that we can create 'degenerate triangles' and thus have
+        // discontinuities in the triangle strip, thus creating separate rectangles.
+        this.node.elementData[ elementDataIndex++ ] = elementDataValue++;
+        this.node.elementData[ elementDataIndex++ ] = elementDataValue++;
+        this.node.elementData[ elementDataIndex++ ] = elementDataValue++;
+        this.node.elementData[ elementDataIndex++ ] = elementDataValue;
+        if ( i + 1 < this.node.numActiveParticles ) {
+          // Add the 'degenerate triangle' that will force a discontinuity in the triangle strip.
+          this.node.elementData[ elementDataIndex++ ] = elementDataValue++;
+          this.node.elementData[ elementDataIndex++ ] = elementDataValue;
+        }
+      }
+
+      // Load the vertex data into the GPU.
+      gl.bindBuffer( gl.ARRAY_BUFFER, this.vertexBuffer );
+      gl.bufferData( gl.ARRAY_BUFFER, this.node.vertexData, gl.STATIC_DRAW );
+
+      // Set up the attributes that will be passed into the vertex shader.
+      var elementSize = Float32Array.BYTES_PER_ELEMENT;
+      var elementsPerVertex = POSITION_VALUES_PER_VERTEX + TEXTURE_VALUES_PER_VERTEX + OPACITY_VALUES_PER_VERTEX;
+      var stride = elementSize * elementsPerVertex;
+      gl.vertexAttribPointer( shaderProgram.attributeLocations.aPosition, 2, gl.FLOAT, false, stride, 0 );
+      gl.vertexAttribPointer( shaderProgram.attributeLocations.aTextureCoordinate, 2, gl.FLOAT, false, stride,
+        elementSize * TEXTURE_VALUES_PER_VERTEX );
+      gl.vertexAttribPointer( shaderProgram.attributeLocations.aOpacity, 1, gl.FLOAT, false, stride,
+        elementSize * ( POSITION_VALUES_PER_VERTEX + TEXTURE_VALUES_PER_VERTEX ) );
+
+      // Load the element data into the GPU.
+      gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, this.elementBuffer );
+      gl.bufferData( gl.ELEMENT_ARRAY_BUFFER, new Uint16Array( this.node.elementData ), gl.STATIC_DRAW );
+
+      shaderProgram.use();
+
+      gl.uniformMatrix3fv( shaderProgram.uniformLocations.uModelViewMatrix, false, modelViewMatrix.entries );
+      gl.uniformMatrix3fv( shaderProgram.uniformLocations.uProjectionMatrix, false, projectionMatrix.entries );
+
+      // activate and bind the texture
+      gl.activeTexture( gl.TEXTURE0 );
+      gl.bindTexture( gl.TEXTURE_2D, this.texture );
+      gl.uniform1i( shaderProgram.uniformLocations.uSampler, 0 );
+
+      // add the element data
+      gl.drawElements( gl.TRIANGLE_STRIP, elementDataIndex, gl.UNSIGNED_SHORT, 0 );
+
+      shaderProgram.unuse();
+    },
+
+    dispose: function() {
+      this.shaderProgram.dispose();
+      this.gl.deleteBuffer( this.vertexBuffer );
+      this.gl.deleteTexture( this.texture );
+      this.gl.deleteBuffer( this.elementBuffer );
+      this.shaderProgram = null;
+
+      // After we are disposed, we don't care about context loss
+      this.gl.canvas.removeEventListener( 'webglcontextlost', this.contextLossListener );
+    }
+  } );
+
+  return ParticlesWebGLNode;
 } );
