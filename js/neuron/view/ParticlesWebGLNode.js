@@ -380,6 +380,8 @@ define( function( require ) {
       gl.drawElements( gl.TRIANGLE_STRIP, elementDataIndex, gl.UNSIGNED_SHORT, 0 );
 
       shaderProgram.unuse();
+
+      return WebGLNode.PAINTED_SOMETHING;
     },
 
     dispose: function() {
