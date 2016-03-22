@@ -20,6 +20,7 @@ define( function( require ) {
   var NeuronParticlesTexture = require( 'NEURON/neuron/view/NeuronParticlesTexture' );
   var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
   var ShaderProgram = require( 'SCENERY/util/ShaderProgram' );
+  var Vector2 = require( 'DOT/Vector2' );
   var WebGLNode = require( 'SCENERY/nodes/WebGLNode' );
 
   // constants
@@ -56,7 +57,7 @@ define( function( require ) {
     // @private - pre-allocated arrays and values that are reused for better performance
     this.vertexData = new Float32Array( MAX_PARTICLES * VERTICES_PER_PARTICLE *
                                         ( POSITION_VALUES_PER_VERTEX + TEXTURE_VALUES_PER_VERTEX + OPACITY_VALUES_PER_VERTEX) );
-    this.elementData = new Array( MAX_PARTICLES * ( VERTICES_PER_PARTICLE + 2 ) );
+    this.elementData = new Uint16Array( MAX_PARTICLES * ( VERTICES_PER_PARTICLE + 2 ) );
     this.particleData = new Array( MAX_PARTICLES );
 
     // pre-calculate the texture coordinates for the two different particle types
@@ -67,8 +68,7 @@ define( function( require ) {
     // than reallocated during each update.
     for ( var i = 0; i < MAX_PARTICLES; i++ ) {
       this.particleData[ i ] = {
-        xPos: 0,
-        yPos: 0,
+        pos: new Vector2(),
         radius: 1,
         type: null,
         opacity: 1
@@ -130,8 +130,7 @@ define( function( require ) {
       // Only add the particle if its zoomed location is within the bounds being shown.
       if ( this.particleBounds.containsCoordinates( zoomedXPos, zoomedYPos ) ) {
         var particleDataEntry = this.particleData[ this.numActiveParticles ];
-        particleDataEntry.xPos = zoomedXPos;
-        particleDataEntry.yPos = zoomedYPos;
+        particleDataEntry.pos.setXY( zoomedXPos, zoomedYPos );
         particleDataEntry.radius = zoomedRadius;
         particleDataEntry.type = particle.getType();
         particleDataEntry.opacity = particle.getOpacity();
@@ -146,30 +145,29 @@ define( function( require ) {
      * @private
      */
     updateParticleData: function() {
-      var self = this;
       this.numActiveParticles = 0;
 
       // For better performance, we loop over the arrays contained within the observable arrays rather than using the
       // forEach function.  This is much more efficient.  Note that this is only safe if no mods are made to the
       // contents of the observable array.
 
-      var i = 0;
+      var i;
       var particleArray = this.neuronModel.backgroundParticles.getArray();
 
       for ( i = 0; i < particleArray.length; i++ ) {
-        self.addParticleData( particleArray[ i ] );
+        this.addParticleData( particleArray[ i ] );
       }
 
       particleArray = this.neuronModel.transientParticles.getArray();
 
       for ( i = 0; i < particleArray.length; i++ ) {
-        self.addParticleData( particleArray[ i ] );
+        this.addParticleData( particleArray[ i ] );
       }
 
       particleArray = this.neuronModel.playbackParticles.getArray();
 
       for ( i = 0; i < particleArray.length; i++ ) {
-        self.addParticleData( particleArray[ i ] );
+        this.addParticleData( particleArray[ i ] );
       }
     }
 
@@ -292,8 +290,8 @@ define( function( require ) {
         //-------------------------------------------------------------------------------------------------------------
 
         // upper left vertex position
-        this.node.vertexData[ vertexDataIndex++ ] = particleDatum.xPos - adjustedParticleRadius;
-        this.node.vertexData[ vertexDataIndex++ ] = particleDatum.yPos - adjustedParticleRadius;
+        this.node.vertexData[ vertexDataIndex++ ] = particleDatum.pos.x - adjustedParticleRadius;
+        this.node.vertexData[ vertexDataIndex++ ] = particleDatum.pos.y - adjustedParticleRadius;
 
         // texture coordinate, which is a 2-component vector
         this.node.vertexData[ vertexDataIndex++ ] = textureCoordinates.minX; // x texture coordinate
@@ -303,8 +301,8 @@ define( function( require ) {
         this.node.vertexData[ vertexDataIndex++ ] = particleDatum.opacity;
 
         // lower left vertex position
-        this.node.vertexData[ vertexDataIndex++ ] = particleDatum.xPos - adjustedParticleRadius;
-        this.node.vertexData[ vertexDataIndex++ ] = particleDatum.yPos + adjustedParticleRadius;
+        this.node.vertexData[ vertexDataIndex++ ] = particleDatum.pos.x - adjustedParticleRadius;
+        this.node.vertexData[ vertexDataIndex++ ] = particleDatum.pos.y + adjustedParticleRadius;
 
         // texture coordinate, which is a 2-component vector
         this.node.vertexData[ vertexDataIndex++ ] = textureCoordinates.minX; // x texture coordinate
@@ -314,8 +312,8 @@ define( function( require ) {
         this.node.vertexData[ vertexDataIndex++ ] = particleDatum.opacity;
 
         // upper right vertex position
-        this.node.vertexData[ vertexDataIndex++ ] = particleDatum.xPos + adjustedParticleRadius;
-        this.node.vertexData[ vertexDataIndex++ ] = particleDatum.yPos - adjustedParticleRadius;
+        this.node.vertexData[ vertexDataIndex++ ] = particleDatum.pos.x + adjustedParticleRadius;
+        this.node.vertexData[ vertexDataIndex++ ] = particleDatum.pos.y - adjustedParticleRadius;
 
         // texture coordinate, which is a 2-component vector
         this.node.vertexData[ vertexDataIndex++ ] = textureCoordinates.maxX; // x texture coordinate
@@ -325,8 +323,8 @@ define( function( require ) {
         this.node.vertexData[ vertexDataIndex++ ] = particleDatum.opacity;
 
         // lower right vertex position
-        this.node.vertexData[ vertexDataIndex++ ] = particleDatum.xPos + adjustedParticleRadius;
-        this.node.vertexData[ vertexDataIndex++ ] = particleDatum.yPos + adjustedParticleRadius;
+        this.node.vertexData[ vertexDataIndex++ ] = particleDatum.pos.x + adjustedParticleRadius;
+        this.node.vertexData[ vertexDataIndex++ ] = particleDatum.pos.y + adjustedParticleRadius;
 
         // texture coordinate, which is a 2-component vector
         this.node.vertexData[ vertexDataIndex++ ] = textureCoordinates.maxX; // x texture coordinate
@@ -350,7 +348,7 @@ define( function( require ) {
 
       // Load the vertex data into the GPU.
       gl.bindBuffer( gl.ARRAY_BUFFER, this.vertexBuffer );
-      gl.bufferData( gl.ARRAY_BUFFER, this.node.vertexData, gl.STATIC_DRAW );
+      gl.bufferData( gl.ARRAY_BUFFER, this.node.vertexData, gl.DYNAMIC_DRAW );
 
       // Set up the attributes that will be passed into the vertex shader.
       var elementSize = Float32Array.BYTES_PER_ELEMENT;
@@ -364,7 +362,7 @@ define( function( require ) {
 
       // Load the element data into the GPU.
       gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, this.elementBuffer );
-      gl.bufferData( gl.ELEMENT_ARRAY_BUFFER, new Uint16Array( this.node.elementData ), gl.STATIC_DRAW );
+      gl.bufferData( gl.ELEMENT_ARRAY_BUFFER, this.node.elementData, gl.DYNAMIC_DRAW );
 
       shaderProgram.use();
 
