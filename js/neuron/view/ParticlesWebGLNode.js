@@ -64,17 +64,32 @@ define( function( require ) {
     this.sodiumTextureCoords = this.particlesTexture.getTexCoords( ParticleType.SODIUM_ION );
     this.potassiumTextureCoords = this.particlesTexture.getTexCoords( ParticleType.POTASSIUM_ION );
 
-    // For better performance, the array of particle data objects is initialized here and the values updated rather
-    // than reallocated during each update.
     for ( var i = 0; i < MAX_PARTICLES; i++ ) {
+
+      // For better performance, the array of particle data objects is initialized here and the values updated rather
+      // than reallocated during each update.
       this.particleData[ i ] = {
         pos: new Vector2(),
         radius: 1,
         type: null,
         opacity: 1
       };
+
+      // Also for better performance, the element data is initialized at the start for the max number of particles.
+      var indexBase = i * 6;
+      var valueBase = i * 4;
+      this.elementData[ indexBase ] = valueBase;
+      this.elementData[ indexBase + 1 ] = valueBase + 1;
+      this.elementData[ indexBase + 2 ] = valueBase + 2;
+      this.elementData[ indexBase + 3 ] = valueBase + 3;
+      if ( i + 1 < MAX_PARTICLES ) {
+        // Add the 'degenerate triangle' that will force a discontinuity in the triangle strip.
+        this.elementData[ indexBase + 4 ] = valueBase + 3;
+        this.elementData[ indexBase + 5 ] = valueBase + 4;
+      }
     }
-    this.numActiveParticles = 0;
+
+    this.numActiveParticles = 0; // @private
 
     // initial update
     this.updateParticleData();
@@ -265,8 +280,6 @@ define( function( require ) {
 
       // Convert particle data to vertices that represent a rectangle plus texture coordinates.
       var vertexDataIndex = 0;
-      var elementDataIndex = 0;
-      var elementDataValue = 0;
       for ( i = 0; i < this.node.numActiveParticles; i++ ) {
 
         // convenience var
@@ -332,18 +345,6 @@ define( function( require ) {
 
         // opacity, which is a single value
         this.node.vertexData[ vertexDataIndex++ ] = particleDatum.opacity;
-
-        // Add the element indices.  This is done so that we can create 'degenerate triangles' and thus have
-        // discontinuities in the triangle strip, thus creating separate rectangles.
-        this.node.elementData[ elementDataIndex++ ] = elementDataValue++;
-        this.node.elementData[ elementDataIndex++ ] = elementDataValue++;
-        this.node.elementData[ elementDataIndex++ ] = elementDataValue++;
-        this.node.elementData[ elementDataIndex++ ] = elementDataValue;
-        if ( i + 1 < this.node.numActiveParticles ) {
-          // Add the 'degenerate triangle' that will force a discontinuity in the triangle strip.
-          this.node.elementData[ elementDataIndex++ ] = elementDataValue++;
-          this.node.elementData[ elementDataIndex++ ] = elementDataValue;
-        }
       }
 
       // Load the vertex data into the GPU.
@@ -362,7 +363,7 @@ define( function( require ) {
 
       // Load the element data into the GPU.
       gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, this.elementBuffer );
-      gl.bufferData( gl.ELEMENT_ARRAY_BUFFER, this.node.elementData, gl.DYNAMIC_DRAW );
+      gl.bufferData( gl.ELEMENT_ARRAY_BUFFER, this.node.elementData, gl.STATIC_DRAW );
 
       shaderProgram.use();
 
@@ -375,7 +376,7 @@ define( function( require ) {
       gl.uniform1i( shaderProgram.uniformLocations.uSampler, 0 );
 
       // add the element data
-      gl.drawElements( gl.TRIANGLE_STRIP, elementDataIndex, gl.UNSIGNED_SHORT, 0 );
+      gl.drawElements( gl.TRIANGLE_STRIP, this.node.numActiveParticles * 6 - 2, gl.UNSIGNED_SHORT, 0 );
 
       shaderProgram.unuse();
 
