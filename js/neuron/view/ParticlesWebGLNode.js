@@ -189,8 +189,9 @@ define( function( require ) {
   } );
 
   /**
+   * Constructor for the object that will do the actual painting for this node.  This constructor, rather than an
+   * instance, is passed to the parent WebGLNode type.
    * @constructor
-   *
    * @param {WebGLRenderingContext} gl
    * @param {WaveWebGLNode} node
    */
