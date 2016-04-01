@@ -1,5 +1,5 @@
 {
-  "comment": "# neuron 1.0.1 Fri Apr 01 2016 13:00:56 GMT-0600 (MDT)",
+  "comment": "# neuron 1.0.1 Fri Apr 01 2016 15:08:32 GMT-0600 (MDT)",
   "assert": {
     "sha": "d4909677d27ed571d5d859d709a0612bf7811db8",
     "branch": "HEAD"
@@ -9,8 +9,8 @@
     "branch": "HEAD"
   },
   "brand": {
-    "sha": "c9282935819904d033c0e22d9d36e3590019f38b",
-    "branch": "HEAD"
+    "sha": "09d93d47fa562fbb11e97da4dd3569a7b770bcf2",
+    "branch": "neuron-1.0"
   },
   "chipper": {
     "sha": "1d1d5d329bc1412d2f4a90288ae62f113187c195",
@@ -25,15 +25,15 @@
     "branch": "HEAD"
   },
   "joist": {
-    "sha": "a8fdef228d5e3b8722adbe7383b9a3380caae23f",
-    "branch": "HEAD"
+    "sha": "6232b82b6d7995d5edef49edbf009021b9f9d725",
+    "branch": "neuron-1.0"
   },
   "kite": {
     "sha": "4a947119f6e57cb6a6d9d1bf4596502ca721464c",
     "branch": "HEAD"
   },
   "neuron": {
-    "sha": "64c5c11fd61725afdd0b66d87fbac813f16e91a8",
+    "sha": "8d7334fa7dd6afd446d375fea045c40af250a66e",
     "branch": "1.0"
   },
   "phet-core": {
@@ -42,7 +42,7 @@
   },
   "phetcommon": {
     "sha": "d71dc9ef13282a0970c0007e8af3eecaafd24a87",
-    "branch": "neuron-1.0"
+    "branch": "HEAD"
   },
   "scenery": {
     "sha": "47143cdd307334564a3b6f6b07ff0e391ba24fb7",
