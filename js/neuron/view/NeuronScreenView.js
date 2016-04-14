@@ -43,7 +43,7 @@ define( function( require ) {
   var AxonCrossSectionControlPanel = require( 'NEURON/neuron/view/controlpanel/AxonCrossSectionControlPanel' );
   var SimSpeedControlPanel = require( 'NEURON/neuron/view/controlpanel/SimSpeedControlPanel' );
   var PlayPauseButton = require( 'SCENERY_PHET/buttons/PlayPauseButton' );
-  var StepButton = require( 'SCENERY_PHET/buttons/StepButton' );
+  var StepForwardButton = require( 'SCENERY_PHET/buttons/StepForwardButton' );
   var Util = require( 'SCENERY/util/Util' );
   var ParticlesCanvasNode = require( 'NEURON/neuron/view/ParticlesCanvasNode' );
 
@@ -229,7 +229,7 @@ define( function( require ) {
     );
 
     // step forward is enabled whenever paused.
-    var stepForwardButton = new StepButton(
+    var stepForwardButton = new StepForwardButton(
       function() { neuronClockModelAdapter.stepClockWhilePaused(); },
       playingProperty
     );
