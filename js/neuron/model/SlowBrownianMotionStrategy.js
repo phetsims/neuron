@@ -14,6 +14,7 @@ define( function( require ) {
 
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
+  var neuron = require( 'NEURON/neuron' );
   var MotionStrategy = require( 'NEURON/neuron/model/MotionStrategy' );
 
   // constants
@@ -34,6 +35,8 @@ define( function( require ) {
     // In seconds of sim time.
     thisStrategy.timeUntilNextJump = this.generateNewJumpTime();
   }
+
+  neuron.register( 'SlowBrownianMotionStrategy', SlowBrownianMotionStrategy );
 
   return inherit( MotionStrategy, SlowBrownianMotionStrategy, {
 

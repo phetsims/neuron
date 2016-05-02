@@ -26,6 +26,7 @@ define( function( require ) {
   var HBox = require( 'SCENERY/nodes/HBox' );
   var inherit = require( 'PHET_CORE/inherit' );
   var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
+  var neuron = require( 'NEURON/neuron' );
   var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
   var Node = require( 'SCENERY/nodes/Node' );
   var Panel = require( 'SUN/Panel' );
@@ -245,6 +246,8 @@ define( function( require ) {
       thisChart.visible = chartVisible;
     } );
   }
+
+  neuron.register( 'MembranePotentialChart', MembranePotentialChart );
 
   return inherit( Panel, MembranePotentialChart, {
 

@@ -12,6 +12,7 @@ define( function( require ) {
   // modules
   var CheckBox = require( 'SUN/CheckBox' );
   var inherit = require( 'PHET_CORE/inherit' );
+  var neuron = require( 'NEURON/neuron' );
   var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
   var Panel = require( 'SUN/Panel' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
@@ -83,6 +84,8 @@ define( function( require ) {
       allIonsSimulatedCheckBox.enabled = !neuronModel.isStimulusInitiationLockedOut();
     } );
   }
+
+  neuron.register( 'AxonCrossSectionControlPanel', AxonCrossSectionControlPanel );
 
   return inherit( Panel, AxonCrossSectionControlPanel );
 } );

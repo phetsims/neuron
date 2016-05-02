@@ -20,6 +20,7 @@ define( function( require ) {
   var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
   var Color = require( 'SCENERY/util/Color' );
   var MembraneChannelTypes = require( 'NEURON/neuron/model/MembraneChannelTypes' );
+  var neuron = require( 'NEURON/neuron' );
 
   // constants
   var CHANNEL_HEIGHT = NeuronConstants.MEMBRANE_THICKNESS * 1.2; // In nanometers.
@@ -56,6 +57,8 @@ define( function( require ) {
     // Start the capture timer now, since leak channels are always capturing particles.
     thisChannel.restartCaptureCountdownTimer( false );
   }
+
+  neuron.register( 'PotassiumLeakageChannel', PotassiumLeakageChannel );
 
   return inherit( AbstractLeakChannel, PotassiumLeakageChannel, {
 

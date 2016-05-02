@@ -9,6 +9,7 @@ define( function( require ) {
 
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
+  var neuron = require( 'NEURON/neuron' );
   var Node = require( 'SCENERY/nodes/Node' );
   var Path = require( 'SCENERY/nodes/Path' );
   var Color = require( 'SCENERY/util/Color' );
@@ -74,6 +75,8 @@ define( function( require ) {
     updateRepresentation( particle.getOpacity() );
   }
 
-  return inherit( Node, ParticleNode, {} );
+  neuron.register( 'ParticleNode', ParticleNode );
+
+  return inherit( Node, ParticleNode );
 } );
 

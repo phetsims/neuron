@@ -11,6 +11,7 @@ define( function( require ) {
 
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
+  var neuron = require( 'NEURON/neuron' );
 
   /**
    * @param {number} time
@@ -21,6 +22,8 @@ define( function( require ) {
     this.time = time; // @private
     this.state = state; // @private
   }
+
+  neuron.register( 'DataPoint', DataPoint );
 
   return inherit( Object, DataPoint, {
 

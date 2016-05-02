@@ -11,6 +11,7 @@ define( function( require ) {
 
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
+  var neuron = require( 'NEURON/neuron' );
 
   /*
    * JavaScript object dictionary only supports String as keys, but the channel's state are stored against Membrane
@@ -71,6 +72,8 @@ define( function( require ) {
       thisNeuronModelState.particlePlaybackMementos.push( transientParticle.getPlaybackMemento() );
     }
   }
+
+  neuron.register( 'NeuronModelState', NeuronModelState );
 
   return inherit( Object, NeuronModelState, {
 

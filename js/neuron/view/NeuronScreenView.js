@@ -46,6 +46,7 @@ define( function( require ) {
   var StepForwardButton = require( 'SCENERY_PHET/buttons/StepForwardButton' );
   var Util = require( 'SCENERY/util/Util' );
   var ParticlesCanvasNode = require( 'NEURON/neuron/view/ParticlesCanvasNode' );
+  var neuron = require( 'NEURON/neuron' );
 
   // strings
   var stimulateNeuronString = require( 'string!NEURON/stimulateNeuron' );
@@ -63,7 +64,7 @@ define( function( require ) {
    * constant clock. The clock adapter calculates the appropriate real time dt and dispatches it to the actual model.
    * @constructor
    */
-  function NeuronView( neuronClockModelAdapter ) {
+  function NeuronScreenView( neuronClockModelAdapter ) {
 
     var thisView = this;
     thisView.neuronModel = neuronClockModelAdapter.model; // model is neuron model
@@ -326,5 +327,7 @@ define( function( require ) {
     thisView.addChild( membranePotentialChartNode );
   }
 
-  return inherit( ScreenView, NeuronView );
+  neuron.register( 'NeuronScreenView', NeuronScreenView );
+
+  return inherit( ScreenView, NeuronScreenView );
 } );

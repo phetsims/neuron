@@ -10,11 +10,12 @@ define( function( require ) {
   'use strict';
 
   // modules
+  var neuron = require( 'NEURON/neuron' );
+  var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
   var PotassiumIon = require( 'NEURON/neuron/model/PotassiumIon' );
   var SodiumIon = require( 'NEURON/neuron/model/SodiumIon' );
-  var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
 
-  return {
+  var ParticleFactory = {
     /**
      * factory method for creating a particle of the specified type
      * @param {ParticleType} particleType - ParticleType enum constants
@@ -37,4 +38,8 @@ define( function( require ) {
       return newParticle;
     }
   };
+
+  neuron.register( 'ParticleFactory', ParticleFactory );
+
+  return ParticleFactory;
 } );

@@ -10,8 +10,11 @@ define( function( require ) {
 
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
+  var neuron = require( 'NEURON/neuron' );
 
   function MotionStrategy() { }
+
+  neuron.register( 'MotionStrategy', MotionStrategy );
 
   return inherit( Object, MotionStrategy, {
 

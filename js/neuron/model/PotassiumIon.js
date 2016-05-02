@@ -14,6 +14,7 @@ define( function( require ) {
   var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
   var Particle = require( 'NEURON/neuron/model/Particle' );
   var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
+  var neuron = require( 'NEURON/neuron' );
 
   /**
    * @constructor
@@ -21,6 +22,8 @@ define( function( require ) {
   function PotassiumIon() {
     Particle.call( this );
   }
+
+  neuron.register( 'PotassiumIon', PotassiumIon );
 
   return inherit( Particle, PotassiumIon, {
 

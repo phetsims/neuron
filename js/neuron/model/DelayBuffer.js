@@ -14,8 +14,9 @@ define( function( require ) {
   'use strict';
 
   // modules
-  var inherit = require( 'PHET_CORE/inherit' );
   var DelayElement = require( 'NEURON/neuron/model/DelayElement' );
+  var inherit = require( 'PHET_CORE/inherit' );
+  var neuron = require( 'NEURON/neuron' );
   var Util = require( 'DOT/Util' );
 
   // This value is used to tell if two numbers are different.  It was needed due to some floating point resolution
@@ -47,6 +48,8 @@ define( function( require ) {
     // Set the initial conditions.
     thisBuffer.clear();
   }
+
+  neuron.register( 'DelayBuffer', DelayBuffer );
 
   return inherit( Object, DelayBuffer, {
 

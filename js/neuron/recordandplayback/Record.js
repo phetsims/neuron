@@ -10,9 +10,10 @@ define( function( require ) {
   'use strict';
 
   // modules
-  var inherit = require( 'PHET_CORE/inherit' );
-  var Mode = require( 'NEURON/neuron/recordandplayback/Mode' );
   var DataPoint = require( 'NEURON/neuron/recordandplayback/DataPoint' );
+  var inherit = require( 'PHET_CORE/inherit' );
+  var neuron = require( 'NEURON/neuron' );
+  var Mode = require( 'NEURON/neuron/recordandplayback/Mode' );
 
   /**
    * @param {RecordAndPlaybackModel} recordAndPlaybackModel
@@ -21,6 +22,8 @@ define( function( require ) {
   function Record( recordAndPlaybackModel ) {
     this.recordAndPlaybackModel = recordAndPlaybackModel;
   }
+
+  neuron.register( 'Record', Record );
 
   return inherit( Mode, Record, {
 

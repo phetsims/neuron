@@ -16,6 +16,7 @@ define( function( require ) {
   var CaptureZone = require( 'NEURON/neuron/model/CaptureZone' );
   var Vector2 = require( 'DOT/Vector2' );
   var DotUtil = require( 'DOT/Util' ); // eslint-disable-line require-statement-match
+  var neuron = require( 'NEURON/neuron' );
 
   // isPointZone method of captureZone is refactored to use Vector components, this class wide
   // instance is used for intermediary vector calculations.  See isPointInZone method
@@ -49,6 +50,8 @@ define( function( require ) {
     thisZone.zoneShape = new Shape();
     this.updateShape();
   }
+
+  neuron.register( 'PieSliceShapedCaptureZone', PieSliceShapedCaptureZone );
 
   return inherit( CaptureZone, PieSliceShapedCaptureZone, {
 

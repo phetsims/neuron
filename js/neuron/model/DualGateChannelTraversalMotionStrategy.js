@@ -14,14 +14,15 @@ define( function( require ) {
 
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
-  var Vector2 = require( 'DOT/Vector2' );
-  var MotionStrategy = require( 'NEURON/neuron/model/MotionStrategy' );
-  var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
-  var WanderAwayThenFadeMotionStrategy = require( 'NEURON/neuron/model/WanderAwayThenFadeMotionStrategy' );
-  var TimedFadeAwayStrategy = require( 'NEURON/neuron/model/TimedFadeAwayStrategy' );
-  var SpeedChangeLinearMotionStrategy = require( 'NEURON/neuron/model/SpeedChangeLinearMotionStrategy' );
   var LinearMotionStrategy = require( 'NEURON/neuron/model/LinearMotionStrategy' );
   var MathUtils = require( 'NEURON/neuron/common/MathUtils' );
+  var MotionStrategy = require( 'NEURON/neuron/model/MotionStrategy' );
+  var neuron = require( 'NEURON/neuron' );
+  var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
+  var SpeedChangeLinearMotionStrategy = require( 'NEURON/neuron/model/SpeedChangeLinearMotionStrategy' );
+  var TimedFadeAwayStrategy = require( 'NEURON/neuron/model/TimedFadeAwayStrategy' );
+  var Vector2 = require( 'DOT/Vector2' );
+  var WanderAwayThenFadeMotionStrategy = require( 'NEURON/neuron/model/WanderAwayThenFadeMotionStrategy' );
 
   // Threshold at which particles will "bounce" back out of the channel rather than traversing it.
   var INACTIVATION_BOUNCE_THRESHOLD = 0.5;
@@ -46,6 +47,8 @@ define( function( require ) {
     this.bouncing = false; // @private
     this.setCourseForCurrentTraversalPoint( startingLocationX, startingLocationY );
   }
+
+  neuron.register( 'DualGateChannelTraversalMotionStrategy', DualGateChannelTraversalMotionStrategy );
 
   return inherit( MotionStrategy, DualGateChannelTraversalMotionStrategy, {
 

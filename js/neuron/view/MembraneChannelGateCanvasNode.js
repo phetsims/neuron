@@ -17,6 +17,7 @@ define( function( require ) {
   var Shape = require( 'KITE/Shape' );
   var kite = require( 'KITE/kite' );
   var MembraneChannelTypes = require( 'NEURON/neuron/model/MembraneChannelTypes' );
+  var neuron = require( 'NEURON/neuron' );
   var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
   var Color = require( 'SCENERY/util/Color' );
 
@@ -153,6 +154,8 @@ define( function( require ) {
 
     thisNode.invalidatePaint();
   }
+
+  neuron.register( 'MembraneChannelGateCanvasNode', MembraneChannelGateCanvasNode );
 
   return inherit( CanvasNode, MembraneChannelGateCanvasNode, {
 

@@ -20,6 +20,7 @@ define( function( require ) {
   var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
   var MathUtils = require( 'NEURON/neuron/common/MathUtils' );
   var MembraneChannelTypes = require( 'NEURON/neuron/model/MembraneChannelTypes' );
+  var neuron = require( 'NEURON/neuron' );
 
   // constants
   var CHANNEL_HEIGHT = NeuronConstants.MEMBRANE_THICKNESS * 1.2; // In nanometers.
@@ -75,6 +76,8 @@ define( function( require ) {
     thisChannel.reset();
     thisChannel.channelColor = NeuronConstants.SODIUM_COLOR.colorUtilsDarker( 0.2 );
   }
+
+  neuron.register( 'SodiumDualGatedChannel', SodiumDualGatedChannel );
 
   return inherit( GatedChannel, SodiumDualGatedChannel, {
 

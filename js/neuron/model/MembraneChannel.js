@@ -21,6 +21,7 @@ define( function( require ) {
   var Matrix3 = require( 'DOT/Matrix3' );
   var Rectangle = require( 'DOT/Rectangle' );
   var Color = require( 'SCENERY/util/Color' );
+  var neuron = require( 'NEURON/neuron' );
 
   // constants
   var SIDE_HEIGHT_TO_CHANNEL_HEIGHT_RATIO = 1.3;
@@ -85,6 +86,8 @@ define( function( require ) {
     // Perform the initial update the shape of the channel rectangle.
     this.updateChannelRect();
   }
+
+  neuron.register( 'MembraneChannel', MembraneChannel );
 
   return inherit( PropertySet, MembraneChannel, {
 

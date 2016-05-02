@@ -18,6 +18,7 @@ define( function( require ) {
   var Util = require( 'DOT/Util' );
   var Rectangle = require( 'SCENERY/nodes/Rectangle' );
   var GrippyIndentNode = require( 'NEURON/neuron/view/chart/GrippyIndentNode' );
+  var neuron = require( 'NEURON/neuron' );
 
   // constants
   var WIDTH_PROPORTION = 0.013; // empirically determined
@@ -105,6 +106,8 @@ define( function( require ) {
     grippyIndent3.translate( 0, height / 2 + indentSpacing );
     thisChartCursor.addChild( grippyIndent3 );
   }
+
+  neuron.register( 'ChartCursor', ChartCursor );
 
   return inherit( Rectangle, ChartCursor, {} );
 } );

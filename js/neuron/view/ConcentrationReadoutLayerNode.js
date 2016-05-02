@@ -10,6 +10,7 @@ define( function( require ) {
 
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
+  var neuron = require( 'NEURON/neuron' );
   var Node = require( 'SCENERY/nodes/Node' );
   var Text = require( 'SCENERY/nodes/Text' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
@@ -157,6 +158,8 @@ define( function( require ) {
       }
     } );
   }
+
+  neuron.register( 'ConcentrationReadoutLayerNode', ConcentrationReadoutLayerNode );
 
   return inherit( Node, ConcentrationReadoutLayerNode );
 

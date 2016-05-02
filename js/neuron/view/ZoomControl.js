@@ -13,6 +13,7 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var Dimension2 = require( 'DOT/Dimension2' );
   var HSlider = require( 'SUN/HSlider' );
+  var neuron = require( 'NEURON/neuron' );
   var VBox = require( 'SCENERY/nodes/VBox' );
   var Path = require( 'SCENERY/nodes/Path' );
   var Shape = require( 'KITE/Shape' );
@@ -90,6 +91,8 @@ define( function( require ) {
     // restore the zoom to its original value
     zoomProperty.set( originalZoomValue );
   }
+
+  neuron.register( 'ZoomControl', ZoomControl );
 
   return inherit( VBox, ZoomControl );
 } );

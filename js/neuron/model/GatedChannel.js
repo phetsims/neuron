@@ -11,6 +11,7 @@ define( function( require ) {
 
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
+  var neuron = require( 'NEURON/neuron' );
   var MembraneChannel = require( 'NEURON/neuron/model/MembraneChannel' );
 
   /**
@@ -23,6 +24,8 @@ define( function( require ) {
     MembraneChannel.call( this, channelWidth, channelHeight, modelContainingParticles );
     this.setOpenness( 0 );  // Gated channels are assumed to be initially closed.
   }
+
+  neuron.register( 'GatedChannel', GatedChannel );
 
   return inherit( MembraneChannel, GatedChannel, {
 

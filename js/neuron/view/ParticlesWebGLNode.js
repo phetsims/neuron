@@ -17,6 +17,7 @@ define( function( require ) {
   // modules
   var ContextLossFailureDialog = require( 'SCENERY_PHET/ContextLossFailureDialog' );
   var inherit = require( 'PHET_CORE/inherit' );
+  var neuron = require( 'NEURON/neuron' );
   var NeuronParticlesTexture = require( 'NEURON/neuron/view/NeuronParticlesTexture' );
   var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
   var ShaderProgram = require( 'SCENERY/util/ShaderProgram' );
@@ -122,6 +123,8 @@ define( function( require ) {
       self.invalidatePaint();
     } );
   }
+
+  neuron.register( 'ParticlesWebGLNode', ParticlesWebGLNode );
 
   inherit( WebGLNode, ParticlesWebGLNode, {
 

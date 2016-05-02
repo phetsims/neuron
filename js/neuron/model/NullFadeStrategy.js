@@ -8,13 +8,16 @@ define( function( require ) {
   'use strict';
 
   // modules
-  var inherit = require( 'PHET_CORE/inherit' );
   var FadeStrategy = require( 'NEURON/neuron/model/FadeStrategy' );
+  var inherit = require( 'PHET_CORE/inherit' );
+  var neuron = require( 'NEURON/neuron' );
 
   /**
    * @constructor
    */
   function NullFadeStrategy() {}
+
+  neuron.register( 'NullFadeStrategy', NullFadeStrategy );
 
   return inherit( FadeStrategy, NullFadeStrategy, {
 

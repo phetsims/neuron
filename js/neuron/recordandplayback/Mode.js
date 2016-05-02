@@ -11,12 +11,15 @@ define( function( require ) {
 
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
+  var neuron = require( 'NEURON/neuron' );
   var PropertySet = require( 'AXON/PropertySet' );
 
   /**
    * @constructor
    */
   function Mode() {}
+
+  neuron.register( 'Mode', Mode );
 
   return inherit( PropertySet, Mode, {
 

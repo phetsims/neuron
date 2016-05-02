@@ -15,6 +15,7 @@ define( function( require ) {
 
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
+  var neuron = require( 'NEURON/neuron' );
 
   /**
    * @param {Particle} particle
@@ -28,6 +29,8 @@ define( function( require ) {
     this.radius = particle.getRadius();
     this.representationColor = particle.getRepresentationColor();
   }
+
+  neuron.register( 'ParticlePlaybackMemento', ParticlePlaybackMemento );
 
   return inherit( Object, ParticlePlaybackMemento, {
 

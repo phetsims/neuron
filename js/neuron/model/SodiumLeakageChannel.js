@@ -21,6 +21,7 @@ define( function( require ) {
   var MembraneCrossingDirection = require( 'NEURON/neuron/model/MembraneCrossingDirection' );
   var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
   var MembraneChannelTypes = require( 'NEURON/neuron/model/MembraneChannelTypes' );
+  var neuron = require( 'NEURON/neuron' );
 
   // constants
   var CHANNEL_HEIGHT = NeuronConstants.MEMBRANE_THICKNESS * 1.2; // In nanometers.
@@ -64,6 +65,8 @@ define( function( require ) {
     // capturing particles.
     thisChannel.restartCaptureCountdownTimer( false );
   }
+
+  neuron.register( 'SodiumLeakageChannel', SodiumLeakageChannel );
 
   return inherit( AbstractLeakChannel, SodiumLeakageChannel, {
 

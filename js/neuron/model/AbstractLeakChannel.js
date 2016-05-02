@@ -13,6 +13,7 @@ define( function( require ) {
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
   var MembraneChannel = require( 'NEURON/neuron/model/MembraneChannel' );
+  var neuron = require( 'NEURON/neuron' );
 
   /**
    * @param {number} channelWidth
@@ -24,6 +25,8 @@ define( function( require ) {
     MembraneChannel.call( this, channelWidth, channelHeight, modelContainingParticles );
     this.reset();
   }
+
+  neuron.register( 'AbstractLeakChannel', AbstractLeakChannel );
 
   return inherit( MembraneChannel, AbstractLeakChannel, {
 

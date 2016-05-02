@@ -15,8 +15,9 @@ define( function( require ) {
 
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
-  var ViewableParticle = require( 'NEURON/neuron/model/ViewableParticle' );
+  var neuron = require( 'NEURON/neuron' );
   var PotassiumIon = require( 'NEURON/neuron/model/PotassiumIon' );
+  var ViewableParticle = require( 'NEURON/neuron/model/ViewableParticle' );
 
   /**
    * Construct a playback particle.
@@ -39,6 +40,8 @@ define( function( require ) {
     this.radius = particle.getRadius();
     this.particleType = particle.getType();
   }
+
+  neuron.register( 'PlaybackParticle', PlaybackParticle );
 
   return inherit( ViewableParticle, PlaybackParticle, {
 

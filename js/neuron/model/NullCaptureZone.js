@@ -12,9 +12,10 @@ define( function( require ) {
   'use strict';
 
   // modules
-  var inherit = require( 'PHET_CORE/inherit' );
-  var Shape = require( 'KITE/Shape' );
   var CaptureZone = require( 'NEURON/neuron/model/CaptureZone' );
+  var inherit = require( 'PHET_CORE/inherit' );
+  var neuron = require( 'NEURON/neuron' );
+  var Shape = require( 'KITE/Shape' );
 
   /**
    * @constructor
@@ -22,6 +23,8 @@ define( function( require ) {
   function NullCaptureZone() {
     CaptureZone.call( this, {} );
   }
+
+  neuron.register( 'NullCaptureZone', NullCaptureZone );
 
   return inherit( CaptureZone, NullCaptureZone, {
 

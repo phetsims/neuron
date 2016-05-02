@@ -11,14 +11,15 @@ define( function( require ) {
   'use strict';
 
   // modules
-  var inherit = require( 'PHET_CORE/inherit' );
-  var Emitter = require( 'AXON/Emitter' );
-  var Vector2 = require( 'DOT/Vector2' );
-  var Shape = require( 'KITE/Shape' );
-  var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
-  var TravelingActionPotential = require( 'NEURON/neuron/model/TravelingActionPotential' );
   var AxonMembraneState = require( 'NEURON/neuron/model/AxonMembraneState' );
   var Cubic = require( 'KITE/segments/Cubic' );
+  var Emitter = require( 'AXON/Emitter' );
+  var inherit = require( 'PHET_CORE/inherit' );
+  var neuron = require( 'NEURON/neuron' );
+  var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
+  var Shape = require( 'KITE/Shape' );
+  var TravelingActionPotential = require( 'NEURON/neuron/model/TravelingActionPotential' );
+  var Vector2 = require( 'DOT/Vector2' );
 
   // Fixed membrane characteristics.
   var BODY_LENGTH = NeuronConstants.DEFAULT_DIAMETER * 1.5;
@@ -135,6 +136,8 @@ define( function( require ) {
     this.abbc = new Vector2();
     this.bbcd = new Vector2();
   }
+
+  neuron.register( 'AxonMembrane', AxonMembrane );
 
   return inherit( Object, AxonMembrane, {
 

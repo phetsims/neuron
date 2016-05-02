@@ -11,6 +11,7 @@ define( function( require ) {
 
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
+  var neuron = require( 'NEURON/neuron' );
   var NeuronModel = require( 'NEURON/neuron/model/NeuronModel' );
   var NeuronScreenView = require( 'NEURON/neuron/view/NeuronScreenView' );
   var NeuronClockModelAdapter = require( 'NEURON/neuron/model/NeuronClockModelAdapter' );
@@ -35,6 +36,8 @@ define( function( require ) {
       { backgroundColor: '#ccfefa' }
     );
   }
+
+  neuron.register( 'NeuronScreen', NeuronScreen );
 
   return inherit( Screen, NeuronScreen );
 } );

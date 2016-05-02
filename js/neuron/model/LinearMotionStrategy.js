@@ -11,6 +11,7 @@ define( function( require ) {
 
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
+  var neuron = require( 'NEURON/neuron' );
   var MotionStrategy = require( 'NEURON/neuron/model/MotionStrategy' );
 
   /**
@@ -20,6 +21,8 @@ define( function( require ) {
   function LinearMotionStrategy( velocity ) {
     this.velocity = velocity; // @private, in nanometers per second of simulation time
   }
+
+  neuron.register( 'LinearMotionStrategy', LinearMotionStrategy );
 
   return inherit( MotionStrategy, LinearMotionStrategy, {
 

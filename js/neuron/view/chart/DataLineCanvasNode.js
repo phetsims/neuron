@@ -11,6 +11,7 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var Bounds2 = require( 'DOT/Bounds2' );
   var CanvasNode = require( 'SCENERY/nodes/CanvasNode' );
+  var neuron = require( 'NEURON/neuron' );
 
   // constants
   var LINE_COLOR = '#ff5500'; // colorblind-friendly red
@@ -42,6 +43,8 @@ define( function( require ) {
       self.invalidatePaint();
     } );
   }
+
+  neuron.register( 'DataLineCanvasNode', DataLineCanvasNode );
 
   return inherit( CanvasNode, DataLineCanvasNode, {
 

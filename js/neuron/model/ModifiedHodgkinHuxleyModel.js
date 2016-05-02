@@ -18,6 +18,7 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var DelayBuffer = require( 'NEURON/neuron/model/DelayBuffer' );
   var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
+  var neuron = require( 'NEURON/neuron' );
 
   /**
    * Amount of time used for each iteration of the model.  This is fixed, and when the model is stepped it breaks
@@ -66,6 +67,8 @@ define( function( require ) {
 
     thisModel.reset();// reset and initialize
   }
+
+  neuron.register( 'ModifiedHodgkinHuxleyModel', ModifiedHodgkinHuxleyModel );
 
   return inherit( Object, ModifiedHodgkinHuxleyModel, {
 

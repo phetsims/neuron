@@ -12,6 +12,7 @@ define( function( require ) {
 
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
+  var neuron = require( 'NEURON/neuron' );
   var Node = require( 'SCENERY/nodes/Node' );
   var Path = require( 'SCENERY/nodes/Path' );
   var Line = require( 'SCENERY/nodes/Line' );
@@ -73,6 +74,8 @@ define( function( require ) {
         travelingActionPotentialNode.travelingActionPotentialEnded();
     } );
   }
+
+  neuron.register( 'AxonBodyNode', AxonBodyNode );
 
   return inherit( Node, AxonBodyNode );
 } );

@@ -12,6 +12,7 @@ define( function( require ) {
 
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
+  var neuron = require( 'NEURON/neuron' );
 
   /**
    * @param {number} travelTimeCountdownTimer
@@ -22,6 +23,8 @@ define( function( require ) {
     this.travelTimeCountdownTimer = travelTimeCountdownTimer; // @private
     this.lingerCountdownTimer = lingerCountdownTimer; // @private
   }
+
+  neuron.register( 'TravelingActionPotentialState', TravelingActionPotentialState );
 
   return inherit( Object, TravelingActionPotentialState, {
 

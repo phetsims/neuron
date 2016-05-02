@@ -10,13 +10,15 @@ define( function( require ) {
   'use strict';
 
   // modules
+  var Color = require( 'SCENERY/util/Color' );
+  var neuron = require( 'NEURON/neuron' );
   var PhetColorScheme = require( 'SCENERY_PHET/PhetColorScheme' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
-  var Color = require( 'SCENERY/util/Color' );
 
-  var clockFrameRate = 60;
-  var minActionPotentialClockDT = ( 1 / clockFrameRate ) / 3000;
-  var maxActionPotentialClockDT = ( 1 / clockFrameRate ) / 1000;
+  // constants
+  var CLOCK_FRAME_RATE = 60;
+  var MIN_ACTION_POTENTIAL_CLOCK_DT = ( 1 / CLOCK_FRAME_RATE ) / 3000;
+  var MAX_ACTION_POTENTIAL_CLOCK_DT = ( 1 / CLOCK_FRAME_RATE ) / 1000;
 
   var NeuronConstants = {
 
@@ -39,15 +41,17 @@ define( function( require ) {
 
     // Set up the clock ranges for the various modules.  Note that for this sim the clock rates are often several orders
     // of magnitude slower than real time.
-    MIN_ACTION_POTENTIAL_CLOCK_DT: minActionPotentialClockDT,
-    MAX_ACTION_POTENTIAL_CLOCK_DT: maxActionPotentialClockDT,
-    DEFAULT_ACTION_POTENTIAL_CLOCK_DT: (minActionPotentialClockDT + maxActionPotentialClockDT) * 0.55,
+    MIN_ACTION_POTENTIAL_CLOCK_DT: MIN_ACTION_POTENTIAL_CLOCK_DT,
+    MAX_ACTION_POTENTIAL_CLOCK_DT: MAX_ACTION_POTENTIAL_CLOCK_DT,
+    DEFAULT_ACTION_POTENTIAL_CLOCK_DT: (MIN_ACTION_POTENTIAL_CLOCK_DT + MAX_ACTION_POTENTIAL_CLOCK_DT) * 0.55,
     TIME_SPAN: 25, // In seconds.
     DEFAULT_MAX_VELOCITY: 40000
   };
 
   // verify that enum is immutable, without the runtime penalty in production code
   if ( assert ) { Object.freeze( NeuronConstants ); }
+
+  neuron.register( 'NeuronConstants', NeuronConstants );
 
   return NeuronConstants;
 } );

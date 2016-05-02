@@ -10,13 +10,14 @@ define( function( require ) {
   'use strict';
 
   // modules
+  var neuron = require( 'NEURON/neuron' );
   var MembraneChannelTypes = require( 'NEURON/neuron/model/MembraneChannelTypes' );
   var PotassiumGatedChannel = require( 'NEURON/neuron/model/PotassiumGatedChannel' );
   var SodiumLeakageChannel = require( 'NEURON/neuron/model/SodiumLeakageChannel' );
   var PotassiumLeakageChannel = require( 'NEURON/neuron/model/PotassiumLeakageChannel' );
   var SodiumDualGatedChannel = require( 'NEURON/neuron/model/SodiumDualGatedChannel' );
 
-  return {
+  var MembraneChannelFactory = {
     /**
      * factory method for creating a MembraneChannel of the specified type.
      * @param {MembraneChannelTypes} channelType
@@ -46,4 +47,8 @@ define( function( require ) {
       return membraneChannel;
     }
   };
+
+  neuron.register( 'MembraneChannelFactory', MembraneChannelFactory );
+
+  return MembraneChannelFactory;
 } );

@@ -14,6 +14,7 @@ define( function( require ) {
 
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
+  var neuron = require( 'NEURON/neuron' );
 
   /**
    * @param {TravelingActionPotentialState} travelingActionPotentialState
@@ -22,6 +23,8 @@ define( function( require ) {
   function AxonMembraneState( travelingActionPotentialState ) {
     this.travelingActionPotentialState = travelingActionPotentialState;  // @private
   }
+
+  neuron.register( 'AxonMembraneState', AxonMembraneState );
 
   return inherit( Object, AxonMembraneState, {
 

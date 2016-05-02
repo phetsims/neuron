@@ -15,10 +15,11 @@ define( function( require ) {
   'use strict';
 
   // modules
-  var inherit = require( 'PHET_CORE/inherit' );
   var Emitter = require( 'AXON/Emitter' );
-  var Vector2 = require( 'DOT/Vector2' );
+  var inherit = require( 'PHET_CORE/inherit' );
+  var neuron = require( 'NEURON/neuron' );
   var TravelingActionPotentialState = require( 'NEURON/neuron/model/TravelingActionPotentialState' );
+  var Vector2 = require( 'DOT/Vector2' );
 
   // constants
   var TRAVELING_TIME = 0.0020; // In seconds of sim time (not wall time).
@@ -83,6 +84,8 @@ define( function( require ) {
     // create the initial shape
     this.updateShapeDescription(); // Also create an initialize Shape
   }
+
+  neuron.register( 'TravelingActionPotential', TravelingActionPotential );
 
   return inherit( Object, TravelingActionPotential, {
 

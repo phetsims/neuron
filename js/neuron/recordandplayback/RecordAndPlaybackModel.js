@@ -21,6 +21,7 @@ define( function( require ) {
   var Playback = require( 'NEURON/neuron/recordandplayback/Playback' );
   var Live = require( 'NEURON/neuron/recordandplayback/Live' );
   var ObservableArray = require( 'AXON/ObservableArray' );
+  var neuron = require( 'NEURON/neuron' );
 
   /**
    * @param {number} maxRecordPoints
@@ -54,6 +55,8 @@ define( function( require ) {
     this.resetAll();
 
   }
+
+  neuron.register( 'RecordAndPlaybackModel', RecordAndPlaybackModel );
 
   return inherit( PropertySet, RecordAndPlaybackModel, {
 

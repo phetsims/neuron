@@ -19,6 +19,7 @@ define( function( require ) {
   var MembraneCrossingDirection = require( 'NEURON/neuron/model/MembraneCrossingDirection' );
   var MathUtils = require( 'NEURON/neuron/common/MathUtils' );
   var MembraneChannelTypes = require( 'NEURON/neuron/model/MembraneChannelTypes' );
+  var neuron = require( 'NEURON/neuron' );
 
   // constants
   var CHANNEL_HEIGHT = NeuronConstants.MEMBRANE_THICKNESS * 1.2; // In nanometers.
@@ -51,6 +52,8 @@ define( function( require ) {
     thisChannel.channelColor = NeuronConstants.POTASSIUM_COLOR.colorUtilsDarker( 0.2 );
     thisChannel.reset();
   }
+
+  neuron.register( 'PotassiumGatedChannel', PotassiumGatedChannel );
 
   return inherit( GatedChannel, PotassiumGatedChannel, {
 

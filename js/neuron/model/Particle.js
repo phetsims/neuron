@@ -22,6 +22,7 @@ define( function( require ) {
   var NullFadeStrategy = require( 'NEURON/neuron/model/NullFadeStrategy' );
   var MotionStrategy = require( 'NEURON/neuron/model/MotionStrategy' );
   var ParticlePlaybackMemento = require( 'NEURON/neuron/model/ParticlePlaybackMemento' );
+  var neuron = require( 'NEURON/neuron' );
 
   // constants
   var DEFAULT_PARTICLE_RADIUS = 0.75;  // In nanometers.
@@ -55,6 +56,8 @@ define( function( require ) {
     // @public - strategy for fading in and out
     this.fadeStrategy = NullFadeStrategy.getInstance();
   }
+
+  neuron.register( 'Particle', Particle );
 
   return inherit( ViewableParticle, Particle, {
 

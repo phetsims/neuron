@@ -17,8 +17,8 @@ define( function( require ) {
   var AxonMembrane = require( 'NEURON/neuron/model/AxonMembrane' );
   var ModifiedHodgkinHuxleyModel = require( 'NEURON/neuron/model/ModifiedHodgkinHuxleyModel' );
   var RecordAndPlaybackModel = require( 'NEURON/neuron/recordandplayback/RecordAndPlaybackModel' );
-  var MembraneChannelTypes = require( 'NEURON/neuron/model/MembraneChannelTypes' );
   var neuron = require( 'NEURON/neuron' );
+  var MembraneChannelTypes = require( 'NEURON/neuron/model/MembraneChannelTypes' );
   var NeuronModelState = require( 'NEURON/neuron/model/NeuronModelState' );
   var ParticlePosition = require( 'NEURON/neuron/model/ParticlePosition' );
   var ParticleFactory = require( 'NEURON/neuron/model/ParticleFactory' );

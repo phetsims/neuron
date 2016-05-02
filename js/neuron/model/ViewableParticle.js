@@ -12,14 +12,15 @@ define( function( require ) {
 
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
+  var neuron = require( 'NEURON/neuron' );
 
   /**
    *
    * @constructor
    */
-  function ViewableParticle() {
+  function ViewableParticle() {}
 
-  }
+  neuron.register( 'ViewableParticle', ViewableParticle );
 
   return inherit( Object, ViewableParticle, {
 

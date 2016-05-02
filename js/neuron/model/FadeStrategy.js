@@ -12,8 +12,11 @@ define( function( require ) {
 
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
+  var neuron = require( 'NEURON/neuron' );
 
   function FadeStrategy() {}
+
+  neuron.register( 'FadeStrategy', FadeStrategy );
 
   return inherit( Object, FadeStrategy, {
 

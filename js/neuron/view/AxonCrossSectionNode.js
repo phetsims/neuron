@@ -11,6 +11,7 @@ define( function( require ) {
 
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
+  var neuron = require( 'NEURON/neuron' );
   var Node = require( 'SCENERY/nodes/Node' );
   var Path = require( 'SCENERY/nodes/Path' );
   var Color = require( 'SCENERY/util/Color' );
@@ -43,6 +44,8 @@ define( function( require ) {
     var innerMembrane = new Path( innerDiameterCircle, { fill: new Color( 73, 210, 242 ), stroke: Color.BLACK, lineWidth: LINE_WIDTH } );
     thisNode.addChild( innerMembrane );
   }
+
+  neuron.register( 'AxonCrossSectionNode', AxonCrossSectionNode );
 
   return inherit( Node, AxonCrossSectionNode );
 } );

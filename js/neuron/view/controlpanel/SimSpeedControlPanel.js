@@ -11,6 +11,7 @@ define( function( require ) {
 
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
+  var neuron = require( 'NEURON/neuron' );
   var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
   var Panel = require( 'SUN/Panel' );
   var VerticalAquaRadioButtonGroup = require( 'SUN/VerticalAquaRadioButtonGroup' );
@@ -48,6 +49,8 @@ define( function( require ) {
 
     Panel.call( this, speedRadioButtonGroup, options );
   }
+
+  neuron.register( 'SimSpeedControlPanel', SimSpeedControlPanel );
 
   return inherit( Panel, SimSpeedControlPanel );
 } );

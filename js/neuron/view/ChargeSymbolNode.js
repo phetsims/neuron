@@ -13,6 +13,7 @@ define( function( require ) {
   var Matrix3 = require( 'DOT/Matrix3' );
   var Color = require( 'SCENERY/util/Color' );
   var inherit = require( 'PHET_CORE/inherit' );
+  var neuron = require( 'NEURON/neuron' );
   var Path = require( 'SCENERY/nodes/Path' );
   var Shape = require( 'KITE/Shape' );
 
@@ -97,6 +98,8 @@ define( function( require ) {
       }
     } );
   }
+
+  neuron.register( 'ChargeSymbolNode', ChargeSymbolNode );
 
   return inherit( Path, ChargeSymbolNode, {
 

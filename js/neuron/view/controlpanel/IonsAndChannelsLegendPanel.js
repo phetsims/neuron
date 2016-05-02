@@ -23,6 +23,7 @@ define( function( require ) {
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
   var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   var MembraneChannelNode = require( 'NEURON/neuron/view/MembraneChannelNode' );
+  var neuron = require( 'NEURON/neuron' );
   var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
   var ParticleNode = require( 'NEURON/neuron/view/ParticleNode' );
   var PotassiumGatedChannel = require( 'NEURON/neuron/model/PotassiumGatedChannel' );
@@ -131,6 +132,8 @@ define( function( require ) {
       yMargin: 10
     } );
   }
+
+  neuron.register( 'IonsAndChannelsLegendPanel', IonsAndChannelsLegendPanel );
 
   return inherit( Panel, IonsAndChannelsLegendPanel );
 } );

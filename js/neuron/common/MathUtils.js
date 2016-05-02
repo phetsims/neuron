@@ -9,15 +9,16 @@ define( function( require ) {
   'use strict';
 
   // modules
-  var Vector2 = require( 'DOT/Vector2' );
+  var neuron = require( 'NEURON/neuron' );
   var Util = require( 'DOT/Util' );
+  var Vector2 = require( 'DOT/Vector2' );
 
   // These vectors are used as temporary objects for calculating distance without creating new Vector2 instances, see
   // the createTraversalPoint method.
   var distanceCalculatorVectorLHS = new Vector2();
   var distanceCalculatorVectorRHS = new Vector2();
 
-  return {
+  var MathUtils = {
 
     /**
      * A method to calculate distance by reusing vector instances. This method is created to reduce Vector2 instance
@@ -59,5 +60,9 @@ define( function( require ) {
       return tmp / factor;
     }
   };
+
+  neuron.register( 'MathUtils', MathUtils );
+
+  return MathUtils;
 } );
 

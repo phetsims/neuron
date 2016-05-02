@@ -18,6 +18,7 @@ define( function( require ) {
   var Circle = require( 'SCENERY/nodes/Circle' );
   var Vector2 = require( 'DOT/Vector2' );
   var Bounds2 = require( 'DOT/Bounds2' );
+  var neuron = require( 'NEURON/neuron' );
 
   /**
    * @param {MembraneChannel} membraneChannelModel
@@ -187,6 +188,8 @@ define( function( require ) {
     updateLocation();
     updateRotation();
   }
+
+  neuron.register( 'MembraneChannelNode', MembraneChannelNode );
 
   return inherit( Node, MembraneChannelNode, {
 

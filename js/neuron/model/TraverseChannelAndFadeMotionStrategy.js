@@ -17,6 +17,7 @@ define( function( require ) {
   var WanderAwayThenFadeMotionStrategy = require( 'NEURON/neuron/model/WanderAwayThenFadeMotionStrategy' );
   var TimedFadeAwayStrategy = require( 'NEURON/neuron/model/TimedFadeAwayStrategy' );
   var MathUtils = require( 'NEURON/neuron/common/MathUtils' );
+  var neuron = require( 'NEURON/neuron' );
 
   /**
    * @param {MembraneChannel} channel
@@ -42,6 +43,8 @@ define( function( require ) {
 
     this.setCourseForCurrentTraversalPoint( startingLocationX, startingLocationY );
   }
+
+  neuron.register( 'TraverseChannelAndFadeMotionStrategy', TraverseChannelAndFadeMotionStrategy );
 
   return inherit( MotionStrategy, TraverseChannelAndFadeMotionStrategy, {
 

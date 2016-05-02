@@ -14,6 +14,7 @@ define( function( require ) {
   var Node = require( 'SCENERY/nodes/Node' );
   var Vector2 = require( 'DOT/Vector2' );
   var ChargeSymbolNode = require( 'NEURON/neuron/view/ChargeSymbolNode' );
+  var neuron = require( 'NEURON/neuron' );
 
   // Max size of the charge symbols, tweak as needed.
   var MAX_CHARGE_SYMBOL_SIZE = 10;
@@ -121,6 +122,8 @@ define( function( require ) {
 
     addChargeSymbols();
   }
+
+  neuron.register( 'ChargeSymbolsLayerNode', ChargeSymbolsLayerNode );
 
   return inherit( Node, ChargeSymbolsLayerNode );
 

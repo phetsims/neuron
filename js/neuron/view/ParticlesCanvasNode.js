@@ -14,6 +14,7 @@ define( function( require ) {
   // modules
   var CanvasNode = require( 'SCENERY/nodes/CanvasNode' );
   var inherit = require( 'PHET_CORE/inherit' );
+  var neuron = require( 'NEURON/neuron' );
   var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
 
   /**
@@ -56,6 +57,8 @@ define( function( require ) {
       thisNode.invalidatePaint();
     } );
   }
+
+  neuron.register( 'ParticlesCanvasNode', ParticlesCanvasNode );
 
   return inherit( CanvasNode, ParticlesCanvasNode, {
 

@@ -13,6 +13,7 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var Mode = require( 'NEURON/neuron/recordandplayback/Mode' );
   var BehaviourModeType = require( 'NEURON/neuron/recordandplayback/BehaviourModeType' );
+  var neuron = require( 'NEURON/neuron' );
 
   /**
    * @param {RecordAndPlaybackModel} recordAndPlaybackModel
@@ -22,6 +23,8 @@ define( function( require ) {
     var thisPlayBack = this;
     thisPlayBack.recordAndPlaybackModel = recordAndPlaybackModel;
   }
+
+  neuron.register( 'Playback', Playback );
 
   return inherit( Mode, Playback, {
 

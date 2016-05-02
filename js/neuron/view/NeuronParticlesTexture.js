@@ -13,6 +13,7 @@ define( function( require ) {
   var Bounds2 = require( 'DOT/Bounds2' );
   var Color = require( 'SCENERY/util/Color' );
   var inherit = require( 'PHET_CORE/inherit' );
+  var neuron = require( 'NEURON/neuron' );
   var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
   var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
   var Vector2 = require( 'DOT/Vector2' );
@@ -45,6 +46,8 @@ define( function( require ) {
       console.log( 'this.canvas..toDataURL() = ' + this.canvas.toDataURL() );
     }
   }
+
+  neuron.register( 'NeuronParticlesTexture', NeuronParticlesTexture );
 
   return inherit( Object, NeuronParticlesTexture, {
 

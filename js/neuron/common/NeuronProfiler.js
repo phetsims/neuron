@@ -9,6 +9,7 @@ define( function( require ) {
 
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
+  var neuron = require( 'NEURON/neuron' );
   var platform = require( 'PHET_CORE/platform' );
   var Util = require( 'DOT/Util' );
 
@@ -84,6 +85,8 @@ define( function( require ) {
       }
     } );
   }
+
+  neuron.register( 'NeuronProfiler', NeuronProfiler );
 
   return inherit( Object, NeuronProfiler, {
 

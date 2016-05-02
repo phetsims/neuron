@@ -10,8 +10,9 @@ define( function( require ) {
   'use strict';
 
   // modules
-  var inherit = require( 'PHET_CORE/inherit' );
   var FadeStrategy = require( 'NEURON/neuron/model/FadeStrategy' );
+  var inherit = require( 'PHET_CORE/inherit' );
+  var neuron = require( 'NEURON/neuron' );
   var NullFadeStrategy = require( 'NEURON/neuron/model/NullFadeStrategy' );
 
   /**
@@ -25,6 +26,8 @@ define( function( require ) {
     this.fadeCountdownTimer = fadeTime; // @private
     this.opacityTarget = 1; // @private
   }
+
+  neuron.register( 'TimedFadeInStrategy', TimedFadeInStrategy );
 
   return inherit( FadeStrategy, TimedFadeInStrategy, {
 

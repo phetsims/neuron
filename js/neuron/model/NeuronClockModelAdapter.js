@@ -18,6 +18,7 @@ define( function( require ) {
 
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
+  var neuron = require( 'NEURON/neuron' );
   var PropertySet = require( 'AXON/PropertySet' );
 
   // the following constants could easily be turned into options if there was a need to reuse and thus generalize
@@ -53,6 +54,8 @@ define( function( require ) {
     self.resetCallBacks = [];
     self.residualTime = 0;
   }
+
+  neuron.register( 'NeuronClockModelAdapter', NeuronClockModelAdapter );
 
   return inherit( PropertySet, NeuronClockModelAdapter, {
 

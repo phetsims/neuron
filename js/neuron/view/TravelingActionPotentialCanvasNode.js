@@ -13,6 +13,7 @@ define( function( require ) {
   // modules
   var CanvasNode = require( 'SCENERY/nodes/CanvasNode' );
   var inherit = require( 'PHET_CORE/inherit' );
+  var neuron = require( 'NEURON/neuron' );
 
   // constants
   var BACKGROUND_COLOR = '#CC66FF';
@@ -31,6 +32,8 @@ define( function( require ) {
     this.travelingActionPotential = null; // @private - must hook up an action potential using methods defined below
     CanvasNode.call( self, { canvasBounds: bounds } );
   }
+
+  neuron.register( 'TravelingActionPotentialCanvasNode', TravelingActionPotentialCanvasNode );
 
   return inherit( CanvasNode, TravelingActionPotentialCanvasNode, {
 

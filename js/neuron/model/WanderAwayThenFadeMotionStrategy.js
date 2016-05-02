@@ -12,6 +12,7 @@ define( function( require ) {
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
   var MotionStrategy = require( 'NEURON/neuron/model/MotionStrategy' );
+  var neuron = require( 'NEURON/neuron' );
   var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
   var TimedFadeAwayStrategy = require( 'NEURON/neuron/model/TimedFadeAwayStrategy' );
 
@@ -53,6 +54,8 @@ define( function( require ) {
     // Set an initial velocity and direction.
     this.updateVelocity( currentLocationX, currentLocationY );
   }
+
+  neuron.register( 'WanderAwayThenFadeMotionStrategy', WanderAwayThenFadeMotionStrategy );
 
   return inherit( MotionStrategy, WanderAwayThenFadeMotionStrategy, {
 

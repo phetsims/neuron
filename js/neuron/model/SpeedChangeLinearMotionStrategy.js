@@ -13,6 +13,7 @@ define( function( require ) {
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
   var MotionStrategy = require( 'NEURON/neuron/model/MotionStrategy' );
+  var neuron = require( 'NEURON/neuron' );
 
   /**
    * @param {Vector2} initialVelocity
@@ -26,6 +27,8 @@ define( function( require ) {
     this.speedScaleFactor = speedScaleFactor;
     this.firstSpeedCountdownTimer = timeAtFirstSpeed;
   }
+
+  neuron.register( 'SpeedChangeLinearMotionStrategy', SpeedChangeLinearMotionStrategy );
 
   return inherit( MotionStrategy, SpeedChangeLinearMotionStrategy, {
 

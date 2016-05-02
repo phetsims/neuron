@@ -12,6 +12,7 @@ define( function( require ) {
 
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
+  var neuron = require( 'NEURON/neuron' );
 
   /**
    * @param {number} value
@@ -24,6 +25,8 @@ define( function( require ) {
     this.value = value;
     this.deltaTime = deltaTime;
   }
+
+  neuron.register( 'DelayElement', DelayElement );
 
   return inherit( Object, DelayElement, {
 

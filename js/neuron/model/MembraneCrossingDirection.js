@@ -5,8 +5,11 @@
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
  */
-define( function() {
+define( function( require ) {
   'use strict';
+
+  // modules
+  var neuron = require( 'NEURON/neuron' );
 
   var MembraneCrossingDirection = {
     'OUT_TO_IN': 'OUT_TO_IN',
@@ -15,6 +18,8 @@ define( function() {
 
   // verify that enum is immutable, without the runtime penalty in production code
   if ( assert ) { Object.freeze( MembraneCrossingDirection ); }
+
+  neuron.register( 'MembraneCrossingDirection', MembraneCrossingDirection );
 
   return MembraneCrossingDirection;
 } );

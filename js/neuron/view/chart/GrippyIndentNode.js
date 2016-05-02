@@ -16,6 +16,7 @@ define( function( require ) {
   var Color = require( 'SCENERY/util/Color' );
   var inherit = require( 'PHET_CORE/inherit' );
   var Node = require( 'SCENERY/nodes/Node' );
+  var neuron = require( 'NEURON/neuron' );
 
   // constants
   var STROKE_LINE_WIDTH = 0.5;
@@ -42,6 +43,8 @@ define( function( require ) {
       lineWidth: STROKE_LINE_WIDTH
     } ) );
   }
+
+  neuron.register( 'GrippyIndentNode', GrippyIndentNode );
 
   return inherit( Node, GrippyIndentNode );
 
