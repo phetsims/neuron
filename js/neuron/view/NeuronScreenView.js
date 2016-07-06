@@ -36,7 +36,7 @@ define( function( require ) {
   var ConcentrationReadoutLayerNode = require( 'NEURON/neuron/view/ConcentrationReadoutLayerNode' );
   var MembraneChannelGateCanvasNode = require( 'NEURON/neuron/view/MembraneChannelGateCanvasNode' );
   var ChargeSymbolsLayerNode = require( 'NEURON/neuron/view/ChargeSymbolsLayerNode' );
-  var StepBackButton = require( 'SCENERY_PHET/buttons/StepBackButton' );
+  var StepBackwardButton = require( 'SCENERY_PHET/buttons/StepBackwardButton' );
   var ZoomControl = require( 'NEURON/neuron/view/ZoomControl' );
   var MembranePotentialChart = require( 'NEURON/neuron/view/chart/MembranePotentialChart' );
   var IonsAndChannelsLegendPanel = require( 'NEURON/neuron/view/controlpanel/IonsAndChannelsLegendPanel' );
@@ -216,7 +216,7 @@ define( function( require ) {
       listener: function() { neuronClockModelAdapter.stepClockWhilePaused(); }
     } );
 
-    var stepBackwardButton = new StepBackButton( {
+    var stepBackwardButton = new StepBackwardButton( {
       listener: function() { neuronClockModelAdapter.stepClockBackWhilePaused(); }
     } );
     var stepBackEnabledProperty = new DerivedProperty( [
