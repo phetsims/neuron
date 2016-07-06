@@ -210,25 +210,28 @@ define( function( require ) {
     var playingProperty = neuronClockModelAdapter.playingProperty; // convenience variable
     var playPauseButton = new PlayPauseButton( playingProperty, { radius: 25 } );
 
-    // Allow step back only if the mode is not playing and if recorded state data exists in the data buffer.  Data
-    // recording is only initiated after the neuron has been stimulated, so if the sim is paused before the neuron was
-    // ever stimulated, backwards stepping will not be possible.
+    // step forward is enabled whenever paused.
+    var stepForwardButton = new StepForwardButton( {
+      playingProperty: playingProperty,
+      listener: function() { neuronClockModelAdapter.stepClockWhilePaused(); }
+    } );
+
+    var stepBackwardButton = new StepBackButton( {
+      listener: function() { neuronClockModelAdapter.stepClockBackWhilePaused(); }
+    } );
     var stepBackEnabledProperty = new DerivedProperty( [
         playingProperty,
         thisView.neuronModel.timeProperty
       ],
       function( playing, time ) {
+        // Allow step back only if the mode is not playing and if recorded state data exists in the data buffer.  Data
+        // recording is only initiated after the neuron has been stimulated, so if the sim is paused before the neuron
+        // was ever stimulated, backwards stepping will not be possible.
         return !playing && time > thisView.neuronModel.getMinRecordedTime() && thisView.neuronModel.getRecordedTimeRange() > 0;
       }
     );
-
-    var stepBackwardButton = new StepBackButton( stepBackEnabledProperty, {
-      listener: function() { neuronClockModelAdapter.stepClockBackWhilePaused(); }
-    } );
-
-    // step forward is enabled whenever paused.
-    var stepForwardButton = new StepForwardButton( playingProperty, {
-      listener: function() { neuronClockModelAdapter.stepClockWhilePaused(); }
+    stepBackEnabledProperty.link( function( enabled ) {
+      stepBackwardButton.enabled = enabled;
     } );
 
     recordPlayButtons.push( stepBackwardButton );
