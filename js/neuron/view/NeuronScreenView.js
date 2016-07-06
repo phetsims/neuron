@@ -222,18 +222,14 @@ define( function( require ) {
       }
     );
 
-    var stepBackwardButton = new StepBackButton(
-      function() {
-        neuronClockModelAdapter.stepClockBackWhilePaused();
-      },
-      stepBackEnabledProperty
-    );
+    var stepBackwardButton = new StepBackButton( stepBackEnabledProperty, {
+      listener: function() { neuronClockModelAdapter.stepClockBackWhilePaused(); }
+    } );
 
     // step forward is enabled whenever paused.
-    var stepForwardButton = new StepForwardButton(
-      function() { neuronClockModelAdapter.stepClockWhilePaused(); },
-      playingProperty
-    );
+    var stepForwardButton = new StepForwardButton( playingProperty, {
+      listener: function() { neuronClockModelAdapter.stepClockWhilePaused(); }
+    } );
 
     recordPlayButtons.push( stepBackwardButton );
     recordPlayButtons.push( playPauseButton );
