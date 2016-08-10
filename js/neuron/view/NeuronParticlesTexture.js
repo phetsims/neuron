@@ -30,7 +30,6 @@ define( function( require ) {
    */
   function NeuronParticlesTexture( modelViewTransform ) {
     this.modelViewTransform = modelViewTransform; // @private
-    this.strokeGapBetweenParticles = 4;  // @private - empirically determined
 
     // create the canvas upon which the particle images will be drawn
     this.canvas = document.createElement( 'canvas' );
