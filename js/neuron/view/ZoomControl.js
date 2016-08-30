@@ -30,7 +30,9 @@ define( function( require ) {
 
     var zoomSliderOptions = {
       thumbSize: new Dimension2( 18, 22 ),
-      trackSize: new Dimension2( 100, 1 )
+      trackSize: new Dimension2( 100, 1 ),
+      thumbTouchAreaXDilation: 8,
+      thumbTouchAreaYDilation: 8
     };
     var zoomSlider = new HSlider( zoomProperty, { min: minZoom, max: maxZoom }, zoomSliderOptions );
     zoomSlider.rotation = -Math.PI / 2;
@@ -42,7 +44,9 @@ define( function( require ) {
         xMargin: marginOptions.xMargin,
         yMargin: marginOptions.yMargin,
         baseColor: 'white',
-        listener: listener
+        listener: listener,
+        touchAreaXDilation: 5,
+        touchAreaYDilation: 5
       } );
     }
 
