@@ -36,7 +36,7 @@ define( function( require ) {
     // set through the query parameter, please see the NeuronProfiler.js file for details on these.
     if ( window.phet.chipper.getQueryParameters().hasOwnProperty( 'neuronProfiler' ) ) {
       // create and hook up the neuron profiler
-      window.phet.neuron.profiler = new NeuronProfiler( sim, parseInt( window.phet.chipper.getQueryParameters().neuronProfiler ) );
+      window.phet.neuron.profiler = new NeuronProfiler( sim, parseInt( window.phet.chipper.getQueryParameters().neuronProfiler, 10 ) );
     }
   } );
 } );
