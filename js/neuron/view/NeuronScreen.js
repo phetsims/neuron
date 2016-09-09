@@ -23,14 +23,8 @@ define( function( require ) {
    */
   function NeuronScreen() {
 
-    var neuronModel = new NeuronModel();
-
-    // NeuronModelAdapter intercepts the default Step function and provides "constant" clock and record Playback
-    // features to NeuronModel, see NeuronClockModelAdapter
-    var neuronClockModelAdapter = new NeuronClockModelAdapter( neuronModel );
-
     Screen.call( this,
-      function() { return neuronClockModelAdapter; },
+      function() { return new NeuronClockModelAdapter( new NeuronModel() ); }, // clock model adapter provides constant ticks to model
       function( model ) { return new NeuronScreenView( model ); },
       { backgroundColor: '#ccfefa' }
     );
