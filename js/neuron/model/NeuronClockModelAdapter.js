@@ -41,7 +41,7 @@ define( function( require ) {
   function NeuronClockModelAdapter( model ) {
 
     var self = this;
-    self.model = model;
+    this.model = model;
 
     PropertySet.call( this, {
         // @public
@@ -50,9 +50,9 @@ define( function( require ) {
       }
     );
 
-    self.stepCallbacks = [];
-    self.resetCallBacks = [];
-    self.residualTime = 0;
+    this.stepCallbacks = [];
+    this.resetCallBacks = [];
+    this.residualTime = 0;
   }
 
   neuron.register( 'NeuronClockModelAdapter', NeuronClockModelAdapter );

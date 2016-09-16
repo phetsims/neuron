@@ -33,39 +33,38 @@ define( function( require ) {
    */
   function ModifiedHodgkinHuxleyModel() {
 
-    var self = this;
-    self.perNaChannels = 100; // @private
-    self.perKChannels = 100; // @private
-    self.elapsedTime = 0; // @private
-    self.timeSinceActionPotential = Number.POSITIVE_INFINITY; // @private
-    self.m3hDelayBuffer = new DelayBuffer( MAX_DELAY, NeuronConstants.MIN_ACTION_POTENTIAL_CLOCK_DT ); // @private
-    self.n4DelayBuffer = new DelayBuffer( MAX_DELAY, NeuronConstants.MIN_ACTION_POTENTIAL_CLOCK_DT ); // @private
+    this.perNaChannels = 100; // @private
+    this.perKChannels = 100; // @private
+    this.elapsedTime = 0; // @private
+    this.timeSinceActionPotential = Number.POSITIVE_INFINITY; // @private
+    this.m3hDelayBuffer = new DelayBuffer( MAX_DELAY, NeuronConstants.MIN_ACTION_POTENTIAL_CLOCK_DT ); // @private
+    this.n4DelayBuffer = new DelayBuffer( MAX_DELAY, NeuronConstants.MIN_ACTION_POTENTIAL_CLOCK_DT ); // @private
 
-    self.resting_v = 65;// @private, final doesn't change
+    this.resting_v = 65;// @private, final doesn't change
 
     // deltas of voltage-dependent gating parameters
-    self.dn = 0; // @private
-    self.dm = 0; // @private
-    self.dh = 0; // @private
+    this.dn = 0; // @private
+    this.dm = 0; // @private
+    this.dh = 0; // @private
 
-    self.timeRemainder = 0; // @private
+    this.timeRemainder = 0; // @private
 
     // Ek-Er, Ena - Er, Eleak - Er
-    self.vk = 0; // @private
-    self.vna = 0; // @private
-    self.vl = 0; // @private
+    this.vk = 0; // @private
+    this.vna = 0; // @private
+    this.vl = 0; // @private
 
-    self.n4 = 0; // @private
-    self.m3h = 0; // @private
-    self.na_current = 0; // @private
-    self.k_current = 0; // @private
-    self.l_current = 0; // @private
+    this.n4 = 0; // @private
+    this.m3h = 0; // @private
+    this.na_current = 0; // @private
+    this.k_current = 0; // @private
+    this.l_current = 0; // @private
 
-    self.vClampOn = false; // @private
+    this.vClampOn = false; // @private
 
-    self.vClampValue = this.convertV( 0 ); // @private
+    this.vClampValue = this.convertV( 0 ); // @private
 
-    self.reset();// reset and initialize
+    this.reset();// reset and initialize
   }
 
   neuron.register( 'ModifiedHodgkinHuxleyModel', ModifiedHodgkinHuxleyModel );
@@ -117,7 +116,7 @@ define( function( require ) {
       }
 
       // Step the model the appropriate number of times.
-      _.times( modelIterationsToRun, function( i ) {
+      for ( var i = 0; i < modelIterationsToRun; i++ ){
 
         this.dh = (this.ah * (1 - this.h) - this.bh * this.h) * INTERNAL_TIME_STEP;
         this.dm = (this.am * (1 - this.m) - this.bm * this.m) * INTERNAL_TIME_STEP;
@@ -169,8 +168,7 @@ define( function( require ) {
         if ( this.timeSinceActionPotential < Number.POSITIVE_INFINITY ) {
           this.timeSinceActionPotential += INTERNAL_TIME_STEP;
         }
-
-      }, this );
+      }
 
       this.m3hDelayBuffer.addValue( this.m3h, dt );
       this.n4DelayBuffer.addValue( this.n4, dt );

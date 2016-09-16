@@ -47,7 +47,7 @@ define( function( require ) {
     this.fixedRotationalOffset = fixedRotationalOffset;
     this.angleOfExtent = angleOfExtent;
     this.rotationAngle = 0;
-    self.zoneShape = new Shape();
+    this.zoneShape = new Shape();
     this.updateShape();
   }
 

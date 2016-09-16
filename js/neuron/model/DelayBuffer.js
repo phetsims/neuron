@@ -30,23 +30,23 @@ define( function( require ) {
    */
   function DelayBuffer( maxDelay, minTimeStep ) {
     var self = this;
-    self.numEntries = Math.ceil( maxDelay / minTimeStep ); // @private
-    self.filling = false; // @private
-    self.allDeltaTimesEqual = true; // @private
-    self.previousDeltaTime = -1; // @private
-    self.countAtThisDeltaTime = 0; // @private
+    this.numEntries = Math.ceil( maxDelay / minTimeStep ); // @private
+    this.filling = false; // @private
+    this.allDeltaTimesEqual = true; // @private
+    this.previousDeltaTime = -1; // @private
+    this.countAtThisDeltaTime = 0; // @private
     // Allocate the memory that will be used.
-    self.delayElements = new Array( this.numEntries ); // @private
+    this.delayElements = new Array( this.numEntries ); // @private
 
     _.times( this.numEntries, function( idx ) {
       self.delayElements[ idx ] = new DelayElement();
     } );
 
     // Head and tail pointers for FIFO-type behavior.
-    self.head = 0; // @private
-    self.tail = 0; // @private
+    this.head = 0; // @private
+    this.tail = 0; // @private
     // Set the initial conditions.
-    self.clear();
+    this.clear();
   }
 
   neuron.register( 'DelayBuffer', DelayBuffer );

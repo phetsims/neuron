@@ -44,13 +44,12 @@ define( function( require ) {
    * @constructor
    */
   function PotassiumGatedChannel( modelContainingParticles, hodgkinHuxleyModel ) {
-    var self = this;
-    GatedChannel.call( self, CHANNEL_WIDTH, CHANNEL_HEIGHT, modelContainingParticles );
-    self.staggerDelay = Math.random() * MAX_STAGGER_DELAY;
-    self.hodgkinHuxleyModel = hodgkinHuxleyModel;
-    self.setInteriorCaptureZone( new PieSliceShapedCaptureZone( this.getCenterLocation(), CHANNEL_WIDTH * 5, Math.PI, Math.PI * 0.5 ) );
-    self.channelColor = NeuronConstants.POTASSIUM_COLOR.colorUtilsDarker( 0.2 );
-    self.reset();
+    GatedChannel.call( this, CHANNEL_WIDTH, CHANNEL_HEIGHT, modelContainingParticles );
+    this.staggerDelay = Math.random() * MAX_STAGGER_DELAY;
+    this.hodgkinHuxleyModel = hodgkinHuxleyModel;
+    this.setInteriorCaptureZone( new PieSliceShapedCaptureZone( this.getCenterLocation(), CHANNEL_WIDTH * 5, Math.PI, Math.PI * 0.5 ) );
+    this.channelColor = NeuronConstants.POTASSIUM_COLOR.colorUtilsDarker( 0.2 );
+    this.reset();
   }
 
   neuron.register( 'PotassiumGatedChannel', PotassiumGatedChannel );

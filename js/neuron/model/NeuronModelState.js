@@ -48,28 +48,28 @@ define( function( require ) {
     var self = this;
 
     // @private, accessed via getter methods
-    self.axonMembraneState = neuronModel.getAxonMembrane().getState();
-    self.hodgkinHuxleyModelState = neuronModel.hodgkinHuxleyModel.getState();
-    self.membranePotential = neuronModel.getMembranePotential();
-    self.sodiumExteriorConcentration = neuronModel.getSodiumExteriorConcentration();
-    self.sodiumInteriorConcentration = neuronModel.getSodiumInteriorConcentration();
-    self.potassiumExteriorConcentration = neuronModel.getPotassiumExteriorConcentration();
-    self.potassiumInteriorConcentration = neuronModel.getPotassiumInteriorConcentration();
+    this.axonMembraneState = neuronModel.getAxonMembrane().getState();
+    this.hodgkinHuxleyModelState = neuronModel.hodgkinHuxleyModel.getState();
+    this.membranePotential = neuronModel.getMembranePotential();
+    this.sodiumExteriorConcentration = neuronModel.getSodiumExteriorConcentration();
+    this.sodiumInteriorConcentration = neuronModel.getSodiumInteriorConcentration();
+    this.potassiumExteriorConcentration = neuronModel.getPotassiumExteriorConcentration();
+    this.potassiumInteriorConcentration = neuronModel.getPotassiumInteriorConcentration();
 
     // use c-style loops below for better performance
 
     var i;
-    self.membraneChannelStateMap = map();
+    this.membraneChannelStateMap = map();
     for ( i = 0; i < neuronModel.membraneChannels.length; i++ ) {
       var membraneChannel = neuronModel.membraneChannels.get( i );
-      self.membraneChannelStateMap.put( membraneChannel, membraneChannel.getState() );
+      this.membraneChannelStateMap.put( membraneChannel, membraneChannel.getState() );
     }
 
-    self.particlePlaybackMementos = [];
+    this.particlePlaybackMementos = [];
 
     for ( i = 0; i < neuronModel.transientParticles.length; i++ ) {
       var transientParticle = neuronModel.transientParticles.get( i );
-      self.particlePlaybackMementos.push( transientParticle.getPlaybackMemento() );
+      this.particlePlaybackMementos.push( transientParticle.getPlaybackMemento() );
     }
   }
 
