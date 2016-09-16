@@ -34,8 +34,7 @@ define( function( require ) {
    * @constructor
    */
   function MembraneChannel( channelWidth, channelHeight, modelContainingParticles ) {
-    var self = this;
-    PropertySet.call( self, {
+    PropertySet.call( this, {
 
       // If the channel's Openness and ActivationAmt is different from its previous values, flag the channel's state as
       // changed. The canvas implementation of the membrane channel node will repaint if any one of the channel's state

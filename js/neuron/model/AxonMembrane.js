@@ -30,8 +30,6 @@ define( function( require ) {
    */
   function AxonMembrane() {
 
-    var self = this;
-
     // @public - events emitted by instances of this type
     this.travelingActionPotentialStarted = new Emitter();
     this.travelingActionPotentialReachedCrossSection = new Emitter();

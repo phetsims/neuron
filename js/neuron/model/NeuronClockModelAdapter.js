@@ -40,7 +40,6 @@ define( function( require ) {
    */
   function NeuronClockModelAdapter( model ) {
 
-    var self = this;
     this.model = model;
 
     PropertySet.call( this, {

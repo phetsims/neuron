@@ -45,8 +45,6 @@ define( function( require ) {
    */
   function NeuronModelState( neuronModel ) {
 
-    var self = this;
-
     // @private, accessed via getter methods
     this.axonMembraneState = neuronModel.getAxonMembrane().getState();
     this.hodgkinHuxleyModelState = neuronModel.hodgkinHuxleyModel.getState();

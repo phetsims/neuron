@@ -27,10 +27,9 @@ define( function( require ) {
    * @constructor
    */
   function TravelingActionPotentialCanvasNode( mvt, bounds ) {
-    var self = this;
     this.mvt = mvt;
     this.travelingActionPotential = null; // @private - must hook up an action potential using methods defined below
-    CanvasNode.call( self, { canvasBounds: bounds } );
+    CanvasNode.call( this, { canvasBounds: bounds } );
   }
 
   neuron.register( 'TravelingActionPotentialCanvasNode', TravelingActionPotentialCanvasNode );

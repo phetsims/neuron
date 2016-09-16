@@ -41,7 +41,7 @@ define( function( require ) {
     var width = membranePotentialChart.chartDimension.width * WIDTH_PROPORTION;
     var height = bottomOfPlotArea.y - topOfPlotArea.y;
 
-    Rectangle.call( self, -width / 2, 0, width, height, 0, 0, {
+    Rectangle.call( this, -width / 2, 0, width, height, 0, 0, {
       cursor: 'e-resize',
       fill: CURSOR_FILL_COLOR,
       stroke: CURSOR_STROKE_COLOR,

@@ -127,7 +127,7 @@ define( function( require ) {
     this.potassiumInteriorConcentration = NOMINAL_POTASSIUM_INTERIOR_CONCENTRATION;
     this.potassiumExteriorConcentration = NOMINAL_POTASSIUM_EXTERIOR_CONCENTRATION;
 
-    RecordAndPlaybackModel.call( self, maxRecordPoints, {
+    RecordAndPlaybackModel.call( this, maxRecordPoints, {
 
       potentialChartVisible: DEFAULT_FOR_MEMBRANE_CHART_VISIBILITY, // @public
 
@@ -776,7 +776,6 @@ define( function( require ) {
      * @private
      */
     scanCaptureZoneForFreeParticles: function( zone, particleType ) {
-      var self = this;
       var closestFreeParticle = null;
       var distanceOfClosestParticle = Number.POSITIVE_INFINITY;
       var totalNumberOfParticles = 0;

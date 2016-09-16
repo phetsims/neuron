@@ -57,7 +57,7 @@ define( function( require ) {
    */
   function ChargeSymbolNode( axonModel, maxWidth, maxPotential, polarityReversed ) {
     var self = this;
-    Path.call( self, new Shape(), {
+    Path.call( this, new Shape(), {
       fill: FILL_COLOR,
       lineWidth: EDGE_STROKE,
       stroke: EDGE_COLOR
