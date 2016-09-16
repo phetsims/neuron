@@ -111,7 +111,7 @@ define( function( require ) {
       return edgeShape.getStrokedBounds( new kite.LineStyles( { lineWidth: 0.4 } ) );
     }
 
-    this.edgeNodeBounds = computeEdgeBounds( self.membraneChannels.get( 0 ) );
+    this.edgeNodeBounds = computeEdgeBounds( this.membraneChannels.get( 0 ) );
 
     // The profiler found too many color instance being created during rendering, so cache them here.
     this.channelColors = {};
@@ -138,7 +138,7 @@ define( function( require ) {
 
     // each iteration during channel rendering updates the same local variable in order to avoid new vector creation
     this.transformedChannelLocation = new Vector2();
-    this.viewTransformationMatrix = self.mvt.getMatrix();
+    this.viewTransformationMatrix = this.mvt.getMatrix();
 
     // avoid creation of new vector instances, update x, y positions and use it during rendering
     this.channelEdgeConnectionPoint = new Vector2();
@@ -167,7 +167,7 @@ define( function( require ) {
      */
     paintCanvas: function( context ) {
       var self = this;
-      var edgeNodeBounds = self.edgeNodeBounds;
+      var edgeNodeBounds = this.edgeNodeBounds;
 
       // Use the same object reference.  These are intermediary objects and don't hold any state, and are used only for
       // rendering.
