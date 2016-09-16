@@ -29,11 +29,10 @@ define( function( require ) {
    * @constructor
    */
   function SlowBrownianMotionStrategy( initialLocationX, initialLocationY ) {
-    var self = this;
-    self.initialLocationX = initialLocationX;
-    self.initialLocationY = initialLocationY;
+    this.initialLocationX = initialLocationX;
+    this.initialLocationY = initialLocationY;
     // In seconds of sim time.
-    self.timeUntilNextJump = this.generateNewJumpTime();
+    this.timeUntilNextJump = this.generateNewJumpTime();
   }
 
   neuron.register( 'SlowBrownianMotionStrategy', SlowBrownianMotionStrategy );

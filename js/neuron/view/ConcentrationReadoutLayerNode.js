@@ -44,7 +44,7 @@ define( function( require ) {
   function ConcentrationReadoutLayerNode( neuronModel, zoomProperty, zoomableRootNode, viewPortBounds, axonCrossSectionNode ) {
 
     var self = this;
-    Node.call( self );
+    Node.call( this );
     this.zoomableRootNode = zoomableRootNode;
 
     // Concentration readouts.
@@ -110,10 +110,10 @@ define( function( require ) {
     potassiumInteriorConcentrationReadout.computeShapeBounds = function() { return ( potassiumInteriorConcentrationReadoutRect.bounds ); };
 
     // add the concentration readouts
-    self.addChild( sodiumExteriorConcentrationReadoutRect );
-    self.addChild( sodiumInteriorConcentrationReadoutRect );
-    self.addChild( potassiumExteriorConcentrationReadoutRect );
-    self.addChild( potassiumInteriorConcentrationReadoutRect );
+    this.addChild( sodiumExteriorConcentrationReadoutRect );
+    this.addChild( sodiumInteriorConcentrationReadoutRect );
+    this.addChild( potassiumExteriorConcentrationReadoutRect );
+    this.addChild( potassiumInteriorConcentrationReadoutRect );
 
     // Update the readout positions when the zoom factor or visibility changes.  Visibility is used as an optimization -
     // it prevents making updates when the readouts aren't visible.

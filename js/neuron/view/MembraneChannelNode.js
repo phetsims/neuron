@@ -27,9 +27,9 @@ define( function( require ) {
    */
   function MembraneChannelNode( membraneChannelModel, mvt ) {
     var self = this;
-    Node.call( self, {} );
-    self.membraneChannelModel = membraneChannelModel;
-    self.mvt = mvt;
+    Node.call( this, {} );
+    this.membraneChannelModel = membraneChannelModel;
+    this.mvt = mvt;
 
     /**
      *  @private
@@ -68,13 +68,13 @@ define( function( require ) {
 
     // Create the layers for the channel the edges.  This makes offsets and rotations easier.  See addToCanvas on why
     // node layer is an instance member.
-    self.channelLayer = new Node();
-    self.addChild( self.channelLayer );
-    self.channelLayer.addChild( channel );
-    self.edgeLayer = new Node();
-    self.addChild( self.edgeLayer );
-    self.edgeLayer.addChild( leftEdgeNode );
-    self.edgeLayer.addChild( rightEdgeNode );
+    this.channelLayer = new Node();
+    this.addChild( this.channelLayer );
+    this.channelLayer.addChild( channel );
+    this.edgeLayer = new Node();
+    this.addChild( this.edgeLayer );
+    this.edgeLayer.addChild( leftEdgeNode );
+    this.edgeLayer.addChild( rightEdgeNode );
 
     // gets created and updated only if channel has InactivationGate
     var inactivationGateBallNode;
@@ -88,13 +88,13 @@ define( function( require ) {
 
       // Skip bounds computation to improve performance
       inactivationGateString.computeShapeBounds = function() {return new Bounds2( 0, 0, 0, 0 );};
-      self.channelLayer.addChild( inactivationGateString );
+      this.channelLayer.addChild( inactivationGateString );
 
       var ballDiameter = mvt.modelToViewDeltaX( membraneChannelModel.getChannelSize().width );
 
       // inactivationBallShape is always a circle, so use the optimized version.
       inactivationGateBallNode = new Circle( ballDiameter / 2, { fill: edgeColor, lineWidth: 0.5, stroke: edgeColor } );
-      self.edgeLayer.addChild( inactivationGateBallNode );
+      this.edgeLayer.addChild( inactivationGateBallNode );
     }
 
     //private

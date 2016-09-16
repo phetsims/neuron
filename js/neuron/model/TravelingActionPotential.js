@@ -49,8 +49,7 @@ define( function( require ) {
    */
   function TravelingActionPotential( axonMembrane ) {
 
-    var self = this;
-    self.axonMembrane = axonMembrane; // @private
+    this.axonMembrane = axonMembrane; // @private
 
     // @public - events emitted as the action potential changes
     this.shapeChanged = new Emitter();

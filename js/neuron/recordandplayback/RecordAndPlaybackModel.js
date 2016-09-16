@@ -37,23 +37,22 @@ define( function( require ) {
       mode: null // The current operational mode, valid values are playback, record or live
     } );
     var self = this;
-    PropertySet.call( self, properties );
+    PropertySet.call( this, properties );
 
-    self.maxRecordPoints = maxRecordPoints;
+    this.maxRecordPoints = maxRecordPoints;
 
     // @private - the history of data points that have been recorded from the model.
-    self.recordHistory = new ObservableArray();
+    this.recordHistory = new ObservableArray();
 
-    self.recordMode = new Record( this ); // @private - samples data from the mode and stores it
-    self.playbackMode = new Playback( this ); // @private - plays back recorded data
-    self.liveMode = new Live( this ); // @private - runs the model without recording it
+    this.recordMode = new Record( this ); // @private - samples data from the mode and stores it
+    this.playbackMode = new Playback( this ); // @private - plays back recorded data
+    this.liveMode = new Live( this ); // @private - runs the model without recording it
 
-    self.timeProperty.link( function() {
+    this.timeProperty.link( function() {
       self.updateRecordPlayBack();
     } );
 
     this.resetAll();
-
   }
 
   neuron.register( 'RecordAndPlaybackModel', RecordAndPlaybackModel );
@@ -204,7 +203,8 @@ define( function( require ) {
       var sortedHistory = this.recordHistory.getArray().slice();
 
       sortedHistory.sort( function( o1, o2 ) {
-        return compare( Math.abs( o1.getTime() - self.time ), Math.abs( o2.getTime() - self.time ) );//Though inefficient, this hasn't caused noticeable slowdown during testing
+        // Though inefficient, this hasn't caused noticeable slowdown during testing.
+        return compare( Math.abs( o1.getTime() - self.time ), Math.abs( o2.getTime() - self.time ) );
       } );
 
       function compare( d1, d2 ) {

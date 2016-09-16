@@ -20,8 +20,7 @@ define( function( require ) {
    * @constructor
    */
   function Playback( recordAndPlaybackModel ) {
-    var self = this;
-    self.recordAndPlaybackModel = recordAndPlaybackModel;
+    this.recordAndPlaybackModel = recordAndPlaybackModel;
   }
 
   neuron.register( 'Playback', Playback );

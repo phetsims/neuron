@@ -36,13 +36,12 @@ define( function( require ) {
    */
   function AxonBodyNode( axonMembraneModel, canvasBounds, mvt ) {
 
-    var self = this;
-    Node.call( self, {} );
-    self.axonMembraneModel = axonMembraneModel;
-    self.mvt = mvt;
+    Node.call( this, {} );
+    this.axonMembraneModel = axonMembraneModel;
+    this.mvt = mvt;
 
     // Add the axon body.
-    var axonBodyShape = self.mvt.modelToViewShape( axonMembraneModel.axonBodyShape );
+    var axonBodyShape = this.mvt.modelToViewShape( axonMembraneModel.axonBodyShape );
     var axonBodyBounds = axonBodyShape.bounds;
     var gradientOrigin = new Vector2( axonBodyBounds.getMaxX(), axonBodyBounds.getMaxY() );
     var gradientExtent = new Vector2( mvt.modelToViewX( axonMembraneModel.crossSectionCircleCenter.x ),
@@ -56,21 +55,21 @@ define( function( require ) {
       stroke: 'black',
       lineWidth: LINE_WIDTH
     } );
-    self.addChild( axonBody );
+    this.addChild( axonBody );
 
     if ( SHOW_GRADIENT_LINE ) {
       // The following line is useful when trying to debug the gradient.
-      self.addChild( new Line( gradientOrigin, gradientExtent ) );
+      this.addChild( new Line( gradientOrigin, gradientExtent ) );
     }
 
-    var travelingActionPotentialNode = new TravelingActionPotentialCanvasNode( self.mvt, canvasBounds );
+    var travelingActionPotentialNode = new TravelingActionPotentialCanvasNode( this.mvt, canvasBounds );
     this.addChild( travelingActionPotentialNode );
 
-    self.axonMembraneModel.travelingActionPotentialStarted.addListener( function() {
+    this.axonMembraneModel.travelingActionPotentialStarted.addListener( function() {
       travelingActionPotentialNode.travelingActionPotentialStarted( axonMembraneModel.travelingActionPotential );
     } );
 
-    self.axonMembraneModel.travelingActionPotentialEnded.addListener( function() {
+    this.axonMembraneModel.travelingActionPotentialEnded.addListener( function() {
         travelingActionPotentialNode.travelingActionPotentialEnded();
     } );
   }

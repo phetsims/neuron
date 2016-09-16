@@ -62,23 +62,23 @@ define( function( require ) {
   function MembranePotentialChart( chartDimension, neuronClockModelAdapter ) {
 
     var self = this;
-    Node.call( self );
+    Node.call( this );
 
     // @private
-    self.chartDimension = chartDimension;
-    self.clock = neuronClockModelAdapter;
-    self.neuronModel = neuronClockModelAdapter.model;
-    self.updateCountdownTimer = 0; // init to zero so that an update occurs right away
-    self.timeIndexOfFirstDataPt = 0;
-    self.playingWhenDragStarted = true;
-    self.dataSeries = new XYDataSeries( {
+    this.chartDimension = chartDimension;
+    this.clock = neuronClockModelAdapter;
+    this.neuronModel = neuronClockModelAdapter.model;
+    this.updateCountdownTimer = 0; // init to zero so that an update occurs right away
+    this.timeIndexOfFirstDataPt = 0;
+    this.playingWhenDragStarted = true;
+    this.dataSeries = new XYDataSeries( {
       color: PhetColorScheme.RED_COLORBLIND,
       maxPoints: 750 // empirically determined
     } );
-    self.domain = [ 0, TIME_SPAN ];
-    self.range = [ -100, 100 ];
-    self.mostRecentXValue = 0;
-    self.mostRecentYValue = 0;
+    this.domain = [ 0, TIME_SPAN ];
+    this.range = [ -100, 100 ];
+    this.mostRecentXValue = 0;
+    this.mostRecentYValue = 0;
 
     // Create the root node for the plot.
     var plotNode = new Node();
@@ -121,13 +121,13 @@ define( function( require ) {
 
     plotNode.addChild( new Path( gridShape, { stroke: 'gray', lineWidth: 0.6, boundsMethod: 'none' } ) );
 
-    neuronClockModelAdapter.registerStepCallback( self.step.bind( self ) );
+    neuronClockModelAdapter.registerStepCallback( this.step.bind( this ) );
 
     neuronClockModelAdapter.registerResetCallback( function() {
       self.updateOnSimulationReset();
     } );
 
-    self.neuronModel.stimulusPulseInitiatedProperty.link( function( stimulusPulseInitiated ) {
+    this.neuronModel.stimulusPulseInitiatedProperty.link( function( stimulusPulseInitiated ) {
       if ( stimulusPulseInitiated && !self.neuronModel.isPotentialChartVisible() ) {
           // If the chart is not visible, we clear any previous recording.
         self.clearChart();
@@ -184,23 +184,23 @@ define( function( require ) {
     chartYAxisLabelNode.scale( yAxisLabelScaleFactor );
 
     // use domain(0,25) and range(-100,100) as Model View Map
-    self.chartMvt = ModelViewTransform2.createRectangleInvertedYMapping( new Bounds2( this.domain[ 0 ], this.range[ 0 ],
+    this.chartMvt = ModelViewTransform2.createRectangleInvertedYMapping( new Bounds2( this.domain[ 0 ], this.range[ 0 ],
       this.domain[ 1 ], this.range[ 1 ] ), new Bounds2( 0, 0, chartDimension.width, chartDimension.height ), 1, 1 );
 
     // create and add the node that will represent the data line on the chart
-    this.dataLineNode = new DataLineCanvasNode( chartDimension.width, chartDimension.height, self.dataSeries, this.chartMvt );
+    this.dataLineNode = new DataLineCanvasNode( chartDimension.width, chartDimension.height, this.dataSeries, this.chartMvt );
     plotNode.addChild( this.dataLineNode );
 
     // add the cursor that shows the time value of the neuron state
-    this.chartCursor = new ChartCursor( self );
+    this.chartCursor = new ChartCursor( this );
     plotNode.addChild( this.chartCursor );
 
     neuronClockModelAdapter.playingProperty.link( function() {
       self.updateCursorState();
     } );
 
-    self.neuronModel.timeProperty.link( self.updateChartCursor.bind( self ) );
-    self.neuronModel.modeProperty.link( function( mode ) {
+    this.neuronModel.timeProperty.link( this.updateChartCursor.bind( this ) );
+    this.neuronModel.modeProperty.link( function( mode ) {
       if ( mode ) {
         self.updateChartCursor.bind( self );
       }
@@ -242,7 +242,7 @@ define( function( require ) {
       }
     ) );
 
-    self.neuronModel.potentialChartVisibleProperty.link( function( chartVisible ) {
+    this.neuronModel.potentialChartVisibleProperty.link( function( chartVisible ) {
       self.visible = chartVisible;
     } );
   }

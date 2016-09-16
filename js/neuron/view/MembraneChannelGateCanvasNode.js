@@ -84,10 +84,10 @@ define( function( require ) {
    */
   function MembraneChannelGateCanvasNode( neuronModel, modelViewTransform, bounds ) {
     var self = this;
-    CanvasNode.call( self, { pickable: false, canvasBounds: bounds } );
-    self.neuronModel = neuronModel;
-    self.membraneChannels = neuronModel.membraneChannels;
-    self.mvt = modelViewTransform;
+    CanvasNode.call( this, { pickable: false, canvasBounds: bounds } );
+    this.neuronModel = neuronModel;
+    this.membraneChannels = neuronModel.membraneChannels;
+    this.mvt = modelViewTransform;
 
     neuronModel.channelRepresentationChanged.addListener( function() {
       self.invalidatePaint();
@@ -111,7 +111,7 @@ define( function( require ) {
       return edgeShape.getStrokedBounds( new kite.LineStyles( { lineWidth: 0.4 } ) );
     }
 
-    self.edgeNodeBounds = computeEdgeBounds( self.membraneChannels.get( 0 ) );
+    this.edgeNodeBounds = computeEdgeBounds( self.membraneChannels.get( 0 ) );
 
     // The profiler found too many color instance being created during rendering, so cache them here.
     this.channelColors = {};
@@ -152,7 +152,7 @@ define( function( require ) {
     this.transformedOverallSize = new Dimension2();
     this.transformedEdgeNodeSize = new Dimension2();
 
-    self.invalidatePaint();
+    this.invalidatePaint();
   }
 
   neuron.register( 'MembraneChannelGateCanvasNode', MembraneChannelGateCanvasNode );

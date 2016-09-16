@@ -28,8 +28,7 @@ define( function( require ) {
    * @constructor
    */
   function AxonCrossSectionNode( axonMembraneModel, mvt ) {
-    var self = this;
-    Node.call( self, {} );
+    Node.call( this, {} );
     var outerDiameter = axonMembraneModel.getCrossSectionDiameter() + axonMembraneModel.getMembraneThickness();
     var innerDiameter = axonMembraneModel.getCrossSectionDiameter() - axonMembraneModel.getMembraneThickness();
 
@@ -40,9 +39,9 @@ define( function( require ) {
     var outerDiameterCircle = mvt.modelToViewShape( new Shape().ellipse( 0, 0, outerDiameter / 2, outerDiameter / 2 ) );
     var innerDiameterCircle = mvt.modelToViewShape( new Shape().ellipse( 0, 0, innerDiameter / 2, innerDiameter / 2 ) );
     var outerMembrane = new Path( outerDiameterCircle, { fill: MEMBRANE_COLOR, stroke: Color.BLACK, lineWidth: LINE_WIDTH } );
-    self.addChild( outerMembrane );
+    this.addChild( outerMembrane );
     var innerMembrane = new Path( innerDiameterCircle, { fill: new Color( 73, 210, 242 ), stroke: Color.BLACK, lineWidth: LINE_WIDTH } );
-    self.addChild( innerMembrane );
+    this.addChild( innerMembrane );
   }
 
   neuron.register( 'AxonCrossSectionNode', AxonCrossSectionNode );

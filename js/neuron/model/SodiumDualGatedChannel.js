@@ -65,16 +65,15 @@ define( function( require ) {
    * @constructor
    */
   function SodiumDualGatedChannel( modelContainingParticles, hodgkinHuxleyModel ) {
-    var self = this;
-    GatedChannel.call( self, CHANNEL_WIDTH, CHANNEL_HEIGHT, modelContainingParticles );
-    self.gateState = GateState.IDLE;
-    self.hodgkinHuxleyModel = hodgkinHuxleyModel;
-    self.stateTransitionTimer = 0;
-    self.staggerDelay = 0;
+    GatedChannel.call( this, CHANNEL_WIDTH, CHANNEL_HEIGHT, modelContainingParticles );
+    this.gateState = GateState.IDLE;
+    this.hodgkinHuxleyModel = hodgkinHuxleyModel;
+    this.stateTransitionTimer = 0;
+    this.staggerDelay = 0;
     this.previousNormalizedConductance = 0;
-    self.setExteriorCaptureZone( new PieSliceShapedCaptureZone( self.getCenterLocation(), CHANNEL_WIDTH * 5, 0, Math.PI * 0.7 ) );
-    self.reset();
-    self.channelColor = NeuronConstants.SODIUM_COLOR.colorUtilsDarker( 0.2 );
+    this.setExteriorCaptureZone( new PieSliceShapedCaptureZone( this.getCenterLocation(), CHANNEL_WIDTH * 5, 0, Math.PI * 0.7 ) );
+    this.reset();
+    this.channelColor = NeuronConstants.SODIUM_COLOR.colorUtilsDarker( 0.2 );
   }
 
   neuron.register( 'SodiumDualGatedChannel', SodiumDualGatedChannel );

@@ -92,19 +92,19 @@ define( function( require ) {
       }
     } );
 
-    self.addInputListener( chartCursorDragHandler );
+    this.addInputListener( chartCursorDragHandler );
 
     // Add the indentations that are intended to convey the idea of "gripability".
     var indentSpacing = 0.05 * height;
     var grippyIndent1 = new GrippyIndentNode( width / 2, CURSOR_FILL_COLOR );
     grippyIndent1.translate( 0, height / 2 - indentSpacing );
-    self.addChild( grippyIndent1 );
+    this.addChild( grippyIndent1 );
     var grippyIndent2 = new GrippyIndentNode( width / 2, CURSOR_FILL_COLOR );
     grippyIndent2.translate( 0, height / 2 );
-    self.addChild( grippyIndent2 );
+    this.addChild( grippyIndent2 );
     var grippyIndent3 = new GrippyIndentNode( width / 2, CURSOR_FILL_COLOR );
     grippyIndent3.translate( 0, height / 2 + indentSpacing );
-    self.addChild( grippyIndent3 );
+    this.addChild( grippyIndent3 );
   }
 
   neuron.register( 'ChartCursor', ChartCursor );

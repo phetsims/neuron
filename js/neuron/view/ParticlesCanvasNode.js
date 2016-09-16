@@ -25,14 +25,14 @@ define( function( require ) {
    */
   function ParticlesCanvasNode( neuronModel, modelViewTransform, clipArea ) {
     var self = this;
-    CanvasNode.call( self, {
+    CanvasNode.call( this, {
       pickable: false,
       canvasBounds: clipArea.bounds,
       clipArea: clipArea,
       layerSplit: true
     } );
-    self.modelViewTransform = modelViewTransform;
-    self.neuronModel = neuronModel;
+    this.modelViewTransform = modelViewTransform;
+    this.neuronModel = neuronModel;
 
     // Monitor a property that indicates when a particle state has changed and initiate a redraw.
     neuronModel.particlesMoved.addListener( function() {
@@ -66,7 +66,7 @@ define( function( require ) {
     renderSodiumParticles: function( particles, context ) {
       var self = this;
       context.fillStyle = particles[ 0 ].getRepresentationColor().getCanvasStyle(); // All sodium ions are of the same color,
-      var transformedRadius = self.modelViewTransform.modelToViewDeltaX( particles[ 0 ].getRadius() );
+      var transformedRadius = this.modelViewTransform.modelToViewDeltaX( particles[ 0 ].getRadius() );
       context.lineWidth = 0.3;
       context.strokeStyle = 'black';
       particles.forEach( function( particle ) {
@@ -84,7 +84,7 @@ define( function( require ) {
     renderPotassiumParticles: function( particles, context ) {
       var self = this;
       context.fillStyle = particles[ 0 ].getRepresentationColor().getCanvasStyle();
-      var size = self.modelViewTransform.modelToViewDeltaX( particles[ 0 ].getRadius() * 2 ) * 0.55;
+      var size = this.modelViewTransform.modelToViewDeltaX( particles[ 0 ].getRadius() * 2 ) * 0.55;
       context.lineWidth = 0.3;
       context.strokeStyle = 'black';
       particles.forEach( function( particle ) {
