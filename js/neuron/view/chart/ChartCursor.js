@@ -31,7 +31,7 @@ define( function( require ) {
    */
   function ChartCursor( membranePotentialChart ) {
 
-    var thisChartCursor = this;
+    var self = this;
     var topOfPlotArea = membranePotentialChart.chartMvt.modelToViewPosition( new Vector2( 0, membranePotentialChart.range[ 1 ] ) );
     var bottomOfPlotArea = membranePotentialChart.chartMvt.modelToViewPosition( new Vector2( 0, membranePotentialChart.range[ 0 ] ) );
 
@@ -41,7 +41,7 @@ define( function( require ) {
     var width = membranePotentialChart.chartDimension.width * WIDTH_PROPORTION;
     var height = bottomOfPlotArea.y - topOfPlotArea.y;
 
-    Rectangle.call( thisChartCursor, -width / 2, 0, width, height, 0, 0, {
+    Rectangle.call( self, -width / 2, 0, width, height, 0, 0, {
       cursor: 'e-resize',
       fill: CURSOR_FILL_COLOR,
       stroke: CURSOR_STROKE_COLOR,
@@ -61,7 +61,7 @@ define( function( require ) {
 
       start: function( e ) {
         pressPoint = e.currentTarget.globalToParentPoint( e.pointer.point );
-        pressTime = membranePotentialChart.chartMvt.viewToModelPosition( new Vector2( thisChartCursor.x, thisChartCursor.y ) ).x;
+        pressTime = membranePotentialChart.chartMvt.viewToModelPosition( new Vector2( self.x, self.y ) ).x;
         membranePotentialChart.playingWhenDragStarted = membranePotentialChart.clock.playing;
         if ( membranePotentialChart.playingWhenDragStarted ) {
           // The user must be trying to grab the cursor while the sim is running or while recorded content is being
@@ -92,19 +92,19 @@ define( function( require ) {
       }
     } );
 
-    thisChartCursor.addInputListener( chartCursorDragHandler );
+    self.addInputListener( chartCursorDragHandler );
 
     // Add the indentations that are intended to convey the idea of "gripability".
     var indentSpacing = 0.05 * height;
     var grippyIndent1 = new GrippyIndentNode( width / 2, CURSOR_FILL_COLOR );
     grippyIndent1.translate( 0, height / 2 - indentSpacing );
-    thisChartCursor.addChild( grippyIndent1 );
+    self.addChild( grippyIndent1 );
     var grippyIndent2 = new GrippyIndentNode( width / 2, CURSOR_FILL_COLOR );
     grippyIndent2.translate( 0, height / 2 );
-    thisChartCursor.addChild( grippyIndent2 );
+    self.addChild( grippyIndent2 );
     var grippyIndent3 = new GrippyIndentNode( width / 2, CURSOR_FILL_COLOR );
     grippyIndent3.translate( 0, height / 2 + indentSpacing );
-    thisChartCursor.addChild( grippyIndent3 );
+    self.addChild( grippyIndent3 );
   }
 
   neuron.register( 'ChartCursor', ChartCursor );

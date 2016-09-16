@@ -29,24 +29,24 @@ define( function( require ) {
    * @constructor
    */
   function DelayBuffer( maxDelay, minTimeStep ) {
-    var thisBuffer = this;
-    thisBuffer.numEntries = Math.ceil( maxDelay / minTimeStep ); // @private
-    thisBuffer.filling = false; // @private
-    thisBuffer.allDeltaTimesEqual = true; // @private
-    thisBuffer.previousDeltaTime = -1; // @private
-    thisBuffer.countAtThisDeltaTime = 0; // @private
+    var self = this;
+    self.numEntries = Math.ceil( maxDelay / minTimeStep ); // @private
+    self.filling = false; // @private
+    self.allDeltaTimesEqual = true; // @private
+    self.previousDeltaTime = -1; // @private
+    self.countAtThisDeltaTime = 0; // @private
     // Allocate the memory that will be used.
-    thisBuffer.delayElements = new Array( this.numEntries ); // @private
+    self.delayElements = new Array( this.numEntries ); // @private
 
     _.times( this.numEntries, function( idx ) {
-      thisBuffer.delayElements[ idx ] = new DelayElement();
+      self.delayElements[ idx ] = new DelayElement();
     } );
 
     // Head and tail pointers for FIFO-type behavior.
-    thisBuffer.head = 0; // @private
-    thisBuffer.tail = 0; // @private
+    self.head = 0; // @private
+    self.tail = 0; // @private
     // Set the initial conditions.
-    thisBuffer.clear();
+    self.clear();
   }
 
   neuron.register( 'DelayBuffer', DelayBuffer );

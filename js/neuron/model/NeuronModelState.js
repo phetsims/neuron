@@ -45,31 +45,31 @@ define( function( require ) {
    */
   function NeuronModelState( neuronModel ) {
 
-    var thisNeuronModelState = this;
+    var self = this;
 
     // @private, accessed via getter methods
-    thisNeuronModelState.axonMembraneState = neuronModel.getAxonMembrane().getState();
-    thisNeuronModelState.hodgkinHuxleyModelState = neuronModel.hodgkinHuxleyModel.getState();
-    thisNeuronModelState.membranePotential = neuronModel.getMembranePotential();
-    thisNeuronModelState.sodiumExteriorConcentration = neuronModel.getSodiumExteriorConcentration();
-    thisNeuronModelState.sodiumInteriorConcentration = neuronModel.getSodiumInteriorConcentration();
-    thisNeuronModelState.potassiumExteriorConcentration = neuronModel.getPotassiumExteriorConcentration();
-    thisNeuronModelState.potassiumInteriorConcentration = neuronModel.getPotassiumInteriorConcentration();
+    self.axonMembraneState = neuronModel.getAxonMembrane().getState();
+    self.hodgkinHuxleyModelState = neuronModel.hodgkinHuxleyModel.getState();
+    self.membranePotential = neuronModel.getMembranePotential();
+    self.sodiumExteriorConcentration = neuronModel.getSodiumExteriorConcentration();
+    self.sodiumInteriorConcentration = neuronModel.getSodiumInteriorConcentration();
+    self.potassiumExteriorConcentration = neuronModel.getPotassiumExteriorConcentration();
+    self.potassiumInteriorConcentration = neuronModel.getPotassiumInteriorConcentration();
 
     // use c-style loops below for better performance
 
     var i;
-    thisNeuronModelState.membraneChannelStateMap = map();
+    self.membraneChannelStateMap = map();
     for ( i = 0; i < neuronModel.membraneChannels.length; i++ ) {
       var membraneChannel = neuronModel.membraneChannels.get( i );
-      thisNeuronModelState.membraneChannelStateMap.put( membraneChannel, membraneChannel.getState() );
+      self.membraneChannelStateMap.put( membraneChannel, membraneChannel.getState() );
     }
 
-    thisNeuronModelState.particlePlaybackMementos = [];
+    self.particlePlaybackMementos = [];
 
     for ( i = 0; i < neuronModel.transientParticles.length; i++ ) {
       var transientParticle = neuronModel.transientParticles.get( i );
-      thisNeuronModelState.particlePlaybackMementos.push( transientParticle.getPlaybackMemento() );
+      self.particlePlaybackMementos.push( transientParticle.getPlaybackMemento() );
     }
   }
 

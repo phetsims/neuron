@@ -56,8 +56,8 @@ define( function( require ) {
    * value and vice versa.
    */
   function ChargeSymbolNode( axonModel, maxWidth, maxPotential, polarityReversed ) {
-    var thisNode = this;
-    Path.call( thisNode, new Shape(), {
+    var self = this;
+    Path.call( self, new Shape(), {
       fill: FILL_COLOR,
       lineWidth: EDGE_STROKE,
       stroke: EDGE_COLOR
@@ -83,7 +83,7 @@ define( function( require ) {
     }
 
     function updateRepresentation() {
-      thisNode.setShape( getSymbolShape() );
+      self.setShape( getSymbolShape() );
     }
 
     axonModel.membranePotentialProperty.link( function() {

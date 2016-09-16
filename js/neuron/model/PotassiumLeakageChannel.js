@@ -38,24 +38,24 @@ define( function( require ) {
    * @constructor
    */
   function PotassiumLeakageChannel( modelContainingParticles, hodgkinHuxleyModel ) {
-    var thisChannel = this;
-    AbstractLeakChannel.call( thisChannel, CHANNEL_WIDTH, CHANNEL_HEIGHT, modelContainingParticles );
+    var self = this;
+    AbstractLeakChannel.call( self, CHANNEL_WIDTH, CHANNEL_HEIGHT, modelContainingParticles );
 
     // Set the speed at which particles will move through the channel.
-    thisChannel.setParticleVelocity( DEFAULT_PARTICLE_VELOCITY );
+    self.setParticleVelocity( DEFAULT_PARTICLE_VELOCITY );
 
     // Set up the capture zones for this channel.
-    thisChannel.setInteriorCaptureZone( new PieSliceShapedCaptureZone( thisChannel.getCenterLocation(), CHANNEL_WIDTH * 5, Math.PI, Math.PI * 0.5 ) );
-    thisChannel.setExteriorCaptureZone( new PieSliceShapedCaptureZone( thisChannel.getCenterLocation(), CHANNEL_WIDTH * 5, 0, Math.PI * 0.5 ) );
+    self.setInteriorCaptureZone( new PieSliceShapedCaptureZone( self.getCenterLocation(), CHANNEL_WIDTH * 5, Math.PI, Math.PI * 0.5 ) );
+    self.setExteriorCaptureZone( new PieSliceShapedCaptureZone( self.getCenterLocation(), CHANNEL_WIDTH * 5, 0, Math.PI * 0.5 ) );
 
     // Set the rate of particle capture for leakage.
-    thisChannel.setMinInterCaptureTime( MIN_INTER_PARTICLE_CAPTURE_TIME );
-    thisChannel.setMaxInterCaptureTime( MAX_INTER_PARTICLE_CAPTURE_TIME );
+    self.setMinInterCaptureTime( MIN_INTER_PARTICLE_CAPTURE_TIME );
+    self.setMaxInterCaptureTime( MAX_INTER_PARTICLE_CAPTURE_TIME );
 
-    thisChannel.channelColor = BASE_COLOR.colorUtilsDarker( 0.2 );
+    self.channelColor = BASE_COLOR.colorUtilsDarker( 0.2 );
 
     // Start the capture timer now, since leak channels are always capturing particles.
-    thisChannel.restartCaptureCountdownTimer( false );
+    self.restartCaptureCountdownTimer( false );
   }
 
   neuron.register( 'PotassiumLeakageChannel', PotassiumLeakageChannel );

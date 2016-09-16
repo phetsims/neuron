@@ -24,24 +24,24 @@ define( function( require ) {
    * @constructor
    */
   function ParticlesCanvasNode( neuronModel, modelViewTransform, clipArea ) {
-    var thisNode = this;
-    CanvasNode.call( thisNode, {
+    var self = this;
+    CanvasNode.call( self, {
       pickable: false,
       canvasBounds: clipArea.bounds,
       clipArea: clipArea,
       layerSplit: true
     } );
-    thisNode.modelViewTransform = modelViewTransform;
-    thisNode.neuronModel = neuronModel;
+    self.modelViewTransform = modelViewTransform;
+    self.neuronModel = neuronModel;
 
     // Monitor a property that indicates when a particle state has changed and initiate a redraw.
     neuronModel.particlesMoved.addListener( function() {
-      thisNode.invalidatePaint();
+      self.invalidatePaint();
     } );
 
     // monitor a property that indicates whether all ions are being depicted and initiate a redraw on a change
     neuronModel.allIonsSimulatedProperty.lazyLink( function() {
-      thisNode.invalidatePaint();
+      self.invalidatePaint();
     } );
 
     /**
@@ -53,8 +53,8 @@ define( function( require ) {
      * probably be removed if and when the Scenery issue is addressed.
      */
     neuronModel.atLeastOneParticlePresentProperty.lazyLink( function( atLeastOneParticlePresent ) {
-      thisNode.visible = atLeastOneParticlePresent;
-      thisNode.invalidatePaint();
+      self.visible = atLeastOneParticlePresent;
+      self.invalidatePaint();
     } );
   }
 

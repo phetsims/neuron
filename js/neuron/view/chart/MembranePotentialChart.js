@@ -61,24 +61,24 @@ define( function( require ) {
    */
   function MembranePotentialChart( chartDimension, neuronClockModelAdapter ) {
 
-    var thisChart = this;
-    Node.call( thisChart );
+    var self = this;
+    Node.call( self );
 
     // @private
-    thisChart.chartDimension = chartDimension;
-    thisChart.clock = neuronClockModelAdapter;
-    thisChart.neuronModel = neuronClockModelAdapter.model;
-    thisChart.updateCountdownTimer = 0; // init to zero so that an update occurs right away
-    thisChart.timeIndexOfFirstDataPt = 0;
-    thisChart.playingWhenDragStarted = true;
-    thisChart.dataSeries = new XYDataSeries( {
+    self.chartDimension = chartDimension;
+    self.clock = neuronClockModelAdapter;
+    self.neuronModel = neuronClockModelAdapter.model;
+    self.updateCountdownTimer = 0; // init to zero so that an update occurs right away
+    self.timeIndexOfFirstDataPt = 0;
+    self.playingWhenDragStarted = true;
+    self.dataSeries = new XYDataSeries( {
       color: PhetColorScheme.RED_COLORBLIND,
       maxPoints: 750 // empirically determined
     } );
-    thisChart.domain = [ 0, TIME_SPAN ];
-    thisChart.range = [ -100, 100 ];
-    thisChart.mostRecentXValue = 0;
-    thisChart.mostRecentYValue = 0;
+    self.domain = [ 0, TIME_SPAN ];
+    self.range = [ -100, 100 ];
+    self.mostRecentXValue = 0;
+    self.mostRecentYValue = 0;
 
     // Create the root node for the plot.
     var plotNode = new Node();
@@ -121,20 +121,20 @@ define( function( require ) {
 
     plotNode.addChild( new Path( gridShape, { stroke: 'gray', lineWidth: 0.6, boundsMethod: 'none' } ) );
 
-    neuronClockModelAdapter.registerStepCallback( thisChart.step.bind( thisChart ) );
+    neuronClockModelAdapter.registerStepCallback( self.step.bind( self ) );
 
     neuronClockModelAdapter.registerResetCallback( function() {
-      thisChart.updateOnSimulationReset();
+      self.updateOnSimulationReset();
     } );
 
-    thisChart.neuronModel.stimulusPulseInitiatedProperty.link( function( stimulusPulseInitiated ) {
-      if ( stimulusPulseInitiated && !thisChart.neuronModel.isPotentialChartVisible()  ) {
+    self.neuronModel.stimulusPulseInitiatedProperty.link( function( stimulusPulseInitiated ) {
+      if ( stimulusPulseInitiated && !self.neuronModel.isPotentialChartVisible() ) {
           // If the chart is not visible, we clear any previous recording.
-          thisChart.clearChart();
+        self.clearChart();
       }
-      if ( stimulusPulseInitiated && !thisChart.chartIsFull ){
+      if ( stimulusPulseInitiated && !self.chartIsFull ) {
         // initiate recording
-        thisChart.neuronModel.startRecording();
+        self.neuronModel.startRecording();
       }
     } );
 
@@ -150,13 +150,13 @@ define( function( require ) {
       font: new PhetFont( { size: 12 } ),
       maxWidth: 100, // empirically determined
       listener: function() {
-        if ( thisChart.neuronModel.isActionPotentialInProgress() ) {
-          thisChart.neuronModel.setModeRecord();
+        if ( self.neuronModel.isActionPotentialInProgress() ) {
+          self.neuronModel.setModeRecord();
         }
         else {
-          thisChart.neuronModel.setModeLive();
+          self.neuronModel.setModeLive();
         }
-        thisChart.clearChart();
+        self.clearChart();
       }
     } );
 
@@ -164,7 +164,7 @@ define( function( require ) {
     var closeButton = new CloseButton( {
       iconLength: 6,
       listener: function() {
-        thisChart.neuronModel.potentialChartVisible = false;
+        self.neuronModel.potentialChartVisible = false;
       }
     } );
 
@@ -184,25 +184,25 @@ define( function( require ) {
     chartYAxisLabelNode.scale( yAxisLabelScaleFactor );
 
     // use domain(0,25) and range(-100,100) as Model View Map
-    thisChart.chartMvt = ModelViewTransform2.createRectangleInvertedYMapping( new Bounds2( this.domain[ 0 ], this.range[ 0 ],
+    self.chartMvt = ModelViewTransform2.createRectangleInvertedYMapping( new Bounds2( this.domain[ 0 ], this.range[ 0 ],
       this.domain[ 1 ], this.range[ 1 ] ), new Bounds2( 0, 0, chartDimension.width, chartDimension.height ), 1, 1 );
 
     // create and add the node that will represent the data line on the chart
-    this.dataLineNode = new DataLineCanvasNode( chartDimension.width, chartDimension.height, thisChart.dataSeries, this.chartMvt );
+    this.dataLineNode = new DataLineCanvasNode( chartDimension.width, chartDimension.height, self.dataSeries, this.chartMvt );
     plotNode.addChild( this.dataLineNode );
 
     // add the cursor that shows the time value of the neuron state
-    this.chartCursor = new ChartCursor( thisChart );
+    this.chartCursor = new ChartCursor( self );
     plotNode.addChild( this.chartCursor );
 
     neuronClockModelAdapter.playingProperty.link( function() {
-      thisChart.updateCursorState();
+      self.updateCursorState();
     } );
 
-    thisChart.neuronModel.timeProperty.link( thisChart.updateChartCursor.bind( thisChart ) );
-    thisChart.neuronModel.modeProperty.link( function( mode ) {
+    self.neuronModel.timeProperty.link( self.updateChartCursor.bind( self ) );
+    self.neuronModel.modeProperty.link( function( mode ) {
       if ( mode ) {
-        thisChart.updateChartCursor.bind( thisChart );
+        self.updateChartCursor.bind( self );
       }
     } );
 
@@ -242,8 +242,8 @@ define( function( require ) {
       }
     ) );
 
-    thisChart.neuronModel.potentialChartVisibleProperty.link( function( chartVisible ) {
-      thisChart.visible = chartVisible;
+    self.neuronModel.potentialChartVisibleProperty.link( function( chartVisible ) {
+      self.visible = chartVisible;
     } );
   }
 

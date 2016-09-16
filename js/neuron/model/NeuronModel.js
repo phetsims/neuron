@@ -95,39 +95,39 @@ define( function( require ) {
    * @constructor
    */
   function NeuronModel() {
-    var thisModel = this;
+    var self = this;
     var maxRecordPoints = Math.ceil( NeuronConstants.TIME_SPAN * 1000 / NeuronConstants.MIN_ACTION_POTENTIAL_CLOCK_DT );
-    thisModel.axonMembrane = new AxonMembrane();
+    self.axonMembrane = new AxonMembrane();
 
     // @public - events emitted by this model
     this.channelRepresentationChanged = new Emitter();
     this.particlesMoved = new Emitter();
 
     // @public, read-only - list of the particles that come and go when the simulation is working in real time
-    thisModel.transientParticles = new ObservableArray();
+    self.transientParticles = new ObservableArray();
 
     // @private - backup of the transient particles, used to restore them when returning to live mode after doing playback
-    thisModel.transientParticlesBackup = new ObservableArray();
+    self.transientParticlesBackup = new ObservableArray();
 
     // @public, read-only - particles that are "in the background", meaning that they are always present and they don't
     // cross the membrane
-    thisModel.backgroundParticles = new ObservableArray();
+    self.backgroundParticles = new ObservableArray();
 
     // @public, read-only - list of particles that are shown during playback
-    thisModel.playbackParticles = new ObservableArray();
+    self.playbackParticles = new ObservableArray();
 
-    thisModel.membraneChannels = new ObservableArray(); // @public, read-only
-    thisModel.hodgkinHuxleyModel = new ModifiedHodgkinHuxleyModel(); // @public
+    self.membraneChannels = new ObservableArray(); // @public, read-only
+    self.hodgkinHuxleyModel = new ModifiedHodgkinHuxleyModel(); // @public
 
     // @public, read-only - various model values
-    thisModel.crossSectionInnerRadius = (thisModel.axonMembrane.getCrossSectionDiameter() - thisModel.axonMembrane.getMembraneThickness()) / 2;
-    thisModel.crossSectionOuterRadius = (thisModel.axonMembrane.getCrossSectionDiameter() + thisModel.axonMembrane.getMembraneThickness()) / 2;
-    thisModel.sodiumInteriorConcentration = NOMINAL_SODIUM_INTERIOR_CONCENTRATION;
-    thisModel.sodiumExteriorConcentration = NOMINAL_SODIUM_EXTERIOR_CONCENTRATION;
-    thisModel.potassiumInteriorConcentration = NOMINAL_POTASSIUM_INTERIOR_CONCENTRATION;
-    thisModel.potassiumExteriorConcentration = NOMINAL_POTASSIUM_EXTERIOR_CONCENTRATION;
+    self.crossSectionInnerRadius = (self.axonMembrane.getCrossSectionDiameter() - self.axonMembrane.getMembraneThickness()) / 2;
+    self.crossSectionOuterRadius = (self.axonMembrane.getCrossSectionDiameter() + self.axonMembrane.getMembraneThickness()) / 2;
+    self.sodiumInteriorConcentration = NOMINAL_SODIUM_INTERIOR_CONCENTRATION;
+    self.sodiumExteriorConcentration = NOMINAL_SODIUM_EXTERIOR_CONCENTRATION;
+    self.potassiumInteriorConcentration = NOMINAL_POTASSIUM_INTERIOR_CONCENTRATION;
+    self.potassiumExteriorConcentration = NOMINAL_POTASSIUM_EXTERIOR_CONCENTRATION;
 
-    RecordAndPlaybackModel.call( thisModel, maxRecordPoints, {
+    RecordAndPlaybackModel.call( self, maxRecordPoints, {
 
       potentialChartVisible: DEFAULT_FOR_MEMBRANE_CHART_VISIBILITY, // @public
 
@@ -148,11 +148,11 @@ define( function( require ) {
     } );
 
     // add a listener that will stimulate the HH model then the traveling action potential reaches the cross section
-    thisModel.axonMembrane.travelingActionPotentialReachedCrossSection.addListener( function() {
+    self.axonMembrane.travelingActionPotentialReachedCrossSection.addListener( function() {
 
       // The action potential has arrived at the cross section, so stimulate the model the simulates the action
       // potential voltages and current flows.
-      thisModel.hodgkinHuxleyModel.stimulate();
+      self.hodgkinHuxleyModel.stimulate();
 
       if ( window.phet.neuron.profiler && window.phet.neuron.profiler.setting === 1 ) {
         // If enabled, start collecting profiling data, which will automatically be spat out to the console (or as
@@ -168,22 +168,22 @@ define( function( require ) {
       // This should never change while stimulus is locked out, and we depend on the UI to enforce this rule.
       // Otherwise, background particles could come and go during and action potential or during playback, which would
       // be hard to handle.
-      assert && assert( !thisModel.isStimulusInitiationLockedOut(), 'all ions setting changed when stimulus was locked out' );
+      assert && assert( !self.isStimulusInitiationLockedOut(), 'all ions setting changed when stimulus was locked out' );
 
       if ( allIonsSimulated ) {
 
         // add the background particles
-        thisModel.addInitialBulkParticles();
+        self.addInitialBulkParticles();
       }
       else {
         // remove the background particles
-        thisModel.backgroundParticles.clear();
+        self.backgroundParticles.clear();
       }
 
       // update the property that indicates whether there is at least one particle present
-      thisModel.atLeastOneParticlePresent = ( thisModel.backgroundParticles.length +
-                                              thisModel.transientParticles.length +
-                                              thisModel.playbackParticles.length ) > 0;
+      self.atLeastOneParticlePresent = ( self.backgroundParticles.length +
+                                         self.transientParticles.length +
+                                         self.playbackParticles.length ) > 0;
     } );
 
     // Define a function to add the initial channels.  The pattern is intended to be such that the potassium and sodium
@@ -201,22 +201,22 @@ define( function( require ) {
 
       // Add some of each type so that they are visible at the top portion of the membrane.
       if ( NUM_SODIUM_LEAK_CHANNELS > 0 ) {
-        thisModel.addChannel( MembraneChannelTypes.SODIUM_LEAKAGE_CHANNEL, angle );
+        self.addChannel( MembraneChannelTypes.SODIUM_LEAKAGE_CHANNEL, angle );
         sodiumLeakChannelsAdded++;
         angle += angleIncrement;
       }
       if ( NUM_GATED_POTASSIUM_CHANNELS > 0 ) {
-        thisModel.addChannel( MembraneChannelTypes.POTASSIUM_GATED_CHANNEL, angle );
+        self.addChannel( MembraneChannelTypes.POTASSIUM_GATED_CHANNEL, angle );
         gatedPotassiumChannelsAdded++;
         angle += angleIncrement;
       }
       if ( NUM_GATED_SODIUM_CHANNELS > 0 ) {
-        thisModel.addChannel( MembraneChannelTypes.SODIUM_GATED_CHANNEL, angle );
+        self.addChannel( MembraneChannelTypes.SODIUM_GATED_CHANNEL, angle );
         gatedSodiumChannelsAdded++;
         angle += angleIncrement;
       }
       if ( NUM_POTASSIUM_LEAK_CHANNELS > 0 ) {
-        thisModel.addChannel( MembraneChannelTypes.POTASSIUM_LEAKAGE_CHANNEL, angle );
+        self.addChannel( MembraneChannelTypes.POTASSIUM_LEAKAGE_CHANNEL, angle );
         potassiumLeakChannelsAdded++;
         angle += angleIncrement;
       }
@@ -256,7 +256,7 @@ define( function( require ) {
           assert && assert( false ); // Should never get here, so debug if it does.
         }
 
-        thisModel.addChannel( channelTypeToAdd, angle );
+        self.addChannel( channelTypeToAdd, angle );
         angle += angleIncrement;
       }
     }
@@ -266,8 +266,8 @@ define( function( require ) {
     // Note: It is expected that the model will be reset once it has been created, and this will set the initial state,
     // including adding the particles to the model.
 
-    thisModel.timeProperty.link( thisModel.updateRecordPlayBack.bind( this ) );
-    thisModel.modeProperty.link( thisModel.updateRecordPlayBack.bind( this ) );
+    self.timeProperty.link( self.updateRecordPlayBack.bind( this ) );
+    self.modeProperty.link( self.updateRecordPlayBack.bind( this ) );
 
     this.reset(); // This does initialization
   }
@@ -597,30 +597,30 @@ define( function( require ) {
      * @private
      */
     addInitialBulkParticles: function() {
-      var thisModel = this;
+      var self = this;
 
       // Make a list of pre-existing particles.
-      var preExistingParticles = _.clone( thisModel.transientParticles.getArray() );
+      var preExistingParticles = _.clone( self.transientParticles.getArray() );
 
       // Add the initial particles.
-      thisModel.addBackgroundParticles( ParticleType.SODIUM_ION, ParticlePosition.INSIDE_MEMBRANE, NUM_SODIUM_IONS_INSIDE_CELL );
-      thisModel.addBackgroundParticles( ParticleType.SODIUM_ION, ParticlePosition.OUTSIDE_MEMBRANE, NUM_SODIUM_IONS_OUTSIDE_CELL );
-      thisModel.addBackgroundParticles( ParticleType.POTASSIUM_ION, ParticlePosition.INSIDE_MEMBRANE, NUM_POTASSIUM_IONS_INSIDE_CELL );
-      thisModel.addBackgroundParticles( ParticleType.POTASSIUM_ION, ParticlePosition.OUTSIDE_MEMBRANE, NUM_POTASSIUM_IONS_OUTSIDE_CELL );
+      self.addBackgroundParticles( ParticleType.SODIUM_ION, ParticlePosition.INSIDE_MEMBRANE, NUM_SODIUM_IONS_INSIDE_CELL );
+      self.addBackgroundParticles( ParticleType.SODIUM_ION, ParticlePosition.OUTSIDE_MEMBRANE, NUM_SODIUM_IONS_OUTSIDE_CELL );
+      self.addBackgroundParticles( ParticleType.POTASSIUM_ION, ParticlePosition.INSIDE_MEMBRANE, NUM_POTASSIUM_IONS_INSIDE_CELL );
+      self.addBackgroundParticles( ParticleType.POTASSIUM_ION, ParticlePosition.OUTSIDE_MEMBRANE, NUM_POTASSIUM_IONS_OUTSIDE_CELL );
 
       // Look at each sodium gate and, if there are no ions in its capture zone, add some.
-      thisModel.membraneChannels.forEach( function( membraneChannel ) {
+      self.membraneChannels.forEach( function( membraneChannel ) {
         if ( membraneChannel instanceof SodiumDualGatedChannel ) {
           var captureZone = membraneChannel.getExteriorCaptureZone();
-          var numParticlesInZone = thisModel.scanCaptureZoneForFreeParticles( captureZone, ParticleType.SODIUM_ION );
+          var numParticlesInZone = self.scanCaptureZoneForFreeParticles( captureZone, ParticleType.SODIUM_ION );
           if ( numParticlesInZone === 0 ) {
-            thisModel.addBackgroundParticlesToZone( ParticleType.SODIUM_ION, captureZone, Math.floor( Math.random() * 2 ) + 1 );
+            self.addBackgroundParticlesToZone( ParticleType.SODIUM_ION, captureZone, Math.floor( Math.random() * 2 ) + 1 );
           }
         }
       } );
 
       // Set all new particles to exhibit simple Brownian motion.
-      thisModel.backgroundParticles.forEach( function( backgroundParticle ) {
+      self.backgroundParticles.forEach( function( backgroundParticle ) {
         if ( preExistingParticles.indexOf( backgroundParticle ) === -1 ) {
           backgroundParticle.setMotionStrategy( new SlowBrownianMotionStrategy( backgroundParticle.getPositionX(), backgroundParticle.getPositionY() ) );
         }
@@ -643,10 +643,10 @@ define( function( require ) {
         // to avoid creation of new Vector2 instances the capture zone updates the particles position
         captureZone.assignNewParticleLocation( newParticle );
       }
-      var thisModel = this;
+      var self = this;
       newParticle.continueExistingProperty.lazyLink( function( newValue ) {
         if ( !newValue ) {
-          thisModel.transientParticles.remove( newParticle );
+          self.transientParticles.remove( newParticle );
         }
       } );
       return newParticle;
@@ -661,14 +661,14 @@ define( function( require ) {
      */
     addBackgroundParticles: function( particleType, position, numberToAdd ) {
       var newParticle = null;
-      var thisModel = this;
+      var self = this;
       _.times( numberToAdd, function( value ) {
-        newParticle = thisModel.createBackgroundParticle( particleType );
+        newParticle = self.createBackgroundParticle( particleType );
         if ( position === ParticlePosition.INSIDE_MEMBRANE ) {
-          thisModel.positionParticleInsideMembrane( newParticle );
+          self.positionParticleInsideMembrane( newParticle );
         }
         else {
-          thisModel.positionParticleOutsideMembrane( newParticle );
+          self.positionParticleOutsideMembrane( newParticle );
         }
         // Set the opacity.
         if ( Math.random() >= 0.5 ) { // replaced for nextBoolean
@@ -777,14 +777,14 @@ define( function( require ) {
      * @private
      */
     scanCaptureZoneForFreeParticles: function( zone, particleType ) {
-      var thisModel = this;
+      var self = this;
       var closestFreeParticle = null;
       var distanceOfClosestParticle = Number.POSITIVE_INFINITY;
       var totalNumberOfParticles = 0;
       var captureZoneOrigin = zone.getOriginPoint();
 
       // loop over the contained array - this is faster, but the array can't be modified
-      thisModel.transientParticles.getArray().forEach( function( particle ) {
+      self.transientParticles.getArray().forEach( function( particle ) {
 
         // This method is refactored to use position x,y components instead of vector2 instances
         if ( (particle.getType() === particleType) && (particle.isAvailableForCapture()) && (zone.isPointInZone( particle.getPositionX(), particle.getPositionY() )) ) {
@@ -1095,16 +1095,16 @@ define( function( require ) {
       // Set the state of the playback particles.  This maps the particle mementos in to the playback particles so that
       // we don't have to delete and add back a bunch of particles at each step.
       var additionalPlaybackParticlesNeeded = state.getPlaybackParticleMementos().length - this.playbackParticles.length;
-      var thisModel = this;
+      var self = this;
       if ( additionalPlaybackParticlesNeeded > 0 ) {
         _.times( additionalPlaybackParticlesNeeded, function( idx ) {
           var newPlaybackParticle = new PlaybackParticle();
-          thisModel.playbackParticles.push( newPlaybackParticle );
+          self.playbackParticles.push( newPlaybackParticle );
         } );
       }
       else if ( additionalPlaybackParticlesNeeded < 0 ) {
         _.times( Math.abs( additionalPlaybackParticlesNeeded ), function( idx ) {
-          thisModel.playbackParticles.pop();// remove the last item
+          self.playbackParticles.pop();// remove the last item
         } );
       }
 
@@ -1112,7 +1112,7 @@ define( function( require ) {
       var playbackParticleIndex = 0;
       var mementos = state.getPlaybackParticleMementos();
       mementos.forEach( function( memento ) {
-        thisModel.playbackParticles.get( playbackParticleIndex ).restoreFromMemento( memento );
+        self.playbackParticles.get( playbackParticleIndex ).restoreFromMemento( memento );
         playbackParticleIndex++;
       } );
 

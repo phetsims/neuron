@@ -27,10 +27,10 @@ define( function( require ) {
   function ChargeSymbolsLayerNode( neuronModel, mvt ) {
 
     Node.call( this );
-    var chargeSymbolLayer = this;
+    var self = this;
 
     neuronModel.chargesShownProperty.link( function( chargesShown ) {
-      chargeSymbolLayer.visible = chargesShown;
+      self.visible = chargesShown;
     } );
 
     /**
@@ -63,9 +63,9 @@ define( function( require ) {
 
       calcChargeSymbolLocations( channel1.getCenterLocation(), channel2.getCenterLocation(), Vector2.ZERO, outerSymbolLocation, innerSymbolLocation );
       outerSymbolParentNode.setTranslation( mvt.modelToViewPosition( outerSymbolLocation ) );
-      chargeSymbolLayer.addChild( outerSymbolParentNode );
+      self.addChild( outerSymbolParentNode );
       innerSymbolParentNode.setTranslation( mvt.modelToViewPosition( innerSymbolLocation ) );
-      chargeSymbolLayer.addChild( innerSymbolParentNode );
+      self.addChild( innerSymbolParentNode );
     }
 
     /**

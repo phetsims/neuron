@@ -26,10 +26,10 @@ define( function( require ) {
    * @constructor
    */
   function MembraneChannelNode( membraneChannelModel, mvt ) {
-    var thisNode = this;
-    Node.call( thisNode, {} );
-    thisNode.membraneChannelModel = membraneChannelModel;
-    thisNode.mvt = mvt;
+    var self = this;
+    Node.call( self, {} );
+    self.membraneChannelModel = membraneChannelModel;
+    self.mvt = mvt;
 
     /**
      *  @private
@@ -68,13 +68,13 @@ define( function( require ) {
 
     // Create the layers for the channel the edges.  This makes offsets and rotations easier.  See addToCanvas on why
     // node layer is an instance member.
-    thisNode.channelLayer = new Node();
-    thisNode.addChild( thisNode.channelLayer );
-    thisNode.channelLayer.addChild( channel );
-    thisNode.edgeLayer = new Node();
-    thisNode.addChild( thisNode.edgeLayer );
-    thisNode.edgeLayer.addChild( leftEdgeNode );
-    thisNode.edgeLayer.addChild( rightEdgeNode );
+    self.channelLayer = new Node();
+    self.addChild( self.channelLayer );
+    self.channelLayer.addChild( channel );
+    self.edgeLayer = new Node();
+    self.addChild( self.edgeLayer );
+    self.edgeLayer.addChild( leftEdgeNode );
+    self.edgeLayer.addChild( rightEdgeNode );
 
     // gets created and updated only if channel has InactivationGate
     var inactivationGateBallNode;
@@ -88,13 +88,13 @@ define( function( require ) {
 
       // Skip bounds computation to improve performance
       inactivationGateString.computeShapeBounds = function() {return new Bounds2( 0, 0, 0, 0 );};
-      thisNode.channelLayer.addChild( inactivationGateString );
+      self.channelLayer.addChild( inactivationGateString );
 
       var ballDiameter = mvt.modelToViewDeltaX( membraneChannelModel.getChannelSize().width );
 
       // inactivationBallShape is always a circle, so use the optimized version.
       inactivationGateBallNode = new Circle( ballDiameter / 2, { fill: edgeColor, lineWidth: 0.5, stroke: edgeColor } );
-      thisNode.edgeLayer.addChild( inactivationGateBallNode );
+      self.edgeLayer.addChild( inactivationGateBallNode );
     }
 
     //private
@@ -172,15 +172,15 @@ define( function( require ) {
     }
 
     function updateLocation() {
-      thisNode.channelLayer.translate( mvt.modelToViewPosition( membraneChannelModel.getCenterLocation() ) );
-      thisNode.edgeLayer.translate( mvt.modelToViewPosition( membraneChannelModel.getCenterLocation() ) );
+      self.channelLayer.translate( mvt.modelToViewPosition( membraneChannelModel.getCenterLocation() ) );
+      self.edgeLayer.translate( mvt.modelToViewPosition( membraneChannelModel.getCenterLocation() ) );
     }
 
     function updateRotation() {
       // Rotate based on the model element's orientation (the Java Version rotates and then translates, here the
       // transformation order is reversed - Ashraf).
-      thisNode.channelLayer.setRotation( -membraneChannelModel.rotationalAngle + Math.PI / 2 );
-      thisNode.edgeLayer.setRotation( -membraneChannelModel.rotationalAngle + Math.PI / 2 );
+      self.channelLayer.setRotation( -membraneChannelModel.rotationalAngle + Math.PI / 2 );
+      self.edgeLayer.setRotation( -membraneChannelModel.rotationalAngle + Math.PI / 2 );
     }
 
     // Update the representation and location.

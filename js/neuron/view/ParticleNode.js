@@ -27,17 +27,17 @@ define( function( require ) {
    * @constructor
    */
   function ParticleNode( particle, modelViewTransform ) {
-    var thisNode = this;
+    var self = this;
     Node.call( this, {} );
-    thisNode.particle = particle;
-    thisNode.modelViewTransform = modelViewTransform;
+    self.particle = particle;
+    self.modelViewTransform = modelViewTransform;
 
     // Create the initial representation with the aspects that don't change.
     var representation = new Path( new Shape(), { lineWidth: PARTICLE_EDGE_STROKE, stroke: Color.BLACK } );
-    thisNode.addChild( representation );
+    self.addChild( representation );
 
     function updateOffset( x, y ) {
-      thisNode.translate( modelViewTransform.modelToViewPosition( new Vector2( x, y ) ) );
+      self.translate( modelViewTransform.modelToViewPosition( new Vector2( x, y ) ) );
     }
 
     function updateRepresentation( newOpacity ) {
@@ -68,7 +68,7 @@ define( function( require ) {
 
       representation.setShape( representationShape );
       representation.fill = particle.getRepresentationColor();
-      thisNode.setOpacity( newOpacity );
+      self.setOpacity( newOpacity );
     }
 
     updateOffset( particle.getPositionX(), particle.getPositionY() );

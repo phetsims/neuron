@@ -33,39 +33,39 @@ define( function( require ) {
    */
   function ModifiedHodgkinHuxleyModel() {
 
-    var thisModel = this;
-    thisModel.perNaChannels = 100; // @private
-    thisModel.perKChannels = 100; // @private
-    thisModel.elapsedTime = 0; // @private
-    thisModel.timeSinceActionPotential = Number.POSITIVE_INFINITY; // @private
-    thisModel.m3hDelayBuffer = new DelayBuffer( MAX_DELAY, NeuronConstants.MIN_ACTION_POTENTIAL_CLOCK_DT ); // @private
-    thisModel.n4DelayBuffer = new DelayBuffer( MAX_DELAY, NeuronConstants.MIN_ACTION_POTENTIAL_CLOCK_DT ); // @private
+    var self = this;
+    self.perNaChannels = 100; // @private
+    self.perKChannels = 100; // @private
+    self.elapsedTime = 0; // @private
+    self.timeSinceActionPotential = Number.POSITIVE_INFINITY; // @private
+    self.m3hDelayBuffer = new DelayBuffer( MAX_DELAY, NeuronConstants.MIN_ACTION_POTENTIAL_CLOCK_DT ); // @private
+    self.n4DelayBuffer = new DelayBuffer( MAX_DELAY, NeuronConstants.MIN_ACTION_POTENTIAL_CLOCK_DT ); // @private
 
-    thisModel.resting_v = 65;// @private, final doesn't change
+    self.resting_v = 65;// @private, final doesn't change
 
     // deltas of voltage-dependent gating parameters
-    thisModel.dn = 0; // @private
-    thisModel.dm = 0; // @private
-    thisModel.dh = 0; // @private
+    self.dn = 0; // @private
+    self.dm = 0; // @private
+    self.dh = 0; // @private
 
-    thisModel.timeRemainder = 0; // @private
+    self.timeRemainder = 0; // @private
 
     // Ek-Er, Ena - Er, Eleak - Er
-    thisModel.vk = 0; // @private
-    thisModel.vna = 0; // @private
-    thisModel.vl = 0; // @private
+    self.vk = 0; // @private
+    self.vna = 0; // @private
+    self.vl = 0; // @private
 
-    thisModel.n4 = 0; // @private
-    thisModel.m3h = 0; // @private
-    thisModel.na_current = 0; // @private
-    thisModel.k_current = 0; // @private
-    thisModel.l_current = 0; // @private
+    self.n4 = 0; // @private
+    self.m3h = 0; // @private
+    self.na_current = 0; // @private
+    self.k_current = 0; // @private
+    self.l_current = 0; // @private
 
-    thisModel.vClampOn = false; // @private
+    self.vClampOn = false; // @private
 
-    thisModel.vClampValue = this.convertV( 0 ); // @private
+    self.vClampValue = this.convertV( 0 ); // @private
 
-    thisModel.reset();// reset and initialize
+    self.reset();// reset and initialize
   }
 
   neuron.register( 'ModifiedHodgkinHuxleyModel', ModifiedHodgkinHuxleyModel );

@@ -36,20 +36,20 @@ define( function( require ) {
       historyCleared: false,
       mode: null // The current operational mode, valid values are playback, record or live
     } );
-    var thisModel = this;
-    PropertySet.call( thisModel, properties );
+    var self = this;
+    PropertySet.call( self, properties );
 
-    thisModel.maxRecordPoints = maxRecordPoints;
+    self.maxRecordPoints = maxRecordPoints;
 
     // @private - the history of data points that have been recorded from the model.
-    thisModel.recordHistory = new ObservableArray();
+    self.recordHistory = new ObservableArray();
 
-    thisModel.recordMode = new Record( this ); // @private - samples data from the mode and stores it
-    thisModel.playbackMode = new Playback( this ); // @private - plays back recorded data
-    thisModel.liveMode = new Live( this ); // @private - runs the model without recording it
+    self.recordMode = new Record( this ); // @private - samples data from the mode and stores it
+    self.playbackMode = new Playback( this ); // @private - plays back recorded data
+    self.liveMode = new Live( this ); // @private - runs the model without recording it
 
-    thisModel.timeProperty.link( function() {
-      thisModel.updateRecordPlayBack();
+    self.timeProperty.link( function() {
+      self.updateRecordPlayBack();
     } );
 
     this.resetAll();
@@ -200,11 +200,11 @@ define( function( require ) {
      * Look up a recorded state based on the specified time
      */
     getPlaybackState: function() {
-      var thisModel = this;
+      var self = this;
       var sortedHistory = this.recordHistory.getArray().slice();
 
       sortedHistory.sort( function( o1, o2 ) {
-        return compare( Math.abs( o1.getTime() - thisModel.time ), Math.abs( o2.getTime() - thisModel.time ) );//Though inefficient, this hasn't caused noticeable slowdown during testing
+        return compare( Math.abs( o1.getTime() - self.time ), Math.abs( o2.getTime() - self.time ) );//Though inefficient, this hasn't caused noticeable slowdown during testing
       } );
 
       function compare( d1, d2 ) {
@@ -271,9 +271,9 @@ define( function( require ) {
     clearHistoryRemainder: function() {
       this.historyRemainderCleared = false;
       var keep = [];
-      var thisModel = this;
+      var self = this;
       this.recordHistory.forEach( function( dataPoint ) {
-        if ( dataPoint.getTime() < thisModel.time ) {
+        if ( dataPoint.getTime() < self.time ) {
           keep.push( dataPoint );
         }
       } );

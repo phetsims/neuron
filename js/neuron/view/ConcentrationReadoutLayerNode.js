@@ -43,8 +43,8 @@ define( function( require ) {
    */
   function ConcentrationReadoutLayerNode( neuronModel, zoomProperty, zoomableRootNode, viewPortBounds, axonCrossSectionNode ) {
 
-    var thisNode = this;
-    Node.call( thisNode );
+    var self = this;
+    Node.call( self );
     this.zoomableRootNode = zoomableRootNode;
 
     // Concentration readouts.
@@ -110,10 +110,10 @@ define( function( require ) {
     potassiumInteriorConcentrationReadout.computeShapeBounds = function() { return ( potassiumInteriorConcentrationReadoutRect.bounds ); };
 
     // add the concentration readouts
-    thisNode.addChild( sodiumExteriorConcentrationReadoutRect );
-    thisNode.addChild( sodiumInteriorConcentrationReadoutRect );
-    thisNode.addChild( potassiumExteriorConcentrationReadoutRect );
-    thisNode.addChild( potassiumInteriorConcentrationReadoutRect );
+    self.addChild( sodiumExteriorConcentrationReadoutRect );
+    self.addChild( sodiumInteriorConcentrationReadoutRect );
+    self.addChild( potassiumExteriorConcentrationReadoutRect );
+    self.addChild( potassiumInteriorConcentrationReadoutRect );
 
     // Update the readout positions when the zoom factor or visibility changes.  Visibility is used as an optimization -
     // it prevents making updates when the readouts aren't visible.
@@ -124,7 +124,7 @@ define( function( require ) {
 
           // Place the exterior readouts to the upper left, just outside of the membrane.  The algorithm for placement was
           // empirically determined and will need adjustment if anything about the neuron position changes.
-          var exteriorIndicatorYOffset = Math.max( thisNode.zoomableRootNode.transform.transformY( 45 ), 5 );
+          var exteriorIndicatorYOffset = Math.max( self.zoomableRootNode.transform.transformY( 45 ), 5 );
           potassiumExteriorConcentrationReadoutRect.left = viewPortBounds.minX + maxExteriorReadoutWidth -
                                                            potassiumExteriorConcentrationReadoutRect.bounds.width + 4;
           potassiumExteriorConcentrationReadoutRect.top = viewPortBounds.minY + exteriorIndicatorYOffset;
@@ -133,7 +133,7 @@ define( function( require ) {
 
           // Place the interior readout in a place where it can be seen whether or not the chart is showing and doesn't
           // overlap with the membrane of the neuron.  The Y position calculation is empirically determined.
-          var interiorIndicatorYOffset = 80 + thisNode.zoomableRootNode.transform.transformY( 80 ) * 0.5;
+          var interiorIndicatorYOffset = 80 + self.zoomableRootNode.transform.transformY( 80 ) * 0.5;
 
           potassiumInteriorConcentrationReadoutRect.centerX = axonCrossSectionNode.centerX;
           potassiumInteriorConcentrationReadoutRect.top = viewPortBounds.y + interiorIndicatorYOffset;
@@ -146,14 +146,14 @@ define( function( require ) {
     // update the readouts when the concentration changes, but only if the readout are visible
     neuronModel.concentrationChangedProperty.link( function( concentrationChanged ) {
       // this is optimized to skip updates if not visible to avoid recalculating bounds
-      if ( concentrationChanged && thisNode.isVisible() ) {
+      if ( concentrationChanged && self.isVisible() ) {
         updateConcentrationReadoutValues();
       }
     } );
 
     // update the readouts when this node transitions from invisible to visible
     this.on( 'visibility', function( a ) {
-      if ( thisNode.visible ) {
+      if ( self.visible ) {
         updateConcentrationReadoutValues();
       }
     } );

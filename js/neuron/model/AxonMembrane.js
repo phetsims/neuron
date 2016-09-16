@@ -30,7 +30,7 @@ define( function( require ) {
    */
   function AxonMembrane() {
 
-    var thisAxonMembrane = this;
+    var self = this;
 
     // @public - events emitted by instances of this type
     this.travelingActionPotentialStarted = new Emitter();
@@ -39,14 +39,14 @@ define( function( require ) {
     this.travelingActionPotentialEnded = new Emitter();
 
     // Traveling action potential that moves down the membrane.
-    thisAxonMembrane.travelingActionPotential = null;
+    self.travelingActionPotential = null;
 
     //-----------------------------------------------------------------------------------------------------------------
     // Create the shape of the axon body
     //-----------------------------------------------------------------------------------------------------------------
 
     // @public - shape of the body of the axon
-    thisAxonMembrane.axonBodyShape = new Shape();
+    self.axonBodyShape = new Shape();
 
     // points at which axon membrane would appear to vanish, used in shape creation
     var vanishingPoint = new Vector2(
@@ -55,7 +55,7 @@ define( function( require ) {
     );
 
     // Find the two points at which the shape will intersect the outer edge of the cross section.
-    var r = NeuronConstants.DEFAULT_DIAMETER / 2 + thisAxonMembrane.getMembraneThickness() / 2;
+    var r = NeuronConstants.DEFAULT_DIAMETER / 2 + self.getMembraneThickness() / 2;
     var theta = BODY_TILT_ANGLE + Math.PI * 0.45; // Multiplier tweaked a bit for improved appearance.
     var intersectionPointA = new Vector2( r * Math.cos( theta ), r * Math.sin( theta ) );
     theta += Math.PI;
@@ -89,13 +89,13 @@ define( function( require ) {
       vanishingPoint.y + controlPtRadius * Math.sin( angleToIntersectionPt - 0.25 ) );
 
     // @private - curves that define the boundaries of the body
-    thisAxonMembrane.curveA = new Cubic(
+    self.curveA = new Cubic(
       vanishingPoint,
       controlPtA2,
       controlPtA1,
       intersectionPointA
     );
-    thisAxonMembrane.curveB = new Cubic(
+    self.curveB = new Cubic(
       vanishingPoint,
       controlPtB1,
       controlPtB2,
@@ -104,8 +104,8 @@ define( function( require ) {
 
     // In order to create the full shape, we reverse one of the curves and the connect the two curves together in
     // order to create the full shape of the axon body.
-    thisAxonMembrane.axonBodyShape.moveTo( intersectionPointA.x, intersectionPointA.y );
-    thisAxonMembrane.axonBodyShape.cubicCurveTo(
+    self.axonBodyShape.moveTo( intersectionPointA.x, intersectionPointA.y );
+    self.axonBodyShape.cubicCurveTo(
       controlPtA1.x,
       controlPtA1.y,
       controlPtA2.x,
@@ -113,7 +113,7 @@ define( function( require ) {
       vanishingPoint.x,
       vanishingPoint.y
     );
-    thisAxonMembrane.axonBodyShape.cubicCurveTo(
+    self.axonBodyShape.cubicCurveTo(
       controlPtB1.x,
       controlPtB1.y,
       controlPtB2.x,
@@ -121,12 +121,12 @@ define( function( require ) {
       intersectionPointB.x,
       intersectionPointB.y
     );
-    thisAxonMembrane.axonBodyShape.close();
+    self.axonBodyShape.close();
 
     // @public - shape of the cross section of the membrane.	For now, and unless there is some reason to do otherwise,
     // the center of the cross section is positioned at the origin.
-    thisAxonMembrane.crossSectionCircleCenter = Vector2.ZERO;
-    thisAxonMembrane.crossSectionCircleRadius = NeuronConstants.DEFAULT_DIAMETER / 2;
+    self.crossSectionCircleCenter = Vector2.ZERO;
+    self.crossSectionCircleRadius = NeuronConstants.DEFAULT_DIAMETER / 2;
 
     // @private - In order to avoid creating new Vector2 instances during animation, these instances are declared and
     // reused in the evaluateCurve method.
@@ -157,18 +157,18 @@ define( function( require ) {
        * @public
        */
       initiateTravelingActionPotential: function() {
-        var thisAxonMembrane = this;
+        var self = this;
         assert && assert( this.travelingActionPotential === null, 'Should not initiate a 2nd traveling action potential before prior one has completed.' );
         this.travelingActionPotential = new TravelingActionPotential( this );
         this.travelingActionPotential.crossSectionReached.addListener( function() {
-          thisAxonMembrane.travelingActionPotentialReachedCrossSection.emit();
+          self.travelingActionPotentialReachedCrossSection.emit();
         } );
 
         this.travelingActionPotential.lingeringCompleted.addListener( function() {
-          thisAxonMembrane.removeTravelingActionPotential();
+          self.removeTravelingActionPotential();
         } );
 
-        thisAxonMembrane.travelingActionPotentialStarted.emit();
+        self.travelingActionPotentialStarted.emit();
       },
 
       /**

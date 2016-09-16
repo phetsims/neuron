@@ -40,14 +40,14 @@ define( function( require ) {
    * @constructor
    */
   function PieSliceShapedCaptureZone( center, radius, fixedRotationalOffset, angleOfExtent ) {
-    var thisZone = this;
-    CaptureZone.call( thisZone );
+    var self = this;
+    CaptureZone.call( self );
     this.originPoint = center;
     this.radius = radius;
     this.fixedRotationalOffset = fixedRotationalOffset;
     this.angleOfExtent = angleOfExtent;
     this.rotationAngle = 0;
-    thisZone.zoneShape = new Shape();
+    self.zoneShape = new Shape();
     this.updateShape();
   }
 
