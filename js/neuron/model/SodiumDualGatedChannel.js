@@ -171,6 +171,9 @@ define( function( require ) {
             this.gateState = GateState.IDLE;
           }
           break;
+
+        default:
+          throw new Error( 'invalid gateState: ' + this.gateState );
       }
 
       // Save values for the next time through.

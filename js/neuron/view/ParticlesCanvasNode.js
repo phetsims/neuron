@@ -119,6 +119,8 @@ define( function( require ) {
           case ParticleType.POTASSIUM_ION:
             self.renderPotassiumParticles( particlesOfSameType, context );
             break;
+          default:
+            throw new Error( 'invalid particleType: ' + particleType );
         }
       } );
     },
