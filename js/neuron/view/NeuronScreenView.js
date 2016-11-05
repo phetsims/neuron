@@ -47,6 +47,7 @@ define( function( require ) {
   var Util = require( 'SCENERY/util/Util' );
   var ParticlesCanvasNode = require( 'NEURON/neuron/view/ParticlesCanvasNode' );
   var neuron = require( 'NEURON/neuron' );
+  var PhetColorScheme = require( 'SCENERY_PHET/PhetColorScheme' );
 
   // strings
   var stimulateNeuronString = require( 'string!NEURON/stimulateNeuron' );
@@ -184,7 +185,10 @@ define( function( require ) {
         clipAreaBounds.width + estimatedMaxParticleWidth,
         clipAreaBounds.height + estimatedMaxParticleWidth
       );
-      var maskNode = new Path( maskingShape, { stroke: NeuronConstants.SCREEN_BACKGROUND, lineWidth: estimatedMaxParticleWidth } );
+      var maskNode = new Path( maskingShape, {
+        stroke: NeuronConstants.SCREEN_BACKGROUND,
+        lineWidth: estimatedMaxParticleWidth
+      } );
       this.addChild( maskNode );
 
       if ( SHOW_PARTICLE_CANVAS_BOUNDS ) {
@@ -256,7 +260,7 @@ define( function( require ) {
     var stimulateNeuronButton = new RectangularPushButton( {
       content: new MultiLineText( stimulateNeuronString, { font: BUTTON_FONT } ),
       listener: function() { self.neuronModel.initiateStimulusPulse(); },
-      baseColor: 'rgb( 242, 233, 22 )',
+      baseColor: PhetColorScheme.PHET_YELLOW,
       right: worldNodeClipArea.bounds.maxX,
       centerY: centerYForLowerControls,
       minWidth: 50,
