@@ -24,8 +24,10 @@ define( function( require ) {
    */
   function NeuronProfiler( sim, setting ) {
 
+    assert && assert( setting >= 1 && setting <= 3, 'invalid profiler setting, value = ' + setting );
+
     var self = this;
-    this.setting = setting;
+    this.setting = setting; // @public, read only
 
     this.frameCount = 0;
     this.dataCollectionInProgress = false; // @private

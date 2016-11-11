@@ -8,6 +8,7 @@ define( function( require ) {
 
   // modules
   var NeuronProfiler = require( 'NEURON/neuron/common/NeuronProfiler' );
+  var NeuronQueryParameters = require( 'NEURON/neuron/common/NeuronQueryParameters' );
   var NeuronScreen = require( 'NEURON/neuron/view/NeuronScreen' );
   var Sim = require( 'JOIST/Sim' );
   var SimLauncher = require( 'JOIST/SimLauncher' );
@@ -34,9 +35,10 @@ define( function( require ) {
     // This sim has some sim-specific profiling that can be done.  If the query parameter checked below is present,
     // the profiler is instantiated and made available.  There are several different profiling operations that can be
     // set through the query parameter, please see the NeuronProfiler.js file for details on these.
-    if ( window.phet.chipper.getQueryParameters().hasOwnProperty( 'neuronProfiler' ) ) {
+    if ( NeuronQueryParameters.neuronProfiler >= 1 ) {
+
       // create and hook up the neuron profiler
-      window.phet.neuron.profiler = new NeuronProfiler( sim, parseInt( window.phet.chipper.getQueryParameters().neuronProfiler, 10 ) );
+      window.phet.neuron.profiler = new NeuronProfiler( sim, NeuronQueryParameters.neuronProfiler );
     }
   } );
 } );
