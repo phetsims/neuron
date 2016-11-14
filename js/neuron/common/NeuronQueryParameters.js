@@ -14,10 +14,7 @@ define( function( require ) {
   var NeuronQueryParameters = QueryStringMachine.getAll( {
 
     // turn on the Neuron-specific profiler
-    neuronProfiler: { type: 'number', defaultValue: -1 },
-
-    // allow WebGL
-    webgl: { type: 'boolean', defaultValue: true }
+    neuronProfiler: { type: 'number', defaultValue: -1 }
   } );
 
   neuron.register( 'NeuronQueryParameters', NeuronQueryParameters );

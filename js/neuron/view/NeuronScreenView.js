@@ -18,7 +18,6 @@ define( function( require ) {
   var Vector2 = require( 'DOT/Vector2' );
   var Bounds2 = require( 'DOT/Bounds2' );
   var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
-  var NeuronQueryParameters = require( 'NEURON/neuron/common/NeuronQueryParameters' );
   var Matrix3 = require( 'DOT/Matrix3' );
   var Shape = require( 'KITE/Shape' );
   var Dimension2 = require( 'DOT/Dimension2' );
@@ -159,7 +158,7 @@ define( function( require ) {
     } );
 
     // Check to see if WebGL can be used
-    var webGLSupported = Util.isWebGLSupported && NeuronQueryParameters.webgl;
+    var webGLSupported = Util.isWebGLSupported && phet.chipper.queryParameters.webgl;
 
     if ( webGLSupported ) {
 
