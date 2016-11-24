@@ -16,6 +16,8 @@ define( function( require ) {
   var NeuronScreenView = require( 'NEURON/neuron/view/NeuronScreenView' );
   var NeuronClockModelAdapter = require( 'NEURON/neuron/model/NeuronClockModelAdapter' );
   var Screen = require( 'JOIST/Screen' );
+  var Property = require( 'AXON/Property' );
+  var Color = require( 'SCENERY/util/Color' );
 
   /**
    * Creates the model and view for the NeuronScreen
@@ -26,7 +28,7 @@ define( function( require ) {
     Screen.call( this,
       function() { return new NeuronClockModelAdapter( new NeuronModel() ); }, // clock model adapter provides constant ticks to model
       function( model ) { return new NeuronScreenView( model ); },
-      { backgroundColor: '#ccfefa' }
+      { backgroundColorProperty: new Property( Color.toColor( '#ccfefa' ) ) }
     );
   }
 
