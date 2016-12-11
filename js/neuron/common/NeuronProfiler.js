@@ -43,7 +43,7 @@ define( function( require ) {
       }
     } );
 
-    sim.on( 'frameCompleted', function() {
+    sim.frameEndedEmitter.addListener( function() {
       if ( self.dataCollectionInProgress && self.frameStartedTimes.length !== 0 ) {
         var currentTime = new Date().getTime();
         self.frameEndedTimes[ self.frameCount ] = currentTime;
