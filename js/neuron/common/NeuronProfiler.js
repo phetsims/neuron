@@ -37,7 +37,7 @@ define( function( require ) {
     this.frameEndedTimes = []; // @private, in milliseconds
     this.frameProcessingTimes = []; // @private, time between frame started and frame completed events in milliseconds
 
-    sim.on( 'frameStarted', function() {
+    sim.frameStartedEmitter.addListener( function() {
       if ( self.dataCollectionInProgress ) {
         self.frameStartedTimes[ self.frameCount ] = new Date().getTime();
       }
@@ -59,9 +59,9 @@ define( function( require ) {
           var testDurationInSeconds = self.dataCollectionDuration / 1000;
           var maxFrameProcessingTime = 0;
           var totalFrameProcessingTime = 0;
-          for( var i = 0; i < self.frameCount; i++ ){
+          for ( var i = 0; i < self.frameCount; i++ ) {
             totalFrameProcessingTime += self.frameProcessingTimes[ i ];
-            if ( self.frameProcessingTimes[ i ] > maxFrameProcessingTime ){
+            if ( self.frameProcessingTimes[ i ] > maxFrameProcessingTime ) {
               maxFrameProcessingTime = self.frameProcessingTimes[ i ];
             }
           }
@@ -75,11 +75,11 @@ define( function( require ) {
             'max frame processing time = ' + Util.toFixed( maxFrameProcessingTime, 2 ) + ' ms\n';
 
           // display the message
-          if ( platform.mobileSafari ){
+          if ( platform.mobileSafari ) {
             // pop up the message in an alert dialog, since the console is not available
             alert( message );
           }
-          else{
+          else {
             console.log( '------------ Profiling Result ------------------' );
             console.log( message );
           }
@@ -99,7 +99,7 @@ define( function( require ) {
      * @public
      */
     startDataAnalysis: function( duration ) {
-      if ( this.dataCollectionInProgress ){
+      if ( this.dataCollectionInProgress ) {
         throw new Error( 'Attempt to start data collection when already in progress.' );
       }
       this.frameCount = 0;
