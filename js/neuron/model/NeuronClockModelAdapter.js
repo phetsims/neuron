@@ -9,7 +9,7 @@
  * present in this sim because the sim was ported from a Java version.  Use of this technique is not recommended for
  * new HTML5/JavaScript simulations.
  *
- * @author Chris Malley (cmalley@pixelzoom.com)
+ * @author Chris Malley (PixelZoom, Inc.)
  * @author Sharfudeen Ashraf (for Ghent University)
  * @author John Blanco
  */
