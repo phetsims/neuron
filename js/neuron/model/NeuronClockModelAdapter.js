@@ -136,7 +136,8 @@ define( function( require ) {
      * @public
      */
     stepClockWhilePaused: function() {
-      _.times( TICKS_PER_SINGLE_STEP, function() { this.tick( NOMINAL_TICK_TIME ); }, this );
+      var self = this;
+      _.times( TICKS_PER_SINGLE_STEP, function() { self.tick( NOMINAL_TICK_TIME ); });
     },
 
     /**
@@ -144,7 +145,8 @@ define( function( require ) {
      * @public
      */
     stepClockBackWhilePaused: function() {
-      _.times( TICKS_PER_SINGLE_STEP, function() { this.tick( -NOMINAL_TICK_TIME ); }, this );
+      var self = this;
+      _.times( TICKS_PER_SINGLE_STEP, function() { self.tick( -NOMINAL_TICK_TIME ); });
     }
 
   } );

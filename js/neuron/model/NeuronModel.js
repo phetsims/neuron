@@ -436,7 +436,7 @@ define( function( require ) {
       this.particlesMoved.emit();
 
       // If any one channel's state is changed, trigger a channel representation changed event
-      if ( _.any( this.membraneChannels.getArray(), 'channelStateChanged' ) ) {
+      if ( _.some( this.membraneChannels.getArray(), 'channelStateChanged' ) ) {
         this.channelRepresentationChanged.emit();
       }
 
@@ -1121,7 +1121,7 @@ define( function( require ) {
       this.concentrationChanged = true;
 
       // If any one channel's state is changed, emit a channel representation changed event
-      if ( _.any( this.membraneChannels.getArray(), 'channelStateChanged' ) ) {
+      if ( _.some( this.membraneChannels.getArray(), 'channelStateChanged' ) ) {
         this.channelRepresentationChanged.emit();
       }
     }
