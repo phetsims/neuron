@@ -1,5 +1,5 @@
 {
-  "comment": "# neuron 1.1.1 Wed Apr 05 2017 22:55:54 GMT-0600 (MDT)",
+  "comment": "# neuron 1.1.2-rc.1 Thu Apr 06 2017 01:47:53 GMT-0600 (MDT)",
   "assert": {
     "sha": "7d27130a4d27da15aa7f8a21bbfb9245288c1b44",
     "branch": "HEAD"
@@ -33,7 +33,7 @@
     "branch": "HEAD"
   },
   "neuron": {
-    "sha": "464d833051e035dc19c9c35d2e843641580cdb88",
+    "sha": "f7661d125b7444a2fb64bf2d2d041413f258e5ce",
     "branch": "1.1"
   },
   "phet-core": {
@@ -50,7 +50,7 @@
   },
   "scenery": {
     "sha": "182dae833f6708dcce1f50d7f2bcf9c1586d2b7a",
-    "branch": "neuron-1.1"
+    "branch": "HEAD"
   },
   "scenery-phet": {
     "sha": "f0fc9ae838b8744281b76d3f576271b82ce33a8a",
