@@ -631,7 +631,7 @@ define( function( require ) {
      * a particle is or may soon be needed to travel through a membrane channel.
      * @param {ParticleType.string} particleType
      * @param {CaptureZone} captureZone
-     * @return {Particle}
+     * @returns {Particle}
      * @private
      */
     createTransientParticle: function( particleType, captureZone ) {
@@ -737,7 +737,7 @@ define( function( require ) {
      * Returns a boolean values indicating whether or not an action potential is in progress.  For the purposes of this
      * sim, this means whether there is an AP traveling down the membrane or if the flow of ions through the channels at
      * the transverse cross section is enough to be considered part of an AP.
-     * @return {boolean}
+     * @returns {boolean}
      * @public
      */
     isActionPotentialInProgress: function() {
@@ -772,7 +772,7 @@ define( function( require ) {
      * Scan the supplied capture zone for particles of the specified type.
      * @param {CaptureZone} zone
      * @param {ParticleType.string} particleType
-     * @return {number}
+     * @returns {number}
      * @private
      */
     scanCaptureZoneForFreeParticles: function( zone, particleType ) {
@@ -868,7 +868,7 @@ define( function( require ) {
     /**
      * Get the state of this model.  This is generally used in support of the record-and-playback feature, and the
      * return value contains just enough state information to support this feature.
-     * @return {NeuronModelState}
+     * @returns {NeuronModelState}
      * @public
      */
     getState: function() {
@@ -938,7 +938,7 @@ define( function( require ) {
     /**
      * Create a particle of the specified type and add it to the model.
      * @param {ParticleType.string} particleType
-     * @return {Particle}
+     * @returns {Particle}
      * @private
      */
     createBackgroundParticle: function( particleType ) {
@@ -984,7 +984,7 @@ define( function( require ) {
      * Get a boolean value that indicates whether the initiation of a new stimulus (i.e. action potential) is currently
      * locked out.  This is done to prevent the situation where multiple action potentials are moving down the membrane
      * at the same time.
-     * @return {boolean}
+     * @returns {boolean}
      * @public
      */
     isStimulusInitiationLockedOut: function() {

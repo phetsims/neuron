@@ -197,7 +197,7 @@ define( function( require ) {
      * @param {MembraneChannel} channel
      * @param {number} startingLocationX
      * @param {number} startingLocationY
-     * @return {Array.<Vector2>}
+     * @returns {Array.<Vector2>}
      * @private
      */
     createTraversalPoints: function( channel, startingLocationX, startingLocationY ) {

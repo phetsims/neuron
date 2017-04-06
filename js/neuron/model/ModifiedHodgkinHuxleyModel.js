@@ -188,7 +188,7 @@ define( function( require ) {
      * conductance.
      *
      * @param {number} delayAmount - time delay in seconds
-     * @return {number}
+     * @returns {number}
      * @public
      */
     get_delayed_n4: function( delayAmount ) {
@@ -210,7 +210,7 @@ define( function( require ) {
      * that governs the sodium channel conductance.
      *
      * @param {number} delayAmount - time delay in seconds
-     * @return {number}
+     * @returns {number}
      * @public
      */
     get_delayed_m3h: function( delayAmount ) {
