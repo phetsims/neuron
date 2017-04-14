@@ -1,5 +1,5 @@
 {
-  "comment": "# neuron 1.1.2 Thu Apr 13 2017 18:59:43 GMT-0600 (MDT)",
+  "comment": "# neuron 1.1.2 Thu Apr 13 2017 20:43:20 GMT-0600 (MDT)",
   "assert": {
     "sha": "7d27130a4d27da15aa7f8a21bbfb9245288c1b44",
     "branch": "HEAD"
@@ -26,14 +26,14 @@
   },
   "joist": {
     "sha": "636a00e51f92a1ecbf0373609e117438e616a3c5",
-    "branch": "neuron-1.1"
+    "branch": "HEAD"
   },
   "kite": {
     "sha": "733028991124bcea81c36b315f00e18453ba3d7b",
     "branch": "HEAD"
   },
   "neuron": {
-    "sha": "e8d667f351864ed7c0a519d87eefed955f8280c3",
+    "sha": "3beec9e4b9211a20f116e8e50934a5120476b480",
     "branch": "1.1"
   },
   "phet-core": {
@@ -41,8 +41,8 @@
     "branch": "HEAD"
   },
   "phetcommon": {
-    "sha": "e9e5028b62601e8b95abd09ff0cbcee82d67ec82",
-    "branch": "HEAD"
+    "sha": "7bad0484926661b7702899415cf7256c0a4515ab",
+    "branch": "neuron-1.1"
   },
   "query-string-machine": {
     "sha": "05231e54a60c79502166d7bba26301fe8b668772",
