@@ -87,7 +87,7 @@ define( function( require ) {
     }
 
     axonModel.membranePotentialProperty.link( function() {
-      if ( axonModel.chargesShown ) {
+      if ( axonModel.chargesShownProperty.get() ) {
         updateRepresentation();
       }
     } );

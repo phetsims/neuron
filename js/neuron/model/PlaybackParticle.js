@@ -27,7 +27,6 @@ define( function( require ) {
   function PlaybackParticle( particle ) {
     particle = particle || new PotassiumIon();// Construct as potassium by default.  This choice is arbitrary.
 
-    // ViewableParticle is a PropertySet
     ViewableParticle.call( this, {
       appearanceChanged: false
     } );

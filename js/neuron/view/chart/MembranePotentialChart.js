@@ -398,7 +398,7 @@ define( function( require ) {
      * @public
      */
     setPlaying: function( playing ) {
-      this.clock.playing = playing;
+      this.clock.playingProperty.set( playing );
     }
   } );
 } );

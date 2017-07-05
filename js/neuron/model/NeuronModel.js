@@ -24,6 +24,7 @@ define( function( require ) {
   var ParticleFactory = require( 'NEURON/neuron/model/ParticleFactory' );
   var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
   var PlaybackParticle = require( 'NEURON/neuron/model/PlaybackParticle' );
+  var Property = require( 'AXON/Property' );
   var MembraneChannelFactory = require( 'NEURON/neuron/model/MembraneChannelFactory' );
   var SodiumDualGatedChannel = require( 'NEURON/neuron/model/SodiumDualGatedChannel' );
   var SlowBrownianMotionStrategy = require( 'NEURON/neuron/model/SlowBrownianMotionStrategy' );
@@ -127,25 +128,23 @@ define( function( require ) {
     this.potassiumInteriorConcentration = NOMINAL_POTASSIUM_INTERIOR_CONCENTRATION;
     this.potassiumExteriorConcentration = NOMINAL_POTASSIUM_EXTERIOR_CONCENTRATION;
 
-    RecordAndPlaybackModel.call( this, maxRecordPoints, {
+    RecordAndPlaybackModel.call( this, maxRecordPoints );
 
-      potentialChartVisible: DEFAULT_FOR_MEMBRANE_CHART_VISIBILITY, // @public
+    // @public
+    this.potentialChartVisibleProperty = new Property( DEFAULT_FOR_MEMBRANE_CHART_VISIBILITY ); // @public
+    this.chargesShownProperty = new Property( DEFAULT_FOR_CHARGES_SHOWN ); // @public
+    this.concentrationReadoutVisibleProperty = new Property( DEFAULT_FOR_CONCENTRATION_READOUT_SHOWN );
+    this.membranePotentialProperty = new Property( 0 );
+    this.stimulusLockoutProperty = new Property( false );
+    this.allIonsSimulatedProperty = new Property( DEFAULT_FOR_SHOW_ALL_IONS ); // controls whether all ions, or just those near membrane, are simulated
+    this.playbackParticlesVisibleProperty = new Property( false );
+    this.concentrationChangedProperty = new Property( false );
+    this.stimulusPulseInitiatedProperty = new Property( false );
+    this.neuronModelPlaybackStateProperty = new Property( null );
 
-      // @public
-      chargesShown: DEFAULT_FOR_CHARGES_SHOWN, // @public
-      concentrationReadoutVisible: DEFAULT_FOR_CONCENTRATION_READOUT_SHOWN,
-      membranePotential: 0,
-      stimulusLockout: false,
-      allIonsSimulated: DEFAULT_FOR_SHOW_ALL_IONS, // controls whether all ions, or just those near membrane, are simulated
-      playbackParticlesVisible: false,
-      concentrationChanged: false,
-      stimulusPulseInitiated: false,
-      neuronModelPlaybackState: null,
-
-      // @public, part of a workaround for an issue with refreshing canvases when nothing is drawn, see
-      // https://github.com/phetsims/neuron/issues/100 and https://github.com/phetsims/scenery/issues/503
-      atLeastOneParticlePresent: false
-    } );
+    // @public, part of a workaround for an issue with refreshing canvases when nothing is drawn, see
+    // https://github.com/phetsims/neuron/issues/100 and https://github.com/phetsims/scenery/issues/503
+    this.atLeastOneParticlePresentProperty = new Property( false );
 
     // add a listener that will stimulate the HH model then the traveling action potential reaches the cross section
     this.axonMembrane.travelingActionPotentialReachedCrossSection.addListener( function() {
@@ -190,7 +189,7 @@ define( function( require ) {
     // intended to be such that the potassium and sodium gated channels are right next to each other, with occasional
     // leak channels interspersed.  There should be one or more of each type of channel on the top of the membrane so
     // when the user zooms in, they can see all types.
-    ( function() {
+    (function() {
       var angle = Math.PI * 0.45;
       var totalNumChannels = NUM_GATED_SODIUM_CHANNELS + NUM_GATED_POTASSIUM_CHANNELS + NUM_SODIUM_LEAK_CHANNELS +
                              NUM_POTASSIUM_LEAK_CHANNELS;
@@ -260,7 +259,7 @@ define( function( require ) {
         self.addChannel( channelTypeToAdd, angle );
         angle += angleIncrement;
       }
-    } )();
+    })();
 
     // Note: It is expected that the model will be reset once it has been created, and this will set the initial state,
     // including adding the particles to the model.
@@ -324,8 +323,8 @@ define( function( require ) {
 
       // There is a bit of a threshold on sending out notifications of membrane voltage changes, since otherwise the
       // natural "noise" in the model causes notifications to be sent out continuously.
-      if ( Math.abs( this.membranePotential - this.hodgkinHuxleyModel.getMembraneVoltage() ) > MEMBRANE_POTENTIAL_CHANGE_THRESHOLD ) {
-        this.membranePotential = this.hodgkinHuxleyModel.getMembraneVoltage();
+      if ( Math.abs( this.membranePotentialProperty.get() - this.hodgkinHuxleyModel.getMembraneVoltage() ) > MEMBRANE_POTENTIAL_CHANGE_THRESHOLD ) {
+        this.membranePotentialProperty.set( this.hodgkinHuxleyModel.getMembraneVoltage() );
       }
 
       // Update the stimulus lockout state.
@@ -351,7 +350,7 @@ define( function( require ) {
 
       // Adjust the overall potassium and sodium concentration levels based parameters of the HH model.  This is done
       // solely to provide values that can be displayed to the user, and are not used for anything else in the model.
-      var concentrationChanged = this.concentrationChanged = false;
+      var concentrationChanged = this.concentrationChangedProperty.set( false );
       var difference;
       var potassiumConductance = this.hodgkinHuxleyModel.get_delayed_n4( CONCENTRATION_READOUT_DELAY );
       if ( potassiumConductance !== 0 ) {
@@ -424,7 +423,7 @@ define( function( require ) {
         }
       }
       if ( concentrationChanged ) {
-        this.concentrationChanged = true;
+        this.concentrationChangedProperty.set( true );
       }
 
       // Update the flag that indicates whether these is at least one particle present in the model.
@@ -480,7 +479,7 @@ define( function( require ) {
       this.channelRepresentationChanged.emit();
 
       // Reset the concentration readout values.
-      var concentrationChanged = this.concentrationChanged = false;
+      var concentrationChanged = this.concentrationChangedProperty.set( false );
       if ( this.sodiumExteriorConcentration !== NOMINAL_SODIUM_EXTERIOR_CONCENTRATION ) {
         this.sodiumExteriorConcentration = NOMINAL_SODIUM_EXTERIOR_CONCENTRATION;
         concentrationChanged = true;
@@ -498,7 +497,7 @@ define( function( require ) {
         concentrationChanged = true;
       }
       if ( concentrationChanged ) {
-        this.concentrationChanged = true; // Trigger concentrationReadout change
+        this.concentrationChangedProperty.set( true ); // Trigger concentrationReadout change
       }
 
       // Reset the stimulation lockout.
@@ -577,7 +576,7 @@ define( function( require ) {
      * @public
      */
     isAllIonsSimulated: function() {
-      return this.allIonsSimulated;
+      return this.allIonsSimulatedProperty.get();
     },
 
     /**
@@ -587,7 +586,7 @@ define( function( require ) {
      * @public
      */
     setAllIonsSimulated: function( allIonsSimulated ) {
-      this.allIonsSimulated = allIonsSimulated;
+      this.allIonsSimulatedProperty.set( allIonsSimulated );
     },
 
     /**
@@ -698,7 +697,7 @@ define( function( require ) {
     // @public
     initiateStimulusPulse: function() {
       if ( !this.isStimulusInitiationLockedOut() ) {
-        this.stimulusPulseInitiated = true;
+        this.stimulusPulseInitiatedProperty.set( true );
         this.axonMembrane.initiateTravelingActionPotential();
         this.updateStimulusLockoutState();
         if ( window.phet.neuron.profiler && window.phet.neuron.profiler.setting === 2 ) {
@@ -802,7 +801,7 @@ define( function( require ) {
 
     // @private
     updateStimulusLockoutState: function() {
-      if ( this.stimulusLockout ) {
+      if ( this.stimulusLockoutProperty ) {
         // Currently locked out, see if that should change.
         if ( !this.isPlayback() && !this.isActionPotentialInProgress() ) {
           this.setStimulusLockout( false );
@@ -828,7 +827,7 @@ define( function( require ) {
 
         // In either of these modes, the simulation particles (as opposed to the playback particles) should be visible.
         // Make sure that this is the case.
-        if ( this.playbackParticlesVisible ) {
+        if ( this.playbackParticlesVisibleProperty.get() ) {
 
           // Hide the playback particles.  This is done by removing them from the model.
           this.playbackParticles.clear();
@@ -838,13 +837,13 @@ define( function( require ) {
           this.transientParticlesBackup.clear();
 
           // Update the state variable.
-          this.playbackParticlesVisible = false;
+          this.playbackParticlesVisibleProperty.set( false );
         }
       }
       else if ( this.isPlayback() ) {
         // The playback particles should be showing and the simulation particles should be hidden.  Make sure that this
         // is the case.
-        if ( !this.playbackParticlesVisible ) {
+        if ( !this.playbackParticlesVisibleProperty.get() ) {
           // Hide the simulation particles.  This is done by making a backup copy of them (so that they can be added
           // back later) and then removing them from the model.
           this.transientParticlesBackup.addAll( this.transientParticles.getArray().slice() );
@@ -853,7 +852,7 @@ define( function( require ) {
           // Note that we don't explicitly add the playback particles
           // here.  That is taken care of when the playback state is
           // set.  Here we only set the flag.
-          this.playbackParticlesVisible = true;
+          this.playbackParticlesVisibleProperty.set( true );
         }
 
         // Trigger the event that lets the view know that the particles should be redrawn.
@@ -889,7 +888,7 @@ define( function( require ) {
      */
     getSodiumInteriorConcentration: function() {
       if ( this.isPlayback() ) {
-        return this.neuronModelPlaybackState.getSodiumInteriorConcentration();
+        return this.neuronModelPlaybackStateProperty.getSodiumInteriorConcentration();
       }
       else {
         return this.sodiumInteriorConcentration;
@@ -902,7 +901,7 @@ define( function( require ) {
      */
     getSodiumExteriorConcentration: function() {
       if ( this.isPlayback() ) {
-        return this.neuronModelPlaybackState.getSodiumExteriorConcentration();
+        return this.neuronModelPlaybackStateProperty.getSodiumExteriorConcentration();
       }
       else {
         return this.sodiumExteriorConcentration;
@@ -915,7 +914,7 @@ define( function( require ) {
      */
     getPotassiumInteriorConcentration: function() {
       if ( this.isPlayback() ) {
-        return this.neuronModelPlaybackState.getPotassiumInteriorConcentration();
+        return this.neuronModelPlaybackStateProperty.getPotassiumInteriorConcentration();
       }
       else {
         return this.potassiumInteriorConcentration;
@@ -928,7 +927,7 @@ define( function( require ) {
      */
     getPotassiumExteriorConcentration: function() {
       if ( this.isPlayback() ) {
-        return this.neuronModelPlaybackState.getPotassiumExteriorConcentration();
+        return this.neuronModelPlaybackStateProperty.getPotassiumExteriorConcentration();
       }
       else {
         return this.potassiumExteriorConcentration;
@@ -988,7 +987,7 @@ define( function( require ) {
      * @public
      */
     isStimulusInitiationLockedOut: function() {
-      return this.stimulusLockout;
+      return this.stimulusLockoutProperty.get();
     },
 
     /**
@@ -1020,7 +1019,7 @@ define( function( require ) {
      * @public
      */
     isChargesShown: function() {
-      return this.chargesShown;
+      return this.chargesShownProperty.get();
     },
 
     /**
@@ -1046,7 +1045,7 @@ define( function( require ) {
     setStimulusLockout: function( lockout ) {
       this.stimulusLockoutProperty.set( lockout );
       if ( !lockout ) {
-        this.stimulusPulseInitiated = false;
+        this.stimulusPulseInitiatedProperty.set( false );
       }
     },
 
@@ -1056,7 +1055,7 @@ define( function( require ) {
      */
     getMembranePotential: function() {
       if ( this.isPlayback() ) {
-        return this.neuronModelPlaybackState.getMembranePotential();
+        return this.neuronModelPlaybackStateProperty.get().getMembranePotential();
       }
       else {
         return this.hodgkinHuxleyModel.getMembraneVoltage();
@@ -1070,7 +1069,7 @@ define( function( require ) {
      * @public
      */
     setPlaybackState: function( state ) {
-      this.concentrationChanged = false;
+      this.concentrationChangedProperty.set( false );
 
       // Set the membrane channel state.
       this.axonMembrane.setState( state.getAxonMembraneState() );
@@ -1114,11 +1113,11 @@ define( function( require ) {
         playbackParticleIndex++;
       } );
 
-      this.neuronModelPlaybackState = state;
-      this.membranePotential = state.getMembranePotential();
+      this.neuronModelPlaybackStateProperty.set( state );
+      this.membranePotentialProperty.set( state.getMembranePotential() );
 
       // For the sake of simplicity, always send out notifications for the concentration changes.
-      this.concentrationChanged = true;
+      this.concentrationChangedProperty.set( true );
 
       // If any one channel's state is changed, emit a channel representation changed event
       if ( _.some( this.membraneChannels.getArray(), 'channelStateChanged' ) ) {

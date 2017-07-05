@@ -19,7 +19,7 @@ define( function( require ) {
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
   var neuron = require( 'NEURON/neuron' );
-  var PropertySet = require( 'AXON/PropertySet' );
+  var Property = require( 'AXON/Property' );
 
   // the following constants could easily be turned into options if there was a need to reuse and thus generalize
   // this class.
@@ -42,12 +42,10 @@ define( function( require ) {
 
     this.model = model;
 
-    PropertySet.call( this, {
-        // @public
-        playing: true, // linked to playPause button
-        speed: 1 // factor controlling simulation clock speed
-      }
-    );
+    Object.call( this );
+
+    this.playingProperty = new Property( true ); // linked to playPause button
+    this.speedProperty = new Property( 1 ); // factor controlling simulation clock speed
 
     this.stepCallbacks = [];
     this.resetCallBacks = [];
@@ -56,7 +54,7 @@ define( function( require ) {
 
   neuron.register( 'NeuronClockModelAdapter', NeuronClockModelAdapter );
 
-  return inherit( PropertySet, NeuronClockModelAdapter, {
+  return inherit( Object, NeuronClockModelAdapter, {
 
     // @public
     step: function( dt ) {
@@ -66,10 +64,10 @@ define( function( require ) {
         return;
       }
 
-      if ( this.playing ) {
+      if ( this.playingProperty.get() ) {
 
         // 'tick' the simulation, adjusting for dt values that are higher than the sim model can handle
-        var simTickTime = dt * TIME_ADJUSTMENT_FACTOR * this.speed;
+        var simTickTime = dt * TIME_ADJUSTMENT_FACTOR * this.speedProperty.get();
         var numTicks = 1;
         if ( simTickTime > MAX_SIM_TICK_TIME ){
 
@@ -90,10 +88,11 @@ define( function( require ) {
 
     // @public
     reset: function() {
+      this.playingProperty.reset();
+      this.speedProperty.reset();
       this.lastSimulationTime = 0.0;
       this.simulationTime = 0.0;
-      this.speed = 1;
-      PropertySet.prototype.reset.call( this );
+      this.speedProperty.set( 1 );
 
       //fire reset event callback
       for ( var i = 0; i < this.resetCallBacks.length; i++ ) {

@@ -12,7 +12,7 @@ define( function( require ) {
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
   var neuron = require( 'NEURON/neuron' );
-  var PropertySet = require( 'AXON/PropertySet' );
+  var Property = require( 'AXON/Property' );
 
   /**
    * @constructor
@@ -21,7 +21,7 @@ define( function( require ) {
 
   neuron.register( 'Mode', Mode );
 
-  return inherit( PropertySet, Mode, {
+  return inherit( Object, Mode, {
 
     // @public
     step: function( simulationTimeChange ) {

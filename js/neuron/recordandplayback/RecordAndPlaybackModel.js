@@ -16,7 +16,7 @@ define( function( require ) {
 
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
-  var PropertySet = require( 'AXON/PropertySet' );
+  var Property = require( 'AXON/Property' );
   var Record = require( 'NEURON/neuron/recordandplayback/Record' );
   var Playback = require( 'NEURON/neuron/recordandplayback/Playback' );
   var Live = require( 'NEURON/neuron/recordandplayback/Live' );
@@ -25,19 +25,19 @@ define( function( require ) {
 
   /**
    * @param {number} maxRecordPoints
-   * @param {Object} properties
    * @constructor
    */
-  function RecordAndPlaybackModel( maxRecordPoints, properties ) {
-    properties = _.extend( properties, {
-      playing: true, // True if playing, false if paused
-      time: 0, // Current time of recording or playback
-      historyRemainderCleared: false,
-      historyCleared: false,
-      mode: null // The current operational mode, valid values are playback, record or live
-    } );
+  function RecordAndPlaybackModel( maxRecordPoints ) {
+
     var self = this;
-    PropertySet.call( this, properties );
+
+    this.playingProperty = new Property( true ); // True if playing, false if paused
+    this.timeProperty = new Property( 0 ); // Current time of recording or playback
+    this.historyRemainderClearedProperty = new Property( false );
+    this.historyClearedProperty = new Property( false );
+    this.modeProperty = new Property( null ); // The current operational mode, valid values are playback, record or live
+
+    Object.call( this );
 
     this.maxRecordPoints = maxRecordPoints;
 
@@ -57,7 +57,7 @@ define( function( require ) {
 
   neuron.register( 'RecordAndPlaybackModel', RecordAndPlaybackModel );
 
-  return inherit( PropertySet, RecordAndPlaybackModel, {
+  return inherit( Object, RecordAndPlaybackModel, {
 
     /**
      * Update the simulation model (should cause side effects to update the view), returning a snapshot of the state after the update.
@@ -75,7 +75,7 @@ define( function( require ) {
      * @param {number} dt
      */
     step: function( dt ) {
-      if ( this.playing ) {
+      if ( this.playingProperty.get() ) {
         this.stepMode( dt );
       }
     },
@@ -85,11 +85,11 @@ define( function( require ) {
      * @param {number} dt - the amount of time to step the current mode
      */
     stepMode: function( dt ) {
-      this.mode.step( dt );
+      this.modeProperty.get().step( dt );
     },
 
     isPlayback: function() {
-      return this.mode === this.playbackMode;
+      return this.modeProperty.get() === this.playbackMode;
     },
 
     updateRecordPlayBack: function() {
@@ -97,19 +97,19 @@ define( function( require ) {
     },
 
     isRecord: function() {
-      return this.mode === this.recordMode;
+      return this.modeProperty.get() === this.recordMode;
     },
 
     isLive: function() {
-      return this.mode === this.liveMode;
+      return this.modeProperty.get() === this.liveMode;
     },
 
     setPlaying: function( playing ) {
-      this.playing = playing;
+      this.playingProperty.set( playing );
     },
 
     isPlaying: function() {
-      return this.playing;
+      return this.playingProperty.get();
     },
 
     isRecordingFull: function() {
@@ -125,7 +125,7 @@ define( function( require ) {
     },
 
     getTime: function() {
-      return this.time;
+      return this.timeProperty.get();
     },
 
     getMaxRecordedTime: function() {
@@ -139,7 +139,7 @@ define( function( require ) {
     },
 
     setMode: function( mode ) {
-      this.mode = mode;
+      this.modeProperty.get( mode );
     },
 
     setModeLive: function() {
@@ -155,7 +155,7 @@ define( function( require ) {
     },
 
     setTime: function( t ) {
-      this.time = t;
+      this.timeProperty.set( t );
       var isPlayBackVal = this.isPlayback();
       var recordPtsLength = this.getNumRecordedPoints();
       if ( isPlayBackVal && ( recordPtsLength > 0) ) { // Only restore state if during playback and state has been recorded
@@ -184,7 +184,7 @@ define( function( require ) {
     clearHistory: function() {
       this.recordHistory.clear();
       this.setTime( 0.0 );// for some reason, time has to be reset to 0.0 here, or charts don't clear in motion-series on first press of clear button
-      this.historyCleared = !this.historyCleared;
+      this.historyClearedProperty.set( !this.historyClearedProperty.get() );
     },
 
     /**
@@ -204,7 +204,7 @@ define( function( require ) {
 
       sortedHistory.sort( function( o1, o2 ) {
         // Though inefficient, this hasn't caused noticeable slowdown during testing.
-        return compare( Math.abs( o1.getTime() - self.time ), Math.abs( o2.getTime() - self.time ) );
+        return compare( Math.abs( o1.getTime() - self.timeProperty.get() ), Math.abs( o2.getTime() - self.timeProperty.get() ) );
       } );
 
       function compare( d1, d2 ) {
@@ -258,33 +258,37 @@ define( function( require ) {
      * use setmode
      */
     setRecord: function( rec ) {
-      if ( rec && this.mode !== this.recordMode ) {
+      if ( rec && this.modeProperty.get() !== this.recordMode ) {
         this.clearHistoryRemainder();
         this.handleRecordStartedDuringPlayback();
-        this.mode = this.recordMode;
+        this.modeProperty.set( this.recordMode );
       }
-      else if ( !rec && this.mode !== this.playbackMode ) {
-        this.mode = this.playbackMode;
+      else if ( !rec && this.modeProperty.get() !== this.playbackMode ) {
+        this.modeProperty.set( this.playbackMode );
       }
     },
 
     clearHistoryRemainder: function() {
-      this.historyRemainderCleared = false;
+      this.historyRemainderClearedProperty.set( false );
       var keep = [];
       var self = this;
       this.recordHistory.forEach( function( dataPoint ) {
-        if ( dataPoint.getTime() < self.time ) {
+        if ( dataPoint.getTime() < self.timeProperty.get() ) {
           keep.push( dataPoint );
         }
       } );
 
       this.recordHistory.clear();
       this.recordHistory.addAll( keep.slice() );
-      this.historyRemainderCleared = true;
+      this.historyRemainderClearedProperty.set( true );
     },
 
     resetAll: function() {
-      PropertySet.prototype.reset.call( this );
+      this.playingProperty.reset();
+      this.timeProperty.reset();
+      this.historyRemainderClearedProperty.reset();
+      this.historyClearedProperty.reset();
+      this.modeProperty.reset();
       this.clearHistory();
       this.setTime( 0.0 );
       this.setRecord( true );

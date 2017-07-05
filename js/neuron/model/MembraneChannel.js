@@ -12,7 +12,7 @@ define( function( require ) {
 
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
-  var PropertySet = require( 'AXON/PropertySet' );
+  var Property = require( 'AXON/Property' );
   var Vector2 = require( 'DOT/Vector2' );
   var Dimension2 = require( 'DOT/Dimension2' );
   var NullCaptureZone = require( 'NEURON/neuron/model/NullCaptureZone' );
@@ -34,16 +34,15 @@ define( function( require ) {
    * @constructor
    */
   function MembraneChannel( channelWidth, channelHeight, modelContainingParticles ) {
-    PropertySet.call( this, {
+    Object.call( this );
 
-      // If the channel's Openness and ActivationAmt is different from its previous values, flag the channel's state as
-      // changed. The canvas implementation of the membrane channel node will repaint if any one of the channel's state
-      // is found to be have been changed.
-      channelStateChanged: false, // @public
+    // If the channel's Openness and ActivationAmt is different from its previous values, flag the channel's state as
+    // changed. The canvas implementation of the membrane channel node will repaint if any one of the channel's state
+    // is found to be have been changed.
+    this.channelStateChangedProperty = new Property( false );// @public
 
-      // All the channel states are updated at once at the end stepInTime. This was done for performance reasons.
-      representationChanged: false // @public
-    } );
+    // All the channel states are updated at once at the end stepInTime. This was done for performance reasons.
+    this.representationChangedProperty = new Property( false );// @public
 
     // position of the channel
     this.centerLocation = new Vector2(); // @public
@@ -88,7 +87,7 @@ define( function( require ) {
 
   neuron.register( 'MembraneChannel', MembraneChannel );
 
-  return inherit( PropertySet, MembraneChannel, {
+  return inherit( Object, MembraneChannel, {
 
     /**
      * Implements the time-dependent behavior of the channel.
@@ -370,7 +369,7 @@ define( function( require ) {
      * @public
      */
     notifyIfMembraneStateChanged: function( prevOpenness, prevInActivationAmt ) {
-      this.channelStateChanged = prevOpenness !== this.openness || prevInActivationAmt !== this.inactivationAmount;
+      this.channelStateChangedProperty.set( prevOpenness !== this.openness || prevInActivationAmt !== this.inactivationAmount );
     },
 
     // @public

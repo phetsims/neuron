@@ -62,7 +62,7 @@ define( function( require ) {
       start: function( e ) {
         pressPoint = e.currentTarget.globalToParentPoint( e.pointer.point );
         pressTime = membranePotentialChart.chartMvt.viewToModelPosition( new Vector2( self.x, self.y ) ).x;
-        membranePotentialChart.playingWhenDragStarted = membranePotentialChart.clock.playing;
+        membranePotentialChart.playingWhenDragStarted = membranePotentialChart.clock.playingProperty.get();
         if ( membranePotentialChart.playingWhenDragStarted ) {
           // The user must be trying to grab the cursor while the sim is running or while recorded content is being
           // played back.  Pause the clock.

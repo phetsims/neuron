@@ -32,7 +32,7 @@ define( function( require ) {
 
       if ( simulationTimeChange > 0 ) {
         if ( this.recordAndPlaybackModel.getTime() < this.recordAndPlaybackModel.getMaxRecordedTime() ) {
-          this.recordAndPlaybackModel.setTime( this.recordAndPlaybackModel.time + simulationTimeChange );
+          this.recordAndPlaybackModel.setTime( this.recordAndPlaybackModel.timeProperty.get() + simulationTimeChange );
         }
         else {
           if ( BehaviourModeType.recordAtEndOfPlayback ) {
@@ -45,7 +45,7 @@ define( function( require ) {
       }
       else if ( simulationTimeChange < 0 ) {
         if ( this.recordAndPlaybackModel.getTime() > this.recordAndPlaybackModel.getMinRecordedTime() ) {
-          this.recordAndPlaybackModel.setTime( this.recordAndPlaybackModel.time + simulationTimeChange );
+          this.recordAndPlaybackModel.setTime( this.recordAndPlaybackModel.timeProperty.get() + simulationTimeChange );
         }
       }
     },
