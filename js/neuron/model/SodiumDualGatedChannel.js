@@ -112,12 +112,12 @@ define( function( require ) {
           break;
 
         case GateState.OPENING:
+          // We are on the way down, so set a new state.
           if ( this.isOpen() && this.getCaptureCountdownTimer() === Number.POSITIVE_INFINITY ) {
             // We are open enough to start capturing particles.
             this.restartCaptureCountdownTimer( true );
           }
           if ( this.previousNormalizedConductance > normalizedConductance ) {
-            // We are on the way down, so set a new state.
             this.gateState = GateState.BECOMING_INACTIVE;
             // Should be fully open at this point.
             this.setOpenness( 1 );
@@ -141,6 +141,7 @@ define( function( require ) {
             this.setInactivationAmount( 1 );
             this.gateState = GateState.INACTIVATED;
             this.stateTransitionTimer = INACTIVE_TO_RESETTING_TIME;
+
           }
           break;
 

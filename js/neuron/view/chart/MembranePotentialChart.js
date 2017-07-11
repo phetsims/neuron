@@ -164,7 +164,7 @@ define( function( require ) {
     var closeButton = new CloseButton( {
       iconLength: 6,
       listener: function() {
-        self.neuronModel.potentialChartVisible = false;
+        self.neuronModel.potentialChartVisibleProperty.set( false );
       }
     } );
 

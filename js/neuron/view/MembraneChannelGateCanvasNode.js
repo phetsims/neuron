@@ -198,6 +198,7 @@ define( function( require ) {
         channelSize.width = membraneChannelModel.getChannelSize().width * membraneChannelModel.getOpenness();
         channelSize.height = membraneChannelModel.getChannelSize().height;
 
+
         transformedChannelSize.width = Math.abs( self.mvt.modelToViewDeltaX( channelSize.width ) );
         transformedChannelSize.height = Math.abs( self.mvt.modelToViewDeltaY( channelSize.height ) );
 

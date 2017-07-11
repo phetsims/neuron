@@ -37,8 +37,6 @@ define( function( require ) {
     this.historyClearedProperty = new Property( false );
     this.modeProperty = new Property( null ); // The current operational mode, valid values are playback, record or live
 
-    Object.call( this );
-
     this.maxRecordPoints = maxRecordPoints;
 
     // @private - the history of data points that have been recorded from the model.
@@ -139,7 +137,7 @@ define( function( require ) {
     },
 
     setMode: function( mode ) {
-      this.modeProperty.get( mode );
+      this.modeProperty.set( mode );
     },
 
     setModeLive: function() {

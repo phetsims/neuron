@@ -128,7 +128,6 @@ define( function( require ) {
     this.potassiumInteriorConcentration = NOMINAL_POTASSIUM_INTERIOR_CONCENTRATION;
     this.potassiumExteriorConcentration = NOMINAL_POTASSIUM_EXTERIOR_CONCENTRATION;
 
-    RecordAndPlaybackModel.call( this, maxRecordPoints );
 
     // @public
     this.potentialChartVisibleProperty = new Property( DEFAULT_FOR_MEMBRANE_CHART_VISIBILITY ); // @public
@@ -180,9 +179,9 @@ define( function( require ) {
       }
 
       // update the property that indicates whether there is at least one particle present
-      self.atLeastOneParticlePresent = ( self.backgroundParticles.length +
-                                         self.transientParticles.length +
-                                         self.playbackParticles.length ) > 0;
+      self.atLeastOneParticlePresentProperty.set( ( self.backgroundParticles.length +
+                                                    self.transientParticles.length +
+                                                    self.playbackParticles.length ) > 0 );
     } );
 
     // Use an immediately invoked function expression (IIFE) a function to add the initial channels.  The pattern is
@@ -261,9 +260,10 @@ define( function( require ) {
       }
     })();
 
+    RecordAndPlaybackModel.call( this, maxRecordPoints );
+
     // Note: It is expected that the model will be reset once it has been created, and this will set the initial state,
     // including adding the particles to the model.
-
     this.timeProperty.link( this.updateRecordPlayBack.bind( this ) );
     this.modeProperty.link( this.updateRecordPlayBack.bind( this ) );
 
@@ -427,15 +427,18 @@ define( function( require ) {
       }
 
       // Update the flag that indicates whether these is at least one particle present in the model.
-      this.atLeastOneParticlePresent = ( this.backgroundParticles.length +
-                                         this.transientParticles.length +
-                                         this.playbackParticles.length ) > 0;
+      this.atLeastOneParticlePresentProperty.set( ( this.backgroundParticles.length +
+                                                    this.transientParticles.length +
+                                                    this.playbackParticles.length ) > 0 );
 
       // Emit the event that lets the view know that the particles should be redrawn.
       this.particlesMoved.emit();
 
       // If any one channel's state is changed, trigger a channel representation changed event
-      if ( _.some( this.membraneChannels.getArray(), 'channelStateChanged' ) ) {
+      var channelStateChanged = function( membraneChannel ) {
+        return membraneChannel.channelStateChangedProperty.get();
+      };
+      if ( _.some( this.membraneChannels.getArray(), channelStateChanged ) ) {
         this.channelRepresentationChanged.emit();
       }
 
@@ -801,13 +804,14 @@ define( function( require ) {
 
     // @private
     updateStimulusLockoutState: function() {
-      if ( this.stimulusLockoutProperty ) {
+      if ( this.stimulusLockoutProperty.get() ) {
         // Currently locked out, see if that should change.
         if ( !this.isPlayback() && !this.isActionPotentialInProgress() ) {
           this.setStimulusLockout( false );
         }
       }
       else {
+        // Currently locked out, see if that should change.
         // Currently NOT locked out, see if that should change.
         var backwards = this.getTime() - this.getMaxRecordedTime() <= 0;
         if ( this.isActionPotentialInProgress() || (this.isPlayback() && backwards) ) {
@@ -888,7 +892,7 @@ define( function( require ) {
      */
     getSodiumInteriorConcentration: function() {
       if ( this.isPlayback() ) {
-        return this.neuronModelPlaybackStateProperty.getSodiumInteriorConcentration();
+        return this.neuronModelPlaybackStateProperty.get().getSodiumInteriorConcentration();
       }
       else {
         return this.sodiumInteriorConcentration;
@@ -901,7 +905,7 @@ define( function( require ) {
      */
     getSodiumExteriorConcentration: function() {
       if ( this.isPlayback() ) {
-        return this.neuronModelPlaybackStateProperty.getSodiumExteriorConcentration();
+        return this.neuronModelPlaybackStateProperty.get().getSodiumExteriorConcentration();
       }
       else {
         return this.sodiumExteriorConcentration;
@@ -914,7 +918,7 @@ define( function( require ) {
      */
     getPotassiumInteriorConcentration: function() {
       if ( this.isPlayback() ) {
-        return this.neuronModelPlaybackStateProperty.getPotassiumInteriorConcentration();
+        return this.neuronModelPlaybackStateProperty.get().getPotassiumInteriorConcentration();
       }
       else {
         return this.potassiumInteriorConcentration;
@@ -927,7 +931,7 @@ define( function( require ) {
      */
     getPotassiumExteriorConcentration: function() {
       if ( this.isPlayback() ) {
-        return this.neuronModelPlaybackStateProperty.getPotassiumExteriorConcentration();
+        return this.neuronModelPlaybackStateProperty.get().getPotassiumExteriorConcentration();
       }
       else {
         return this.potassiumExteriorConcentration;
@@ -1003,7 +1007,7 @@ define( function( require ) {
      * @public
      */
     isConcentrationReadoutVisible: function() {
-      return this.concentrationReadoutVisible;
+      return this.concentrationReadoutVisibleProperty.get();
     },
 
     /**
@@ -1035,7 +1039,7 @@ define( function( require ) {
      * @public
      */
     isPotentialChartVisible: function() {
-      return this.potentialChartVisible;
+      return this.potentialChartVisibleProperty.get();
     },
 
     /**
@@ -1120,7 +1124,10 @@ define( function( require ) {
       this.concentrationChangedProperty.set( true );
 
       // If any one channel's state is changed, emit a channel representation changed event
-      if ( _.some( this.membraneChannels.getArray(), 'channelStateChanged' ) ) {
+      var channelStateChanged = function( membraneChannel ) {
+        return membraneChannel.channelStateChangedProperty.get();
+      };
+      if ( _.some( this.membraneChannels.getArray(), channelStateChanged ) ) {
         this.channelRepresentationChanged.emit();
       }
     }
