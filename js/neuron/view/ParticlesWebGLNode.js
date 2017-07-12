@@ -260,10 +260,16 @@ define( function( require ) {
     // generate a mipmap for better handling of zoom in/out
     gl.generateMipmap( gl.TEXTURE_2D );
 
+    // context loss dialog, constructed lazily because Dialog requires sim bounds during construction
+    var dialog = null;
+
     this.contextLossListener = function( event ) {
       event.preventDefault();
 
-      new ContextLossFailureDialog().show();
+      if ( !dialog ) {
+        dialog = new ContextLossFailureDialog();
+      }
+      dialog.show();
 
       if ( document.domain === 'phet.colorado.edu' ) {
         window._gaq && window._gaq.push( [ '_trackEvent', 'WebGL Context Loss', 'neuron' + phet.joist.sim.version, document.URL ] );
