@@ -15,7 +15,6 @@ define( function( require ) {
   'use strict';
 
   // modules
-  var ContextLossFailureDialog = require( 'SCENERY_PHET/ContextLossFailureDialog' );
   var inherit = require( 'PHET_CORE/inherit' );
   var neuron = require( 'NEURON/neuron' );
   var NeuronParticlesTexture = require( 'NEURON/neuron/view/NeuronParticlesTexture' );
@@ -259,25 +258,6 @@ define( function( require ) {
 
     // generate a mipmap for better handling of zoom in/out
     gl.generateMipmap( gl.TEXTURE_2D );
-
-    // context loss dialog, constructed lazily because Dialog requires sim bounds during construction
-    var dialog = null;
-
-    this.contextLossListener = function( event ) {
-      event.preventDefault();
-
-      if ( !dialog ) {
-        dialog = new ContextLossFailureDialog();
-      }
-      dialog.show();
-
-      if ( document.domain === 'phet.colorado.edu' ) {
-        window._gaq && window._gaq.push( [ '_trackEvent', 'WebGL Context Loss', 'neuron' + phet.joist.sim.version, document.URL ] );
-      }
-    };
-
-    // set up a handler for context loss - this will just put up a dialog, better handling may exist eventually
-    gl.canvas.addEventListener( 'webglcontextlost', this.contextLossListener );
   }
 
   inherit( Object, ParticlesPainter, {
@@ -399,9 +379,6 @@ define( function( require ) {
       this.gl.deleteTexture( this.texture );
       this.gl.deleteBuffer( this.elementBuffer );
       this.shaderProgram = null;
-
-      // After we are disposed, we don't care about context loss
-      this.gl.canvas.removeEventListener( 'webglcontextlost', this.contextLossListener );
     }
   } );
 
