@@ -12,13 +12,13 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var neuron = require( 'NEURON/neuron' );
   var Node = require( 'SCENERY/nodes/Node' );
-  var Text = require( 'SCENERY/nodes/Text' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
   var PotassiumIon = require( 'NEURON/neuron/model/PotassiumIon' );
   var Property = require( 'AXON/Property' );
   var Rectangle = require( 'SCENERY/nodes/Rectangle' );
   var SodiumIon = require( 'NEURON/neuron/model/SodiumIon' );
   var StringUtils = require( 'PHETCOMMON/util/StringUtils' );
+  var Text = require( 'SCENERY/nodes/Text' );
   var Util = require( 'DOT/Util' );
 
   // strings

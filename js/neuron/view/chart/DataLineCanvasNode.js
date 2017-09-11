@@ -8,9 +8,9 @@ define( function( require ) {
   'use strict';
 
   // modules
-  var inherit = require( 'PHET_CORE/inherit' );
   var Bounds2 = require( 'DOT/Bounds2' );
   var CanvasNode = require( 'SCENERY/nodes/CanvasNode' );
+  var inherit = require( 'PHET_CORE/inherit' );
   var neuron = require( 'NEURON/neuron' );
 
   // constants

@@ -10,12 +10,12 @@ define( function( require ) {
   'use strict';
 
   // modules
-  var neuron = require( 'NEURON/neuron' );
   var MembraneChannelTypes = require( 'NEURON/neuron/model/MembraneChannelTypes' );
+  var neuron = require( 'NEURON/neuron' );
   var PotassiumGatedChannel = require( 'NEURON/neuron/model/PotassiumGatedChannel' );
-  var SodiumLeakageChannel = require( 'NEURON/neuron/model/SodiumLeakageChannel' );
   var PotassiumLeakageChannel = require( 'NEURON/neuron/model/PotassiumLeakageChannel' );
   var SodiumDualGatedChannel = require( 'NEURON/neuron/model/SodiumDualGatedChannel' );
+  var SodiumLeakageChannel = require( 'NEURON/neuron/model/SodiumLeakageChannel' );
 
   var MembraneChannelFactory = {
     /**

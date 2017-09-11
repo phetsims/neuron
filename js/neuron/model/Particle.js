@@ -16,13 +16,13 @@ define( function( require ) {
 
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
-  var ViewableParticle = require( 'NEURON/neuron/model/ViewableParticle' );
+  var MotionStrategy = require( 'NEURON/neuron/model/MotionStrategy' );
+  var neuron = require( 'NEURON/neuron' );
+  var NullFadeStrategy = require( 'NEURON/neuron/model/NullFadeStrategy' );
+  var ParticlePlaybackMemento = require( 'NEURON/neuron/model/ParticlePlaybackMemento' );
   var Property = require( 'AXON/Property' );
   var StillnessMotionStrategy = require( 'NEURON/neuron/model/StillnessMotionStrategy' );
-  var NullFadeStrategy = require( 'NEURON/neuron/model/NullFadeStrategy' );
-  var MotionStrategy = require( 'NEURON/neuron/model/MotionStrategy' );
-  var ParticlePlaybackMemento = require( 'NEURON/neuron/model/ParticlePlaybackMemento' );
-  var neuron = require( 'NEURON/neuron' );
+  var ViewableParticle = require( 'NEURON/neuron/model/ViewableParticle' );
 
   // constants
   var DEFAULT_PARTICLE_RADIUS = 0.75;  // In nanometers.

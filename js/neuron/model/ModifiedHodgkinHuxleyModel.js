@@ -15,10 +15,10 @@ define( function( require ) {
   'use strict';
 
   // modules
-  var inherit = require( 'PHET_CORE/inherit' );
   var DelayBuffer = require( 'NEURON/neuron/model/DelayBuffer' );
-  var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
+  var inherit = require( 'PHET_CORE/inherit' );
   var neuron = require( 'NEURON/neuron' );
+  var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
 
   /**
    * Amount of time used for each iteration of the model.  This is fixed, and when the model is stepped it breaks

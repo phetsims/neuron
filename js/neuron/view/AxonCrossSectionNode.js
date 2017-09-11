@@ -10,11 +10,11 @@ define( function( require ) {
   'use strict';
 
   // modules
+  var Color = require( 'SCENERY/util/Color' );
   var inherit = require( 'PHET_CORE/inherit' );
   var neuron = require( 'NEURON/neuron' );
   var Node = require( 'SCENERY/nodes/Node' );
   var Path = require( 'SCENERY/nodes/Path' );
-  var Color = require( 'SCENERY/util/Color' );
   var Shape = require( 'KITE/Shape' );
 
   // constants

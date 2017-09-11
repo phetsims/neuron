@@ -12,16 +12,16 @@ define( function( require ) {
   'use strict';
 
   // modules
-  var inherit = require( 'PHET_CORE/inherit' );
-  var Color = require( 'SCENERY/util/Color' );
-  var MathUtils = require( 'NEURON/neuron/common/MathUtils' );
   var AbstractLeakChannel = require( 'NEURON/neuron/model/AbstractLeakChannel' );
-  var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
-  var PieSliceShapedCaptureZone = require( 'NEURON/neuron/model/PieSliceShapedCaptureZone' );
-  var MembraneCrossingDirection = require( 'NEURON/neuron/model/MembraneCrossingDirection' );
-  var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
+  var Color = require( 'SCENERY/util/Color' );
+  var inherit = require( 'PHET_CORE/inherit' );
+  var MathUtils = require( 'NEURON/neuron/common/MathUtils' );
   var MembraneChannelTypes = require( 'NEURON/neuron/model/MembraneChannelTypes' );
+  var MembraneCrossingDirection = require( 'NEURON/neuron/model/MembraneCrossingDirection' );
   var neuron = require( 'NEURON/neuron' );
+  var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
+  var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
+  var PieSliceShapedCaptureZone = require( 'NEURON/neuron/model/PieSliceShapedCaptureZone' );
 
   // constants
   var CHANNEL_HEIGHT = NeuronConstants.MEMBRANE_THICKNESS * 1.2; // In nanometers.

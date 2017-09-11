@@ -14,8 +14,8 @@ define( function( require ) {
 
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
-  var neuron = require( 'NEURON/neuron' );
   var MotionStrategy = require( 'NEURON/neuron/model/MotionStrategy' );
+  var neuron = require( 'NEURON/neuron' );
 
   // constants
   var MAX_JUMP_DISTANCE = 1; // In nanometers.

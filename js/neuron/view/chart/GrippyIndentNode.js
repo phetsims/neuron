@@ -15,8 +15,8 @@ define( function( require ) {
   var Circle = require( 'SCENERY/nodes/Circle' );
   var Color = require( 'SCENERY/util/Color' );
   var inherit = require( 'PHET_CORE/inherit' );
-  var Node = require( 'SCENERY/nodes/Node' );
   var neuron = require( 'NEURON/neuron' );
+  var Node = require( 'SCENERY/nodes/Node' );
 
   // constants
   var STROKE_LINE_WIDTH = 0.5;

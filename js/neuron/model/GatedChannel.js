@@ -11,8 +11,8 @@ define( function( require ) {
 
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
-  var neuron = require( 'NEURON/neuron' );
   var MembraneChannel = require( 'NEURON/neuron/model/MembraneChannel' );
+  var neuron = require( 'NEURON/neuron' );
 
   /**
    * @param {number} channelWidth

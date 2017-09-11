@@ -11,13 +11,13 @@ define( function( require ) {
 
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
-  var Vector2 = require( 'DOT/Vector2' );
-  var MotionStrategy = require( 'NEURON/neuron/model/MotionStrategy' );
-  var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
-  var WanderAwayThenFadeMotionStrategy = require( 'NEURON/neuron/model/WanderAwayThenFadeMotionStrategy' );
-  var TimedFadeAwayStrategy = require( 'NEURON/neuron/model/TimedFadeAwayStrategy' );
   var MathUtils = require( 'NEURON/neuron/common/MathUtils' );
+  var MotionStrategy = require( 'NEURON/neuron/model/MotionStrategy' );
   var neuron = require( 'NEURON/neuron' );
+  var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
+  var TimedFadeAwayStrategy = require( 'NEURON/neuron/model/TimedFadeAwayStrategy' );
+  var Vector2 = require( 'DOT/Vector2' );
+  var WanderAwayThenFadeMotionStrategy = require( 'NEURON/neuron/model/WanderAwayThenFadeMotionStrategy' );
 
   /**
    * @param {MembraneChannel} channel

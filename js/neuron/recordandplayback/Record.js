@@ -12,8 +12,8 @@ define( function( require ) {
   // modules
   var DataPoint = require( 'NEURON/neuron/recordandplayback/DataPoint' );
   var inherit = require( 'PHET_CORE/inherit' );
-  var neuron = require( 'NEURON/neuron' );
   var Mode = require( 'NEURON/neuron/recordandplayback/Mode' );
+  var neuron = require( 'NEURON/neuron' );
 
   /**
    * @param {RecordAndPlaybackModel} recordAndPlaybackModel

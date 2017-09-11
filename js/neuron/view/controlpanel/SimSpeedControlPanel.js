@@ -14,8 +14,8 @@ define( function( require ) {
   var neuron = require( 'NEURON/neuron' );
   var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
   var Panel = require( 'SUN/Panel' );
-  var VerticalAquaRadioButtonGroup = require( 'SUN/VerticalAquaRadioButtonGroup' );
   var Text = require( 'SCENERY/nodes/Text' );
+  var VerticalAquaRadioButtonGroup = require( 'SUN/VerticalAquaRadioButtonGroup' );
 
   // strings - labels for speed radio buttons
   var fastForwardString = require( 'string!NEURON/fastForward' );

@@ -11,15 +11,15 @@ define( function( require ) {
   'use strict';
 
   // modules
+  var Color = require( 'SCENERY/util/Color' );
   var inherit = require( 'PHET_CORE/inherit' );
+  var Line = require( 'SCENERY/nodes/Line' );
+  var LinearGradient = require( 'SCENERY/util/LinearGradient' );
   var neuron = require( 'NEURON/neuron' );
   var Node = require( 'SCENERY/nodes/Node' );
   var Path = require( 'SCENERY/nodes/Path' );
-  var Line = require( 'SCENERY/nodes/Line' );
-  var Color = require( 'SCENERY/util/Color' );
-  var Vector2 = require( 'DOT/Vector2' );
-  var LinearGradient = require( 'SCENERY/util/LinearGradient' );
   var TravelingActionPotentialCanvasNode = require( 'NEURON/neuron/view/TravelingActionPotentialCanvasNode' );
+  var Vector2 = require( 'DOT/Vector2' );
 
   // constants
   var AXON_BODY_COLOR = new Color( 221, 216, 44 );

@@ -40,8 +40,8 @@ define( function( require ) {
   var XYDataSeries = require( 'GRIDDLE/XYDataSeries' );
 
   // strings
-  var chartTitleString = require( 'string!NEURON/chartTitle' );
   var chartClearString = require( 'string!NEURON/chartClear' );
+  var chartTitleString = require( 'string!NEURON/chartTitle' );
   var chartXAxisLabelString = require( 'string!NEURON/chartXAxisLabel' );
   var chartYAxisLabelString = require( 'string!NEURON/chartYAxisLabel' );
 

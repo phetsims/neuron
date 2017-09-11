@@ -12,11 +12,11 @@ define( function( require ) {
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
   var neuron = require( 'NEURON/neuron' );
+  var NeuronClockModelAdapter = require( 'NEURON/neuron/model/NeuronClockModelAdapter' );
   var NeuronModel = require( 'NEURON/neuron/model/NeuronModel' );
   var NeuronScreenView = require( 'NEURON/neuron/view/NeuronScreenView' );
-  var NeuronClockModelAdapter = require( 'NEURON/neuron/model/NeuronClockModelAdapter' );
-  var Screen = require( 'JOIST/Screen' );
   var Property = require( 'AXON/Property' );
+  var Screen = require( 'JOIST/Screen' );
 
   /**
    * Creates the model and view for the NeuronScreen

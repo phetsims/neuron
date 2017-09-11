@@ -16,12 +16,12 @@ define( function( require ) {
 
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
+  var Live = require( 'NEURON/neuron/recordandplayback/Live' );
+  var neuron = require( 'NEURON/neuron' );
+  var ObservableArray = require( 'AXON/ObservableArray' );
+  var Playback = require( 'NEURON/neuron/recordandplayback/Playback' );
   var Property = require( 'AXON/Property' );
   var Record = require( 'NEURON/neuron/recordandplayback/Record' );
-  var Playback = require( 'NEURON/neuron/recordandplayback/Playback' );
-  var Live = require( 'NEURON/neuron/recordandplayback/Live' );
-  var ObservableArray = require( 'AXON/ObservableArray' );
-  var neuron = require( 'NEURON/neuron' );
 
   /**
    * @param {number} maxRecordPoints

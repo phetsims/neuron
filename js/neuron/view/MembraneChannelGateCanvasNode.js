@@ -10,16 +10,16 @@ define( function( require ) {
   'use strict';
 
   // modules
-  var inherit = require( 'PHET_CORE/inherit' );
   var CanvasNode = require( 'SCENERY/nodes/CanvasNode' );
+  var Color = require( 'SCENERY/util/Color' );
   var Dimension2 = require( 'DOT/Dimension2' );
-  var Vector2 = require( 'DOT/Vector2' );
-  var Shape = require( 'KITE/Shape' );
+  var inherit = require( 'PHET_CORE/inherit' );
   var kite = require( 'KITE/kite' );
   var MembraneChannelTypes = require( 'NEURON/neuron/model/MembraneChannelTypes' );
   var neuron = require( 'NEURON/neuron' );
   var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
-  var Color = require( 'SCENERY/util/Color' );
+  var Shape = require( 'KITE/Shape' );
+  var Vector2 = require( 'DOT/Vector2' );
 
   // utility function for drawing the shape that depicts the edge or side of a membrane channel
   function drawEdge( context, transformedEdgeNodeSize ) {

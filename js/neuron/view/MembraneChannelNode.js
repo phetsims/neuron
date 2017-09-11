@@ -9,16 +9,16 @@ define( function( require ) {
   'use strict';
 
   // modules
+  var Bounds2 = require( 'DOT/Bounds2' );
+  var Circle = require( 'SCENERY/nodes/Circle' );
+  var Color = require( 'SCENERY/util/Color' );
+  var Dimension2 = require( 'DOT/Dimension2' );
   var inherit = require( 'PHET_CORE/inherit' );
+  var neuron = require( 'NEURON/neuron' );
   var Node = require( 'SCENERY/nodes/Node' );
   var Path = require( 'SCENERY/nodes/Path' );
-  var Dimension2 = require( 'DOT/Dimension2' );
-  var Color = require( 'SCENERY/util/Color' );
   var Shape = require( 'KITE/Shape' );
-  var Circle = require( 'SCENERY/nodes/Circle' );
   var Vector2 = require( 'DOT/Vector2' );
-  var Bounds2 = require( 'DOT/Bounds2' );
-  var neuron = require( 'NEURON/neuron' );
 
   /**
    * @param {MembraneChannel} membraneChannelModel

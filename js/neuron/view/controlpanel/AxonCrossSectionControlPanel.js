@@ -20,11 +20,11 @@ define( function( require ) {
   var VBox = require( 'SCENERY/nodes/VBox' );
 
   // strings - labels for control panel check boxes
-  var showLegendString = require( 'string!NEURON/showLegend' );
   var allIonsString = require( 'string!NEURON/allIons' );
-  var potentialChartString = require( 'string!NEURON/potentialChart' );
   var chargesString = require( 'string!NEURON/charges' );
   var concentrationsString = require( 'string!NEURON/concentrations' );
+  var potentialChartString = require( 'string!NEURON/potentialChart' );
+  var showLegendString = require( 'string!NEURON/showLegend' );
 
   // constants
   var CHECK_BOX_OPTIONS = { boxWidth: 15 };

@@ -11,14 +11,14 @@ define( function( require ) {
   'use strict';
 
   // modules
-  var inherit = require( 'PHET_CORE/inherit' );
   var Color = require( 'SCENERY/util/Color' );
-  var Vector2 = require( 'DOT/Vector2' );
+  var GrippyIndentNode = require( 'NEURON/neuron/view/chart/GrippyIndentNode' );
+  var inherit = require( 'PHET_CORE/inherit' );
+  var neuron = require( 'NEURON/neuron' );
+  var Rectangle = require( 'SCENERY/nodes/Rectangle' );
   var SimpleDragHandler = require( 'SCENERY/input/SimpleDragHandler' );
   var Util = require( 'DOT/Util' );
-  var Rectangle = require( 'SCENERY/nodes/Rectangle' );
-  var GrippyIndentNode = require( 'NEURON/neuron/view/chart/GrippyIndentNode' );
-  var neuron = require( 'NEURON/neuron' );
+  var Vector2 = require( 'DOT/Vector2' );
 
   // constants
   var WIDTH_PROPORTION = 0.013; // empirically determined

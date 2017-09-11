@@ -10,9 +10,9 @@ define( function( require ) {
   'use strict';
 
   // modules
+  var BehaviourModeType = require( 'NEURON/neuron/recordandplayback/BehaviourModeType' );
   var inherit = require( 'PHET_CORE/inherit' );
   var Mode = require( 'NEURON/neuron/recordandplayback/Mode' );
-  var BehaviourModeType = require( 'NEURON/neuron/recordandplayback/BehaviourModeType' );
   var neuron = require( 'NEURON/neuron' );
 
   /**

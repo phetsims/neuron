@@ -11,17 +11,17 @@ define( function( require ) {
   'use strict';
 
   // modules
-  var inherit = require( 'PHET_CORE/inherit' );
-  var Property = require( 'AXON/Property' );
-  var Vector2 = require( 'DOT/Vector2' );
+  var Color = require( 'SCENERY/util/Color' );
   var Dimension2 = require( 'DOT/Dimension2' );
+  var inherit = require( 'PHET_CORE/inherit' );
+  var Matrix3 = require( 'DOT/Matrix3' );
+  var neuron = require( 'NEURON/neuron' );
   var NullCaptureZone = require( 'NEURON/neuron/model/NullCaptureZone' );
   var PhetColorScheme = require( 'SCENERY_PHET/PhetColorScheme' );
-  var TraverseChannelAndFadeMotionStrategy = require( 'NEURON/neuron/model/TraverseChannelAndFadeMotionStrategy' );
-  var Matrix3 = require( 'DOT/Matrix3' );
+  var Property = require( 'AXON/Property' );
   var Rectangle = require( 'DOT/Rectangle' );
-  var Color = require( 'SCENERY/util/Color' );
-  var neuron = require( 'NEURON/neuron' );
+  var TraverseChannelAndFadeMotionStrategy = require( 'NEURON/neuron/model/TraverseChannelAndFadeMotionStrategy' );
+  var Vector2 = require( 'DOT/Vector2' );
 
   // constants
   var SIDE_HEIGHT_TO_CHANNEL_HEIGHT_RATIO = 1.3;
