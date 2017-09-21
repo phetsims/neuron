@@ -1,4 +1,4 @@
-// Copyright 2014-2015, University of Colorado Boulder
+// Copyright 2014-2016, University of Colorado Boulder
 /**
  * This class is a delay buffer that allows information to be put into it and then extracted based on the amount of
  * time in the past that a value is needed.

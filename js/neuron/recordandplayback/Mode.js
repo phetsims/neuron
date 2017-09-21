@@ -1,4 +1,4 @@
-// Copyright 2014-2015, University of Colorado Boulder
+// Copyright 2014-2017, University of Colorado Boulder
 
 /**
  * Base type representing a Mode in Record and PlayBack Model. The mode can be either playback, record or live.

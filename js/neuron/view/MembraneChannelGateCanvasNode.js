@@ -1,4 +1,4 @@
-// Copyright 2014-2015, University of Colorado Boulder
+// Copyright 2014-2017, University of Colorado Boulder
 /**
  * The dynamic parts of the Membrane Channels, namely the gate, channel expansion, and string, are rendered directly on
  * a single canvas for optimal performance.

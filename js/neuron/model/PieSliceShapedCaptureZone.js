@@ -1,4 +1,4 @@
-// Copyright 2014-2015, University of Colorado Boulder
+// Copyright 2014-2017, University of Colorado Boulder
 
 /**
  * A "capture zone" (which is a 2D space that defines where particles may be captured by a gate) that is shaped like a

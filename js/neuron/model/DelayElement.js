@@ -1,4 +1,4 @@
-// Copyright 2014-2015, University of Colorado Boulder
+// Copyright 2014-2016, University of Colorado Boulder
 /**
  * DelayElements are used as the individual entries in a DelayBuffer.  Each delay element consists of a value and a time
  * difference, generally from the time of the previous entry.
