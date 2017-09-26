@@ -259,7 +259,7 @@ define( function( require ) {
     var stimulateNeuronButton = new RectangularPushButton( {
       content: new MultiLineText( stimulateNeuronString, { font: BUTTON_FONT } ),
       listener: function() { self.neuronModel.initiateStimulusPulse(); },
-      baseColor: PhetColorScheme.PHET_LOGO_YELLOW,
+      baseColor: PhetColorScheme.BUTTON_YELLOW,
       right: worldNodeClipArea.bounds.maxX,
       centerY: centerYForLowerControls,
       minWidth: 50,
