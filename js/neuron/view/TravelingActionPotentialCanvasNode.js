@@ -1,4 +1,4 @@
-// Copyright 2015-2016, University of Colorado Boulder
+// Copyright 2015-2017, University of Colorado Boulder
 /**
  * Class that visually represents the action potential that travels down the membrane prior to reaching the cross
  * section.  It is meant to look sort of 'electric' or 'energetic'.  This is done as a CanvasNode as an optimization,

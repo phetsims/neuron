@@ -1,4 +1,4 @@
-// Copyright 2014-2016, University of Colorado Boulder
+// Copyright 2014-2017, University of Colorado Boulder
 /**
  * Fade strategy that does nothing.  Useful for avoiding having to check for null values of fade strategy all the time.
  * @author John Blanco

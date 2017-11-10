@@ -1,4 +1,4 @@
-// Copyright 2014-2016, University of Colorado Boulder
+// Copyright 2014-2017, University of Colorado Boulder
 /**
  * Abstract base class for all of the leak channels, which are the channels through which ions pass in/out independent
  * of the action potentials.
