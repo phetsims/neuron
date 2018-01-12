@@ -13,7 +13,7 @@ motion of these ions that cause the change in electric potential across the memb
 membrane is meant to be illustrative, and is obviously far less than the actual number of ions that would cross the
 membrane in a real axon.
 
-The charge indicators, which can be turned on using one of the check boxes on the control panel, are sized
+The charge indicators, which can be turned on using one of the checkboxes on the control panel, are sized
 proportionately.  As the membrane potential changes, these indicators grow, shrink, and in some cases change from
 positive to negative or vice versa.
 

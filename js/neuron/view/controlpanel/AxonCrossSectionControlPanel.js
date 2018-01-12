@@ -19,7 +19,7 @@ define( function( require ) {
   var Text = require( 'SCENERY/nodes/Text' );
   var VBox = require( 'SCENERY/nodes/VBox' );
 
-  // strings - labels for control panel check boxes
+  // strings - labels for control panel checkboxes
   var allIonsString = require( 'string!NEURON/allIons' );
   var chargesString = require( 'string!NEURON/charges' );
   var concentrationsString = require( 'string!NEURON/concentrations' );
