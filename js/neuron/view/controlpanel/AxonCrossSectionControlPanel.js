@@ -10,7 +10,7 @@ define( function( require ) {
   'use strict';
 
   // modules
-  var CheckBox = require( 'SUN/CheckBox' );
+  var Checkbox = require( 'SUN/Checkbox' );
   var inherit = require( 'PHET_CORE/inherit' );
   var neuron = require( 'NEURON/neuron' );
   var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
@@ -44,23 +44,23 @@ define( function( require ) {
    */
   function AxonCrossSectionControlPanel( neuronModel, options ) {
 
-    var allIonsSimulatedCheckBox = new CheckBox( new Text( allIonsString, TEXT_OPTIONS ), neuronModel.allIonsSimulatedProperty, CHECK_BOX_OPTIONS );
-    dilateTouchArea( allIonsSimulatedCheckBox );
-    var showChargesCheckBox = new CheckBox( new Text( chargesString, TEXT_OPTIONS ), neuronModel.chargesShownProperty, CHECK_BOX_OPTIONS );
-    dilateTouchArea( showChargesCheckBox );
-    var showConcentrationsCheckBox = new CheckBox( new Text( concentrationsString, TEXT_OPTIONS ), neuronModel.concentrationReadoutVisibleProperty, CHECK_BOX_OPTIONS );
-    dilateTouchArea( showConcentrationsCheckBox );
-    var showPotentialChartCheckBox = new CheckBox( new Text( potentialChartString, TEXT_OPTIONS ), neuronModel.potentialChartVisibleProperty, CHECK_BOX_OPTIONS );
-    dilateTouchArea( showPotentialChartCheckBox );
+    var allIonsSimulatedCheckbox = new Checkbox( new Text( allIonsString, TEXT_OPTIONS ), neuronModel.allIonsSimulatedProperty, CHECK_BOX_OPTIONS );
+    dilateTouchArea( allIonsSimulatedCheckbox );
+    var showChargesCheckbox = new Checkbox( new Text( chargesString, TEXT_OPTIONS ), neuronModel.chargesShownProperty, CHECK_BOX_OPTIONS );
+    dilateTouchArea( showChargesCheckbox );
+    var showConcentrationsCheckbox = new Checkbox( new Text( concentrationsString, TEXT_OPTIONS ), neuronModel.concentrationReadoutVisibleProperty, CHECK_BOX_OPTIONS );
+    dilateTouchArea( showConcentrationsCheckbox );
+    var showPotentialChartCheckbox = new Checkbox( new Text( potentialChartString, TEXT_OPTIONS ), neuronModel.potentialChartVisibleProperty, CHECK_BOX_OPTIONS );
+    dilateTouchArea( showPotentialChartCheckbox );
 
     var crossSectionControlContents = [];
     crossSectionControlContents.push( new Text( showLegendString, {
       font: new PhetFont( { size: 16, weight: 'bold' } )
     } ) );
-    crossSectionControlContents.push( allIonsSimulatedCheckBox );
-    crossSectionControlContents.push( showChargesCheckBox );
-    crossSectionControlContents.push( showConcentrationsCheckBox );
-    crossSectionControlContents.push( showPotentialChartCheckBox );
+    crossSectionControlContents.push( allIonsSimulatedCheckbox );
+    crossSectionControlContents.push( showChargesCheckbox );
+    crossSectionControlContents.push( showConcentrationsCheckbox );
+    crossSectionControlContents.push( showPotentialChartCheckbox );
 
     // vertical panel
     Panel.call( this, new VBox( {
@@ -81,7 +81,7 @@ define( function( require ) {
     neuronModel.stimulusLockoutProperty.link( function( stimulusLockout ) {
       // When stimulation is locked out, we also lock out the ability to change the "All Ions Simulated" state, since
       // otherwise ions would have to disappear during an action potential, which would be tricky.
-      allIonsSimulatedCheckBox.enabled = !neuronModel.isStimulusInitiationLockedOut();
+      allIonsSimulatedCheckbox.enabled = !neuronModel.isStimulusInitiationLockedOut();
     } );
   }
 
