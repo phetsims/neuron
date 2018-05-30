@@ -49,8 +49,7 @@ define( function( require ) {
   return inherit( CanvasNode, DataLineCanvasNode, {
 
     /**
-     * A method that paints the data line on the canvas.  For maximum performance, this adds points to the end of an
-     * existing line when possible rather than redrawing the entire line with each update.
+     * method that paints the data line on the canvas
      * @param {CanvasRenderingContext2D} context
      * @protected
      * @override
