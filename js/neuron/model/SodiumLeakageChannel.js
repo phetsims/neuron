@@ -118,7 +118,7 @@ define( function( require ) {
         // everyone once in a while a sodium atom should leak the opposite
         // direction.  This was requested by the IPHY people in the review
         // held mid-April 2010.
-        if ( Math.random() < 0.2 ) {
+        if ( phet.joist.random.nextDouble() < 0.2 ) {
           result = MembraneCrossingDirection.IN_TO_OUT;
         }
       }
