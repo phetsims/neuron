@@ -197,7 +197,7 @@ define( function( require ) {
     restartCaptureCountdownTimer: function( captureNow ) {
       if ( this.minInterCaptureTime !== Number.POSITIVE_INFINITY && this.maxInterCaptureTime !== Number.POSITIVE_INFINITY ) {
         assert && assert( this.maxInterCaptureTime >= this.minInterCaptureTime );
-        this.captureCountdownTimer = this.minInterCaptureTime + Math.random() * (this.maxInterCaptureTime - this.minInterCaptureTime);
+        this.captureCountdownTimer = this.minInterCaptureTime + phet.joist.random.nextDouble() * (this.maxInterCaptureTime - this.minInterCaptureTime);
       }
       else {
         this.captureCountdownTimer = Number.POSITIVE_INFINITY;

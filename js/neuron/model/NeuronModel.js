@@ -615,7 +615,7 @@ define( function( require ) {
           var captureZone = membraneChannel.getExteriorCaptureZone();
           var numParticlesInZone = self.scanCaptureZoneForFreeParticles( captureZone, ParticleType.SODIUM_ION );
           if ( numParticlesInZone === 0 ) {
-            self.addBackgroundParticlesToZone( ParticleType.SODIUM_ION, captureZone, Math.floor( Math.random() * 2 ) + 1 );
+            self.addBackgroundParticlesToZone( ParticleType.SODIUM_ION, captureZone, Math.floor( phet.joist.random.nextDouble() * 2 ) + 1 );
           }
         }
       } );
@@ -672,7 +672,7 @@ define( function( require ) {
           self.positionParticleOutsideMembrane( newParticle );
         }
         // Set the opacity.
-        if ( Math.random() >= 0.5 ) { // replaced for nextBoolean
+        if ( phet.joist.random.nextDouble() >= 0.5 ) { // replaced for nextBoolean
           newParticle.setOpacity( FOREGROUND_PARTICLE_DEFAULT_OPACITY );
         }
         else {
@@ -726,11 +726,11 @@ define( function( require ) {
      */
     positionParticleInsideMembrane: function( particle ) {
       // Choose any angle.
-      var angle = Math.random() * Math.PI * 2;
+      var angle = phet.joist.random.nextDouble() * Math.PI * 2;
 
       // Choose a distance from the cell center that is within the membrane. The multiplier value is created with the
       // intention of weighting the positions toward the outside in order to get an even distribution per unit area.
-      var multiplier = Math.max( Math.random(), Math.random() );
+      var multiplier = Math.max( phet.joist.random.nextDouble(), phet.joist.random.nextDouble() );
       var distance = (this.crossSectionInnerRadius - particle.getRadius() * 2) * multiplier;
       particle.setPosition( distance * Math.cos( angle ), distance * Math.sin( angle ) );
     },
@@ -757,13 +757,13 @@ define( function( require ) {
     positionParticleOutsideMembrane: function( particle ) {
 
       // Choose any angle.
-      var angle = Math.random() * Math.PI * 2;
+      var angle = phet.joist.random.nextDouble() * Math.PI * 2;
 
       // Choose a distance from the cell center that is outside of the
       // membrane. The multiplier value is created with the intention of
       // weighting the positions toward the outside in order to get an even
       // distribution per unit area.
-      var multiplier = Math.random();
+      var multiplier = phet.joist.random.nextDouble();
       var distance = this.crossSectionOuterRadius + particle.getRadius() * 4 +
                      multiplier * this.crossSectionOuterRadius * 2.2;
 

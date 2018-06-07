@@ -236,7 +236,7 @@ define( function( require ) {
 
     // @private
     updateStaggerDelay: function() {
-      this.staggerDelay = Math.random() * MAX_STAGGER_DELAY;
+      this.staggerDelay = phet.joist.random.nextDouble() * MAX_STAGGER_DELAY;
     },
 
     // @public, @override

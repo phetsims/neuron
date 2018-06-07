@@ -64,17 +64,17 @@ define( function( require ) {
 
     // @private
     generateNewJumpTime: function() {
-      return MIN_TIME_TO_NEXT_JUMP + Math.random() * (MAX_TIME_TO_NEXT_JUMP - MIN_TIME_TO_NEXT_JUMP);
+      return MIN_TIME_TO_NEXT_JUMP + phet.joist.random.nextDouble() * (MAX_TIME_TO_NEXT_JUMP - MIN_TIME_TO_NEXT_JUMP);
     },
 
     // @private
     generateNewJumpDistance: function() {
-      return MIN_JUMP_DISTANCE + Math.random() * (MAX_JUMP_DISTANCE - MIN_JUMP_DISTANCE);
+      return MIN_JUMP_DISTANCE + phet.joist.random.nextDouble() * (MAX_JUMP_DISTANCE - MIN_JUMP_DISTANCE);
     },
 
     // @private
     generateNewJumpAngle: function() {
-      return Math.random() * Math.PI * 2;
+      return phet.joist.random.nextDouble() * Math.PI * 2;
     }
 
   } );

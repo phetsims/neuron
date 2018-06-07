@@ -26,7 +26,7 @@ define( function( require ) {
 
   var RAND = {
     nextInt: function( bounds ) {
-      return Math.floor( Math.random() * bounds );
+      return Math.floor( phet.joist.random.nextDouble() * bounds );
     }
   };
 
@@ -92,8 +92,8 @@ define( function( require ) {
     updateVelocity: function( currentPositionX, currentPositionY ) {
       // Create a velocity vector that causes this to move away from the "away point".
       var awayAngle = Math.atan2( currentPositionY - this.awayPoint.y,
-          currentPositionX - this.awayPoint.x ) + ( Math.random() - 0.5 ) * Math.PI;
-      var newScalerVelocity = MIN_VELOCITY + Math.random() * ( MAX_VELOCITY - MIN_VELOCITY );
+          currentPositionX - this.awayPoint.x ) + ( phet.joist.random.nextDouble() - 0.5 ) * Math.PI;
+      var newScalerVelocity = MIN_VELOCITY + phet.joist.random.nextDouble() * ( MAX_VELOCITY - MIN_VELOCITY );
       this.velocityX = newScalerVelocity * Math.cos( awayAngle );
       this.velocityY = newScalerVelocity * Math.sin( awayAngle );
     }

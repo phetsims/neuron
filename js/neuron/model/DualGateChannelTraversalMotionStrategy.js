@@ -132,8 +132,8 @@ define( function( require ) {
             // This particle should be back where it entered the
             // channel, and can head off in any direction except
             // back toward the membrane.
-            newVelocityVector.rotate( ( Math.random() - 0.5 ) * Math.PI );
-            newVelocityVector.multiplyScalar( 0.3 + ( Math.random() * 0.2 ) );
+            newVelocityVector.rotate( ( phet.joist.random.nextDouble() - 0.5 ) * Math.PI );
+            newVelocityVector.multiplyScalar( 0.3 + ( phet.joist.random.nextDouble() * 0.2 ) );
             movableModelElement.setMotionStrategy( new LinearMotionStrategy( newVelocityVector ) );
           }
           else {
@@ -143,10 +143,10 @@ define( function( require ) {
             // up to work with a specific representation of the
             // inactivation gate, and will need to be changed if the
             // representation of the gate is changed.
-            newVelocityVector.multiplyScalar( 0.5 + ( Math.random() * 0.3 ) );
+            newVelocityVector.multiplyScalar( 0.5 + ( phet.joist.random.nextDouble() * 0.3 ) );
             var maxRotation;
             var minRotation;
-            if ( Math.random() > 0.3 ) {
+            if ( phet.joist.random.nextDouble() > 0.3 ) {
               // Move out to the right (assuming channel is vertical).
               // The angle at which we can move gets more restricted
               // as the inactivation gate closes.
@@ -162,7 +162,7 @@ define( function( require ) {
               angularRange = ( 1 - this.channel.getInactivationAmount() ) * -Math.PI * 0.1;
               minRotation = maxRotation - angularRange;
             }
-            newVelocityVector.rotate( minRotation + Math.random() * ( maxRotation - minRotation ) );
+            newVelocityVector.rotate( minRotation + phet.joist.random.nextDouble() * ( maxRotation - minRotation ) );
             movableModelElement.setMotionStrategy( new SpeedChangeLinearMotionStrategy( newVelocityVector, 0.2, 0.0002 ) );
           }
           fadableModelElement.setFadeStrategy( new TimedFadeAwayStrategy( 0.003 ) );
@@ -262,7 +262,7 @@ define( function( require ) {
           var velocityRotationAngle = 0;
           var minRotation = 0;
           var maxRotation = 0;
-          if ( Math.random() > 0.3 ) {
+          if ( phet.joist.random.nextDouble() > 0.3 ) {
             // Move out to the right (assuming channel is vertical). The angle at which we can move gets more restricted
             // as the inactivation gate closes.
             maxRotation = Math.PI * 0.4;
@@ -276,11 +276,11 @@ define( function( require ) {
             angularRange = ( 1 - this.channel.getInactivationAmount() ) * -Math.PI * 0.1;
             minRotation = maxRotation - angularRange;
           }
-          velocityRotationAngle = minRotation + Math.random() * ( maxRotation - minRotation );
+          velocityRotationAngle = minRotation + phet.joist.random.nextDouble() * ( maxRotation - minRotation );
           this.velocityVector.rotate( velocityRotationAngle );
         }
         else {
-          this.velocityVector.rotate( ( Math.random() - 0.5 ) * ( Math.PI * 0.9 ) * this.maxVelocity / NeuronConstants.DEFAULT_MAX_VELOCITY );
+          this.velocityVector.rotate( ( phet.joist.random.nextDouble() - 0.5 ) * ( Math.PI * 0.9 ) * this.maxVelocity / NeuronConstants.DEFAULT_MAX_VELOCITY );
         }
       }
 

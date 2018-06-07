@@ -95,7 +95,7 @@ define( function( require ) {
       // the cell. However, the IPHY people requested that there should occasionally be some leakage in the other
       // direction for greater realism, hence the random choice below.
       var direction = MembraneCrossingDirection.IN_TO_OUT;
-      if ( Math.random() < 0.2 ) {
+      if ( phet.joist.random.nextDouble() < 0.2 ) {
         direction = MembraneCrossingDirection.OUT_TO_IN;
       }
       return direction;

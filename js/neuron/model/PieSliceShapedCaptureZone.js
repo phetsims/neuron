@@ -86,7 +86,7 @@ define( function( require ) {
 
     // @public, assign a random point that is somewhere within the shape.
     assignNewParticleLocation: function( particle ) {
-      var placementAngle = this.rotationAngle + this.fixedRotationalOffset + (Math.random() - 0.5) * this.angleOfExtent;
+      var placementAngle = this.rotationAngle + this.fixedRotationalOffset + (phet.joist.random.nextDouble() - 0.5) * this.angleOfExtent;
       var distanceFromOrigin = this.radius * 0.9;
       var xPos = this.originPoint.x + distanceFromOrigin * Math.cos( placementAngle );
       var yPos = this.originPoint.y + distanceFromOrigin * Math.sin( placementAngle );
