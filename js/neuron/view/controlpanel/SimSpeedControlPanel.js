@@ -42,7 +42,7 @@ define( function( require ) {
       { node: new Text( normalString, { font: radioButtonFont } ), property: speedProperty, value: 1 },
       { node: new Text( slowMotionString, { font: radioButtonFont } ), property: speedProperty, value: 0.5 }
     ], {
-      radius: 8,
+      radioButtonOptions: { radius: 8 },
       spacing: 8,
       touchAreaXDilation: 5
     } );
