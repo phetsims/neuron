@@ -215,7 +215,7 @@ define( function( require ) {
 
     // step forward is enabled whenever paused.
     var stepForwardButton = new StepForwardButton( {
-      playingProperty: playingProperty,
+      isPlayingProperty: playingProperty,
       listener: function() { neuronClockModelAdapter.stepClockWhilePaused(); }
     } );
 
