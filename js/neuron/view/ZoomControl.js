@@ -1,4 +1,4 @@
-// Copyright 2014-2017, University of Colorado Boulder
+// Copyright 2018, University of Colorado Boulder
 
 /**
  * A Scenery node that can be used to control the zoom factor.
@@ -11,7 +11,6 @@ define( function( require ) {
 
   // modules
   var Dimension2 = require( 'DOT/Dimension2' );
-  var HSlider = require( 'SUN/HSlider' );
   var inherit = require( 'PHET_CORE/inherit' );
   var neuron = require( 'NEURON/neuron' );
   var Path = require( 'SCENERY/nodes/Path' );
@@ -19,6 +18,7 @@ define( function( require ) {
   var Shape = require( 'KITE/Shape' );
   var Util = require( 'DOT/Util' );
   var VBox = require( 'SCENERY/nodes/VBox' );
+  var VSlider = require( 'SUN/VSlider' );
 
   /**
    * @param {Property.<number>} zoomProperty - property that indicates how far zoomed in the simulation is, between
@@ -34,8 +34,7 @@ define( function( require ) {
       thumbTouchAreaXDilation: 8,
       thumbTouchAreaYDilation: 8
     };
-    var zoomSlider = new HSlider( zoomProperty, { min: minZoom, max: maxZoom }, zoomSliderOptions );
-    zoomSlider.rotation = -Math.PI / 2;
+    var zoomSlider = new VSlider( zoomProperty, { min: minZoom, max: maxZoom }, zoomSliderOptions );
 
     function createZoomControlButton( contentNode, marginOptions, listener ) {
       return new RectangularPushButton( {
