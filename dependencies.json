@@ -1,5 +1,5 @@
 {
-  "comment": "# neuron 1.1.8-rc.1 Fri Sep 21 2018 19:59:01 GMT-0600 (MDT)",
+  "comment": "# neuron 1.1.8 Tue Sep 25 2018 11:48:49 GMT-0600 (MDT)",
   "assert": {
     "sha": "7d27130a4d27da15aa7f8a21bbfb9245288c1b44",
     "branch": "HEAD"
@@ -33,7 +33,7 @@
     "branch": "HEAD"
   },
   "neuron": {
-    "sha": "a3a740b517380805ba55171f14964f8455297a17",
+    "sha": "1cf78868465fc56f35fab29b9f8dfd8a52b59ad0",
     "branch": "1.1"
   },
   "phet-core": {
