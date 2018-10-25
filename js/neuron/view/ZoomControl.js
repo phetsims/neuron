@@ -14,9 +14,9 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var neuron = require( 'NEURON/neuron' );
   var Path = require( 'SCENERY/nodes/Path' );
+  var Range = require( 'DOT/Range' );
   var RectangularPushButton = require( 'SUN/buttons/RectangularPushButton' );
   var Shape = require( 'KITE/Shape' );
-  var Range = require( 'DOT/Range' );
   var Util = require( 'DOT/Util' );
   var VBox = require( 'SCENERY/nodes/VBox' );
   var VSlider = require( 'SUN/VSlider' );
