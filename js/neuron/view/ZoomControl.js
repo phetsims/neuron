@@ -16,6 +16,7 @@ define( function( require ) {
   var Path = require( 'SCENERY/nodes/Path' );
   var RectangularPushButton = require( 'SUN/buttons/RectangularPushButton' );
   var Shape = require( 'KITE/Shape' );
+  var Range = require( 'DOT/Range' );
   var Util = require( 'DOT/Util' );
   var VBox = require( 'SCENERY/nodes/VBox' );
   var VSlider = require( 'SUN/VSlider' );
@@ -34,7 +35,7 @@ define( function( require ) {
       thumbTouchAreaXDilation: 8,
       thumbTouchAreaYDilation: 8
     };
-    var zoomSlider = new VSlider( zoomProperty, { min: minZoom, max: maxZoom }, zoomSliderOptions );
+    var zoomSlider = new VSlider( zoomProperty, new Range( minZoom, maxZoom ), zoomSliderOptions );
 
     function createZoomControlButton( contentNode, marginOptions, listener ) {
       return new RectangularPushButton( {
