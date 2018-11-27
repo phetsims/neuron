@@ -234,6 +234,9 @@ define( function( require ) {
       'void main( void ) {',
       '  gl_FragColor = texture2D( uSampler, vTextureCoordinate );',
       '  gl_FragColor.a *= vOpacity;',
+
+      // Use premultipled alpha, see https://github.com/phetsims/energy-skate-park/issues/39
+      '  gl_FragColor.rgb *= gl_FragColor.a;',
       '}'
     ].join( '\n' );
 
