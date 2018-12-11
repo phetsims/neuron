@@ -29,6 +29,7 @@ define( function( require ) {
   var POSITION_VALUES_PER_VERTEX = 2; // x and y, z is considered to be always 1
   var TEXTURE_VALUES_PER_VERTEX = 2; // x and y coordinates within the 2D texture
   var OPACITY_VALUES_PER_VERTEX = 1; // a single value from 0 to 1
+  var scratchFloatArray = new Float32Array( 9 );
 
   /**
    * @param {NeuronModel} neuronModel
@@ -360,8 +361,8 @@ define( function( require ) {
 
       shaderProgram.use();
 
-      gl.uniformMatrix3fv( shaderProgram.uniformLocations.uModelViewMatrix, false, modelViewMatrix.entries );
-      gl.uniformMatrix3fv( shaderProgram.uniformLocations.uProjectionMatrix, false, projectionMatrix.entries );
+      gl.uniformMatrix3fv( shaderProgram.uniformLocations.uModelViewMatrix, false, modelViewMatrix.copyToArray( scratchFloatArray ) );
+      gl.uniformMatrix3fv( shaderProgram.uniformLocations.uProjectionMatrix, false, projectionMatrix.copyToArray( scratchFloatArray ) );
 
       // activate and bind the texture
       gl.activeTexture( gl.TEXTURE0 );
