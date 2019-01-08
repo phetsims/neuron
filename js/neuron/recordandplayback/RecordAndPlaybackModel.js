@@ -62,7 +62,7 @@ define( function( require ) {
      * The returned state could be ignored if the simulation is not in record mode.
      *
      * @param {number} dt - the amount of time to update the simulation (in whatever units the simulation model is using).
-     * @return the updated state, which can be used to restore the model during playback
+     * @returns the updated state, which can be used to restore the model during playback
      */
     stepInTime: function( dt ) {
       throw new Error( 'stepInTime should be implemented in descendant classes.' );
