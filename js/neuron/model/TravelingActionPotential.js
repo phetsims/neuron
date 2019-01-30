@@ -19,6 +19,7 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var neuron = require( 'NEURON/neuron' );
   var TravelingActionPotentialState = require( 'NEURON/neuron/model/TravelingActionPotentialState' );
+  var Util = require( 'DOT/Util' );
   var Vector2 = require( 'DOT/Vector2' );
 
   // constants
@@ -33,7 +34,7 @@ define( function( require ) {
   function calculateInterpolatedPoint( proportion, points, outputPoint ) {
     assert && assert( proportion >= 0 && proportion <= 1, 'proportion is out of range' );
     var unroundedClosestPointIndex = proportion * ( points.length - 1 );
-    var closestPointIndex = Math.round( unroundedClosestPointIndex );
+    var closestPointIndex = Util.roundSymmetric( unroundedClosestPointIndex );
     var nextClosestPointIndex = unroundedClosestPointIndex % 1 >= 0.5 ? closestPointIndex - 1 : closestPointIndex + 1;
     var weight = 1 - Math.abs( closestPointIndex - unroundedClosestPointIndex );
     var closestPoint = points[ closestPointIndex ];

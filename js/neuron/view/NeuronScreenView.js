@@ -40,12 +40,13 @@ define( function( require ) {
   var Rectangle = require( 'SCENERY/nodes/Rectangle' );
   var RectangularPushButton = require( 'SUN/buttons/RectangularPushButton' );
   var ResetAllButton = require( 'SCENERY_PHET/buttons/ResetAllButton' );
+  var SceneryUtil = require( 'SCENERY/util/Util' ); // eslint-disable-line require-statement-match
   var ScreenView = require( 'JOIST/ScreenView' );
   var Shape = require( 'KITE/Shape' );
   var SimSpeedControlPanel = require( 'NEURON/neuron/view/controlpanel/SimSpeedControlPanel' );
   var StepBackwardButton = require( 'SCENERY_PHET/buttons/StepBackwardButton' );
   var StepForwardButton = require( 'SCENERY_PHET/buttons/StepForwardButton' );
-  var Util = require( 'SCENERY/util/Util' );
+  var Util = require( 'DOT/Util' );
   var Vector2 = require( 'DOT/Vector2' );
   var ZoomControl = require( 'NEURON/neuron/view/ZoomControl' );
 
@@ -142,7 +143,7 @@ define( function( require ) {
       // chart below it.
       var zoomTowardTopThreshold = 0.6;
       var scaleMatrix;
-      var scaleAroundX = Math.round( viewPortPosition.x );
+      var scaleAroundX = Util.roundSymmetric( viewPortPosition.x );
       var scaleAroundY;
       if ( zoomFactor > zoomTowardTopThreshold ) {
         scaleAroundY = (zoomFactor - zoomTowardTopThreshold) * self.neuronModel.getAxonMembrane().getCrossSectionDiameter() * 0.075;
@@ -158,7 +159,7 @@ define( function( require ) {
     } );
 
     // Check to see if WebGL can be used
-    var webGLSupported = Util.isWebGLSupported && phet.chipper.queryParameters.webgl;
+    var webGLSupported = SceneryUtil.isWebGLSupported && phet.chipper.queryParameters.webgl;
 
     if ( webGLSupported ) {
 
