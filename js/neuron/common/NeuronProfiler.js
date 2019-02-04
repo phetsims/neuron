@@ -1,7 +1,9 @@
 // Copyright 2015-2017, University of Colorado Boulder
 
 /**
- * Sim-specific code for profiling, created for testing optimizations.
+ * Sim-specific code for profiling, created for testing optimizations.  This profiler can be triggered via a method call
+ * and will then gather profiling data for the specified amount of time, and then log the collected information to the
+ * console.  On iOS devices, it displays the information in an "alert" window.
  */
 
 define( function( require ) {
