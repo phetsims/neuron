@@ -36,7 +36,7 @@ define( function( require ) {
    */
   function DualGateChannelTraversalMotionStrategy( channel, startingLocationX, startingLocationY, maxVelocity ) {
     maxVelocity = maxVelocity || NeuronConstants.DEFAULT_MAX_VELOCITY;
-    this.velocityVector = new Vector2();
+    this.velocityVector = new Vector2( 0, 0 );
     this.channel = channel;
     this.maxVelocity = maxVelocity;
 

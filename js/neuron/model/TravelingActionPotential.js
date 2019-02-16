@@ -60,10 +60,10 @@ define( function( require ) {
     // @public - describes the shape of the action potential
     this.shapeDescription = {
       mode: 'curve', // valid values are 'curve' and 'circle'
-      startPoint: new Vector2(),
-      controlPoint1: new Vector2(),
-      controlPoint2: new Vector2(),
-      endPoint: new Vector2(),
+      startPoint: new Vector2( 0, 0 ),
+      controlPoint1: new Vector2( 0, 0 ),
+      controlPoint2: new Vector2( 0, 0 ),
+      endPoint: new Vector2( 0, 0 ),
       circleCenter: axonMembrane.crossSectionCircleCenter,
       circleRadius: 0
     };
@@ -72,7 +72,7 @@ define( function( require ) {
     this.lingerCountdownTimer = 0; // @private
     this.upperCurvePoints = new Array( NUM_CURVE_POINTS ); // @private
     this.lowerCurvePoints = new Array( NUM_CURVE_POINTS ); // @private
-    this.curveMidPoint = new Vector2(); // @private, pre-allocated for performance reasons
+    this.curveMidPoint = new Vector2( 0, 0 ); // @private, pre-allocated for performance reasons
 
     // Set up the points that will be used to determine the ends of the action potential curve.  These are calculated
     // during construction instead of in real time as a performance optimization.

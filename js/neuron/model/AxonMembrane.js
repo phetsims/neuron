@@ -128,11 +128,11 @@ define( function( require ) {
 
     // @private - In order to avoid creating new Vector2 instances during animation, these instances are declared and
     // reused in the evaluateCurve method.
-    this.ab = new Vector2();
-    this.bc = new Vector2();
-    this.cd = new Vector2();
-    this.abbc = new Vector2();
-    this.bbcd = new Vector2();
+    this.ab = new Vector2( 0, 0 );
+    this.bc = new Vector2( 0, 0 );
+    this.cd = new Vector2( 0, 0 );
+    this.abbc = new Vector2( 0, 0 );
+    this.bbcd = new Vector2( 0, 0 );
   }
 
   neuron.register( 'AxonMembrane', AxonMembrane );
@@ -279,7 +279,7 @@ define( function( require ) {
        * this code uses this interpolation method
        */
       linearInterpolation: function( a, b, t, out ) {
-        out = out || new Vector2();
+        out = out || new Vector2( 0, 0 );
         out.x = a.x + (b.x - a.x) * t;
         out.y = a.y + (b.y - a.y) * t;
         return out;

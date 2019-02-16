@@ -70,7 +70,7 @@ define( function( require ) {
       // For better performance, the array of particle data objects is initialized here and the values updated rather
       // than reallocated during each update.
       this.particleData[ i ] = {
-        pos: new Vector2(),
+        pos: new Vector2( 0, 0 ),
         radius: 1,
         type: null,
         opacity: 1

@@ -20,7 +20,7 @@ define( function( require ) {
 
   // isPointZone method of captureZone is refactored to use Vector components, this class wide
   // instance is used for intermediary vector calculations.  See isPointInZone method
-  var pointZoneCheckPoint = new Vector2();
+  var pointZoneCheckPoint = new Vector2( 0, 0 );
 
   /**
    * This class defines the size and orientation of a capture zone which

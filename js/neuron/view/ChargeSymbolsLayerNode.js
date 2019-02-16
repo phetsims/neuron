@@ -54,8 +54,8 @@ define( function( require ) {
     // function to add a pair of complementary charge symbols, one inside the membrane and one outside
     function addChargeSymbolPair( channel1, channel2 ) {
 
-      var innerSymbolLocation = new Vector2();
-      var outerSymbolLocation = new Vector2();
+      var innerSymbolLocation = new Vector2( 0, 0 );
+      var outerSymbolLocation = new Vector2( 0, 0 );
       var outerSymbolParentNode = new Node();
       outerSymbolParentNode.addChild( outerChargeSymbol );
       var innerSymbolParentNode = new Node();

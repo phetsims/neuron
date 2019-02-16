@@ -45,7 +45,7 @@ define( function( require ) {
     this.representationChangedProperty = new Property( false );// @public
 
     // position of the channel
-    this.centerLocation = new Vector2(); // @public
+    this.centerLocation = new Vector2( 0, 0 ); // @public
 
     // Variable that defines how open the channel is. Valid range is 0 to 1, 0 means fully closed, 1 is fully open.
     this.openness = 0; // @public

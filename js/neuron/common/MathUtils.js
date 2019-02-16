@@ -15,8 +15,8 @@ define( function( require ) {
 
   // These vectors are used as temporary objects for calculating distance without creating new Vector2 instances, see
   // the createTraversalPoint method.
-  var distanceCalculatorVectorLHS = new Vector2();
-  var distanceCalculatorVectorRHS = new Vector2();
+  var distanceCalculatorVectorLHS = new Vector2( 0, 0 );
+  var distanceCalculatorVectorRHS = new Vector2( 0, 0 );
 
   var MathUtils = {
 

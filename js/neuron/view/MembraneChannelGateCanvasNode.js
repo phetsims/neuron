@@ -137,14 +137,14 @@ define( function( require ) {
     this.edgeGateStringColor = Color.BLACK.getCanvasStyle();
 
     // each iteration during channel rendering updates the same local variable in order to avoid new vector creation
-    this.transformedChannelLocation = new Vector2();
+    this.transformedChannelLocation = new Vector2( 0, 0 );
     this.viewTransformationMatrix = this.mvt.getMatrix();
 
     // avoid creation of new vector instances, update x, y positions and use it during rendering
-    this.channelEdgeConnectionPoint = new Vector2();
-    this.channelCenterBottomPoint = new Vector2();
-    this.ballPosition = new Vector2();
-    this.ballConnectionPoint = new Vector2();
+    this.channelEdgeConnectionPoint = new Vector2( 0, 0 );
+    this.channelCenterBottomPoint = new Vector2( 0, 0 );
+    this.ballPosition = new Vector2( 0, 0 );
+    this.ballConnectionPoint = new Vector2( 0, 0 );
 
     // the code is refactored to use minimum instances of Vector2 and Dimensions2
     this.channelSize = new Dimension2();
