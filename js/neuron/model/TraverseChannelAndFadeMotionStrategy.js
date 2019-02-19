@@ -190,7 +190,7 @@ define( function( require ) {
       if ( this.currentDestinationIndex < this.traversalPoints.length ) {
         var dest = this.traversalPoints[ this.currentDestinationIndex ];
         this.velocityVector.setXY( dest.x - currentLocationX, dest.y - currentLocationY );
-        var scaleFactor = this.maxVelocity / this.velocityVector.magnitude();
+        var scaleFactor = this.maxVelocity / this.velocityVector.magnitude;
         this.velocityVector.multiplyScalar( scaleFactor );
       }
       else {

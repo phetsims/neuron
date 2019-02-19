@@ -71,13 +71,13 @@ define( function( require ) {
           // used again.
           this.currentDestinationIndex = Number.MAX_VALUE;
         }
-        else if ( this.distanceBetweenPosAndTraversalPoint( currentPositionRefX, currentPositionRefY, this.traversalPoints[ this.currentDestinationIndex ] ) < this.velocityVector.magnitude() * dt ) {
+        else if ( this.distanceBetweenPosAndTraversalPoint( currentPositionRefX, currentPositionRefY, this.traversalPoints[ this.currentDestinationIndex ] ) < this.velocityVector.magnitude * dt ) {
           // We have arrived at the first traversal point, so now start
           // heading towards the second.
           movableModelElement.setPosition( this.traversalPoints[ this.currentDestinationIndex ].x, this.traversalPoints[ this.currentDestinationIndex ].y );
           this.currentDestinationIndex++;
           this.setCourseForPoint( movableModelElement.getPositionX(), movableModelElement.getPositionY(), this.traversalPoints[ this.currentDestinationIndex ],
-            this.velocityVector.magnitude() );
+            this.velocityVector.magnitude );
         }
         else {
           // Keep moving towards current destination.
@@ -101,13 +101,13 @@ define( function( require ) {
             this.bouncing = true; // Flag for tracking that we need to bounce.
           }
         }
-        if ( this.distanceBetweenPosAndTraversalPoint( currentPositionRefX, currentPositionRefY, this.traversalPoints[ this.currentDestinationIndex ] ) < this.velocityVector.magnitude() * dt ) {
+        if ( this.distanceBetweenPosAndTraversalPoint( currentPositionRefX, currentPositionRefY, this.traversalPoints[ this.currentDestinationIndex ] ) < this.velocityVector.magnitude * dt ) {
           // The element has reached the current traversal point, so
           // it should start moving towards the next.
           movableModelElement.setPosition( this.traversalPoints[ this.currentDestinationIndex ].x, this.traversalPoints[ this.currentDestinationIndex ].y );
           this.currentDestinationIndex++;
           this.setCourseForPoint( movableModelElement.getPositionX(), movableModelElement.getPositionY(), this.traversalPoints[ this.currentDestinationIndex ],
-            this.velocityVector.magnitude() );
+            this.velocityVector.magnitude );
           if ( this.bouncing ) {
             // Slow down if we are bouncing - it looks better this way.
             this.velocityVector.multiplyScalar( 0.5 );
@@ -120,7 +120,7 @@ define( function( require ) {
       }
       else if ( this.currentDestinationIndex === 2 ) {
         // Currently moving towards the 3rd point.
-        if ( this.distanceBetweenPosAndTraversalPoint( currentPositionRefX, currentPositionRefY, this.traversalPoints[ this.currentDestinationIndex ] ) < this.velocityVector.magnitude() * dt ) {
+        if ( this.distanceBetweenPosAndTraversalPoint( currentPositionRefX, currentPositionRefY, this.traversalPoints[ this.currentDestinationIndex ] ) < this.velocityVector.magnitude * dt ) {
           // The element has reached the last traversal point, so a
           // new motion strategy is set to have it move away and then
           // fade out.
@@ -237,7 +237,7 @@ define( function( require ) {
     setCourseForPoint: function( startLocationX, startLocationY, destination, velocityScaler ) {
       this.velocityVector.setXY( destination.x - startLocationX,
         destination.y - startLocationY );
-      var scaleFactor = this.maxVelocity / this.velocityVector.magnitude();
+      var scaleFactor = this.maxVelocity / this.velocityVector.magnitude;
       this.velocityVector.multiplyScalar( scaleFactor );
 
     },
@@ -248,7 +248,7 @@ define( function( require ) {
       if ( this.currentDestinationIndex < this.traversalPoints.length ) {
         var dest = this.traversalPoints[ this.currentDestinationIndex ];
         this.velocityVector.setXY( dest.x - currentLocationX, dest.y - currentLocationY );
-        var scaleFactor = this.maxVelocity / this.velocityVector.magnitude();
+        var scaleFactor = this.maxVelocity / this.velocityVector.magnitude;
         this.velocityVector.multiplyScalar( scaleFactor );
       }
       else {
