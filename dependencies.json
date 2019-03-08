@@ -1,5 +1,5 @@
 {
-  "comment": "# neuron 1.1.9 Tue Nov 06 2018 14:23:31 GMT-0700 (MST)",
+  "comment": "# neuron 1.1.9 Fri Mar 08 2019 13:55:19 GMT-0500 (EST)",
   "assert": {
     "sha": "7d27130a4d27da15aa7f8a21bbfb9245288c1b44",
     "branch": "HEAD"
@@ -9,8 +9,8 @@
     "branch": "HEAD"
   },
   "brand": {
-    "sha": "853b3b17a27619da1323e66ac18bb40bad17f784",
-    "branch": "HEAD"
+    "sha": "5117cd12b9675a4323c3763954d76da8e57b098d",
+    "branch": "neuron-1.1"
   },
   "chipper": {
     "sha": "28ae6db101f42d50b57ccd45a3bf5a6674b30c35",
@@ -25,15 +25,15 @@
     "branch": "HEAD"
   },
   "joist": {
-    "sha": "18b8d0fe1c71cdf42165f1ba40c028f10aece0c9",
-    "branch": "HEAD"
+    "sha": "af1187bfc2e976e63716fbfb95d17583d3584cb2",
+    "branch": "neuron-1.1"
   },
   "kite": {
     "sha": "733028991124bcea81c36b315f00e18453ba3d7b",
     "branch": "HEAD"
   },
   "neuron": {
-    "sha": "13191ba9eb5bb40483c59baea9de262de433abfa",
+    "sha": "be6474fd11bea251bbc786cf3c2e7cf8ae0b4913",
     "branch": "1.1"
   },
   "phet-core": {
