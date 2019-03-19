@@ -1,5 +1,5 @@
 {
-  "comment": "# neuron 1.1.10 Tue Mar 19 2019 12:16:12 GMT-0600 (Mountain Daylight Time)",
+  "comment": "# neuron 1.1.10 Tue Mar 19 2019 17:07:04 GMT-0400 (EDT)",
   "assert": {
     "sha": "7d27130a4d27da15aa7f8a21bbfb9245288c1b44",
     "branch": "HEAD"
@@ -13,8 +13,8 @@
     "branch": "HEAD"
   },
   "chipper": {
-    "sha": "28ae6db101f42d50b57ccd45a3bf5a6674b30c35",
-    "branch": "HEAD"
+    "sha": "97e3373ea4fb897e699f5982bf7fcec296ddd0ef",
+    "branch": "neuron-1.1"
   },
   "dot": {
     "sha": "394365987f8653dba5a82b9ceac29b9eb3e32be9",
@@ -33,7 +33,7 @@
     "branch": "HEAD"
   },
   "neuron": {
-    "sha": "b28a506dc059a585cbfbe5e1ddd619bef96ddb12",
+    "sha": "11b3e22f439ff93b14a054729385ce85bf495401",
     "branch": "1.1"
   },
   "phet-core": {
@@ -42,6 +42,10 @@
   },
   "phetcommon": {
     "sha": "d8117b888fbe4dfcc0041a6eb1b4b41cc9a70fb7",
+    "branch": "HEAD"
+  },
+  "phetmarks": {
+    "sha": "3fdfece0fe0262594bb06856833b8b16be25deb8",
     "branch": "HEAD"
   },
   "query-string-machine": {
@@ -67,9 +71,5 @@
   "tandem": {
     "sha": "d369b847dad15a3d32270318c58d482755a45168",
     "branch": "HEAD"
-  },
-  "phetmarks": {
-    "branch": "master",
-    "sha": "3fdfece0fe0262594bb06856833b8b16be25deb8"
   }
 }
