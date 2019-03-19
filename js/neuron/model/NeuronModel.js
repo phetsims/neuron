@@ -61,7 +61,7 @@ define( function( require ) {
   // Define the amount of delay between the values changing in the HH model until the concentration readouts are
   // updated.  This is needed to make sure that the concentration readouts don't change before visible potassium or
   // sodium ions have crossed the membrane.
-  var CONCENTRATION_READOUT_DELAY = 0.001;  // in seconds of sim time
+  var CONCENTRATION_READOUT_DELAY = 0.0005;  // in seconds of sim time
 
   // Define the thresholds for determining whether an action potential should be considered to be in progress.  These
   // values relate to the rate of flow through the gated sodium, gated potassium, and combination of the sodium and
