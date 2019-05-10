@@ -23,7 +23,8 @@ define( function( require ) {
       team: 'Wendy Adams, Fanny (Benay) Bentley, Janet Casagrand, Mike Klymkowsky, Ariel Paul, Katherine Perkins',
       qualityAssurance: 'Steele Dalton, Amanda Davis, Bryce Griebenow, Ethan Johnson, Elise Morgan, Oliver Orejola, Bryan Yoelin',
       thanks: 'Conversion of this simulation to HTML5 was funded in part by the Ghent University.'
-    }
+    },
+    webgl: true
   };
 
   SimLauncher.launch( function() {
