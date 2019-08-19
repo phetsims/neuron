@@ -1,5 +1,5 @@
 {
-  "comment": "# neuron 1.1.14 Mon Aug 19 2019 14:26:56 GMT-0600 (Mountain Daylight Time)",
+  "comment": "# neuron 1.1.15-rc.1 Mon Aug 19 2019 17:43:01 GMT-0600 (Mountain Daylight Time)",
   "assert": {
     "sha": "7d27130a4d27da15aa7f8a21bbfb9245288c1b44",
     "branch": "HEAD"
@@ -26,14 +26,14 @@
   },
   "joist": {
     "sha": "3634cc226d39159275e7b014ffc7df589eba31e6",
-    "branch": "neuron-1.1"
+    "branch": "HEAD"
   },
   "kite": {
     "sha": "733028991124bcea81c36b315f00e18453ba3d7b",
     "branch": "HEAD"
   },
   "neuron": {
-    "sha": "d30b9b153a28aa3f030eea0975e2c9a0ac4507aa",
+    "sha": "e70d9c5da8f7511b39547f0761bdb0759ff68e1e",
     "branch": "1.1"
   },
   "phet-core": {
@@ -58,7 +58,7 @@
   },
   "scenery-phet": {
     "sha": "202220b2169783630f7a11b86987dc43c8545704",
-    "branch": "neuron-1.1"
+    "branch": "HEAD"
   },
   "sherpa": {
     "sha": "bcc28cd6e710446f4be153ad006e9a02eb412e8c",
