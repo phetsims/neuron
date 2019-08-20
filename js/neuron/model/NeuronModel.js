@@ -92,7 +92,6 @@ define( function( require ) {
   var BACKGROUND_PARTICLE_DEFAULT_OPACITY = 0.10; // default alpha in Java was 0.05, which isn't visible in the canvas so slightly increasing to 0.10
 
   /**
-   * Main constructor for NeuronModel, which contains much of the model logic for the sim.
    * @constructor
    */
   function NeuronModel() {
