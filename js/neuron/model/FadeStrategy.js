@@ -7,12 +7,12 @@
  * @Sharfudeen Ashraf (for Ghent University)
  */
 
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  var inherit = require( 'PHET_CORE/inherit' );
-  var neuron = require( 'NEURON/neuron' );
+  const inherit = require( 'PHET_CORE/inherit' );
+  const neuron = require( 'NEURON/neuron' );
 
   function FadeStrategy() {}
 

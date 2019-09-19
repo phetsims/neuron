@@ -10,14 +10,14 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  var inherit = require( 'PHET_CORE/inherit' );
-  var neuron = require( 'NEURON/neuron' );
-  var PotassiumIon = require( 'NEURON/neuron/model/PotassiumIon' );
-  var ViewableParticle = require( 'NEURON/neuron/model/ViewableParticle' );
+  const inherit = require( 'PHET_CORE/inherit' );
+  const neuron = require( 'NEURON/neuron' );
+  const PotassiumIon = require( 'NEURON/neuron/model/PotassiumIon' );
+  const ViewableParticle = require( 'NEURON/neuron/model/ViewableParticle' );
 
   /**
    * Construct a playback particle.

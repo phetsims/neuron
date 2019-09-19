@@ -5,27 +5,27 @@
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
  */
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  var inherit = require( 'PHET_CORE/inherit' );
-  var neuron = require( 'NEURON/neuron' );
-  var Node = require( 'SCENERY/nodes/Node' );
-  var PhetFont = require( 'SCENERY_PHET/PhetFont' );
-  var PotassiumIon = require( 'NEURON/neuron/model/PotassiumIon' );
-  var Property = require( 'AXON/Property' );
-  var Rectangle = require( 'SCENERY/nodes/Rectangle' );
-  var SodiumIon = require( 'NEURON/neuron/model/SodiumIon' );
-  var StringUtils = require( 'PHETCOMMON/util/StringUtils' );
-  var Text = require( 'SCENERY/nodes/Text' );
-  var Util = require( 'DOT/Util' );
+  const inherit = require( 'PHET_CORE/inherit' );
+  const neuron = require( 'NEURON/neuron' );
+  const Node = require( 'SCENERY/nodes/Node' );
+  const PhetFont = require( 'SCENERY_PHET/PhetFont' );
+  const PotassiumIon = require( 'NEURON/neuron/model/PotassiumIon' );
+  const Property = require( 'AXON/Property' );
+  const Rectangle = require( 'SCENERY/nodes/Rectangle' );
+  const SodiumIon = require( 'NEURON/neuron/model/SodiumIon' );
+  const StringUtils = require( 'PHETCOMMON/util/StringUtils' );
+  const Text = require( 'SCENERY/nodes/Text' );
+  const Util = require( 'DOT/Util' );
 
   // strings
-  var concentrationReadoutPattern0Label1Value2UnitsString = require( 'string!NEURON/concentrationReadoutPattern.0label.1value.2units' );
-  var potassiumChemicalSymbolString = require( 'string!NEURON/potassiumChemicalSymbol' );
-  var sodiumChemicalSymbolString = require( 'string!NEURON/sodiumChemicalSymbol' );
-  var unitsMMString = require( 'string!NEURON/units.mM' );
+  const concentrationReadoutPattern0Label1Value2UnitsString = require( 'string!NEURON/concentrationReadoutPattern.0label.1value.2units' );
+  const potassiumChemicalSymbolString = require( 'string!NEURON/potassiumChemicalSymbol' );
+  const sodiumChemicalSymbolString = require( 'string!NEURON/sodiumChemicalSymbol' );
+  const unitsMMString = require( 'string!NEURON/units.mM' );
 
   // constants that control aspects of the concentration readout.
   var CONCENTRATION_READOUT_NUM_PLACES = 5;

@@ -6,16 +6,16 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  var MembraneChannelTypes = require( 'NEURON/neuron/model/MembraneChannelTypes' );
-  var neuron = require( 'NEURON/neuron' );
-  var PotassiumGatedChannel = require( 'NEURON/neuron/model/PotassiumGatedChannel' );
-  var PotassiumLeakageChannel = require( 'NEURON/neuron/model/PotassiumLeakageChannel' );
-  var SodiumDualGatedChannel = require( 'NEURON/neuron/model/SodiumDualGatedChannel' );
-  var SodiumLeakageChannel = require( 'NEURON/neuron/model/SodiumLeakageChannel' );
+  const MembraneChannelTypes = require( 'NEURON/neuron/model/MembraneChannelTypes' );
+  const neuron = require( 'NEURON/neuron' );
+  const PotassiumGatedChannel = require( 'NEURON/neuron/model/PotassiumGatedChannel' );
+  const PotassiumLeakageChannel = require( 'NEURON/neuron/model/PotassiumLeakageChannel' );
+  const SodiumDualGatedChannel = require( 'NEURON/neuron/model/SodiumDualGatedChannel' );
+  const SodiumLeakageChannel = require( 'NEURON/neuron/model/SodiumLeakageChannel' );
 
   var MembraneChannelFactory = {
     /**

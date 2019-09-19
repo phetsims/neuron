@@ -8,15 +8,15 @@
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
  */
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  var Circle = require( 'SCENERY/nodes/Circle' );
-  var Color = require( 'SCENERY/util/Color' );
-  var inherit = require( 'PHET_CORE/inherit' );
-  var neuron = require( 'NEURON/neuron' );
-  var Node = require( 'SCENERY/nodes/Node' );
+  const Circle = require( 'SCENERY/nodes/Circle' );
+  const Color = require( 'SCENERY/util/Color' );
+  const inherit = require( 'PHET_CORE/inherit' );
+  const neuron = require( 'NEURON/neuron' );
+  const Node = require( 'SCENERY/nodes/Node' );
 
   // constants
   var STROKE_LINE_WIDTH = 0.5;

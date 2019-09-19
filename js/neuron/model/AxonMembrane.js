@@ -7,19 +7,19 @@
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
  */
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  var AxonMembraneState = require( 'NEURON/neuron/model/AxonMembraneState' );
-  var Cubic = require( 'KITE/segments/Cubic' );
-  var Emitter = require( 'AXON/Emitter' );
-  var inherit = require( 'PHET_CORE/inherit' );
-  var neuron = require( 'NEURON/neuron' );
-  var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
-  var Shape = require( 'KITE/Shape' );
-  var TravelingActionPotential = require( 'NEURON/neuron/model/TravelingActionPotential' );
-  var Vector2 = require( 'DOT/Vector2' );
+  const AxonMembraneState = require( 'NEURON/neuron/model/AxonMembraneState' );
+  const Cubic = require( 'KITE/segments/Cubic' );
+  const Emitter = require( 'AXON/Emitter' );
+  const inherit = require( 'PHET_CORE/inherit' );
+  const neuron = require( 'NEURON/neuron' );
+  const NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
+  const Shape = require( 'KITE/Shape' );
+  const TravelingActionPotential = require( 'NEURON/neuron/model/TravelingActionPotential' );
+  const Vector2 = require( 'DOT/Vector2' );
 
   // Fixed membrane characteristics.
   var BODY_LENGTH = NeuronConstants.DEFAULT_DIAMETER * 1.5;

@@ -6,21 +6,21 @@
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
  */
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  var inherit = require( 'PHET_CORE/inherit' );
-  var neuron = require( 'NEURON/neuron' );
-  var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
-  var Panel = require( 'SUN/Panel' );
-  var Text = require( 'SCENERY/nodes/Text' );
-  var VerticalAquaRadioButtonGroup = require( 'SUN/VerticalAquaRadioButtonGroup' );
+  const inherit = require( 'PHET_CORE/inherit' );
+  const neuron = require( 'NEURON/neuron' );
+  const NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
+  const Panel = require( 'SUN/Panel' );
+  const Text = require( 'SCENERY/nodes/Text' );
+  const VerticalAquaRadioButtonGroup = require( 'SUN/VerticalAquaRadioButtonGroup' );
 
   // strings - labels for speed radio buttons
-  var fastForwardString = require( 'string!NEURON/fastForward' );
-  var normalString = require( 'string!NEURON/normal' );
-  var slowMotionString = require( 'string!NEURON/slowMotion' );
+  const fastForwardString = require( 'string!NEURON/fastForward' );
+  const normalString = require( 'string!NEURON/normal' );
+  const slowMotionString = require( 'string!NEURON/slowMotion' );
 
   /**
    * @param {Property.<number>} speedProperty

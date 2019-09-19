@@ -11,17 +11,17 @@
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
  */
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  var inherit = require( 'PHET_CORE/inherit' );
-  var neuron = require( 'NEURON/neuron' );
-  var NeuronParticlesTexture = require( 'NEURON/neuron/view/NeuronParticlesTexture' );
-  var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
-  var ShaderProgram = require( 'SCENERY/util/ShaderProgram' );
-  var Vector2 = require( 'DOT/Vector2' );
-  var WebGLNode = require( 'SCENERY/nodes/WebGLNode' );
+  const inherit = require( 'PHET_CORE/inherit' );
+  const neuron = require( 'NEURON/neuron' );
+  const NeuronParticlesTexture = require( 'NEURON/neuron/view/NeuronParticlesTexture' );
+  const ParticleType = require( 'NEURON/neuron/model/ParticleType' );
+  const ShaderProgram = require( 'SCENERY/util/ShaderProgram' );
+  const Vector2 = require( 'DOT/Vector2' );
+  const WebGLNode = require( 'SCENERY/nodes/WebGLNode' );
 
   // constants
   var MAX_PARTICLES = 2000; // several trials were run and peak number of particles was 1841, so this value should be safe

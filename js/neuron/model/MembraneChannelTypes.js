@@ -5,11 +5,11 @@
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
  */
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  var neuron = require( 'NEURON/neuron' );
+  const neuron = require( 'NEURON/neuron' );
 
   var MembraneChannelTypes = {
     'SODIUM_LEAKAGE_CHANNEL': 'SODIUM_LEAKAGE_CHANNEL',

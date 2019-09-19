@@ -1,9 +1,9 @@
 // Copyright 2014-2017, University of Colorado Boulder
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  var neuron = require( 'NEURON/neuron' );
+  const neuron = require( 'NEURON/neuron' );
 
   var ParticlePosition = {
     'INSIDE_MEMBRANE': 'INSIDE_MEMBRANE',

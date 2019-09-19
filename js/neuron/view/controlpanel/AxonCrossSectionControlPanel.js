@@ -6,25 +6,25 @@
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
  */
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  var Checkbox = require( 'SUN/Checkbox' );
-  var inherit = require( 'PHET_CORE/inherit' );
-  var neuron = require( 'NEURON/neuron' );
-  var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
-  var Panel = require( 'SUN/Panel' );
-  var PhetFont = require( 'SCENERY_PHET/PhetFont' );
-  var Text = require( 'SCENERY/nodes/Text' );
-  var VBox = require( 'SCENERY/nodes/VBox' );
+  const Checkbox = require( 'SUN/Checkbox' );
+  const inherit = require( 'PHET_CORE/inherit' );
+  const neuron = require( 'NEURON/neuron' );
+  const NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
+  const Panel = require( 'SUN/Panel' );
+  const PhetFont = require( 'SCENERY_PHET/PhetFont' );
+  const Text = require( 'SCENERY/nodes/Text' );
+  const VBox = require( 'SCENERY/nodes/VBox' );
 
   // strings - labels for control panel checkboxes
-  var allIonsString = require( 'string!NEURON/allIons' );
-  var chargesString = require( 'string!NEURON/charges' );
-  var concentrationsString = require( 'string!NEURON/concentrations' );
-  var potentialChartString = require( 'string!NEURON/potentialChart' );
-  var showLegendString = require( 'string!NEURON/showLegend' );
+  const allIonsString = require( 'string!NEURON/allIons' );
+  const chargesString = require( 'string!NEURON/charges' );
+  const concentrationsString = require( 'string!NEURON/concentrations' );
+  const potentialChartString = require( 'string!NEURON/potentialChart' );
+  const showLegendString = require( 'string!NEURON/showLegend' );
 
   // constants
   var CHECK_BOX_OPTIONS = { boxWidth: 15 };

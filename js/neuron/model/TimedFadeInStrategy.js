@@ -6,14 +6,14 @@
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
  */
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  var FadeStrategy = require( 'NEURON/neuron/model/FadeStrategy' );
-  var inherit = require( 'PHET_CORE/inherit' );
-  var neuron = require( 'NEURON/neuron' );
-  var NullFadeStrategy = require( 'NEURON/neuron/model/NullFadeStrategy' );
+  const FadeStrategy = require( 'NEURON/neuron/model/FadeStrategy' );
+  const inherit = require( 'PHET_CORE/inherit' );
+  const neuron = require( 'NEURON/neuron' );
+  const NullFadeStrategy = require( 'NEURON/neuron/model/NullFadeStrategy' );
 
   /**
    * Constructor that assumes full fade in.

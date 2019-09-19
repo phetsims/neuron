@@ -8,19 +8,19 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  var AbstractLeakChannel = require( 'NEURON/neuron/model/AbstractLeakChannel' );
-  var Color = require( 'SCENERY/util/Color' );
-  var inherit = require( 'PHET_CORE/inherit' );
-  var MembraneChannelTypes = require( 'NEURON/neuron/model/MembraneChannelTypes' );
-  var MembraneCrossingDirection = require( 'NEURON/neuron/model/MembraneCrossingDirection' );
-  var neuron = require( 'NEURON/neuron' );
-  var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
-  var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
-  var PieSliceShapedCaptureZone = require( 'NEURON/neuron/model/PieSliceShapedCaptureZone' );
+  const AbstractLeakChannel = require( 'NEURON/neuron/model/AbstractLeakChannel' );
+  const Color = require( 'SCENERY/util/Color' );
+  const inherit = require( 'PHET_CORE/inherit' );
+  const MembraneChannelTypes = require( 'NEURON/neuron/model/MembraneChannelTypes' );
+  const MembraneCrossingDirection = require( 'NEURON/neuron/model/MembraneCrossingDirection' );
+  const neuron = require( 'NEURON/neuron' );
+  const NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
+  const ParticleType = require( 'NEURON/neuron/model/ParticleType' );
+  const PieSliceShapedCaptureZone = require( 'NEURON/neuron/model/PieSliceShapedCaptureZone' );
 
   // constants
   var CHANNEL_HEIGHT = NeuronConstants.MEMBRANE_THICKNESS * 1.2; // In nanometers.

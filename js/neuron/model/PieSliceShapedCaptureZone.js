@@ -7,16 +7,16 @@
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
  */
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  var CaptureZone = require( 'NEURON/neuron/model/CaptureZone' );
-  var DotUtil = require( 'DOT/Util' ); // eslint-disable-line require-statement-match
-  var inherit = require( 'PHET_CORE/inherit' );
-  var neuron = require( 'NEURON/neuron' );
-  var Shape = require( 'KITE/Shape' );
-  var Vector2 = require( 'DOT/Vector2' );
+  const CaptureZone = require( 'NEURON/neuron/model/CaptureZone' );
+  const DotUtil = require( 'DOT/Util' ); // eslint-disable-line require-statement-match
+  const inherit = require( 'PHET_CORE/inherit' );
+  const neuron = require( 'NEURON/neuron' );
+  const Shape = require( 'KITE/Shape' );
+  const Vector2 = require( 'DOT/Vector2' );
 
   // isPointZone method of captureZone is refactored to use Vector components, this class wide
   // instance is used for intermediary vector calculations.  See isPointInZone method

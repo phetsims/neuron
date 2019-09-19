@@ -6,15 +6,15 @@
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
  */
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  var inherit = require( 'PHET_CORE/inherit' );
-  var MotionStrategy = require( 'NEURON/neuron/model/MotionStrategy' );
-  var neuron = require( 'NEURON/neuron' );
-  var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
-  var TimedFadeAwayStrategy = require( 'NEURON/neuron/model/TimedFadeAwayStrategy' );
+  const inherit = require( 'PHET_CORE/inherit' );
+  const MotionStrategy = require( 'NEURON/neuron/model/MotionStrategy' );
+  const neuron = require( 'NEURON/neuron' );
+  const NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
+  const TimedFadeAwayStrategy = require( 'NEURON/neuron/model/TimedFadeAwayStrategy' );
 
   // constants
   var CLOCK_TICKS_BEFORE_POSITION_UPDATE = 5;

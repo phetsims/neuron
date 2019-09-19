@@ -8,14 +8,14 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  var CaptureZone = require( 'NEURON/neuron/model/CaptureZone' );
-  var inherit = require( 'PHET_CORE/inherit' );
-  var neuron = require( 'NEURON/neuron' );
-  var Shape = require( 'KITE/Shape' );
+  const CaptureZone = require( 'NEURON/neuron/model/CaptureZone' );
+  const inherit = require( 'PHET_CORE/inherit' );
+  const neuron = require( 'NEURON/neuron' );
+  const Shape = require( 'KITE/Shape' );
 
   /**
    * @constructor

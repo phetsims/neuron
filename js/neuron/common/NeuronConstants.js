@@ -6,14 +6,14 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  * @author John Blanco
  */
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  var Color = require( 'SCENERY/util/Color' );
-  var neuron = require( 'NEURON/neuron' );
-  var PhetColorScheme = require( 'SCENERY_PHET/PhetColorScheme' );
-  var PhetFont = require( 'SCENERY_PHET/PhetFont' );
+  const Color = require( 'SCENERY/util/Color' );
+  const neuron = require( 'NEURON/neuron' );
+  const PhetColorScheme = require( 'SCENERY_PHET/PhetColorScheme' );
+  const PhetFont = require( 'SCENERY_PHET/PhetFont' );
 
   // constants
   var CLOCK_FRAME_RATE = 60;

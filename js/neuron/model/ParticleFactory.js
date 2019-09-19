@@ -6,14 +6,14 @@
  * @Sharfudeen Ashraf (for Ghent University)
  */
 
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  var neuron = require( 'NEURON/neuron' );
-  var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
-  var PotassiumIon = require( 'NEURON/neuron/model/PotassiumIon' );
-  var SodiumIon = require( 'NEURON/neuron/model/SodiumIon' );
+  const neuron = require( 'NEURON/neuron' );
+  const ParticleType = require( 'NEURON/neuron/model/ParticleType' );
+  const PotassiumIon = require( 'NEURON/neuron/model/PotassiumIon' );
+  const SodiumIon = require( 'NEURON/neuron/model/SodiumIon' );
 
   var ParticleFactory = {
     /**

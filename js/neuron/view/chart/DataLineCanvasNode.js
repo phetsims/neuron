@@ -4,14 +4,14 @@
  * A node that represents a line created from a collection of points, intended to be used  to represent data on a
  * graph.  This is created as part of an effort to improve the performance of the dynamic chart in the Neuron sim.
  */
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  var Bounds2 = require( 'DOT/Bounds2' );
-  var CanvasNode = require( 'SCENERY/nodes/CanvasNode' );
-  var inherit = require( 'PHET_CORE/inherit' );
-  var neuron = require( 'NEURON/neuron' );
+  const Bounds2 = require( 'DOT/Bounds2' );
+  const CanvasNode = require( 'SCENERY/nodes/CanvasNode' );
+  const inherit = require( 'PHET_CORE/inherit' );
+  const neuron = require( 'NEURON/neuron' );
 
   // constants
   var LINE_COLOR = '#ff5500'; // colorblind-friendly red

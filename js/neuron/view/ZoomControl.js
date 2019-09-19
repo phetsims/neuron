@@ -6,20 +6,20 @@
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
  */
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  var Dimension2 = require( 'DOT/Dimension2' );
-  var inherit = require( 'PHET_CORE/inherit' );
-  var neuron = require( 'NEURON/neuron' );
-  var Path = require( 'SCENERY/nodes/Path' );
-  var Range = require( 'DOT/Range' );
-  var RectangularPushButton = require( 'SUN/buttons/RectangularPushButton' );
-  var Shape = require( 'KITE/Shape' );
-  var Util = require( 'DOT/Util' );
-  var VBox = require( 'SCENERY/nodes/VBox' );
-  var VSlider = require( 'SUN/VSlider' );
+  const Dimension2 = require( 'DOT/Dimension2' );
+  const inherit = require( 'PHET_CORE/inherit' );
+  const neuron = require( 'NEURON/neuron' );
+  const Path = require( 'SCENERY/nodes/Path' );
+  const Range = require( 'DOT/Range' );
+  const RectangularPushButton = require( 'SUN/buttons/RectangularPushButton' );
+  const Shape = require( 'KITE/Shape' );
+  const Util = require( 'DOT/Util' );
+  const VBox = require( 'SCENERY/nodes/VBox' );
+  const VSlider = require( 'SUN/VSlider' );
 
   /**
    * @param {Property.<number>} zoomProperty - property that indicates how far zoomed in the simulation is, between

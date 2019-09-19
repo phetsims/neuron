@@ -3,18 +3,18 @@
 /**
  * Main entry point for the neuron sim.
  */
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  var NeuronProfiler = require( 'NEURON/neuron/common/NeuronProfiler' );
-  var NeuronQueryParameters = require( 'NEURON/neuron/common/NeuronQueryParameters' );
-  var NeuronScreen = require( 'NEURON/neuron/view/NeuronScreen' );
-  var Sim = require( 'JOIST/Sim' );
-  var SimLauncher = require( 'JOIST/SimLauncher' );
+  const NeuronProfiler = require( 'NEURON/neuron/common/NeuronProfiler' );
+  const NeuronQueryParameters = require( 'NEURON/neuron/common/NeuronQueryParameters' );
+  const NeuronScreen = require( 'NEURON/neuron/view/NeuronScreen' );
+  const Sim = require( 'JOIST/Sim' );
+  const SimLauncher = require( 'JOIST/SimLauncher' );
 
   // strings
-  var neuronTitleString = require( 'string!NEURON/neuron.title' );
+  const neuronTitleString = require( 'string!NEURON/neuron.title' );
 
   var simOptions = {
     credits: {

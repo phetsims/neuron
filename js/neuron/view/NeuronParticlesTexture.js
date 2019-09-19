@@ -6,17 +6,17 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  * @author John Blanco
  */
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  var Bounds2 = require( 'DOT/Bounds2' );
-  var Color = require( 'SCENERY/util/Color' );
-  var inherit = require( 'PHET_CORE/inherit' );
-  var neuron = require( 'NEURON/neuron' );
-  var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
-  var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
-  var Vector2 = require( 'DOT/Vector2' );
+  const Bounds2 = require( 'DOT/Bounds2' );
+  const Color = require( 'SCENERY/util/Color' );
+  const inherit = require( 'PHET_CORE/inherit' );
+  const neuron = require( 'NEURON/neuron' );
+  const NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
+  const ParticleType = require( 'NEURON/neuron/model/ParticleType' );
+  const Vector2 = require( 'DOT/Vector2' );
 
   // constants
   var CANVAS_LENGTH = 128; // width and height of the canvas, must be a power of 2 so that mipmapping can be used

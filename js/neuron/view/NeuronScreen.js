@@ -6,17 +6,17 @@
  *
  * @author John Blanco (PhET Interactive Simulations)
  */
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  var inherit = require( 'PHET_CORE/inherit' );
-  var neuron = require( 'NEURON/neuron' );
-  var NeuronClockModelAdapter = require( 'NEURON/neuron/model/NeuronClockModelAdapter' );
-  var NeuronModel = require( 'NEURON/neuron/model/NeuronModel' );
-  var NeuronScreenView = require( 'NEURON/neuron/view/NeuronScreenView' );
-  var Property = require( 'AXON/Property' );
-  var Screen = require( 'JOIST/Screen' );
+  const inherit = require( 'PHET_CORE/inherit' );
+  const neuron = require( 'NEURON/neuron' );
+  const NeuronClockModelAdapter = require( 'NEURON/neuron/model/NeuronClockModelAdapter' );
+  const NeuronModel = require( 'NEURON/neuron/model/NeuronModel' );
+  const NeuronScreenView = require( 'NEURON/neuron/view/NeuronScreenView' );
+  const Property = require( 'AXON/Property' );
+  const Screen = require( 'JOIST/Screen' );
 
   /**
    * Creates the model and view for the NeuronScreen

@@ -14,36 +14,36 @@
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
  */
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  var Bounds2 = require( 'DOT/Bounds2' );
-  var ChartCursor = require( 'NEURON/neuron/view/chart/ChartCursor' );
-  var CloseButton = require( 'SCENERY_PHET/buttons/CloseButton' );
-  var DataLineCanvasNode = require( 'NEURON/neuron/view/chart/DataLineCanvasNode' );
-  var dot = require( 'DOT/dot' );
-  var HBox = require( 'SCENERY/nodes/HBox' );
-  var inherit = require( 'PHET_CORE/inherit' );
-  var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
-  var neuron = require( 'NEURON/neuron' );
-  var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
-  var Node = require( 'SCENERY/nodes/Node' );
-  var Panel = require( 'SUN/Panel' );
-  var Path = require( 'SCENERY/nodes/Path' );
-  var PhetColorScheme = require( 'SCENERY_PHET/PhetColorScheme' );
-  var PhetFont = require( 'SCENERY_PHET/PhetFont' );
-  var Shape = require( 'KITE/Shape' );
-  var Text = require( 'SCENERY/nodes/Text' );
-  var TextPushButton = require( 'SUN/buttons/TextPushButton' );
-  var Util = require( 'DOT/Util' );
-  var XYDataSeries = require( 'GRIDDLE/XYDataSeries' );
+  const Bounds2 = require( 'DOT/Bounds2' );
+  const ChartCursor = require( 'NEURON/neuron/view/chart/ChartCursor' );
+  const CloseButton = require( 'SCENERY_PHET/buttons/CloseButton' );
+  const DataLineCanvasNode = require( 'NEURON/neuron/view/chart/DataLineCanvasNode' );
+  const dot = require( 'DOT/dot' );
+  const HBox = require( 'SCENERY/nodes/HBox' );
+  const inherit = require( 'PHET_CORE/inherit' );
+  const ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
+  const neuron = require( 'NEURON/neuron' );
+  const NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
+  const Node = require( 'SCENERY/nodes/Node' );
+  const Panel = require( 'SUN/Panel' );
+  const Path = require( 'SCENERY/nodes/Path' );
+  const PhetColorScheme = require( 'SCENERY_PHET/PhetColorScheme' );
+  const PhetFont = require( 'SCENERY_PHET/PhetFont' );
+  const Shape = require( 'KITE/Shape' );
+  const Text = require( 'SCENERY/nodes/Text' );
+  const TextPushButton = require( 'SUN/buttons/TextPushButton' );
+  const Util = require( 'DOT/Util' );
+  const XYDataSeries = require( 'GRIDDLE/XYDataSeries' );
 
   // strings
-  var chartClearString = require( 'string!NEURON/chartClear' );
-  var chartTitleString = require( 'string!NEURON/chartTitle' );
-  var chartXAxisLabelString = require( 'string!NEURON/chartXAxisLabel' );
-  var chartYAxisLabelString = require( 'string!NEURON/chartYAxisLabel' );
+  const chartClearString = require( 'string!NEURON/chartClear' );
+  const chartTitleString = require( 'string!NEURON/chartTitle' );
+  const chartXAxisLabelString = require( 'string!NEURON/chartXAxisLabel' );
+  const chartYAxisLabelString = require( 'string!NEURON/chartYAxisLabel' );
 
   // constants
   var GRID_TICK_TEXT_FONT = new PhetFont( 8 );

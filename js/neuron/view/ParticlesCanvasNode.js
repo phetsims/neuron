@@ -8,14 +8,14 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  * @author John Blanco
  */
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  var CanvasNode = require( 'SCENERY/nodes/CanvasNode' );
-  var inherit = require( 'PHET_CORE/inherit' );
-  var neuron = require( 'NEURON/neuron' );
-  var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
+  const CanvasNode = require( 'SCENERY/nodes/CanvasNode' );
+  const inherit = require( 'PHET_CORE/inherit' );
+  const neuron = require( 'NEURON/neuron' );
+  const ParticleType = require( 'NEURON/neuron/model/ParticleType' );
 
   /**
    * @param {NeuronModel} neuronModel

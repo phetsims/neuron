@@ -6,18 +6,18 @@
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
  */
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  var inherit = require( 'PHET_CORE/inherit' );
-  var MathUtils = require( 'NEURON/neuron/common/MathUtils' );
-  var MotionStrategy = require( 'NEURON/neuron/model/MotionStrategy' );
-  var neuron = require( 'NEURON/neuron' );
-  var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
-  var TimedFadeAwayStrategy = require( 'NEURON/neuron/model/TimedFadeAwayStrategy' );
-  var Vector2 = require( 'DOT/Vector2' );
-  var WanderAwayThenFadeMotionStrategy = require( 'NEURON/neuron/model/WanderAwayThenFadeMotionStrategy' );
+  const inherit = require( 'PHET_CORE/inherit' );
+  const MathUtils = require( 'NEURON/neuron/common/MathUtils' );
+  const MotionStrategy = require( 'NEURON/neuron/model/MotionStrategy' );
+  const neuron = require( 'NEURON/neuron' );
+  const NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
+  const TimedFadeAwayStrategy = require( 'NEURON/neuron/model/TimedFadeAwayStrategy' );
+  const Vector2 = require( 'DOT/Vector2' );
+  const WanderAwayThenFadeMotionStrategy = require( 'NEURON/neuron/model/WanderAwayThenFadeMotionStrategy' );
 
   /**
    * @param {MembraneChannel} channel

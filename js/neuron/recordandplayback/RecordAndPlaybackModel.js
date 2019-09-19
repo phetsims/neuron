@@ -11,17 +11,17 @@
  * @author Sharfudeen Ashraf
  * @author Sam Reid
  */
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  var inherit = require( 'PHET_CORE/inherit' );
-  var Live = require( 'NEURON/neuron/recordandplayback/Live' );
-  var neuron = require( 'NEURON/neuron' );
-  var ObservableArray = require( 'AXON/ObservableArray' );
-  var Playback = require( 'NEURON/neuron/recordandplayback/Playback' );
-  var Property = require( 'AXON/Property' );
-  var Record = require( 'NEURON/neuron/recordandplayback/Record' );
+  const inherit = require( 'PHET_CORE/inherit' );
+  const Live = require( 'NEURON/neuron/recordandplayback/Live' );
+  const neuron = require( 'NEURON/neuron' );
+  const ObservableArray = require( 'AXON/ObservableArray' );
+  const Playback = require( 'NEURON/neuron/recordandplayback/Playback' );
+  const Property = require( 'AXON/Property' );
+  const Record = require( 'NEURON/neuron/recordandplayback/Record' );
 
   /**
    * @param {number} maxRecordPoints

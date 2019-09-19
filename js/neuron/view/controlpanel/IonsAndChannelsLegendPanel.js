@@ -8,39 +8,39 @@
  * @author John Blanco
  *@author Sharfudeen Ashraf (for Ghent University)
  */
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  var Bounds2 = require( 'DOT/Bounds2' );
-  var HBox = require( 'SCENERY/nodes/HBox' );
-  var HStrut = require( 'SCENERY/nodes/HStrut' );
-  var inherit = require( 'PHET_CORE/inherit' );
-  var MembraneChannelNode = require( 'NEURON/neuron/view/MembraneChannelNode' );
-  var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
-  var neuron = require( 'NEURON/neuron' );
-  var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
-  var Panel = require( 'SUN/Panel' );
-  var ParticleNode = require( 'NEURON/neuron/view/ParticleNode' );
-  var PhetFont = require( 'SCENERY_PHET/PhetFont' );
-  var PotassiumGatedChannel = require( 'NEURON/neuron/model/PotassiumGatedChannel' );
-  var PotassiumIon = require( 'NEURON/neuron/model/PotassiumIon' );
-  var PotassiumLeakageChannel = require( 'NEURON/neuron/model/PotassiumLeakageChannel' );
-  var SodiumDualGatedChannel = require( 'NEURON/neuron/model/SodiumDualGatedChannel' );
-  var SodiumIon = require( 'NEURON/neuron/model/SodiumIon' );
-  var SodiumLeakageChannel = require( 'NEURON/neuron/model/SodiumLeakageChannel' );
-  var Text = require( 'SCENERY/nodes/Text' );
-  var VBox = require( 'SCENERY/nodes/VBox' );
-  var Vector2 = require( 'DOT/Vector2' );
+  const Bounds2 = require( 'DOT/Bounds2' );
+  const HBox = require( 'SCENERY/nodes/HBox' );
+  const HStrut = require( 'SCENERY/nodes/HStrut' );
+  const inherit = require( 'PHET_CORE/inherit' );
+  const MembraneChannelNode = require( 'NEURON/neuron/view/MembraneChannelNode' );
+  const ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
+  const neuron = require( 'NEURON/neuron' );
+  const NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
+  const Panel = require( 'SUN/Panel' );
+  const ParticleNode = require( 'NEURON/neuron/view/ParticleNode' );
+  const PhetFont = require( 'SCENERY_PHET/PhetFont' );
+  const PotassiumGatedChannel = require( 'NEURON/neuron/model/PotassiumGatedChannel' );
+  const PotassiumIon = require( 'NEURON/neuron/model/PotassiumIon' );
+  const PotassiumLeakageChannel = require( 'NEURON/neuron/model/PotassiumLeakageChannel' );
+  const SodiumDualGatedChannel = require( 'NEURON/neuron/model/SodiumDualGatedChannel' );
+  const SodiumIon = require( 'NEURON/neuron/model/SodiumIon' );
+  const SodiumLeakageChannel = require( 'NEURON/neuron/model/SodiumLeakageChannel' );
+  const Text = require( 'SCENERY/nodes/Text' );
+  const VBox = require( 'SCENERY/nodes/VBox' );
+  const Vector2 = require( 'DOT/Vector2' );
 
   // strings
-  var legendString = require( 'string!NEURON/legend' );
-  var potassiumGatedChannelString = require( 'string!NEURON/potassiumGatedChannel' );
-  var potassiumIonString = require( 'string!NEURON/potassiumIon' );
-  var potassiumLeakChannelString = require( 'string!NEURON/potassiumLeakChannel' );
-  var sodiumGatedChannelString = require( 'string!NEURON/sodiumGatedChannel' );
-  var sodiumIonString = require( 'string!NEURON/sodiumIon' );
-  var sodiumLeakChannelString = require( 'string!NEURON/sodiumLeakChannel' );
+  const legendString = require( 'string!NEURON/legend' );
+  const potassiumGatedChannelString = require( 'string!NEURON/potassiumGatedChannel' );
+  const potassiumIonString = require( 'string!NEURON/potassiumIon' );
+  const potassiumLeakChannelString = require( 'string!NEURON/potassiumLeakChannel' );
+  const sodiumGatedChannelString = require( 'string!NEURON/sodiumGatedChannel' );
+  const sodiumIonString = require( 'string!NEURON/sodiumIon' );
+  const sodiumLeakChannelString = require( 'string!NEURON/sodiumLeakChannel' );
 
   // constants
   var LEGEND_TEXT_OPTIONS = { font: new PhetFont( { size: 12 } ) };

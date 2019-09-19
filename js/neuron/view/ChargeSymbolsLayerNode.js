@@ -6,15 +6,15 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  var ChargeSymbolNode = require( 'NEURON/neuron/view/ChargeSymbolNode' );
-  var inherit = require( 'PHET_CORE/inherit' );
-  var neuron = require( 'NEURON/neuron' );
-  var Node = require( 'SCENERY/nodes/Node' );
-  var Vector2 = require( 'DOT/Vector2' );
+  const ChargeSymbolNode = require( 'NEURON/neuron/view/ChargeSymbolNode' );
+  const inherit = require( 'PHET_CORE/inherit' );
+  const neuron = require( 'NEURON/neuron' );
+  const Node = require( 'SCENERY/nodes/Node' );
+  const Vector2 = require( 'DOT/Vector2' );
 
   // Max size of the charge symbols, tweak as needed.
   var MAX_CHARGE_SYMBOL_SIZE = 10;

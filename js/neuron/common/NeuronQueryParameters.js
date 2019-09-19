@@ -5,11 +5,11 @@
  *
  * @author John Blanco
  */
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  var neuron = require( 'NEURON/neuron' );
+  const neuron = require( 'NEURON/neuron' );
 
   var NeuronQueryParameters = QueryStringMachine.getAll( {
 

@@ -11,18 +11,18 @@
  * @Sharfudeen Ashraf (for Ghent University)
  */
 
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  var inherit = require( 'PHET_CORE/inherit' );
-  var MotionStrategy = require( 'NEURON/neuron/model/MotionStrategy' );
-  var neuron = require( 'NEURON/neuron' );
-  var NullFadeStrategy = require( 'NEURON/neuron/model/NullFadeStrategy' );
-  var ParticlePlaybackMemento = require( 'NEURON/neuron/model/ParticlePlaybackMemento' );
-  var Property = require( 'AXON/Property' );
-  var StillnessMotionStrategy = require( 'NEURON/neuron/model/StillnessMotionStrategy' );
-  var ViewableParticle = require( 'NEURON/neuron/model/ViewableParticle' );
+  const inherit = require( 'PHET_CORE/inherit' );
+  const MotionStrategy = require( 'NEURON/neuron/model/MotionStrategy' );
+  const neuron = require( 'NEURON/neuron' );
+  const NullFadeStrategy = require( 'NEURON/neuron/model/NullFadeStrategy' );
+  const ParticlePlaybackMemento = require( 'NEURON/neuron/model/ParticlePlaybackMemento' );
+  const Property = require( 'AXON/Property' );
+  const StillnessMotionStrategy = require( 'NEURON/neuron/model/StillnessMotionStrategy' );
+  const ViewableParticle = require( 'NEURON/neuron/model/ViewableParticle' );
 
   // constants
   var DEFAULT_PARTICLE_RADIUS = 0.75;  // In nanometers.

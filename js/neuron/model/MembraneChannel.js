@@ -7,21 +7,21 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  var Color = require( 'SCENERY/util/Color' );
-  var Dimension2 = require( 'DOT/Dimension2' );
-  var inherit = require( 'PHET_CORE/inherit' );
-  var Matrix3 = require( 'DOT/Matrix3' );
-  var neuron = require( 'NEURON/neuron' );
-  var NullCaptureZone = require( 'NEURON/neuron/model/NullCaptureZone' );
-  var PhetColorScheme = require( 'SCENERY_PHET/PhetColorScheme' );
-  var Property = require( 'AXON/Property' );
-  var Rectangle = require( 'DOT/Rectangle' );
-  var TraverseChannelAndFadeMotionStrategy = require( 'NEURON/neuron/model/TraverseChannelAndFadeMotionStrategy' );
-  var Vector2 = require( 'DOT/Vector2' );
+  const Color = require( 'SCENERY/util/Color' );
+  const Dimension2 = require( 'DOT/Dimension2' );
+  const inherit = require( 'PHET_CORE/inherit' );
+  const Matrix3 = require( 'DOT/Matrix3' );
+  const neuron = require( 'NEURON/neuron' );
+  const NullCaptureZone = require( 'NEURON/neuron/model/NullCaptureZone' );
+  const PhetColorScheme = require( 'SCENERY_PHET/PhetColorScheme' );
+  const Property = require( 'AXON/Property' );
+  const Rectangle = require( 'DOT/Rectangle' );
+  const TraverseChannelAndFadeMotionStrategy = require( 'NEURON/neuron/model/TraverseChannelAndFadeMotionStrategy' );
+  const Vector2 = require( 'DOT/Vector2' );
 
   // constants
   var SIDE_HEIGHT_TO_CHANNEL_HEIGHT_RATIO = 1.3;

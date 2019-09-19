@@ -5,11 +5,11 @@
  * @author Sam Reid (PhET Interactive Simulations)
  * @author Sharfudeen Ashraf (for Ghent University)
  */
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  var neuron = require( 'NEURON/neuron' );
+  const neuron = require( 'NEURON/neuron' );
 
   var BehaviourModeType = {
     pauseAtEndOfPlayback: true,

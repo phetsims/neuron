@@ -10,14 +10,14 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  var DelayElement = require( 'NEURON/neuron/model/DelayElement' );
-  var inherit = require( 'PHET_CORE/inherit' );
-  var neuron = require( 'NEURON/neuron' );
-  var Util = require( 'DOT/Util' );
+  const DelayElement = require( 'NEURON/neuron/model/DelayElement' );
+  const inherit = require( 'PHET_CORE/inherit' );
+  const neuron = require( 'NEURON/neuron' );
+  const Util = require( 'DOT/Util' );
 
   // This value is used to tell if two numbers are different.  It was needed due to some floating point resolution
   // problems that were occurring.

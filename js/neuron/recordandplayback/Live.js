@@ -6,13 +6,13 @@
  * @author Sam Reid
  * @author Sharfudeen Ashraf (for Ghent University)
  */
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  var inherit = require( 'PHET_CORE/inherit' );
-  var Mode = require( 'NEURON/neuron/recordandplayback/Mode' );
-  var neuron = require( 'NEURON/neuron' );
+  const inherit = require( 'PHET_CORE/inherit' );
+  const Mode = require( 'NEURON/neuron/recordandplayback/Mode' );
+  const neuron = require( 'NEURON/neuron' );
 
   /**
    * @param {RecordAndPlaybackModel} recordAndPlaybackModel

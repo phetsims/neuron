@@ -13,13 +13,13 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  * @author John Blanco
  */
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  var inherit = require( 'PHET_CORE/inherit' );
-  var neuron = require( 'NEURON/neuron' );
-  var Property = require( 'AXON/Property' );
+  const inherit = require( 'PHET_CORE/inherit' );
+  const neuron = require( 'NEURON/neuron' );
+  const Property = require( 'AXON/Property' );
 
   // the following constants could easily be turned into options if there was a need to reuse and thus generalize
   // this class.

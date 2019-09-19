@@ -4,19 +4,19 @@
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
  */
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  var Color = require( 'SCENERY/util/Color' );
-  var inherit = require( 'PHET_CORE/inherit' );
-  var Matrix3 = require( 'DOT/Matrix3' );
-  var neuron = require( 'NEURON/neuron' );
-  var Node = require( 'SCENERY/nodes/Node' );
-  var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
-  var Path = require( 'SCENERY/nodes/Path' );
-  var Shape = require( 'KITE/Shape' );
-  var Vector2 = require( 'DOT/Vector2' );
+  const Color = require( 'SCENERY/util/Color' );
+  const inherit = require( 'PHET_CORE/inherit' );
+  const Matrix3 = require( 'DOT/Matrix3' );
+  const neuron = require( 'NEURON/neuron' );
+  const Node = require( 'SCENERY/nodes/Node' );
+  const ParticleType = require( 'NEURON/neuron/model/ParticleType' );
+  const Path = require( 'SCENERY/nodes/Path' );
+  const Shape = require( 'KITE/Shape' );
+  const Vector2 = require( 'DOT/Vector2' );
 
   // constants
   var PARTICLE_EDGE_STROKE = 1;

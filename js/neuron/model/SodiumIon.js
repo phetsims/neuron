@@ -5,15 +5,15 @@
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
  */
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  var inherit = require( 'PHET_CORE/inherit' );
-  var neuron = require( 'NEURON/neuron' );
-  var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
-  var Particle = require( 'NEURON/neuron/model/Particle' );
-  var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
+  const inherit = require( 'PHET_CORE/inherit' );
+  const neuron = require( 'NEURON/neuron' );
+  const NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
+  const Particle = require( 'NEURON/neuron/model/Particle' );
+  const ParticleType = require( 'NEURON/neuron/model/ParticleType' );
 
   /**
    * @constructor

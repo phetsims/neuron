@@ -6,14 +6,14 @@
  * console.  On iOS devices, it displays the information in an "alert" window.
  */
 
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  var inherit = require( 'PHET_CORE/inherit' );
-  var neuron = require( 'NEURON/neuron' );
-  var platform = require( 'PHET_CORE/platform' );
-  var Util = require( 'DOT/Util' );
+  const inherit = require( 'PHET_CORE/inherit' );
+  const neuron = require( 'NEURON/neuron' );
+  const platform = require( 'PHET_CORE/platform' );
+  const Util = require( 'DOT/Util' );
 
   /**
    * @param {Sim} sim - reference to the simulation being profiled

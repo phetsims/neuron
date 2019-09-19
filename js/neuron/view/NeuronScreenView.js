@@ -7,51 +7,51 @@
  * @author Sam Reid (PhET Interactive Simulations)
  * @author Sharfudeen Ashraf (for Ghent University)
  */
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  var AxonBodyNode = require( 'NEURON/neuron/view/AxonBodyNode' );
-  var AxonCrossSectionControlPanel = require( 'NEURON/neuron/view/controlpanel/AxonCrossSectionControlPanel' );
-  var AxonCrossSectionNode = require( 'NEURON/neuron/view/AxonCrossSectionNode' );
-  var Bounds2 = require( 'DOT/Bounds2' );
-  var ChargeSymbolsLayerNode = require( 'NEURON/neuron/view/ChargeSymbolsLayerNode' );
-  var ConcentrationReadoutLayerNode = require( 'NEURON/neuron/view/ConcentrationReadoutLayerNode' );
-  var DerivedProperty = require( 'AXON/DerivedProperty' );
-  var Dimension2 = require( 'DOT/Dimension2' );
-  var HBox = require( 'SCENERY/nodes/HBox' );
-  var inherit = require( 'PHET_CORE/inherit' );
-  var IonsAndChannelsLegendPanel = require( 'NEURON/neuron/view/controlpanel/IonsAndChannelsLegendPanel' );
-  var Matrix3 = require( 'DOT/Matrix3' );
-  var MembraneChannelGateCanvasNode = require( 'NEURON/neuron/view/MembraneChannelGateCanvasNode' );
-  var MembranePotentialChart = require( 'NEURON/neuron/view/chart/MembranePotentialChart' );
-  var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
-  var MultiLineText = require( 'SCENERY_PHET/MultiLineText' );
-  var neuron = require( 'NEURON/neuron' );
-  var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
-  var Node = require( 'SCENERY/nodes/Node' );
-  var ParticlesCanvasNode = require( 'NEURON/neuron/view/ParticlesCanvasNode' );
-  var ParticlesWebGLNode = require( 'NEURON/neuron/view/ParticlesWebGLNode' );
-  var Path = require( 'SCENERY/nodes/Path' );
-  var PhetColorScheme = require( 'SCENERY_PHET/PhetColorScheme' );
-  var PhetFont = require( 'SCENERY_PHET/PhetFont' );
-  var PlayPauseButton = require( 'SCENERY_PHET/buttons/PlayPauseButton' );
-  var Property = require( 'AXON/Property' );
-  var Rectangle = require( 'SCENERY/nodes/Rectangle' );
-  var RectangularPushButton = require( 'SUN/buttons/RectangularPushButton' );
-  var ResetAllButton = require( 'SCENERY_PHET/buttons/ResetAllButton' );
-  var SceneryUtil = require( 'SCENERY/util/Util' ); // eslint-disable-line require-statement-match
-  var ScreenView = require( 'JOIST/ScreenView' );
-  var Shape = require( 'KITE/Shape' );
-  var SimSpeedControlPanel = require( 'NEURON/neuron/view/controlpanel/SimSpeedControlPanel' );
-  var StepBackwardButton = require( 'SCENERY_PHET/buttons/StepBackwardButton' );
-  var StepForwardButton = require( 'SCENERY_PHET/buttons/StepForwardButton' );
-  var Util = require( 'DOT/Util' );
-  var Vector2 = require( 'DOT/Vector2' );
-  var ZoomControl = require( 'NEURON/neuron/view/ZoomControl' );
+  const AxonBodyNode = require( 'NEURON/neuron/view/AxonBodyNode' );
+  const AxonCrossSectionControlPanel = require( 'NEURON/neuron/view/controlpanel/AxonCrossSectionControlPanel' );
+  const AxonCrossSectionNode = require( 'NEURON/neuron/view/AxonCrossSectionNode' );
+  const Bounds2 = require( 'DOT/Bounds2' );
+  const ChargeSymbolsLayerNode = require( 'NEURON/neuron/view/ChargeSymbolsLayerNode' );
+  const ConcentrationReadoutLayerNode = require( 'NEURON/neuron/view/ConcentrationReadoutLayerNode' );
+  const DerivedProperty = require( 'AXON/DerivedProperty' );
+  const Dimension2 = require( 'DOT/Dimension2' );
+  const HBox = require( 'SCENERY/nodes/HBox' );
+  const inherit = require( 'PHET_CORE/inherit' );
+  const IonsAndChannelsLegendPanel = require( 'NEURON/neuron/view/controlpanel/IonsAndChannelsLegendPanel' );
+  const Matrix3 = require( 'DOT/Matrix3' );
+  const MembraneChannelGateCanvasNode = require( 'NEURON/neuron/view/MembraneChannelGateCanvasNode' );
+  const MembranePotentialChart = require( 'NEURON/neuron/view/chart/MembranePotentialChart' );
+  const ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
+  const MultiLineText = require( 'SCENERY_PHET/MultiLineText' );
+  const neuron = require( 'NEURON/neuron' );
+  const NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
+  const Node = require( 'SCENERY/nodes/Node' );
+  const ParticlesCanvasNode = require( 'NEURON/neuron/view/ParticlesCanvasNode' );
+  const ParticlesWebGLNode = require( 'NEURON/neuron/view/ParticlesWebGLNode' );
+  const Path = require( 'SCENERY/nodes/Path' );
+  const PhetColorScheme = require( 'SCENERY_PHET/PhetColorScheme' );
+  const PhetFont = require( 'SCENERY_PHET/PhetFont' );
+  const PlayPauseButton = require( 'SCENERY_PHET/buttons/PlayPauseButton' );
+  const Property = require( 'AXON/Property' );
+  const Rectangle = require( 'SCENERY/nodes/Rectangle' );
+  const RectangularPushButton = require( 'SUN/buttons/RectangularPushButton' );
+  const ResetAllButton = require( 'SCENERY_PHET/buttons/ResetAllButton' );
+  const SceneryUtil = require( 'SCENERY/util/Util' ); // eslint-disable-line require-statement-match
+  const ScreenView = require( 'JOIST/ScreenView' );
+  const Shape = require( 'KITE/Shape' );
+  const SimSpeedControlPanel = require( 'NEURON/neuron/view/controlpanel/SimSpeedControlPanel' );
+  const StepBackwardButton = require( 'SCENERY_PHET/buttons/StepBackwardButton' );
+  const StepForwardButton = require( 'SCENERY_PHET/buttons/StepForwardButton' );
+  const Util = require( 'DOT/Util' );
+  const Vector2 = require( 'DOT/Vector2' );
+  const ZoomControl = require( 'NEURON/neuron/view/ZoomControl' );
 
   // strings
-  var stimulateNeuronString = require( 'string!NEURON/stimulateNeuron' );
+  const stimulateNeuronString = require( 'string!NEURON/stimulateNeuron' );
 
   // constants
   var BUTTON_FONT = new PhetFont( 18 );

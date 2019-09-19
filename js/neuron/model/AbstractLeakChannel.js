@@ -7,13 +7,13 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  var inherit = require( 'PHET_CORE/inherit' );
-  var MembraneChannel = require( 'NEURON/neuron/model/MembraneChannel' );
-  var neuron = require( 'NEURON/neuron' );
+  const inherit = require( 'PHET_CORE/inherit' );
+  const MembraneChannel = require( 'NEURON/neuron/model/MembraneChannel' );
+  const neuron = require( 'NEURON/neuron' );
 
   /**
    * @param {number} channelWidth

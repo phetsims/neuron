@@ -5,13 +5,13 @@
  *
  * @author Sharfudeen Ashraf (for Ghent University)
  */
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  var neuron = require( 'NEURON/neuron' );
-  var Util = require( 'DOT/Util' );
-  var Vector2 = require( 'DOT/Vector2' );
+  const neuron = require( 'NEURON/neuron' );
+  const Util = require( 'DOT/Util' );
+  const Vector2 = require( 'DOT/Vector2' );
 
   // These vectors are used as temporary objects for calculating distance without creating new Vector2 instances, see
   // the createTraversalPoint method.

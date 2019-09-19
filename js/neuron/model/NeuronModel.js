@@ -7,32 +7,32 @@
  * @author Sam Reid (PhET Interactive Simulations)
  * @author Sharfudeen Ashraf (for Ghent University)
  */
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  var AxonMembrane = require( 'NEURON/neuron/model/AxonMembrane' );
-  var Emitter = require( 'AXON/Emitter' );
-  var inherit = require( 'PHET_CORE/inherit' );
-  var MathUtils = require( 'NEURON/neuron/common/MathUtils' );
-  var MembraneChannelFactory = require( 'NEURON/neuron/model/MembraneChannelFactory' );
-  var MembraneChannelTypes = require( 'NEURON/neuron/model/MembraneChannelTypes' );
-  var MembraneCrossingDirection = require( 'NEURON/neuron/model/MembraneCrossingDirection' );
-  var ModifiedHodgkinHuxleyModel = require( 'NEURON/neuron/model/ModifiedHodgkinHuxleyModel' );
-  var neuron = require( 'NEURON/neuron' );
-  var NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
-  var NeuronModelState = require( 'NEURON/neuron/model/NeuronModelState' );
-  var ObservableArray = require( 'AXON/ObservableArray' );
-  var ParticleFactory = require( 'NEURON/neuron/model/ParticleFactory' );
-  var ParticlePosition = require( 'NEURON/neuron/model/ParticlePosition' );
-  var ParticleType = require( 'NEURON/neuron/model/ParticleType' );
-  var PlaybackParticle = require( 'NEURON/neuron/model/PlaybackParticle' );
-  var Property = require( 'AXON/Property' );
-  var RecordAndPlaybackModel = require( 'NEURON/neuron/recordandplayback/RecordAndPlaybackModel' );
-  var SlowBrownianMotionStrategy = require( 'NEURON/neuron/model/SlowBrownianMotionStrategy' );
-  var SodiumDualGatedChannel = require( 'NEURON/neuron/model/SodiumDualGatedChannel' );
-  var TimedFadeInStrategy = require( 'NEURON/neuron/model/TimedFadeInStrategy' );
-  var Vector2 = require( 'DOT/Vector2' );
+  const AxonMembrane = require( 'NEURON/neuron/model/AxonMembrane' );
+  const Emitter = require( 'AXON/Emitter' );
+  const inherit = require( 'PHET_CORE/inherit' );
+  const MathUtils = require( 'NEURON/neuron/common/MathUtils' );
+  const MembraneChannelFactory = require( 'NEURON/neuron/model/MembraneChannelFactory' );
+  const MembraneChannelTypes = require( 'NEURON/neuron/model/MembraneChannelTypes' );
+  const MembraneCrossingDirection = require( 'NEURON/neuron/model/MembraneCrossingDirection' );
+  const ModifiedHodgkinHuxleyModel = require( 'NEURON/neuron/model/ModifiedHodgkinHuxleyModel' );
+  const neuron = require( 'NEURON/neuron' );
+  const NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
+  const NeuronModelState = require( 'NEURON/neuron/model/NeuronModelState' );
+  const ObservableArray = require( 'AXON/ObservableArray' );
+  const ParticleFactory = require( 'NEURON/neuron/model/ParticleFactory' );
+  const ParticlePosition = require( 'NEURON/neuron/model/ParticlePosition' );
+  const ParticleType = require( 'NEURON/neuron/model/ParticleType' );
+  const PlaybackParticle = require( 'NEURON/neuron/model/PlaybackParticle' );
+  const Property = require( 'AXON/Property' );
+  const RecordAndPlaybackModel = require( 'NEURON/neuron/recordandplayback/RecordAndPlaybackModel' );
+  const SlowBrownianMotionStrategy = require( 'NEURON/neuron/model/SlowBrownianMotionStrategy' );
+  const SodiumDualGatedChannel = require( 'NEURON/neuron/model/SodiumDualGatedChannel' );
+  const TimedFadeInStrategy = require( 'NEURON/neuron/model/TimedFadeInStrategy' );
+  const Vector2 = require( 'DOT/Vector2' );
 
   // default configuration values
   var DEFAULT_FOR_SHOW_ALL_IONS = true;
