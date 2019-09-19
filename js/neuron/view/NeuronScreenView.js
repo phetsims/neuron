@@ -54,12 +54,12 @@ define( require => {
   const stimulateNeuronString = require( 'string!NEURON/stimulateNeuron' );
 
   // constants
-  var BUTTON_FONT = new PhetFont( 18 );
-  var SHOW_PARTICLE_CANVAS_BOUNDS = false; // for debugging
-  var MIN_ZOOM = 0.7;
-  var MAX_ZOOM = 6;
-  var DEFAULT_ZOOM = 1.0;
-  var CHART_HEIGHT = 100; // in screen coordinates, empirically determined
+  const BUTTON_FONT = new PhetFont( 18 );
+  const SHOW_PARTICLE_CANVAS_BOUNDS = false; // for debugging
+  const MIN_ZOOM = 0.7;
+  const MAX_ZOOM = 6;
+  const DEFAULT_ZOOM = 1.0;
+  const CHART_HEIGHT = 100; // in screen coordinates, empirically determined
 
   /**
    * @param {NeuronClockModelAdapter} neuronClockModelAdapter - holds the NeuronModel which uses specialized real time
@@ -68,10 +68,10 @@ define( require => {
    */
   function NeuronScreenView( neuronClockModelAdapter ) {
 
-    var self = this;
+    const self = this;
     this.neuronModel = neuronClockModelAdapter.model; // model is neuron model
     ScreenView.call( this, { layoutBounds: new Bounds2( 0, 0, 834, 504 ) } );
-    var viewPortPosition = new Vector2( this.layoutBounds.width * 0.40, this.layoutBounds.height - 255 );
+    const viewPortPosition = new Vector2( this.layoutBounds.width * 0.40, this.layoutBounds.height - 255 );
 
     // Set up the model-canvas transform.
     this.mvt = ModelViewTransform2.createSinglePointScaleInvertedYMapping(
@@ -79,18 +79,18 @@ define( require => {
       2.45 ); // Scale factor - smaller numbers "zoom out", bigger ones "zoom in".
 
     // Define the area where the axon and particles will be depicted.
-    var worldNodeClipArea = Shape.rect( 70, 10, this.layoutBounds.maxX - 280, this.layoutBounds.maxY - 110 );
+    const worldNodeClipArea = Shape.rect( 70, 10, this.layoutBounds.maxX - 280, this.layoutBounds.maxY - 110 );
 
     // The zoomable area needs to have a root that isn't zoomed so that it can be effectively clipped.
-    var zoomableAreaRootNode = new Node( { clipArea: worldNodeClipArea } );
+    const zoomableAreaRootNode = new Node( { clipArea: worldNodeClipArea } );
     this.addChild( zoomableAreaRootNode );
 
     // Define the root for the part that can be zoomed.
-    var zoomableNode = new Node();
+    const zoomableNode = new Node();
     zoomableAreaRootNode.addChild( zoomableNode );
 
     // Add a subtle outline to the zoomable area.
-    var clipAreaBounds = worldNodeClipArea.bounds;
+    const clipAreaBounds = worldNodeClipArea.bounds;
     this.addChild( new Rectangle(
       clipAreaBounds.x,
       clipAreaBounds.y,
@@ -102,18 +102,18 @@ define( require => {
     ) );
 
     // Create and add the layers in the desired order.
-    var axonBodyLayer = new Node();
-    var axonCrossSectionLayer = new Node();
-    var channelLayer = new Node();
-    var chargeSymbolLayer = new ChargeSymbolsLayerNode( this.neuronModel, this.mvt );
+    const axonBodyLayer = new Node();
+    const axonCrossSectionLayer = new Node();
+    const channelLayer = new Node();
+    const chargeSymbolLayer = new ChargeSymbolsLayerNode( this.neuronModel, this.mvt );
 
     zoomableNode.addChild( axonBodyLayer );
     zoomableNode.addChild( axonCrossSectionLayer );
     zoomableNode.addChild( channelLayer );
     zoomableNode.addChild( chargeSymbolLayer );
 
-    var dilationFactor = DEFAULT_ZOOM - MIN_ZOOM;
-    var axonBodyNode = new AxonBodyNode(
+    const dilationFactor = DEFAULT_ZOOM - MIN_ZOOM;
+    const axonBodyNode = new AxonBodyNode(
       this.neuronModel.axonMembrane,
       worldNodeClipArea.bounds.dilatedXY(
         worldNodeClipArea.bounds.width * dilationFactor,
@@ -121,30 +121,30 @@ define( require => {
       this.mvt
     );
     axonBodyLayer.addChild( axonBodyNode );
-    var axonCrossSectionNode = new AxonCrossSectionNode( this.neuronModel.axonMembrane, this.mvt );
+    const axonCrossSectionNode = new AxonCrossSectionNode( this.neuronModel.axonMembrane, this.mvt );
     axonCrossSectionLayer.addChild( axonCrossSectionNode );
 
     // Create the node that will render the membrane channels and gates.  This is done on a canvas node for better
     // performance.
-    var channelGateBounds = new Bounds2( 100, 50, 600, 500 ); // empirically determined
-    var membraneChannelGateCanvasNode = new MembraneChannelGateCanvasNode( this.neuronModel, this.mvt, channelGateBounds );
+    const channelGateBounds = new Bounds2( 100, 50, 600, 500 ); // empirically determined
+    const membraneChannelGateCanvasNode = new MembraneChannelGateCanvasNode( this.neuronModel, this.mvt, channelGateBounds );
     channelLayer.addChild( membraneChannelGateCanvasNode );
 
     // Create that property that will control the zoom amount.
-    var zoomProperty = new Property( DEFAULT_ZOOM );
+    const zoomProperty = new Property( DEFAULT_ZOOM );
 
     // Create a property that will contain the current zoom transformation matrix.
-    var zoomMatrixProperty = new Property();
+    const zoomMatrixProperty = new Property();
 
     // Watch the zoom property and zoom in and out correspondingly.
     zoomProperty.link( function( zoomFactor ) {
 
       // Zoom toward the top so that when zoomed in the membrane is in a reasonable place and there is room for the
       // chart below it.
-      var zoomTowardTopThreshold = 0.6;
-      var scaleMatrix;
-      var scaleAroundX = Util.roundSymmetric( viewPortPosition.x );
-      var scaleAroundY;
+      const zoomTowardTopThreshold = 0.6;
+      let scaleMatrix;
+      const scaleAroundX = Util.roundSymmetric( viewPortPosition.x );
+      let scaleAroundY;
       if ( zoomFactor > zoomTowardTopThreshold ) {
         scaleAroundY = (zoomFactor - zoomTowardTopThreshold) * self.neuronModel.getAxonMembrane().getCrossSectionDiameter() * 0.075;
         scaleMatrix = Matrix3.translation( scaleAroundX, scaleAroundY ).timesMatrix( Matrix3.scaling( zoomFactor, zoomFactor ) ).timesMatrix( Matrix3.translation( -scaleAroundX, -scaleAroundY ) );
@@ -159,13 +159,13 @@ define( require => {
     } );
 
     // Check to see if WebGL can be used
-    var webGLSupported = SceneryUtil.isWebGLSupported && phet.chipper.queryParameters.webgl;
+    const webGLSupported = SceneryUtil.isWebGLSupported && phet.chipper.queryParameters.webgl;
 
     if ( webGLSupported ) {
 
-      var estimatedMaxParticleWidth = 30; // empirically determined, used to support clipping-like behavior
+      const estimatedMaxParticleWidth = 30; // empirically determined, used to support clipping-like behavior
 
-      var particlesWebGLNode = new ParticlesWebGLNode(
+      const particlesWebGLNode = new ParticlesWebGLNode(
         this.neuronModel,
         this.mvt,
         zoomMatrixProperty,
@@ -179,13 +179,13 @@ define( require => {
       // WebGLNode doesn't support clipping, so we add a shape around the viewport that matches the background color
       // and makes it look like particles are being clipped. For more detail, see
       // https://github.com/phetsims/neuron/issues/7.
-      var maskingShape = Shape.rect(
+      const maskingShape = Shape.rect(
         clipAreaBounds.x - ( estimatedMaxParticleWidth / 2 ),
         clipAreaBounds.y - ( estimatedMaxParticleWidth / 2 ),
         clipAreaBounds.width + estimatedMaxParticleWidth,
         clipAreaBounds.height + estimatedMaxParticleWidth
       );
-      var maskNode = new Path( maskingShape, {
+      const maskNode = new Path( maskingShape, {
         stroke: NeuronConstants.SCREEN_BACKGROUND,
         lineWidth: estimatedMaxParticleWidth
       } );
@@ -200,7 +200,7 @@ define( require => {
       }
     }
     else {
-      var particlesCanvasNode = new ParticlesCanvasNode( this.neuronModel, this.mvt, worldNodeClipArea );
+      const particlesCanvasNode = new ParticlesCanvasNode( this.neuronModel, this.mvt, worldNodeClipArea );
 
       // The WebGL node uses its own scaling whereas ParticlesCanvasNode uses the parent node's transform matrix for
       // scaling, so add it to the root node of the zoomable content (zoomableNode).
@@ -210,20 +210,20 @@ define( require => {
       zoomableNode.addChild( particlesCanvasNode );
     }
 
-    var recordPlayButtons = [];
-    var playingProperty = neuronClockModelAdapter.playingProperty; // convenience variable
-    var playPauseButton = new PlayPauseButton( playingProperty, { radius: 25 } );
+    const recordPlayButtons = [];
+    const playingProperty = neuronClockModelAdapter.playingProperty; // convenience variable
+    const playPauseButton = new PlayPauseButton( playingProperty, { radius: 25 } );
 
     // step forward is enabled whenever paused.
-    var stepForwardButton = new StepForwardButton( {
+    const stepForwardButton = new StepForwardButton( {
       isPlayingProperty: playingProperty,
       listener: function() { neuronClockModelAdapter.stepClockWhilePaused(); }
     } );
 
-    var stepBackwardButton = new StepBackwardButton( {
+    const stepBackwardButton = new StepBackwardButton( {
       listener: function() { neuronClockModelAdapter.stepClockBackWhilePaused(); }
     } );
-    var stepBackEnabledProperty = new DerivedProperty( [
+    const stepBackEnabledProperty = new DerivedProperty( [
         playingProperty,
         this.neuronModel.timeProperty
       ],
@@ -243,9 +243,9 @@ define( require => {
     recordPlayButtons.push( stepForwardButton );
 
     // figure out the center Y location for all lower controls
-    var centerYForLowerControls = ( clipAreaBounds.maxY + this.layoutBounds.height ) / 2;
+    const centerYForLowerControls = ( clipAreaBounds.maxY + this.layoutBounds.height ) / 2;
 
-    var recordPlayButtonBox = new HBox( {
+    const recordPlayButtonBox = new HBox( {
       children: recordPlayButtons,
       spacing: 5,
       right: this.layoutBounds.maxX / 2,
@@ -255,9 +255,9 @@ define( require => {
     this.addChild( recordPlayButtonBox );
 
     // space between layout edge and controls like reset, zoom control, legend, speed panel, etc.
-    var leftPadding = 20;
+    const leftPadding = 20;
 
-    var stimulateNeuronButton = new RectangularPushButton( {
+    const stimulateNeuronButton = new RectangularPushButton( {
       content: new MultiLineText( stimulateNeuronString, { font: BUTTON_FONT } ),
       listener: function() { self.neuronModel.initiateStimulusPulse(); },
       baseColor: PhetColorScheme.BUTTON_YELLOW,
@@ -278,13 +278,13 @@ define( require => {
     // The clock adapter calculates the appropriate dt and dispatches it to the interested model
     neuronClockModelAdapter.registerStepCallback( this.neuronModel.step.bind( this.neuronModel ) );
 
-    var panelLeftPos = this.layoutBounds.maxX - leftPadding;
-    var ionsAndChannelsLegendPanel = new IonsAndChannelsLegendPanel();
+    const panelLeftPos = this.layoutBounds.maxX - leftPadding;
+    const ionsAndChannelsLegendPanel = new IonsAndChannelsLegendPanel();
     this.addChild( ionsAndChannelsLegendPanel );
     ionsAndChannelsLegendPanel.right = panelLeftPos;
     ionsAndChannelsLegendPanel.top = clipAreaBounds.y;
 
-    var axonCrossSectionControlPanel = new AxonCrossSectionControlPanel( this.neuronModel, {
+    const axonCrossSectionControlPanel = new AxonCrossSectionControlPanel( this.neuronModel, {
       minWidth: ionsAndChannelsLegendPanel.width,
       maxWidth: ionsAndChannelsLegendPanel.width
     } );
@@ -293,7 +293,7 @@ define( require => {
     axonCrossSectionControlPanel.top = ionsAndChannelsLegendPanel.bottom + 20;
 
     // Create and add the Reset All Button in the bottom right
-    var resetAllButton = new ResetAllButton( {
+    const resetAllButton = new ResetAllButton( {
       listener: function() {
         zoomProperty.reset();
         neuronClockModelAdapter.reset();
@@ -303,7 +303,7 @@ define( require => {
     } );
     this.addChild( resetAllButton );
 
-    var concentrationReadoutLayerNode = new ConcentrationReadoutLayerNode( this.neuronModel, zoomProperty,
+    const concentrationReadoutLayerNode = new ConcentrationReadoutLayerNode( this.neuronModel, zoomProperty,
       zoomableNode, worldNodeClipArea.bounds, axonCrossSectionNode );
     this.addChild( concentrationReadoutLayerNode );
 
@@ -311,19 +311,19 @@ define( require => {
       concentrationReadoutLayerNode.visible = concentrationVisible;
     } );
 
-    var simSpeedControlPanel = new SimSpeedControlPanel( neuronClockModelAdapter.speedProperty, {
+    const simSpeedControlPanel = new SimSpeedControlPanel( neuronClockModelAdapter.speedProperty, {
       left: this.layoutBounds.minX + leftPadding,
       centerY: centerYForLowerControls,
       maxWidth: 250 // empirically determined
     } );
     this.addChild( simSpeedControlPanel );
 
-    var zoomControl = new ZoomControl( zoomProperty, MIN_ZOOM, MAX_ZOOM );
+    const zoomControl = new ZoomControl( zoomProperty, MIN_ZOOM, MAX_ZOOM );
     this.addChild( zoomControl );
     zoomControl.top = clipAreaBounds.y;
     zoomControl.left = this.layoutBounds.minX + leftPadding;
 
-    var membranePotentialChartNode = new MembranePotentialChart( new Dimension2( worldNodeClipArea.bounds.width - 60, CHART_HEIGHT ), neuronClockModelAdapter );
+    const membranePotentialChartNode = new MembranePotentialChart( new Dimension2( worldNodeClipArea.bounds.width - 60, CHART_HEIGHT ), neuronClockModelAdapter );
     membranePotentialChartNode.layerSplit = true; // optimization
     membranePotentialChartNode.left = worldNodeClipArea.bounds.left;
     membranePotentialChartNode.bottom = clipAreaBounds.maxY;

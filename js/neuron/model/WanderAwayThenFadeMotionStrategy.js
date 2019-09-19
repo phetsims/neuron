@@ -17,14 +17,14 @@ define( require => {
   const TimedFadeAwayStrategy = require( 'NEURON/neuron/model/TimedFadeAwayStrategy' );
 
   // constants
-  var CLOCK_TICKS_BEFORE_POSITION_UPDATE = 5;
-  var CLOCK_TICKS_BEFORE_VELOCITY_UPDATE = CLOCK_TICKS_BEFORE_POSITION_UPDATE * 20;
-  var POSITION_UPDATE_PERIOD = NeuronConstants.DEFAULT_ACTION_POTENTIAL_CLOCK_DT * CLOCK_TICKS_BEFORE_POSITION_UPDATE;
-  var VELOCITY_UPDATE_PERIOD = NeuronConstants.DEFAULT_ACTION_POTENTIAL_CLOCK_DT * CLOCK_TICKS_BEFORE_VELOCITY_UPDATE;
-  var MIN_VELOCITY = 1000;  // In nanometers per second of sim time.
-  var MAX_VELOCITY = 5000; // In nanometers per second of sim time.
+  const CLOCK_TICKS_BEFORE_POSITION_UPDATE = 5;
+  const CLOCK_TICKS_BEFORE_VELOCITY_UPDATE = CLOCK_TICKS_BEFORE_POSITION_UPDATE * 20;
+  const POSITION_UPDATE_PERIOD = NeuronConstants.DEFAULT_ACTION_POTENTIAL_CLOCK_DT * CLOCK_TICKS_BEFORE_POSITION_UPDATE;
+  const VELOCITY_UPDATE_PERIOD = NeuronConstants.DEFAULT_ACTION_POTENTIAL_CLOCK_DT * CLOCK_TICKS_BEFORE_VELOCITY_UPDATE;
+  const MIN_VELOCITY = 1000;  // In nanometers per second of sim time.
+  const MAX_VELOCITY = 5000; // In nanometers per second of sim time.
 
-  var RAND = {
+  const RAND = {
     nextInt: function( bounds ) {
       return Math.floor( phet.joist.random.nextDouble() * bounds );
     }
@@ -91,9 +91,9 @@ define( require => {
     // @private
     updateVelocity: function( currentPositionX, currentPositionY ) {
       // Create a velocity vector that causes this to move away from the "away point".
-      var awayAngle = Math.atan2( currentPositionY - this.awayPoint.y,
+      const awayAngle = Math.atan2( currentPositionY - this.awayPoint.y,
           currentPositionX - this.awayPoint.x ) + ( phet.joist.random.nextDouble() - 0.5 ) * Math.PI;
-      var newScalerVelocity = MIN_VELOCITY + phet.joist.random.nextDouble() * ( MAX_VELOCITY - MIN_VELOCITY );
+      const newScalerVelocity = MIN_VELOCITY + phet.joist.random.nextDouble() * ( MAX_VELOCITY - MIN_VELOCITY );
       this.velocityX = newScalerVelocity * Math.cos( awayAngle );
       this.velocityY = newScalerVelocity * Math.sin( awayAngle );
     }

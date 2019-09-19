@@ -23,9 +23,9 @@ define( require => {
   const Vector2 = require( 'DOT/Vector2' );
 
   // constants
-  var TRAVELING_TIME = 0.0020; // In seconds of sim time (not wall time).
-  var LINGER_AT_CROSS_SECTION_TIME = 0.0005; // In seconds of sim time (not wall time).
-  var NUM_CURVE_POINTS = 20; // number of points used to approximate the curve of the axon body
+  const TRAVELING_TIME = 0.0020; // In seconds of sim time (not wall time).
+  const LINGER_AT_CROSS_SECTION_TIME = 0.0005; // In seconds of sim time (not wall time).
+  const NUM_CURVE_POINTS = 20; // number of points used to approximate the curve of the axon body
 
   /**
    * A function that takes a proportion between 0 and 1, an array of points, and an output array, and sets the output
@@ -33,12 +33,12 @@ define( require => {
    */
   function calculateInterpolatedPoint( proportion, points, outputPoint ) {
     assert && assert( proportion >= 0 && proportion <= 1, 'proportion is out of range' );
-    var unroundedClosestPointIndex = proportion * ( points.length - 1 );
-    var closestPointIndex = Util.roundSymmetric( unroundedClosestPointIndex );
-    var nextClosestPointIndex = unroundedClosestPointIndex % 1 >= 0.5 ? closestPointIndex - 1 : closestPointIndex + 1;
-    var weight = 1 - Math.abs( closestPointIndex - unroundedClosestPointIndex );
-    var closestPoint = points[ closestPointIndex ];
-    var nextClosestPoint = points[ nextClosestPointIndex ];
+    const unroundedClosestPointIndex = proportion * ( points.length - 1 );
+    const closestPointIndex = Util.roundSymmetric( unroundedClosestPointIndex );
+    const nextClosestPointIndex = unroundedClosestPointIndex % 1 >= 0.5 ? closestPointIndex - 1 : closestPointIndex + 1;
+    const weight = 1 - Math.abs( closestPointIndex - unroundedClosestPointIndex );
+    const closestPoint = points[ closestPointIndex ];
+    const nextClosestPoint = points[ nextClosestPointIndex ];
     outputPoint.setX( weight * closestPoint.x + ( 1 - weight ) * nextClosestPoint.x );
     outputPoint.setY( weight * closestPoint.y + ( 1 - weight ) * nextClosestPoint.y );
   }
@@ -76,7 +76,7 @@ define( require => {
 
     // Set up the points that will be used to determine the ends of the action potential curve.  These are calculated
     // during construction instead of in real time as a performance optimization.
-    for ( var i = 0; i < NUM_CURVE_POINTS; i++ ) {
+    for ( let i = 0; i < NUM_CURVE_POINTS; i++ ) {
       this.upperCurvePoints[ i ] = axonMembrane.evaluateCurve( axonMembrane.getCurveA(), i / ( NUM_CURVE_POINTS - 1 ) );
       this.lowerCurvePoints[ i ] = axonMembrane.evaluateCurve( axonMembrane.getCurveB(), i / ( NUM_CURVE_POINTS - 1 ) );
     }
@@ -129,17 +129,17 @@ define( require => {
         // Depict the traveling action potential as a curved line moving down the axon.  Start by calculating the start
         // and end points.
         this.shapeDescription.mode = 'curve';
-        var travelAmtFactor = Math.max( 1 - this.travelTimeCountdownTimer / TRAVELING_TIME, 0 );
+        const travelAmtFactor = Math.max( 1 - this.travelTimeCountdownTimer / TRAVELING_TIME, 0 );
         calculateInterpolatedPoint( travelAmtFactor, this.upperCurvePoints, this.shapeDescription.startPoint );
-        var startPoint = this.shapeDescription.startPoint;
+        const startPoint = this.shapeDescription.startPoint;
         calculateInterpolatedPoint( travelAmtFactor, this.lowerCurvePoints, this.shapeDescription.endPoint );
-        var endPoint = this.shapeDescription.endPoint;
+        const endPoint = this.shapeDescription.endPoint;
         this.curveMidPoint.setXY( ( startPoint.x + endPoint.x ) / 2, ( startPoint.y + endPoint.y ) / 2 );
         // The exponents used in the control point distances were empirically determined and can be adjusted to make the
         // top or bottom more or less curved as the potential moves down the membrane.
-        var ctrlPoint1Distance = endPoint.distance( startPoint ) * 0.7 * Math.pow( travelAmtFactor, 1.8 );
-        var ctrlPoint2Distance = endPoint.distance( startPoint ) * 0.7 * Math.pow( travelAmtFactor, 0.8 );
-        var perpendicularAngle = Math.atan2( endPoint.y - startPoint.y, endPoint.x - startPoint.x ) + Math.PI / 2;
+        const ctrlPoint1Distance = endPoint.distance( startPoint ) * 0.7 * Math.pow( travelAmtFactor, 1.8 );
+        const ctrlPoint2Distance = endPoint.distance( startPoint ) * 0.7 * Math.pow( travelAmtFactor, 0.8 );
+        const perpendicularAngle = Math.atan2( endPoint.y - startPoint.y, endPoint.x - startPoint.x ) + Math.PI / 2;
         this.shapeDescription.controlPoint1.setXY(
           this.curveMidPoint.x + ctrlPoint1Distance * Math.cos( perpendicularAngle + Math.PI / 6 ),
           this.curveMidPoint.y + ctrlPoint1Distance * Math.sin( perpendicularAngle + Math.PI / 6 ) );
@@ -155,7 +155,7 @@ define( require => {
 
         // Make the shape a little bigger than the cross section so that it can be seen behind it, and have it grow
         // while it is there.
-        var growthFactor = ( 1 - Math.abs( this.lingerCountdownTimer / LINGER_AT_CROSS_SECTION_TIME - 0.5 ) * 2 ) * 0.04 + 1;
+        const growthFactor = ( 1 - Math.abs( this.lingerCountdownTimer / LINGER_AT_CROSS_SECTION_TIME - 0.5 ) * 2 ) * 0.04 + 1;
         this.shapeDescription.circleRadius = this.axonMembrane.crossSectionCircleRadius * growthFactor;
       }
 

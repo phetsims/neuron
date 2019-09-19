@@ -51,7 +51,7 @@ define( require => {
     restoreFromMemento: function( memento ) {
       this.setPosition( memento.getPositionX(), memento.getPositionY() );
 
-      var appearanceChanged = false;
+      let appearanceChanged = false;
       if ( this.opacity !== memento.getOpacity() ) {
         this.opacity = memento.getOpacity();
         appearanceChanged = true;

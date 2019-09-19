@@ -15,7 +15,7 @@ define( require => {
   const PotassiumIon = require( 'NEURON/neuron/model/PotassiumIon' );
   const SodiumIon = require( 'NEURON/neuron/model/SodiumIon' );
 
-  var ParticleFactory = {
+  const ParticleFactory = {
     /**
      * factory method for creating a particle of the specified type
      * @param {ParticleType} particleType - ParticleType enum constants
@@ -23,7 +23,7 @@ define( require => {
      * @public
      */
     createParticle: function( particleType ) {
-      var newParticle = null;
+      let newParticle = null;
 
       switch( particleType ) {
         case ParticleType.POTASSIUM_ION:

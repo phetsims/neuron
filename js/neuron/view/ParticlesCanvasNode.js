@@ -24,7 +24,7 @@ define( require => {
    * @constructor
    */
   function ParticlesCanvasNode( neuronModel, modelViewTransform, clipArea ) {
-    var self = this;
+    const self = this;
     CanvasNode.call( this, {
       pickable: false,
       canvasBounds: clipArea.bounds,
@@ -64,16 +64,16 @@ define( require => {
 
     // @private
     renderSodiumParticles: function( particles, context ) {
-      var self = this;
+      const self = this;
       context.fillStyle = particles[ 0 ].getRepresentationColor().getCanvasStyle(); // All sodium ions are of the same color,
-      var transformedRadius = this.modelViewTransform.modelToViewDeltaX( particles[ 0 ].getRadius() );
+      const transformedRadius = this.modelViewTransform.modelToViewDeltaX( particles[ 0 ].getRadius() );
       context.lineWidth = 0.3;
       context.strokeStyle = 'black';
       particles.forEach( function( particle ) {
         context.globalAlpha = particle.getOpacity();
         context.beginPath();
-        var x = self.modelViewTransform.modelToViewX( particle.getPositionX() );
-        var y = self.modelViewTransform.modelToViewY( particle.getPositionY() );
+        const x = self.modelViewTransform.modelToViewX( particle.getPositionX() );
+        const y = self.modelViewTransform.modelToViewY( particle.getPositionY() );
         context.arc( x, y, transformedRadius, 0, 2 * Math.PI, true );
         context.closePath();
         context.stroke();
@@ -82,16 +82,16 @@ define( require => {
     },
 
     renderPotassiumParticles: function( particles, context ) {
-      var self = this;
+      const self = this;
       context.fillStyle = particles[ 0 ].getRepresentationColor().getCanvasStyle();
-      var size = this.modelViewTransform.modelToViewDeltaX( particles[ 0 ].getRadius() * 2 ) * 0.55;
+      const size = this.modelViewTransform.modelToViewDeltaX( particles[ 0 ].getRadius() * 2 ) * 0.55;
       context.lineWidth = 0.3;
       context.strokeStyle = 'black';
       particles.forEach( function( particle ) {
         context.globalAlpha = particle.getOpacity();
         context.beginPath();
-        var x = self.modelViewTransform.modelToViewX( particle.getPositionX() );
-        var y = self.modelViewTransform.modelToViewY( particle.getPositionY() );
+        const x = self.modelViewTransform.modelToViewX( particle.getPositionX() );
+        const y = self.modelViewTransform.modelToViewY( particle.getPositionY() );
         context.moveTo( x - size, y );
         context.lineTo( x, y - size );
         context.lineTo( x + size, y );
@@ -104,10 +104,10 @@ define( require => {
 
     // @private
     renderParticles: function( particles, context ) {
-      var self = this;
+      const self = this;
 
       // group by particle type, this way no need to set the fillStyle for every particle instance
-      var particlesGroupedByType = _.groupBy( particles, function( particle ) {
+      const particlesGroupedByType = _.groupBy( particles, function( particle ) {
         return particle.getType();
       } );
 

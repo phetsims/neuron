@@ -25,7 +25,7 @@ define( require => {
   const ViewableParticle = require( 'NEURON/neuron/model/ViewableParticle' );
 
   // constants
-  var DEFAULT_PARTICLE_RADIUS = 0.75;  // In nanometers.
+  const DEFAULT_PARTICLE_RADIUS = 0.75;  // In nanometers.
 
   /**
    * Construct a particle.

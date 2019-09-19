@@ -20,7 +20,7 @@ define( require => {
 
   // isPointZone method of captureZone is refactored to use Vector components, this class wide
   // instance is used for intermediary vector calculations.  See isPointInZone method
-  var pointZoneCheckPoint = new Vector2( 0, 0 );
+  const pointZoneCheckPoint = new Vector2( 0, 0 );
 
   /**
    * This class defines the size and orientation of a capture zone which
@@ -40,7 +40,7 @@ define( require => {
    * @constructor
    */
   function PieSliceShapedCaptureZone( center, radius, fixedRotationalOffset, angleOfExtent ) {
-    var self = this;
+    const self = this;
     CaptureZone.call( self );
     this.originPoint = center;
     this.radius = radius;
@@ -86,19 +86,19 @@ define( require => {
 
     // @public, assign a random point that is somewhere within the shape.
     assignNewParticleLocation: function( particle ) {
-      var placementAngle = this.rotationAngle + this.fixedRotationalOffset + (phet.joist.random.nextDouble() - 0.5) * this.angleOfExtent;
-      var distanceFromOrigin = this.radius * 0.9;
-      var xPos = this.originPoint.x + distanceFromOrigin * Math.cos( placementAngle );
-      var yPos = this.originPoint.y + distanceFromOrigin * Math.sin( placementAngle );
+      const placementAngle = this.rotationAngle + this.fixedRotationalOffset + (phet.joist.random.nextDouble() - 0.5) * this.angleOfExtent;
+      const distanceFromOrigin = this.radius * 0.9;
+      const xPos = this.originPoint.x + distanceFromOrigin * Math.cos( placementAngle );
+      const yPos = this.originPoint.y + distanceFromOrigin * Math.sin( placementAngle );
       particle.setPosition( xPos, yPos );
     },
 
     // @public
     updateShape: function() {
 
-      var startAngle = (this.fixedRotationalOffset + this.rotationAngle + this.angleOfExtent / 2) - this.angleOfExtent;
+      let startAngle = (this.fixedRotationalOffset + this.rotationAngle + this.angleOfExtent / 2) - this.angleOfExtent;
       startAngle = DotUtil.moduloBetweenDown( startAngle, 0, Math.PI * 2 );
-      var endAngle = DotUtil.moduloBetweenDown( this.angleOfExtent, 0, Math.PI * 2 );
+      const endAngle = DotUtil.moduloBetweenDown( this.angleOfExtent, 0, Math.PI * 2 );
       return new Shape().arc( this.originPoint.x, this.originPoint.y, this.radius, startAngle, endAngle, true );// ARC2D.PIE startPoint and endPoint is internally added to arc's path
     }
   } );

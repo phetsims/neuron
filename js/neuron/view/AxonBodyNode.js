@@ -22,9 +22,9 @@ define( require => {
   const Vector2 = require( 'DOT/Vector2' );
 
   // constants
-  var AXON_BODY_COLOR = new Color( 221, 216, 44 );
-  var LINE_WIDTH = 1;// STROKE
-  var SHOW_GRADIENT_LINE = false;
+  const AXON_BODY_COLOR = new Color( 221, 216, 44 );
+  const LINE_WIDTH = 1;// STROKE
+  const SHOW_GRADIENT_LINE = false;
 
   /**
    * Constructor for the AxonBodyNode
@@ -41,16 +41,16 @@ define( require => {
     this.mvt = mvt;
 
     // Add the axon body.
-    var axonBodyShape = this.mvt.modelToViewShape( axonMembraneModel.axonBodyShape );
-    var axonBodyBounds = axonBodyShape.bounds;
-    var gradientOrigin = new Vector2( axonBodyBounds.getMaxX(), axonBodyBounds.getMaxY() );
-    var gradientExtent = new Vector2( mvt.modelToViewX( axonMembraneModel.crossSectionCircleCenter.x ),
+    const axonBodyShape = this.mvt.modelToViewShape( axonMembraneModel.axonBodyShape );
+    const axonBodyBounds = axonBodyShape.bounds;
+    const gradientOrigin = new Vector2( axonBodyBounds.getMaxX(), axonBodyBounds.getMaxY() );
+    const gradientExtent = new Vector2( mvt.modelToViewX( axonMembraneModel.crossSectionCircleCenter.x ),
       mvt.modelToViewDeltaX( axonMembraneModel.crossSectionCircleRadius ) );
-    var axonBodyGradient = new LinearGradient( gradientOrigin.x, gradientOrigin.y, gradientExtent.x, gradientExtent.y );
+    const axonBodyGradient = new LinearGradient( gradientOrigin.x, gradientOrigin.y, gradientExtent.x, gradientExtent.y );
     axonBodyGradient.addColorStop( 0, AXON_BODY_COLOR.darkerColor( 0.5 ) );
     axonBodyGradient.addColorStop( 1, AXON_BODY_COLOR.brighterColor( 0.5 ) );
 
-    var axonBody = new Path( axonBodyShape, {
+    const axonBody = new Path( axonBodyShape, {
       fill: axonBodyGradient,
       stroke: 'black',
       lineWidth: LINE_WIDTH
@@ -62,7 +62,7 @@ define( require => {
       this.addChild( new Line( gradientOrigin, gradientExtent ) );
     }
 
-    var travelingActionPotentialNode = new TravelingActionPotentialCanvasNode( this.mvt, canvasBounds );
+    const travelingActionPotentialNode = new TravelingActionPotentialCanvasNode( this.mvt, canvasBounds );
     this.addChild( travelingActionPotentialNode );
 
     this.axonMembraneModel.travelingActionPotentialStarted.addListener( function() {

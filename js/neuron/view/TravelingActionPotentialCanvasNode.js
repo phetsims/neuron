@@ -16,10 +16,10 @@ define( require => {
   const neuron = require( 'NEURON/neuron' );
 
   // constants
-  var BACKGROUND_COLOR = '#CC66FF';
-  var BACKGROUND_LINE_WIDTH = 10;
-  var FOREGROUND_COLOR = 'yellow';
-  var FOREGROUND_LINE_WIDTH = 5;
+  const BACKGROUND_COLOR = '#CC66FF';
+  const BACKGROUND_LINE_WIDTH = 10;
+  const FOREGROUND_COLOR = 'yellow';
+  const FOREGROUND_LINE_WIDTH = 5;
 
   /**
    * @param {ModelViewTransform2} mvt
@@ -70,7 +70,7 @@ define( require => {
     paintCanvas: function( context ) {
 
       if ( this.travelingActionPotential !== null ) {
-        var shapeDescription = this.travelingActionPotential.shapeDescription; // convenience var
+        const shapeDescription = this.travelingActionPotential.shapeDescription; // convenience var
         assert && assert( shapeDescription.mode === 'curve' || shapeDescription.mode === 'circle', 'unrecognized mode for action potential shape' );
 
         // render the action potential in the HTML canvas

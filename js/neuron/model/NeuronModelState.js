@@ -19,12 +19,12 @@ define( require => {
    * @returns {{put: put, get: get}}
    */
   function map() {
-    var keys = [];
-    var values = [];
+    const keys = [];
+    const values = [];
 
     return {
       put: function( key, value ) {
-        var index = keys.indexOf( key );
+        const index = keys.indexOf( key );
         if ( index === -1 ) {
           keys.push( key );
           values.push( value );
@@ -56,17 +56,17 @@ define( require => {
 
     // use c-style loops below for better performance
 
-    var i;
+    let i;
     this.membraneChannelStateMap = map();
     for ( i = 0; i < neuronModel.membraneChannels.length; i++ ) {
-      var membraneChannel = neuronModel.membraneChannels.get( i );
+      const membraneChannel = neuronModel.membraneChannels.get( i );
       this.membraneChannelStateMap.put( membraneChannel, membraneChannel.getState() );
     }
 
     this.particlePlaybackMementos = [];
 
     for ( i = 0; i < neuronModel.transientParticles.length; i++ ) {
-      var transientParticle = neuronModel.transientParticles.get( i );
+      const transientParticle = neuronModel.transientParticles.get( i );
       this.particlePlaybackMementos.push( transientParticle.getPlaybackMemento() );
     }
   }

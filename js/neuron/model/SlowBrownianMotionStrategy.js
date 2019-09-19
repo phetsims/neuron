@@ -18,10 +18,10 @@ define( require => {
   const neuron = require( 'NEURON/neuron' );
 
   // constants
-  var MAX_JUMP_DISTANCE = 1; // In nanometers.
-  var MIN_JUMP_DISTANCE = 0.1;  // In nanometers.
-  var MIN_TIME_TO_NEXT_JUMP = 0.0009;  // In seconds of sim time, not wall time.
-  var MAX_TIME_TO_NEXT_JUMP = 0.0015;  // In seconds of sim time, not wall time.
+  const MAX_JUMP_DISTANCE = 1; // In nanometers.
+  const MIN_JUMP_DISTANCE = 0.1;  // In nanometers.
+  const MIN_TIME_TO_NEXT_JUMP = 0.0009;  // In seconds of sim time, not wall time.
+  const MAX_TIME_TO_NEXT_JUMP = 0.0015;  // In seconds of sim time, not wall time.
 
   /**
    * @param {number} initialLocationX
@@ -46,10 +46,10 @@ define( require => {
         // It is time to jump.
         if ( movableModelElement.isPositionEqual( this.initialLocationX, this.initialLocationY ) ) {
           // Jump away from this location.
-          var jumpAngle = this.generateNewJumpAngle();
-          var jumpDistance = this.generateNewJumpDistance();
-          var currentPosRefX = movableModelElement.getPositionX();
-          var currentPosRefY = movableModelElement.getPositionY();
+          const jumpAngle = this.generateNewJumpAngle();
+          const jumpDistance = this.generateNewJumpDistance();
+          const currentPosRefX = movableModelElement.getPositionX();
+          const currentPosRefY = movableModelElement.getPositionY();
           movableModelElement.setPosition( currentPosRefX + jumpDistance * Math.cos( jumpAngle ),
             currentPosRefY + jumpDistance * Math.sin( jumpAngle ) );
         }

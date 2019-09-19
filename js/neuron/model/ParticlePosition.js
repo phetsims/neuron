@@ -5,7 +5,7 @@ define( require => {
   // modules
   const neuron = require( 'NEURON/neuron' );
 
-  var ParticlePosition = {
+  const ParticlePosition = {
     'INSIDE_MEMBRANE': 'INSIDE_MEMBRANE',
     'OUTSIDE_MEMBRANE': 'OUTSIDE_MEMBRANE'
   };

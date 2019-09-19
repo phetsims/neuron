@@ -18,21 +18,21 @@ define( require => {
   const Shape = require( 'KITE/Shape' );
 
   // constants
-  var EDGE_STROKE = 0.3;
-  var EDGE_COLOR = new Color( 255, 102, 0 );
-  var FILL_COLOR = Color.WHITE;
-  var UNSCALED_SYMBOL_WIDTH = 30;
-  var FIXED_BOUNDS = new Bounds2( -UNSCALED_SYMBOL_WIDTH / 2, -UNSCALED_SYMBOL_WIDTH / 2, UNSCALED_SYMBOL_WIDTH / 2, UNSCALED_SYMBOL_WIDTH / 2 );
+  const EDGE_STROKE = 0.3;
+  const EDGE_COLOR = new Color( 255, 102, 0 );
+  const FILL_COLOR = Color.WHITE;
+  const UNSCALED_SYMBOL_WIDTH = 30;
+  const FIXED_BOUNDS = new Bounds2( -UNSCALED_SYMBOL_WIDTH / 2, -UNSCALED_SYMBOL_WIDTH / 2, UNSCALED_SYMBOL_WIDTH / 2, UNSCALED_SYMBOL_WIDTH / 2 );
 
   // basic, unscaled shapes for the minus and plus signs
-  var UNSCALED_THICKNESS = UNSCALED_SYMBOL_WIDTH * 0.4;
-  var UNSCALED_MINUS_SIGN_SHAPE = Shape.rect(
+  const UNSCALED_THICKNESS = UNSCALED_SYMBOL_WIDTH * 0.4;
+  const UNSCALED_MINUS_SIGN_SHAPE = Shape.rect(
     -UNSCALED_SYMBOL_WIDTH / 2,
     -UNSCALED_THICKNESS / 2,
     UNSCALED_SYMBOL_WIDTH,
     UNSCALED_THICKNESS
   );
-  var UNSCALED_PLUS_SIGN_SHAPE = new Shape()
+  const UNSCALED_PLUS_SIGN_SHAPE = new Shape()
     .moveTo( -UNSCALED_SYMBOL_WIDTH / 2, -UNSCALED_THICKNESS / 2 )
     .lineTo( -UNSCALED_SYMBOL_WIDTH / 2, UNSCALED_THICKNESS / 2 )
     .lineTo( -UNSCALED_THICKNESS / 2, UNSCALED_THICKNESS / 2 )
@@ -56,7 +56,7 @@ define( require => {
    * value and vice versa.
    */
   function ChargeSymbolNode( axonModel, maxWidth, maxPotential, polarityReversed ) {
-    var self = this;
+    const self = this;
     Path.call( this, new Shape(), {
       fill: FILL_COLOR,
       lineWidth: EDGE_STROKE,
@@ -64,13 +64,13 @@ define( require => {
     } );
 
     // pre-allocate a matrix to use for scaling
-    var scalingMatrix = Matrix3.scaling( 1, 1 );
+    const scalingMatrix = Matrix3.scaling( 1, 1 );
 
     // function to return the appropriate symbol size and shape based on the given membrane potential
     function getSymbolShape() {
-      var membranePotential = axonModel.getMembranePotential();
-      var scale = ( maxWidth / UNSCALED_SYMBOL_WIDTH ) * ( membranePotential / maxPotential );
-      var shape;
+      const membranePotential = axonModel.getMembranePotential();
+      const scale = ( maxWidth / UNSCALED_SYMBOL_WIDTH ) * ( membranePotential / maxPotential );
+      let shape;
       if ( ( membranePotential > 0 && !polarityReversed ) ||
            ( membranePotential < 0 && polarityReversed ) ) {
         shape = UNSCALED_PLUS_SIGN_SHAPE;

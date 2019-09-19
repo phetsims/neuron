@@ -25,7 +25,7 @@ define( require => {
   const WanderAwayThenFadeMotionStrategy = require( 'NEURON/neuron/model/WanderAwayThenFadeMotionStrategy' );
 
   // Threshold at which particles will "bounce" back out of the channel rather than traversing it.
-  var INACTIVATION_BOUNCE_THRESHOLD = 0.5;
+  const INACTIVATION_BOUNCE_THRESHOLD = 0.5;
 
   /**
    * @param {MembraneChannel} channel
@@ -55,9 +55,9 @@ define( require => {
     // @public, @override
     move: function( movableModelElement, fadableModelElement, dt ) {
       assert && assert( this.currentDestinationIndex < this.traversalPoints.length );  // Error checking.
-      var angularRange = 0;
-      var currentPositionRefX = movableModelElement.getPositionX();
-      var currentPositionRefY = movableModelElement.getPositionY();
+      let angularRange = 0;
+      const currentPositionRefX = movableModelElement.getPositionX();
+      const currentPositionRefY = movableModelElement.getPositionY();
 
       if ( this.currentDestinationIndex === 0 ) {
         // Currently moving towards the first destination point.  Is the
@@ -127,7 +127,7 @@ define( require => {
 
           movableModelElement.setPosition( this.traversalPoints[ this.currentDestinationIndex ].x, this.traversalPoints[ this.currentDestinationIndex ].y );
           this.currentDestinationIndex = Number.MAX_VALUE;
-          var newVelocityVector = new Vector2( this.velocityVector.x, this.velocityVector.y );
+          const newVelocityVector = new Vector2( this.velocityVector.x, this.velocityVector.y );
           if ( this.bouncing ) {
             // This particle should be back where it entered the
             // channel, and can head off in any direction except
@@ -144,8 +144,8 @@ define( require => {
             // inactivation gate, and will need to be changed if the
             // representation of the gate is changed.
             newVelocityVector.multiplyScalar( 0.5 + ( phet.joist.random.nextDouble() * 0.3 ) );
-            var maxRotation;
-            var minRotation;
+            let maxRotation;
+            let minRotation;
             if ( phet.joist.random.nextDouble() > 0.3 ) {
               // Move out to the right (assuming channel is vertical).
               // The angle at which we can move gets more restricted
@@ -201,22 +201,22 @@ define( require => {
      * @private
      */
     createTraversalPoints: function( channel, startingLocationX, startingLocationY ) {
-      var points = [];
-      var ctr = channel.getCenterLocation();
-      var r = channel.getChannelSize().height * 0.5;
+      const points = [];
+      const ctr = channel.getCenterLocation();
+      const r = channel.getChannelSize().height * 0.5;
 
       // The profiler shows too many vector instances are created from createTravesal method, Since we are dealing with
       // 1000s of particles, for performance reasons and to reduce memory allocation, changing vector constructor
       // function to use object literal http://jsperf.com/object-notation-vs-constructor.
 
       // Create points that represent the inner and outer mouths of the channel.
-      var outerOpeningLocation = { x: ctr.x + Math.cos( channel.getRotationalAngle() ) * r, y: ctr.y + Math.sin( channel.getRotationalAngle() ) * r };
-      var innerOpeningLocation = { x: ctr.x - Math.cos( channel.getRotationalAngle() ) * r, y: ctr.y - Math.sin( channel.getRotationalAngle() ) * r };
+      const outerOpeningLocation = { x: ctr.x + Math.cos( channel.getRotationalAngle() ) * r, y: ctr.y + Math.sin( channel.getRotationalAngle() ) * r };
+      const innerOpeningLocation = { x: ctr.x - Math.cos( channel.getRotationalAngle() ) * r, y: ctr.y - Math.sin( channel.getRotationalAngle() ) * r };
 
       // Create a point that just above where the inactivation gate would be if the channel were inactivated.  Since the
       // model doesn't actually track the location of the inactivation gate (it is left up to the view), this location
       // is a guess, and may have to be tweaked in order to work well with the view.
-      var aboveInactivationGateLocation =
+      const aboveInactivationGateLocation =
       { x: ctr.x - Math.cos( channel.getRotationalAngle() ) * r * 0.5, y: ctr.y - Math.sin( channel.getRotationalAngle() ) * r * 0.5 };
 
       if ( this.distanceBetweenPosAndTraversalPoint( startingLocationX, startingLocationY, innerOpeningLocation ) < this.distanceBetweenPosAndTraversalPoint( startingLocationX, startingLocationY, outerOpeningLocation ) ) {
@@ -237,18 +237,18 @@ define( require => {
     setCourseForPoint: function( startLocationX, startLocationY, destination, velocityScaler ) {
       this.velocityVector.setXY( destination.x - startLocationX,
         destination.y - startLocationY );
-      var scaleFactor = this.maxVelocity / this.velocityVector.magnitude;
+      const scaleFactor = this.maxVelocity / this.velocityVector.magnitude;
       this.velocityVector.multiplyScalar( scaleFactor );
 
     },
 
     // @private
     setCourseForCurrentTraversalPoint: function( currentLocationX, currentLocationY ) {
-      var angularRange = 0;
+      let angularRange = 0;
       if ( this.currentDestinationIndex < this.traversalPoints.length ) {
-        var dest = this.traversalPoints[ this.currentDestinationIndex ];
+        const dest = this.traversalPoints[ this.currentDestinationIndex ];
         this.velocityVector.setXY( dest.x - currentLocationX, dest.y - currentLocationY );
-        var scaleFactor = this.maxVelocity / this.velocityVector.magnitude;
+        const scaleFactor = this.maxVelocity / this.velocityVector.magnitude;
         this.velocityVector.multiplyScalar( scaleFactor );
       }
       else {
@@ -259,9 +259,9 @@ define( require => {
         if ( this.channel.getHasInactivationGate() ) {
           // NOTE: The following is tweaked to work with a particular visual representation of the inactivation gate,
           // and may need to be changed if that representation is changed.
-          var velocityRotationAngle = 0;
-          var minRotation = 0;
-          var maxRotation = 0;
+          let velocityRotationAngle = 0;
+          let minRotation = 0;
+          let maxRotation = 0;
           if ( phet.joist.random.nextDouble() > 0.3 ) {
             // Move out to the right (assuming channel is vertical). The angle at which we can move gets more restricted
             // as the inactivation gate closes.

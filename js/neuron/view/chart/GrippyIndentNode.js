@@ -19,7 +19,7 @@ define( require => {
   const Node = require( 'SCENERY/nodes/Node' );
 
   // constants
-  var STROKE_LINE_WIDTH = 0.5;
+  const STROKE_LINE_WIDTH = 0.5;
 
   /**
    * @param {number} diameter
@@ -29,13 +29,13 @@ define( require => {
   function GrippyIndentNode( diameter, baseColor ) {
 
     Node.call( this );
-    var baseDarkerColor = baseColor.darkerColor( 0.9 );
-    var translucentDarkerColor = new Color( baseDarkerColor.getRed(), baseDarkerColor.getGreen(),
+    const baseDarkerColor = baseColor.darkerColor( 0.9 );
+    const translucentDarkerColor = new Color( baseDarkerColor.getRed(), baseDarkerColor.getGreen(),
       baseDarkerColor.getBlue(), baseColor.getAlpha() );
-    var baseLighterColor = baseColor.brighterColor( 0.9 );
-    var translucentBrighterColor = new Color( baseLighterColor.getRed(), baseLighterColor.getGreen(),
+    const baseLighterColor = baseColor.brighterColor( 0.9 );
+    const translucentBrighterColor = new Color( baseLighterColor.getRed(), baseLighterColor.getGreen(),
       baseLighterColor.getBlue(), baseColor.getAlpha() );
-    var radius = diameter / 2 - STROKE_LINE_WIDTH;
+    const radius = diameter / 2 - STROKE_LINE_WIDTH;
 
     this.addChild( new Circle( radius, {
       fill: translucentDarkerColor,

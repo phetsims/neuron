@@ -24,19 +24,19 @@ define( require => {
   const PieSliceShapedCaptureZone = require( 'NEURON/neuron/model/PieSliceShapedCaptureZone' );
 
   // constants
-  var CHANNEL_HEIGHT = NeuronConstants.MEMBRANE_THICKNESS * 1.2; // In nanometers.
-  var CHANNEL_WIDTH = NeuronConstants.MEMBRANE_THICKNESS * 0.50; // In nanometers.
-  var BASE_COLOR = Color.interpolateRGBA( NeuronConstants.SODIUM_COLOR, Color.YELLOW, 0.5 );
-  var DEFAULT_PARTICLE_VELOCITY = 7000; // In nanometers per sec of sim time.
+  const CHANNEL_HEIGHT = NeuronConstants.MEMBRANE_THICKNESS * 1.2; // In nanometers.
+  const CHANNEL_WIDTH = NeuronConstants.MEMBRANE_THICKNESS * 0.50; // In nanometers.
+  const BASE_COLOR = Color.interpolateRGBA( NeuronConstants.SODIUM_COLOR, Color.YELLOW, 0.5 );
+  const DEFAULT_PARTICLE_VELOCITY = 7000; // In nanometers per sec of sim time.
 
   // Controls the rate of leakage when no action potential is occurring.
   // Higher values mean more leakage, with 1 as the max.
-  var NOMINAL_LEAK_LEVEL = 0.005;
+  const NOMINAL_LEAK_LEVEL = 0.005;
 
   // A scaling factor that is used to normalize the amount of leak channel
   // current to a value between 0 and 1.  This value was determined by
   // testing the Hodgkin-Huxley model.
-  var PEAK_NEGATIVE_CURRENT = 3.44;
+  const PEAK_NEGATIVE_CURRENT = 3.44;
 
   /**
    * @param {number} channelWidth
@@ -71,8 +71,8 @@ define( require => {
 
     // @public, @override
     stepInTime: function( dt ) {
-      var prevOpenness = this.openness;
-      var prevInActivationAmt = this.inactivationAmount;
+      const prevOpenness = this.openness;
+      const prevInActivationAmt = this.inactivationAmount;
 
       AbstractLeakChannel.prototype.stepInTime.call( this, dt );
       // Since this is a leak channel, it is always open, so the openness
@@ -80,7 +80,7 @@ define( require => {
       // want more sodium to flow through when the leak current in the
       // HH model goes up, so the following code accomplishes that goal.
 
-      var normalizedLeakCurrent = MathUtils.round( this.hodgkinHuxleyModel.get_l_current() / PEAK_NEGATIVE_CURRENT, 2 );
+      let normalizedLeakCurrent = MathUtils.round( this.hodgkinHuxleyModel.get_l_current() / PEAK_NEGATIVE_CURRENT, 2 );
       if ( normalizedLeakCurrent <= 0.01 ) {
         // Only pay attention to negative values for the current, which
         // we will map to sodium flow back into the cell.  This is a
@@ -112,7 +112,7 @@ define( require => {
 
     // @public, @override
     chooseCrossingDirection: function() {
-      var result = MembraneCrossingDirection.OUT_TO_IN;
+      let result = MembraneCrossingDirection.OUT_TO_IN;
       if ( this.previousNormalizedLeakCurrent === 0 ) {
         // The cell is idle, not recovering from an action potential, so
         // everyone once in a while a sodium atom should leak the opposite
@@ -145,10 +145,10 @@ define( require => {
       }
       else {
         // Tweak the following values for different behavior.
-        var absoluteMinInterCaptureTime = 0.0002;
-        var variableMinInterCaptureTime = 0.002;
-        var captureTimeRange = 0.005;
-        var minInterCaptureTime = absoluteMinInterCaptureTime + (1 - normalizedRate) * (variableMinInterCaptureTime);
+        const absoluteMinInterCaptureTime = 0.0002;
+        const variableMinInterCaptureTime = 0.002;
+        const captureTimeRange = 0.005;
+        const minInterCaptureTime = absoluteMinInterCaptureTime + (1 - normalizedRate) * (variableMinInterCaptureTime);
         this.setMinInterCaptureTime( minInterCaptureTime );
         this.setMaxInterCaptureTime( minInterCaptureTime + (1 - normalizedRate) * captureTimeRange );
 

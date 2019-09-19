@@ -28,10 +28,10 @@ define( require => {
   const unitsMMString = require( 'string!NEURON/units.mM' );
 
   // constants that control aspects of the concentration readout.
-  var CONCENTRATION_READOUT_NUM_PLACES = 5;
-  var READ_OUT_FONT_SIZE = 14;
-  var READOUT_BOUNDS_DILATION = 2;
-  var INVISIBLE_RECT_FILL = 'rgba( 0, 0, 0, 0 )';
+  const CONCENTRATION_READOUT_NUM_PLACES = 5;
+  const READ_OUT_FONT_SIZE = 14;
+  const READOUT_BOUNDS_DILATION = 2;
+  const INVISIBLE_RECT_FILL = 'rgba( 0, 0, 0, 0 )';
 
   /**
    * @param {NeuronModel} neuronModel
@@ -43,31 +43,31 @@ define( require => {
    */
   function ConcentrationReadoutLayerNode( neuronModel, zoomProperty, zoomableRootNode, viewPortBounds, axonCrossSectionNode ) {
 
-    var self = this;
+    const self = this;
     Node.call( this );
     this.zoomableRootNode = zoomableRootNode;
 
     // Concentration readouts.
-    var sodiumExteriorConcentrationReadout = new Text( '', {
+    const sodiumExteriorConcentrationReadout = new Text( '', {
       font: new PhetFont( { size: READ_OUT_FONT_SIZE } ),
       fill: new SodiumIon().getRepresentationColor()
     } );
-    var sodiumInteriorConcentrationReadout = new Text( '', {
+    const sodiumInteriorConcentrationReadout = new Text( '', {
       font: new PhetFont( { size: READ_OUT_FONT_SIZE } ),
       fill: new SodiumIon().getRepresentationColor()
     } );
-    var potassiumExteriorConcentrationReadout = new Text( '', {
+    const potassiumExteriorConcentrationReadout = new Text( '', {
       font: new PhetFont( { size: READ_OUT_FONT_SIZE } ),
       fill: new PotassiumIon().getRepresentationColor().darkerColor( 0.5 )
     } );
-    var potassiumInteriorConcentrationReadout = new Text( '', {
+    const potassiumInteriorConcentrationReadout = new Text( '', {
       font: new PhetFont( { size: READ_OUT_FONT_SIZE } ),
       fill: new PotassiumIon().getRepresentationColor().darkerColor( 0.5 )
     } );
 
     // convenience function for formatting the readouts
     function createConcentrationReadoutString( label, value ) {
-      var valueText = Util.toFixed( value, CONCENTRATION_READOUT_NUM_PLACES );
+      const valueText = Util.toFixed( value, CONCENTRATION_READOUT_NUM_PLACES );
       return StringUtils.format( concentrationReadoutPattern0Label1Value2UnitsString, label, valueText, unitsMMString );
     }
 
@@ -88,22 +88,22 @@ define( require => {
 
     // Put each of the readouts on an invisible rectangle to prevent artifacts, see
     // https://github.com/phetsims/neuron/issues/122, and also override the bounds computation for better performance.
-    var sodiumExteriorConcentrationReadoutRect = Rectangle.bounds(
+    const sodiumExteriorConcentrationReadoutRect = Rectangle.bounds(
       sodiumExteriorConcentrationReadout.bounds.dilated( READOUT_BOUNDS_DILATION ),
       { fill: INVISIBLE_RECT_FILL, children: [ sodiumExteriorConcentrationReadout ] }
     );
     sodiumExteriorConcentrationReadout.computeShapeBounds = function() { return ( sodiumExteriorConcentrationReadoutRect.bounds ); };
-    var sodiumInteriorConcentrationReadoutRect = Rectangle.bounds(
+    const sodiumInteriorConcentrationReadoutRect = Rectangle.bounds(
       sodiumInteriorConcentrationReadout.bounds.dilated( READOUT_BOUNDS_DILATION ),
       { fill: INVISIBLE_RECT_FILL, children: [ sodiumInteriorConcentrationReadout ] }
     );
     sodiumInteriorConcentrationReadout.computeShapeBounds = function() { return ( sodiumInteriorConcentrationReadoutRect.bounds ); };
-    var potassiumExteriorConcentrationReadoutRect = Rectangle.bounds(
+    const potassiumExteriorConcentrationReadoutRect = Rectangle.bounds(
       potassiumExteriorConcentrationReadout.bounds.dilated( READOUT_BOUNDS_DILATION ),
       { fill: INVISIBLE_RECT_FILL, children: [ potassiumExteriorConcentrationReadout ] }
     );
     potassiumExteriorConcentrationReadout.computeShapeBounds = function() { return ( potassiumExteriorConcentrationReadoutRect.bounds ); };
-    var potassiumInteriorConcentrationReadoutRect = Rectangle.bounds(
+    const potassiumInteriorConcentrationReadoutRect = Rectangle.bounds(
       potassiumInteriorConcentrationReadout.bounds.dilated( READOUT_BOUNDS_DILATION ),
       { fill: INVISIBLE_RECT_FILL, children: [ potassiumInteriorConcentrationReadout ] }
     );
@@ -119,12 +119,12 @@ define( require => {
     // it prevents making updates when the readouts aren't visible.
     Property.multilink( [ zoomProperty, neuronModel.concentrationReadoutVisibleProperty ], function( zoom, visible ) {
         if ( visible ) {
-          var maxExteriorReadoutWidth = Math.max( potassiumExteriorConcentrationReadoutRect.bounds.width,
+          const maxExteriorReadoutWidth = Math.max( potassiumExteriorConcentrationReadoutRect.bounds.width,
             sodiumExteriorConcentrationReadoutRect.bounds.width );
 
           // Place the exterior readouts to the upper left, just outside of the membrane.  The algorithm for placement was
           // empirically determined and will need adjustment if anything about the neuron position changes.
-          var exteriorIndicatorYOffset = Math.max( self.zoomableRootNode.transform.transformY( 45 ), 5 );
+          const exteriorIndicatorYOffset = Math.max( self.zoomableRootNode.transform.transformY( 45 ), 5 );
           potassiumExteriorConcentrationReadoutRect.left = viewPortBounds.minX + maxExteriorReadoutWidth -
                                                            potassiumExteriorConcentrationReadoutRect.bounds.width + 4;
           potassiumExteriorConcentrationReadoutRect.top = viewPortBounds.minY + exteriorIndicatorYOffset;
@@ -133,7 +133,7 @@ define( require => {
 
           // Place the interior readout in a place where it can be seen whether or not the chart is showing and doesn't
           // overlap with the membrane of the neuron.  The Y position calculation is empirically determined.
-          var interiorIndicatorYOffset = 80 + self.zoomableRootNode.transform.transformY( 80 ) * 0.5;
+          const interiorIndicatorYOffset = 80 + self.zoomableRootNode.transform.transformY( 80 ) * 0.5;
 
           potassiumInteriorConcentrationReadoutRect.centerX = axonCrossSectionNode.centerX;
           potassiumInteriorConcentrationReadoutRect.top = viewPortBounds.y + interiorIndicatorYOffset;

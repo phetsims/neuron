@@ -14,8 +14,8 @@ define( require => {
   const neuron = require( 'NEURON/neuron' );
 
   // constants
-  var LINE_COLOR = '#ff5500'; // colorblind-friendly red
-  var LINE_WIDTH = 1;
+  const LINE_COLOR = '#ff5500'; // colorblind-friendly red
+  const LINE_WIDTH = 1;
 
   /**
    * @param {number} width
@@ -26,7 +26,7 @@ define( require => {
    */
   function DataLineCanvasNode( width, height, dataSeries, mvt ) {
 
-    var self = this;
+    const self = this;
     this.dataSeries = dataSeries; // @private
     this.mvt = mvt; // @private
 
@@ -63,9 +63,9 @@ define( require => {
         context.lineWidth = LINE_WIDTH;
         context.beginPath();
         context.moveTo( this.mvt.modelToViewX( this.dataSeries.getX( 0 ) ), this.mvt.modelToViewY( this.dataSeries.getY( 0 ) ) );
-        for ( var i = 1; i < this.dataSeries.getLength(); i++ ) {
-          var endPointX = this.mvt.modelToViewX( this.dataSeries.getX( i ) );
-          var endPointY = this.mvt.modelToViewY( this.dataSeries.getY( i ) );
+        for ( let i = 1; i < this.dataSeries.getLength(); i++ ) {
+          const endPointX = this.mvt.modelToViewX( this.dataSeries.getX( i ) );
+          const endPointY = this.mvt.modelToViewY( this.dataSeries.getY( i ) );
           context.lineTo( endPointX, endPointY );
         }
         context.stroke();

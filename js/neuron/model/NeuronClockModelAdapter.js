@@ -23,14 +23,14 @@ define( require => {
 
   // the following constants could easily be turned into options if there was a need to reuse and thus generalize
   // this class.
-  var TIME_ADJUSTMENT_FACTOR = 7.32E-4; // in seconds, applied to the incoming dt values to scale it up or down
-  var NOMINAL_TICK_TIME = ( 1 / 60 ) * TIME_ADJUSTMENT_FACTOR; // used for single stepping, based on assumed frame rate of 60 fps
-  var TICKS_PER_SINGLE_STEP = 4;
+  const TIME_ADJUSTMENT_FACTOR = 7.32E-4; // in seconds, applied to the incoming dt values to scale it up or down
+  const NOMINAL_TICK_TIME = ( 1 / 60 ) * TIME_ADJUSTMENT_FACTOR; // used for single stepping, based on assumed frame rate of 60 fps
+  const TICKS_PER_SINGLE_STEP = 4;
 
   // Max time that the simulation model can handle in a single tick.  This was determined through testing the
   // simulation and is intended to prevent odd looking graphs and incorrect behavior, see
   // https://github.com/phetsims/neuron/issues/114 and https://github.com/phetsims/neuron/issues/109.
-  var MAX_SIM_TICK_TIME = NOMINAL_TICK_TIME * 10; // empirically determined through testing of the simulation
+  const MAX_SIM_TICK_TIME = NOMINAL_TICK_TIME * 10; // empirically determined through testing of the simulation
 
   /**
    * Creates a NeuronClockModelAdapter.
@@ -67,8 +67,8 @@ define( require => {
       if ( this.playingProperty.get() ) {
 
         // 'tick' the simulation, adjusting for dt values that are higher than the sim model can handle
-        var simTickTime = dt * TIME_ADJUSTMENT_FACTOR * this.speedProperty.get();
-        var numTicks = 1;
+        let simTickTime = dt * TIME_ADJUSTMENT_FACTOR * this.speedProperty.get();
+        let numTicks = 1;
         if ( simTickTime > MAX_SIM_TICK_TIME ){
 
           // this is a larger tick than the sim model can handle, so break it into multiple ticks
@@ -80,7 +80,7 @@ define( require => {
           numTicks++;
           this.residualTime = this.residualTime - simTickTime;
         }
-        for ( var i = 0; i < numTicks; i++ ){
+        for ( let i = 0; i < numTicks; i++ ){
           this.tick( simTickTime );
         }
       }
@@ -95,7 +95,7 @@ define( require => {
       this.speedProperty.set( 1 );
 
       //fire reset event callback
-      for ( var i = 0; i < this.resetCallBacks.length; i++ ) {
+      for ( let i = 0; i < this.resetCallBacks.length; i++ ) {
         this.resetCallBacks[ i ]();
       }
       this.model.reset();
@@ -125,7 +125,7 @@ define( require => {
      */
     tick: function( simulationTimeChange ) {
       // fire step event callback
-      for ( var i = 0; i < this.stepCallbacks.length; i++ ) {
+      for ( let i = 0; i < this.stepCallbacks.length; i++ ) {
         this.stepCallbacks[ i ]( simulationTimeChange );
       }
     },
@@ -135,7 +135,7 @@ define( require => {
      * @public
      */
     stepClockWhilePaused: function() {
-      var self = this;
+      const self = this;
       _.times( TICKS_PER_SINGLE_STEP, function() { self.tick( NOMINAL_TICK_TIME ); });
     },
 
@@ -144,7 +144,7 @@ define( require => {
      * @public
      */
     stepClockBackWhilePaused: function() {
-      var self = this;
+      const self = this;
       _.times( TICKS_PER_SINGLE_STEP, function() { self.tick( -NOMINAL_TICK_TIME ); });
     }
 

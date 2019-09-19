@@ -46,13 +46,13 @@ define( require => {
   const chartYAxisLabelString = require( 'string!NEURON/chartYAxisLabel' );
 
   // constants
-  var GRID_TICK_TEXT_FONT = new PhetFont( 8 );
-  var TIME_SPAN = 25; // In seconds.
-  var MAX_PANEL_WIDTH = 554;
-  var MIN_DISTANCE_SQUARED_BETWEEN_POINTS = 0.01;
+  const GRID_TICK_TEXT_FONT = new PhetFont( 8 );
+  const TIME_SPAN = 25; // In seconds.
+  const MAX_PANEL_WIDTH = 554;
+  const MIN_DISTANCE_SQUARED_BETWEEN_POINTS = 0.01;
 
   // This value sets the frequency of chart updates, which helps to reduce the processor consumption.
-  var UPDATE_PERIOD = NeuronConstants.DEFAULT_ACTION_POTENTIAL_CLOCK_DT; // in seconds of sim time (not wall time)
+  const UPDATE_PERIOD = NeuronConstants.DEFAULT_ACTION_POTENTIAL_CLOCK_DT; // in seconds of sim time (not wall time)
 
   /**
    * @param {Dimension2} chartDimension
@@ -61,7 +61,7 @@ define( require => {
    */
   function MembranePotentialChart( chartDimension, neuronClockModelAdapter ) {
 
-    var self = this;
+    const self = this;
     Node.call( this );
 
     // @private
@@ -81,20 +81,20 @@ define( require => {
     this.mostRecentYValue = 0;
 
     // Create the root node for the plot.
-    var plotNode = new Node();
+    const plotNode = new Node();
 
-    var numVerticalGridLines = 25;
-    var numHorizontalGridLines = 8;
+    const numVerticalGridLines = 25;
+    const numHorizontalGridLines = 8;
 
     // create a function to generate horizontal labels (The dot.LinearFunction returns a map function which can be used
     // to get the appropriate label value based on the index of each vertical line).
-    var domainMap = new dot.LinearFunction( 0, numVerticalGridLines, this.domain[ 0 ], this.domain[ 1 ] );
+    const domainMap = new dot.LinearFunction( 0, numVerticalGridLines, this.domain[ 0 ], this.domain[ 1 ] );
 
     // To create Vertical Labels
     // Example:- for the value of 3 it returns a value of -50 and for 5 it returns 0 (because range is -100 to 100)
-    var rangeMap = new dot.LinearFunction( 0, numHorizontalGridLines, this.range[ 1 ], this.range[ 0 ] );
+    const rangeMap = new dot.LinearFunction( 0, numHorizontalGridLines, this.range[ 1 ], this.range[ 0 ] );
 
-    var gridShape = new Shape();
+    const gridShape = new Shape();
 
     // vertical grid lines
     for ( var i = 0; i < numVerticalGridLines + 1; i++ ) {
@@ -139,14 +139,14 @@ define( require => {
     } );
 
     // title
-    var chartTitleNode = new Text( chartTitleString, {
+    const chartTitleNode = new Text( chartTitleString, {
       font: new PhetFont( { size: 16, weight: 'bold' } ),
       maxWidth: chartDimension.width * 0.5, // multiplier empirically determined through testing with long strings
       top: 0
     } );
 
     // clear button
-    var clearChartButton = new TextPushButton( chartClearString, {
+    const clearChartButton = new TextPushButton( chartClearString, {
       font: new PhetFont( { size: 12 } ),
       maxWidth: 100, // empirically determined
       listener: function() {
@@ -161,7 +161,7 @@ define( require => {
     } );
 
     // close button
-    var closeButton = new CloseButton( {
+    const closeButton = new CloseButton( {
       iconLength: 6,
       listener: function() {
         self.neuronModel.potentialChartVisibleProperty.set( false );
@@ -169,18 +169,18 @@ define( require => {
     } );
 
     // Scale to fit the Title Node within Chart's bounds.
-    var maxTitleWidth = chartDimension.width * 0.67;
-    var titleNodeScaleFactor = Math.min( 1, maxTitleWidth / chartTitleNode.width );
+    const maxTitleWidth = chartDimension.width * 0.67;
+    const titleNodeScaleFactor = Math.min( 1, maxTitleWidth / chartTitleNode.width );
     chartTitleNode.scale( titleNodeScaleFactor );
 
-    var axisLabelFont = { font: new PhetFont( { size: 12 } ) };
-    var chartXAxisLabelNode = new Text( chartXAxisLabelString, axisLabelFont );
-    var chartYAxisLabelNode = new Text( chartYAxisLabelString, axisLabelFont );
+    const axisLabelFont = { font: new PhetFont( { size: 12 } ) };
+    const chartXAxisLabelNode = new Text( chartXAxisLabelString, axisLabelFont );
+    const chartYAxisLabelNode = new Text( chartYAxisLabelString, axisLabelFont );
     chartYAxisLabelNode.rotation = -Math.PI / 2;
 
     // Scale to fit the Y axis within Chart's bounds
-    var yAxisMaxHeight = chartDimension.height;
-    var yAxisLabelScaleFactor = Math.min( 1, yAxisMaxHeight / (0.8 * chartYAxisLabelNode.height) );
+    const yAxisMaxHeight = chartDimension.height;
+    const yAxisLabelScaleFactor = Math.min( 1, yAxisMaxHeight / (0.8 * chartYAxisLabelNode.height) );
     chartYAxisLabelNode.scale( yAxisLabelScaleFactor );
 
     // use domain(0,25) and range(-100,100) as Model View Map
@@ -206,20 +206,20 @@ define( require => {
       }
     } );
 
-    var xMargin = 12;
-    var xSpace = 4;
+    const xMargin = 12;
+    const xSpace = 4;
     // align exactly with clipped area's edges
-    var contentWidth = chartYAxisLabelNode.width + plotNode.width + (2 * xMargin) + xSpace;
-    var adjustMargin = (MAX_PANEL_WIDTH - contentWidth) / 2;
+    const contentWidth = chartYAxisLabelNode.width + plotNode.width + (2 * xMargin) + xSpace;
+    const adjustMargin = (MAX_PANEL_WIDTH - contentWidth) / 2;
 
     // Put the chart, title, and controls in a node together and lay them out.
-    var plotAndYLabel = new HBox( {
+    const plotAndYLabel = new HBox( {
       children: [ chartYAxisLabelNode, plotNode ],
       spacing: xSpace,
       top: Math.max( chartTitleNode.height, clearChartButton.height, closeButton.height ),
       resize: false
     } );
-    var panelContents = new Node();
+    const panelContents = new Node();
     chartTitleNode.centerX = plotAndYLabel.width / 2;
     panelContents.addChild( chartTitleNode );
     panelContents.addChild( plotAndYLabel );
@@ -258,7 +258,7 @@ define( require => {
      * @public
      */
     addDataPoint: function( time, voltage ) {
-      var firstDataPoint = false;
+      let firstDataPoint = false;
       if ( this.dataSeries.getLength() === 0 ) {
         // This is the first data point added since the last time the chart was cleared or since it was created. Record
         // the time index for future reference.
@@ -267,12 +267,12 @@ define( require => {
       }
 
       // compute the x and y values that will be added to the data set if the necessary conditions are met
-      var xValue = time - this.timeIndexOfFirstDataPt;
-      var yValue = voltage * 1000; // this chart uses millivolts internally
+      const xValue = time - this.timeIndexOfFirstDataPt;
+      const yValue = voltage * 1000; // this chart uses millivolts internally
 
       // Calculate the distance from the most recently added point so that we can add as few points as possible and
       // still get a reasonable looking graph.  This is done as an optimization.
-      var distanceFromLastPointSquared = Number.POSITIVE_INFINITY;
+      let distanceFromLastPointSquared = Number.POSITIVE_INFINITY;
       if ( !firstDataPoint ) {
         distanceFromLastPointSquared = Math.pow( xValue - this.mostRecentXValue, 2 ) +
                                        Math.pow( yValue - this.mostRecentYValue, 2 );
@@ -302,7 +302,7 @@ define( require => {
      * @public
      */
     getLastTimeValue: function() {
-      var timeOfLastDataPoint = 0;
+      let timeOfLastDataPoint = 0;
       if ( this.dataSeries.getLength() > 0 ) {
         timeOfLastDataPoint = this.dataSeries.getX( this.dataSeries.getLength() - 1 );
       }
@@ -319,7 +319,7 @@ define( require => {
         if ( !this.chartIsFull && simulationTimeChange > 0 ) {
           this.updateCountdownTimer -= simulationTimeChange;
 
-          var timeInMilliseconds = this.neuronModel.getTime() * 1000;
+          const timeInMilliseconds = this.neuronModel.getTime() * 1000;
 
           if ( this.updateCountdownTimer <= 0 ) {
             this.addDataPoint( timeInMilliseconds, this.neuronModel.getMembranePotential(), true );
@@ -351,10 +351,10 @@ define( require => {
       // Deciding whether or not the chart cursor should be visible is a little tricky, so I've tried to make the logic
       // very explicit for easier maintenance.  Basically, any time we are in playback mode and we are somewhere on the
       // chart, or when stepping and recording, the cursor should be seen.
-      var timeOnChart = ( this.neuronModel.getTime() - this.neuronModel.getMinRecordedTime() ) * 1000;
-      var isCurrentTimeOnChart = ( timeOnChart >= 0 ) && ( timeOnChart <= TIME_SPAN );
-      var dataExists = this.dataSeries.getLength() > 0;
-      var chartCursorVisible = isCurrentTimeOnChart && dataExists;
+      const timeOnChart = ( this.neuronModel.getTime() - this.neuronModel.getMinRecordedTime() ) * 1000;
+      const isCurrentTimeOnChart = ( timeOnChart >= 0 ) && ( timeOnChart <= TIME_SPAN );
+      const dataExists = this.dataSeries.getLength() > 0;
+      const chartCursorVisible = isCurrentTimeOnChart && dataExists;
       this.chartCursor.setVisible( chartCursorVisible );
     },
 
@@ -368,8 +368,8 @@ define( require => {
 
     // @private
     updateChartCursorPos: function() {
-      var recordingStartTime = this.neuronModel.getMinRecordedTime();
-      var recordingCurrentTime = this.neuronModel.getTime();
+      const recordingStartTime = this.neuronModel.getMinRecordedTime();
+      const recordingCurrentTime = this.neuronModel.getTime();
       this.moveChartCursorToTime( ( recordingCurrentTime - recordingStartTime ) * 1000 );
     },
 

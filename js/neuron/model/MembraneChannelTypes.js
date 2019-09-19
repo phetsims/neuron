@@ -11,7 +11,7 @@ define( require => {
   // modules
   const neuron = require( 'NEURON/neuron' );
 
-  var MembraneChannelTypes = {
+  const MembraneChannelTypes = {
     'SODIUM_LEAKAGE_CHANNEL': 'SODIUM_LEAKAGE_CHANNEL',
     'SODIUM_GATED_CHANNEL': 'SODIUM_GATED_CHANNEL',
     'POTASSIUM_LEAKAGE_CHANNEL': 'POTASSIUM_LEAKAGE_CHANNEL',

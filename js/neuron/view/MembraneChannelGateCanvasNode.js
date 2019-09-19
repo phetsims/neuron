@@ -25,8 +25,8 @@ define( require => {
   function drawEdge( context, transformedEdgeNodeSize ) {
 
     // Instead of passing the transformedEdgeNodeSize, the updateEdgeShape function updates the transformedEdgeNodeSize
-    var width = transformedEdgeNodeSize.width;
-    var height = transformedEdgeNodeSize.height;
+    const width = transformedEdgeNodeSize.width;
+    const height = transformedEdgeNodeSize.height;
 
     context.beginPath();
     context.moveTo( -width / 2, height / 4 );
@@ -43,8 +43,8 @@ define( require => {
                              transformedEdgeNodeSize, membraneChannelModel ) {
 
     // create the edge representations
-    var edgeNodeWidth = (membraneChannelModel.overallSize.width - membraneChannelModel.channelSize.width) / 2;
-    var edgeNodeHeight = membraneChannelModel.overallSize.height;
+    let edgeNodeWidth = (membraneChannelModel.overallSize.width - membraneChannelModel.channelSize.width) / 2;
+    const edgeNodeHeight = membraneChannelModel.overallSize.height;
 
     edgeNodeWidth = edgeNodeWidth - 0.2; // adjustment for Canvas pixel width
 
@@ -52,7 +52,7 @@ define( require => {
     transformedEdgeNodeSize.width = Math.abs( thisNode.mvt.modelToViewDeltaX( edgeNodeWidth ) );
     transformedEdgeNodeSize.height = Math.abs( thisNode.mvt.modelToViewDeltaY( edgeNodeHeight ) );
 
-    var rotation = -membraneChannelModel.rotationalAngle + Math.PI / 2;
+    const rotation = -membraneChannelModel.rotationalAngle + Math.PI / 2;
     context.fillStyle = thisNode.edgeFillColors[ membraneChannelModel.getChannelType() ];
     context.strokeStyle = thisNode.edgeStrokeColors[ membraneChannelModel.getChannelType() ];
     context.lineWidth = 0.9;
@@ -83,7 +83,7 @@ define( require => {
    * @constructor
    */
   function MembraneChannelGateCanvasNode( neuronModel, modelViewTransform, bounds ) {
-    var self = this;
+    const self = this;
     CanvasNode.call( this, { pickable: false, canvasBounds: bounds } );
     this.neuronModel = neuronModel;
     this.membraneChannels = neuronModel.membraneChannels;
@@ -94,14 +94,14 @@ define( require => {
     } );
 
     function computeEdgeBounds( membraneChannelModel ) {
-      var edgeNodeWidth = (membraneChannelModel.overallSize.width - membraneChannelModel.channelSize.width) / 2;
-      var edgeNodeHeight = membraneChannelModel.overallSize.height;
-      var transformedEdgeNodeSize = new Dimension2( Math.abs( self.mvt.modelToViewDeltaX( edgeNodeWidth ) ),
+      const edgeNodeWidth = (membraneChannelModel.overallSize.width - membraneChannelModel.channelSize.width) / 2;
+      const edgeNodeHeight = membraneChannelModel.overallSize.height;
+      const transformedEdgeNodeSize = new Dimension2( Math.abs( self.mvt.modelToViewDeltaX( edgeNodeWidth ) ),
         Math.abs( self.mvt.modelToViewDeltaY( edgeNodeHeight ) ) );
 
-      var width = transformedEdgeNodeSize.width;
-      var height = transformedEdgeNodeSize.height;
-      var edgeShape = new Shape();
+      const width = transformedEdgeNodeSize.width;
+      const height = transformedEdgeNodeSize.height;
+      const edgeShape = new Shape();
       edgeShape.moveTo( -width / 2, height / 4 );
       edgeShape.cubicCurveTo( -width / 2, height / 2, width / 2, height / 2, width / 2, height / 4 );
       edgeShape.lineTo( width / 2, -height / 4 );
@@ -166,24 +166,24 @@ define( require => {
      * @protected
      */
     paintCanvas: function( context ) {
-      var self = this;
-      var edgeNodeBounds = this.edgeNodeBounds;
+      const self = this;
+      const edgeNodeBounds = this.edgeNodeBounds;
 
       // Use the same object reference.  These are intermediary objects and don't hold any state, and are used only for
       // rendering.
-      var transformedChannelLocation = this.transformedChannelLocation;
-      var viewTransformationMatrix = this.viewTransformationMatrix;
+      const transformedChannelLocation = this.transformedChannelLocation;
+      const viewTransformationMatrix = this.viewTransformationMatrix;
 
-      var channelEdgeConnectionPoint = this.channelEdgeConnectionPoint;
-      var channelCenterBottomPoint = this.channelCenterBottomPoint;
-      var ballPosition = this.ballPosition;
-      var ballConnectionPoint = this.ballConnectionPoint;
+      const channelEdgeConnectionPoint = this.channelEdgeConnectionPoint;
+      const channelCenterBottomPoint = this.channelCenterBottomPoint;
+      const ballPosition = this.ballPosition;
+      const ballConnectionPoint = this.ballConnectionPoint;
 
       // this code is refactored to use minimum instances of Vector2 and Dimensions2
-      var channelSize = this.channelSize;
-      var transformedChannelSize = this.transformedChannelSize;
-      var transformedOverallSize = this.transformedOverallSize;
-      var transformedEdgeNodeSize = this.transformedEdgeNodeSize;
+      const channelSize = this.channelSize;
+      const transformedChannelSize = this.transformedChannelSize;
+      const transformedOverallSize = this.transformedOverallSize;
+      const transformedEdgeNodeSize = this.transformedEdgeNodeSize;
 
       this.membraneChannels.getArray().forEach( function( membraneChannelModel ) {
 
@@ -192,7 +192,7 @@ define( require => {
         transformedChannelLocation.y = membraneChannelModel.getCenterLocation().y;
         viewTransformationMatrix.multiplyVector2( transformedChannelLocation );
 
-        var rotation = -membraneChannelModel.rotationalAngle + Math.PI / 2;
+        const rotation = -membraneChannelModel.rotationalAngle + Math.PI / 2;
 
         // Set the channel width as a function of the openness of the membrane channel.
         channelSize.width = membraneChannelModel.getChannelSize().width * membraneChannelModel.getOpenness();
@@ -203,10 +203,10 @@ define( require => {
         transformedChannelSize.height = Math.abs( self.mvt.modelToViewDeltaY( channelSize.height ) );
 
         // Make the node a bit bigger than the channel so that the edges can be placed over it with no gaps.
-        var oversizeFactor = 1.18;
-        var width = transformedChannelSize.width * oversizeFactor;
-        var height = transformedChannelSize.height * oversizeFactor;
-        var edgeWidth = edgeNodeBounds.width; // Assume both edges are the same size.
+        const oversizeFactor = 1.18;
+        const width = transformedChannelSize.width * oversizeFactor;
+        const height = transformedChannelSize.height * oversizeFactor;
+        const edgeWidth = edgeNodeBounds.width; // Assume both edges are the same size.
         context.save();
         context.translate( transformedChannelLocation.x, transformedChannelLocation.y );
         context.rotate( rotation );
@@ -233,18 +233,18 @@ define( require => {
           channelEdgeConnectionPoint.y = edgeNodeBounds.getMaxY();
           channelCenterBottomPoint.x = 0;
           channelCenterBottomPoint.y = transformedChannelSize.height / 2;
-          var angle = -Math.PI / 2 * (1 - membraneChannelModel.getInactivationAmount());
-          var radius = (1 - membraneChannelModel.getInactivationAmount()) * transformedOverallSize.width / 2 + membraneChannelModel.getInactivationAmount() * channelEdgeConnectionPoint.distance( channelCenterBottomPoint );
+          const angle = -Math.PI / 2 * (1 - membraneChannelModel.getInactivationAmount());
+          const radius = (1 - membraneChannelModel.getInactivationAmount()) * transformedOverallSize.width / 2 + membraneChannelModel.getInactivationAmount() * channelEdgeConnectionPoint.distance( channelCenterBottomPoint );
 
           ballPosition.x = channelEdgeConnectionPoint.x + Math.cos( angle ) * radius;
           ballPosition.y = channelEdgeConnectionPoint.y - Math.sin( angle ) * radius;
 
-          var ballDiameter = self.mvt.modelToViewDeltaX( membraneChannelModel.getChannelSize().width );
+          const ballDiameter = self.mvt.modelToViewDeltaX( membraneChannelModel.getChannelSize().width );
 
           // Redraw the "string" (actually a strand of protein in real life) that connects the ball to the gate.
           ballConnectionPoint.x = ballPosition.x;
           ballConnectionPoint.y = ballPosition.y;
-          var connectorLength = channelCenterBottomPoint.distance( ballConnectionPoint );
+          const connectorLength = channelCenterBottomPoint.distance( ballConnectionPoint );
           context.save();
           context.translate( transformedChannelLocation.x, transformedChannelLocation.y );
           context.rotate( rotation );

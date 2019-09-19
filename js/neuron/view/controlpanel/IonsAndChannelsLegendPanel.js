@@ -43,12 +43,12 @@ define( require => {
   const sodiumLeakChannelString = require( 'string!NEURON/sodiumLeakChannel' );
 
   // constants
-  var LEGEND_TEXT_OPTIONS = { font: new PhetFont( { size: 12 } ) };
-  var MAX_TEXT_WIDTH = 140; // empirically determined
+  const LEGEND_TEXT_OPTIONS = { font: new PhetFont( { size: 12 } ) };
+  const MAX_TEXT_WIDTH = 140; // empirically determined
 
   // Utility function to scale and fit the text nodes within the panel's bounds
   function scaleAndFitTextItem( textItemNode ) {
-    var textNodeScaleFactor = Math.min( 1, MAX_TEXT_WIDTH / textItemNode.width );
+    const textNodeScaleFactor = Math.min( 1, MAX_TEXT_WIDTH / textItemNode.width );
     textItemNode.scale( textNodeScaleFactor );
     return textItemNode;
   }
@@ -56,7 +56,7 @@ define( require => {
   // Utility function to create an icon/caption node for inclusion in the legend.
   function createIconAndCaptionNode( icon, maxIconWidth, captionText ) {
     assert && assert( icon.width <= maxIconWidth, 'maxIconWidth cannot be larger than ' );
-    var centeringSpacerWidth = ( maxIconWidth - icon.width ) / 2 + 0.1; // Spacing can't be zero, hence the adder at the end.
+    const centeringSpacerWidth = ( maxIconWidth - icon.width ) / 2 + 0.1; // Spacing can't be zero, hence the adder at the end.
     return new HBox( {
       spacing: 0,
       children: [
@@ -77,36 +77,36 @@ define( require => {
     // The model-view transforms below are used to make nodes that usually
     // reside on the canvas be of an appropriate size for inclusion on the
     // control panel.
-    var PARTICLE_MVT = ModelViewTransform2.createRectangleMapping(
+    const PARTICLE_MVT = ModelViewTransform2.createRectangleMapping(
       new Bounds2( -3.0, -3.0, 2.0, 2.0 ), new Bounds2( -8, -8, 16, 16 ) );
 
-    var CHANNEL_MVT = ModelViewTransform2.createSinglePointScaleInvertedYMapping( Vector2.ZERO, Vector2.ZERO, 4 );
+    const CHANNEL_MVT = ModelViewTransform2.createSinglePointScaleInvertedYMapping( Vector2.ZERO, Vector2.ZERO, 4 );
 
     // Add the title to the list of children.
-    var imageAndLabelChildren = [];
+    const imageAndLabelChildren = [];
     imageAndLabelChildren.push( scaleAndFitTextItem( new Text( legendString, { font: new PhetFont( { size: 16, weight: 'bold' } ) } ) ) );
 
     // Create all of the image icons, since we need to do some layout calculations before adding them to the panel.
-    var iconList = [];
-    var sodiumIonImageNode = new ParticleNode( new SodiumIon(), PARTICLE_MVT );
+    const iconList = [];
+    const sodiumIonImageNode = new ParticleNode( new SodiumIon(), PARTICLE_MVT );
     iconList.push( sodiumIonImageNode );
-    var potassiumIonImageNode = new ParticleNode( new PotassiumIon(), PARTICLE_MVT );
+    const potassiumIonImageNode = new ParticleNode( new PotassiumIon(), PARTICLE_MVT );
     iconList.push( potassiumIonImageNode );
-    var sodiumDualGatedChannelNode = new MembraneChannelNode( new SodiumDualGatedChannel(), CHANNEL_MVT );
+    const sodiumDualGatedChannelNode = new MembraneChannelNode( new SodiumDualGatedChannel(), CHANNEL_MVT );
     sodiumDualGatedChannelNode.rotate( -Math.PI / 2 );
     iconList.push( sodiumDualGatedChannelNode );
-    var potassiumGatedChannelNode = new MembraneChannelNode( new PotassiumGatedChannel(), CHANNEL_MVT );
+    const potassiumGatedChannelNode = new MembraneChannelNode( new PotassiumGatedChannel(), CHANNEL_MVT );
     potassiumGatedChannelNode.rotate( -Math.PI / 2 );
     iconList.push( potassiumGatedChannelNode );
-    var sodiumLeakageChannelNode = new MembraneChannelNode( new SodiumLeakageChannel(), CHANNEL_MVT );
+    const sodiumLeakageChannelNode = new MembraneChannelNode( new SodiumLeakageChannel(), CHANNEL_MVT );
     sodiumLeakageChannelNode.rotate( -Math.PI / 2 );
     iconList.push( sodiumLeakageChannelNode );
-    var potassiumLeakageChannelNode = new MembraneChannelNode( new PotassiumLeakageChannel(), CHANNEL_MVT );
+    const potassiumLeakageChannelNode = new MembraneChannelNode( new PotassiumLeakageChannel(), CHANNEL_MVT );
     potassiumLeakageChannelNode.rotate( -Math.PI / 2 );
     iconList.push( potassiumLeakageChannelNode );
 
     // Figure out the maximum icon width.
-    var maxIconWidth = 0;
+    let maxIconWidth = 0;
     iconList.forEach( function( icon ) {
       maxIconWidth = icon.width > maxIconWidth ? icon.width : maxIconWidth;
     } );

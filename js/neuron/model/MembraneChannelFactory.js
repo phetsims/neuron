@@ -17,7 +17,7 @@ define( require => {
   const SodiumDualGatedChannel = require( 'NEURON/neuron/model/SodiumDualGatedChannel' );
   const SodiumLeakageChannel = require( 'NEURON/neuron/model/SodiumLeakageChannel' );
 
-  var MembraneChannelFactory = {
+  const MembraneChannelFactory = {
     /**
      * factory method for creating a MembraneChannel of the specified type.
      * @param {MembraneChannelTypes} channelType
@@ -27,7 +27,7 @@ define( require => {
      * @public
      */
     createMembraneChannel: function( channelType, particleModel, hodgkinHuxleyModel ) {
-      var membraneChannel = null;
+      let membraneChannel = null;
       switch( channelType ) {
         case MembraneChannelTypes.SODIUM_LEAKAGE_CHANNEL:
           membraneChannel = new SodiumLeakageChannel( particleModel, hodgkinHuxleyModel );

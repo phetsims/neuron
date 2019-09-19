@@ -29,7 +29,7 @@ define( require => {
    */
   function RecordAndPlaybackModel( maxRecordPoints ) {
 
-    var self = this;
+    const self = this;
 
     this.playingProperty = new Property( true ); // True if playing, false if paused
     this.timeProperty = new Property( 0 ); // Current time of recording or playback
@@ -154,8 +154,8 @@ define( require => {
 
     setTime: function( t ) {
       this.timeProperty.set( t );
-      var isPlayBackVal = this.isPlayback();
-      var recordPtsLength = this.getNumRecordedPoints();
+      const isPlayBackVal = this.isPlayback();
+      const recordPtsLength = this.getNumRecordedPoints();
       if ( isPlayBackVal && ( recordPtsLength > 0) ) { // Only restore state if during playback and state has been recorded
         this.setPlaybackState( this.getPlaybackState().getState() ); // Sets the model state to reflect the current playback index
       }
@@ -197,8 +197,8 @@ define( require => {
      * Look up a recorded state based on the specified time
      */
     getPlaybackState: function() {
-      var self = this;
-      var sortedHistory = this.recordHistory.getArray().slice();
+      const self = this;
+      const sortedHistory = this.recordHistory.getArray().slice();
 
       sortedHistory.sort( function( o1, o2 ) {
         // Though inefficient, this hasn't caused noticeable slowdown during testing.
@@ -268,8 +268,8 @@ define( require => {
 
     clearHistoryRemainder: function() {
       this.historyRemainderClearedProperty.set( false );
-      var keep = [];
-      var self = this;
+      const keep = [];
+      const self = this;
       this.recordHistory.forEach( function( dataPoint ) {
         if ( dataPoint.getTime() < self.timeProperty.get() ) {
           keep.push( dataPoint );

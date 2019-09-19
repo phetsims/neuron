@@ -19,10 +19,10 @@ define( require => {
   const Vector2 = require( 'DOT/Vector2' );
 
   // constants
-  var CANVAS_LENGTH = 128; // width and height of the canvas, must be a power of 2 so that mipmapping can be used
-  var MARGIN = CANVAS_LENGTH * 0.1; // space around the particles
-  var STROKE_WIDTH = CANVAS_LENGTH / 32;
-  var PRINT_DATA_URL_OF_SPRITE_SHEET = false; // very useful for debugging issues with the sprite sheet texture
+  const CANVAS_LENGTH = 128; // width and height of the canvas, must be a power of 2 so that mipmapping can be used
+  const MARGIN = CANVAS_LENGTH * 0.1; // space around the particles
+  const STROKE_WIDTH = CANVAS_LENGTH / 32;
+  const PRINT_DATA_URL_OF_SPRITE_SHEET = false; // very useful for debugging issues with the sprite sheet texture
 
   /**
    * @param {ModelViewTransform2} modelViewTransform
@@ -65,10 +65,10 @@ define( require => {
       context.lineWidth = STROKE_WIDTH;
       context.lineJoin = 'round';
 
-      var particlePos;
+      let particlePos;
 
       // create the image for sodium ions
-      var sodiumParticleRadius = ( CANVAS_LENGTH / 2 - 2 * MARGIN ) / 2;
+      const sodiumParticleRadius = ( CANVAS_LENGTH / 2 - 2 * MARGIN ) / 2;
       context.fillStyle = NeuronConstants.SODIUM_COLOR.getCanvasStyle();
       context.beginPath();
       particlePos = this.getTilePosition( ParticleType.SODIUM_ION, particlePos );
@@ -77,10 +77,10 @@ define( require => {
       context.stroke();
 
       // create the image for potassium ions
-      var potassiumParticleWidth = CANVAS_LENGTH / 2 - 2 * MARGIN;
+      const potassiumParticleWidth = CANVAS_LENGTH / 2 - 2 * MARGIN;
       particlePos = this.getTilePosition( ParticleType.POTASSIUM_ION, particlePos );
-      var x = particlePos.x;
-      var y = particlePos.y;
+      const x = particlePos.x;
+      const y = particlePos.y;
       context.fillStyle = NeuronConstants.POTASSIUM_COLOR.getCanvasStyle();
       context.beginPath();
       context.moveTo( x - potassiumParticleWidth / 2, y );
@@ -100,7 +100,7 @@ define( require => {
     getTilePosition: function( particleType ) {
 
       // allocate a vector if none was provided
-      var posVector = new Vector2( CANVAS_LENGTH / 4, CANVAS_LENGTH / 4 );
+      const posVector = new Vector2( CANVAS_LENGTH / 4, CANVAS_LENGTH / 4 );
 
       if ( particleType === ParticleType.POTASSIUM_ION ) {
         //The Potassium Tiles are arranged after Sodium
@@ -117,9 +117,9 @@ define( require => {
      * @public
      */
     getTexCoords: function( particleType ) {
-      var coords = new Bounds2( 0, 0, 0, 0 );
-      var tileCenterPosition = this.getTilePosition( particleType );
-      var tileRadius = CANVAS_LENGTH / 4;
+      const coords = new Bounds2( 0, 0, 0, 0 );
+      const tileCenterPosition = this.getTilePosition( particleType );
+      const tileRadius = CANVAS_LENGTH / 4;
 
       // Set the normalized bounds within the texture for the requested particle type.
       coords.setMinX( ( tileCenterPosition.x - tileRadius ) / this.canvas.width );

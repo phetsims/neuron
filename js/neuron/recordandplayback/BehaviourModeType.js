@@ -11,7 +11,7 @@ define( require => {
   // modules
   const neuron = require( 'NEURON/neuron' );
 
-  var BehaviourModeType = {
+  const BehaviourModeType = {
     pauseAtEndOfPlayback: true,
     recordAtEndOfPlayback: false
   };

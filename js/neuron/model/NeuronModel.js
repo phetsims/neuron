@@ -35,68 +35,68 @@ define( require => {
   const Vector2 = require( 'DOT/Vector2' );
 
   // default configuration values
-  var DEFAULT_FOR_SHOW_ALL_IONS = true;
-  var DEFAULT_FOR_MEMBRANE_CHART_VISIBILITY = false;
-  var DEFAULT_FOR_CHARGES_SHOWN = false;
-  var DEFAULT_FOR_CONCENTRATION_READOUT_SHOWN = false;
+  const DEFAULT_FOR_SHOW_ALL_IONS = true;
+  const DEFAULT_FOR_MEMBRANE_CHART_VISIBILITY = false;
+  const DEFAULT_FOR_CHARGES_SHOWN = false;
+  const DEFAULT_FOR_CONCENTRATION_READOUT_SHOWN = false;
 
   // numbers of the various types of channels that are present on the membrane
-  var NUM_GATED_SODIUM_CHANNELS = 20;
-  var NUM_GATED_POTASSIUM_CHANNELS = 20;
-  var NUM_SODIUM_LEAK_CHANNELS = 3;
-  var NUM_POTASSIUM_LEAK_CHANNELS = 7;
+  const NUM_GATED_SODIUM_CHANNELS = 20;
+  const NUM_GATED_POTASSIUM_CHANNELS = 20;
+  const NUM_SODIUM_LEAK_CHANNELS = 3;
+  const NUM_POTASSIUM_LEAK_CHANNELS = 7;
 
   // nominal concentration values
-  var NOMINAL_SODIUM_EXTERIOR_CONCENTRATION = 145;     // In millimolar (mM)
-  var NOMINAL_SODIUM_INTERIOR_CONCENTRATION = 10;      // In millimolar (mM)
-  var NOMINAL_POTASSIUM_EXTERIOR_CONCENTRATION = 4;    // In millimolar (mM)
-  var NOMINAL_POTASSIUM_INTERIOR_CONCENTRATION = 140;  // In millimolar (mM)
+  const NOMINAL_SODIUM_EXTERIOR_CONCENTRATION = 145;     // In millimolar (mM)
+  const NOMINAL_SODIUM_INTERIOR_CONCENTRATION = 10;      // In millimolar (mM)
+  const NOMINAL_POTASSIUM_EXTERIOR_CONCENTRATION = 4;    // In millimolar (mM)
+  const NOMINAL_POTASSIUM_INTERIOR_CONCENTRATION = 140;  // In millimolar (mM)
 
   // numbers of "bulk" ions in and out of the cell when visible
-  var NUM_SODIUM_IONS_OUTSIDE_CELL = 450;
-  var NUM_SODIUM_IONS_INSIDE_CELL = 6;
-  var NUM_POTASSIUM_IONS_OUTSIDE_CELL = 45;
-  var NUM_POTASSIUM_IONS_INSIDE_CELL = 150;
+  const NUM_SODIUM_IONS_OUTSIDE_CELL = 450;
+  const NUM_SODIUM_IONS_INSIDE_CELL = 6;
+  const NUM_POTASSIUM_IONS_OUTSIDE_CELL = 45;
+  const NUM_POTASSIUM_IONS_INSIDE_CELL = 150;
 
   // Define the amount of delay between the values changing in the HH model until the concentration readouts are
   // updated.  This is needed to make sure that the concentration readouts don't change before visible potassium or
   // sodium ions have crossed the membrane.
-  var CONCENTRATION_READOUT_DELAY = 0.0005;  // in seconds of sim time
+  const CONCENTRATION_READOUT_DELAY = 0.0005;  // in seconds of sim time
 
   // Define the thresholds for determining whether an action potential should be considered to be in progress.  These
   // values relate to the rate of flow through the gated sodium, gated potassium, and combination of the sodium and
   // potassium leakage. If the values from the HH model exceed any of these, and action potential is considered to be in
   // progress. The values were determined empirically, and different HH models may require different values here.
-  var POTASSIUM_CURRENT_THRESH_FOR_ACTION_POTENTIAL = 0.001;
-  var SODIUM_CURRENT_THRESH_FOR_ACTION_POTENTIAL = 0.001;
-  var LEAKAGE_CURRENT_THRESH_FOR_ACTION_POTENTIAL = 0.444;
+  const POTASSIUM_CURRENT_THRESH_FOR_ACTION_POTENTIAL = 0.001;
+  const SODIUM_CURRENT_THRESH_FOR_ACTION_POTENTIAL = 0.001;
+  const LEAKAGE_CURRENT_THRESH_FOR_ACTION_POTENTIAL = 0.444;
 
   // Define the rates at which concentration changes during action potential.  These values combined with the
   // conductance at each time step are used to calculate the concentration changes.
-  var INTERIOR_CONCENTRATION_CHANGE_RATE_SODIUM = 0.4;
-  var EXTERIOR_CONCENTRATION_CHANGE_RATE_SODIUM = 7;
-  var INTERIOR_CONCENTRATION_CHANGE_RATE_POTASSIUM = 2.0;
-  var EXTERIOR_CONCENTRATION_CHANGE_RATE_POTASSIUM = 0.05;
+  const INTERIOR_CONCENTRATION_CHANGE_RATE_SODIUM = 0.4;
+  const EXTERIOR_CONCENTRATION_CHANGE_RATE_SODIUM = 7;
+  const INTERIOR_CONCENTRATION_CHANGE_RATE_POTASSIUM = 2.0;
+  const EXTERIOR_CONCENTRATION_CHANGE_RATE_POTASSIUM = 0.05;
 
   // threshold of significant difference for concentration values
-  var CONCENTRATION_DIFF_THRESHOLD = 0.000001;
+  const CONCENTRATION_DIFF_THRESHOLD = 0.000001;
 
   // Define the rate at which concentration is restored to nominal value.  Higher value means quicker restoration.
-  var CONCENTRATION_RESTORATION_FACTOR = 1000;
+  const CONCENTRATION_RESTORATION_FACTOR = 1000;
 
   // value that controls how much of a change of the membrane potential must occur before a notification is sent out
-  var MEMBRANE_POTENTIAL_CHANGE_THRESHOLD = 0.005;
+  const MEMBRANE_POTENTIAL_CHANGE_THRESHOLD = 0.005;
 
   // default values of opacity for newly created particles
-  var FOREGROUND_PARTICLE_DEFAULT_OPACITY = 0.25;
-  var BACKGROUND_PARTICLE_DEFAULT_OPACITY = 0.10; // default alpha in Java was 0.05, which isn't visible in the canvas so slightly increasing to 0.10
+  const FOREGROUND_PARTICLE_DEFAULT_OPACITY = 0.25;
+  const BACKGROUND_PARTICLE_DEFAULT_OPACITY = 0.10; // default alpha in Java was 0.05, which isn't visible in the canvas so slightly increasing to 0.10
 
   /**
    * @constructor
    */
   function NeuronModel() {
-    var self = this;
-    var maxRecordPoints = Math.ceil( NeuronConstants.TIME_SPAN * 1000 / NeuronConstants.MIN_ACTION_POTENTIAL_CLOCK_DT );
+    const self = this;
+    const maxRecordPoints = Math.ceil( NeuronConstants.TIME_SPAN * 1000 / NeuronConstants.MIN_ACTION_POTENTIAL_CLOCK_DT );
     this.axonMembrane = new AxonMembrane();
 
     // @public - events emitted by this model
@@ -188,14 +188,14 @@ define( require => {
     // leak channels interspersed.  There should be one or more of each type of channel on the top of the membrane so
     // when the user zooms in, they can see all types.
     (function() {
-      var angle = Math.PI * 0.45;
-      var totalNumChannels = NUM_GATED_SODIUM_CHANNELS + NUM_GATED_POTASSIUM_CHANNELS + NUM_SODIUM_LEAK_CHANNELS +
+      let angle = Math.PI * 0.45;
+      const totalNumChannels = NUM_GATED_SODIUM_CHANNELS + NUM_GATED_POTASSIUM_CHANNELS + NUM_SODIUM_LEAK_CHANNELS +
                              NUM_POTASSIUM_LEAK_CHANNELS;
-      var angleIncrement = Math.PI * 2 / totalNumChannels;
-      var gatedSodiumChannelsAdded = 0;
-      var gatedPotassiumChannelsAdded = 0;
-      var sodiumLeakChannelsAdded = 0;
-      var potassiumLeakChannelsAdded = 0;
+      const angleIncrement = Math.PI * 2 / totalNumChannels;
+      let gatedSodiumChannelsAdded = 0;
+      let gatedPotassiumChannelsAdded = 0;
+      let sodiumLeakChannelsAdded = 0;
+      let potassiumLeakChannelsAdded = 0;
 
       // Add some of each type so that they are visible at the top portion of the membrane.
       if ( NUM_SODIUM_LEAK_CHANNELS > 0 ) {
@@ -221,13 +221,13 @@ define( require => {
 
       // Now loop through the rest of the membrane's circumference adding
       // the various types of gates.
-      for ( var i = 0; i < totalNumChannels - 4; i++ ) {
+      for ( let i = 0; i < totalNumChannels - 4; i++ ) {
         // Calculate the "urgency" for each type of gate.
-        var gatedSodiumUrgency = NUM_GATED_SODIUM_CHANNELS / gatedSodiumChannelsAdded;
-        var gatedPotassiumUrgency = NUM_GATED_POTASSIUM_CHANNELS / gatedPotassiumChannelsAdded;
-        var potassiumLeakUrgency = NUM_POTASSIUM_LEAK_CHANNELS / potassiumLeakChannelsAdded;
-        var sodiumLeakUrgency = NUM_SODIUM_LEAK_CHANNELS / sodiumLeakChannelsAdded;
-        var channelTypeToAdd = null;
+        const gatedSodiumUrgency = NUM_GATED_SODIUM_CHANNELS / gatedSodiumChannelsAdded;
+        const gatedPotassiumUrgency = NUM_GATED_POTASSIUM_CHANNELS / gatedPotassiumChannelsAdded;
+        const potassiumLeakUrgency = NUM_POTASSIUM_LEAK_CHANNELS / potassiumLeakChannelsAdded;
+        const sodiumLeakUrgency = NUM_SODIUM_LEAK_CHANNELS / sodiumLeakChannelsAdded;
+        let channelTypeToAdd = null;
         if ( gatedSodiumUrgency >= gatedPotassiumUrgency && gatedSodiumUrgency >= potassiumLeakUrgency &&
              gatedSodiumUrgency >= sodiumLeakUrgency ) {
           // Add a gated sodium channel.
@@ -349,9 +349,9 @@ define( require => {
 
       // Adjust the overall potassium and sodium concentration levels based parameters of the HH model.  This is done
       // solely to provide values that can be displayed to the user, and are not used for anything else in the model.
-      var concentrationChanged = this.concentrationChangedProperty.set( false );
-      var difference;
-      var potassiumConductance = this.hodgkinHuxleyModel.get_delayed_n4( CONCENTRATION_READOUT_DELAY );
+      let concentrationChanged = this.concentrationChangedProperty.set( false );
+      let difference;
+      const potassiumConductance = this.hodgkinHuxleyModel.get_delayed_n4( CONCENTRATION_READOUT_DELAY );
       if ( potassiumConductance !== 0 ) {
         // Potassium is moving out of the cell as part of the process of
         // an action potential, so adjust the interior and exterior
@@ -386,7 +386,7 @@ define( require => {
           concentrationChanged = true;
         }
       }
-      var sodiumConductance = this.hodgkinHuxleyModel.get_delayed_m3h( CONCENTRATION_READOUT_DELAY );
+      const sodiumConductance = this.hodgkinHuxleyModel.get_delayed_m3h( CONCENTRATION_READOUT_DELAY );
       if ( this.hodgkinHuxleyModel.get_m3h() !== 0 ) {
         // Sodium is moving in to the cell as part of the process of an
         // action potential, so adjust the interior and exterior
@@ -434,7 +434,7 @@ define( require => {
       this.particlesMoved.emit();
 
       // If any one channel's state is changed, trigger a channel representation changed event
-      var channelStateChanged = function( membraneChannel ) {
+      const channelStateChanged = function( membraneChannel ) {
         return membraneChannel.channelStateChangedProperty.get();
       };
       if ( _.some( this.membraneChannels.getArray(), channelStateChanged ) ) {
@@ -481,7 +481,7 @@ define( require => {
       this.channelRepresentationChanged.emit();
 
       // Reset the concentration readout values.
-      var concentrationChanged = this.concentrationChangedProperty.set( false );
+      let concentrationChanged = this.concentrationChangedProperty.set( false );
       if ( this.sodiumExteriorConcentration !== NOMINAL_SODIUM_EXTERIOR_CONCENTRATION ) {
         this.sodiumExteriorConcentration = NOMINAL_SODIUM_EXTERIOR_CONCENTRATION;
         concentrationChanged = true;
@@ -554,7 +554,7 @@ define( require => {
      * @public
      */
     requestParticleThroughChannel: function( particleType, channel, maxVelocity, direction ) {
-      var captureZone;
+      let captureZone;
       if ( direction === MembraneCrossingDirection.IN_TO_OUT ) {
         captureZone = channel.getInteriorCaptureZone();
       }
@@ -562,7 +562,7 @@ define( require => {
         captureZone = channel.getExteriorCaptureZone();
       }
 
-      var particleToCapture = this.createTransientParticle( particleType, captureZone );
+      const particleToCapture = this.createTransientParticle( particleType, captureZone );
 
       // Make the particle fade in.
       particleToCapture.setFadeStrategy( new TimedFadeInStrategy( 0.0005 ) );
@@ -597,10 +597,10 @@ define( require => {
      * @private
      */
     addInitialBulkParticles: function() {
-      var self = this;
+      const self = this;
 
       // Make a list of pre-existing particles.
-      var preExistingParticles = _.clone( this.transientParticles.getArray() );
+      const preExistingParticles = _.clone( this.transientParticles.getArray() );
 
       // Add the initial particles.
       this.addBackgroundParticles( ParticleType.SODIUM_ION, ParticlePosition.INSIDE_MEMBRANE, NUM_SODIUM_IONS_INSIDE_CELL );
@@ -611,8 +611,8 @@ define( require => {
       // Look at each sodium gate and, if there are no ions in its capture zone, add some.
       this.membraneChannels.forEach( function( membraneChannel ) {
         if ( membraneChannel instanceof SodiumDualGatedChannel ) {
-          var captureZone = membraneChannel.getExteriorCaptureZone();
-          var numParticlesInZone = self.scanCaptureZoneForFreeParticles( captureZone, ParticleType.SODIUM_ION );
+          const captureZone = membraneChannel.getExteriorCaptureZone();
+          const numParticlesInZone = self.scanCaptureZoneForFreeParticles( captureZone, ParticleType.SODIUM_ION );
           if ( numParticlesInZone === 0 ) {
             self.addBackgroundParticlesToZone( ParticleType.SODIUM_ION, captureZone, Math.floor( phet.joist.random.nextDouble() * 2 ) + 1 );
           }
@@ -636,14 +636,14 @@ define( require => {
      * @private
      */
     createTransientParticle: function( particleType, captureZone ) {
-      var newParticle = ParticleFactory.createParticle( particleType );
+      const newParticle = ParticleFactory.createParticle( particleType );
       this.transientParticles.add( newParticle );
       if ( captureZone ) {
 
         // to avoid creation of new Vector2 instances the capture zone updates the particles position
         captureZone.assignNewParticleLocation( newParticle );
       }
-      var self = this;
+      const self = this;
       newParticle.continueExistingProperty.lazyLink( function( newValue ) {
         if ( !newValue ) {
           self.transientParticles.remove( newParticle );
@@ -660,8 +660,8 @@ define( require => {
      * @private
      */
     addBackgroundParticles: function( particleType, position, numberToAdd ) {
-      var newParticle = null;
-      var self = this;
+      let newParticle = null;
+      const self = this;
       _.times( numberToAdd, function( value ) {
         newParticle = self.createBackgroundParticle( particleType );
         if ( position === ParticlePosition.INSIDE_MEMBRANE ) {
@@ -688,8 +688,8 @@ define( require => {
      * @private
      */
     addBackgroundParticlesToZone: function( particleType, captureZone, numberToAdd ) {
-      var newParticle = null;
-      for ( var i = 0; i < numberToAdd; i++ ) {
+      let newParticle = null;
+      for ( let i = 0; i < numberToAdd; i++ ) {
         newParticle = this.createBackgroundParticle( particleType );
         newParticle.setOpacity( FOREGROUND_PARTICLE_DEFAULT_OPACITY );
         captureZone.assignNewParticleLocation( newParticle );
@@ -725,12 +725,12 @@ define( require => {
      */
     positionParticleInsideMembrane: function( particle ) {
       // Choose any angle.
-      var angle = phet.joist.random.nextDouble() * Math.PI * 2;
+      const angle = phet.joist.random.nextDouble() * Math.PI * 2;
 
       // Choose a distance from the cell center that is within the membrane. The multiplier value is created with the
       // intention of weighting the positions toward the outside in order to get an even distribution per unit area.
-      var multiplier = Math.max( phet.joist.random.nextDouble(), phet.joist.random.nextDouble() );
-      var distance = (this.crossSectionInnerRadius - particle.getRadius() * 2) * multiplier;
+      const multiplier = Math.max( phet.joist.random.nextDouble(), phet.joist.random.nextDouble() );
+      const distance = (this.crossSectionInnerRadius - particle.getRadius() * 2) * multiplier;
       particle.setPosition( distance * Math.cos( angle ), distance * Math.sin( angle ) );
     },
 
@@ -756,14 +756,14 @@ define( require => {
     positionParticleOutsideMembrane: function( particle ) {
 
       // Choose any angle.
-      var angle = phet.joist.random.nextDouble() * Math.PI * 2;
+      const angle = phet.joist.random.nextDouble() * Math.PI * 2;
 
       // Choose a distance from the cell center that is outside of the
       // membrane. The multiplier value is created with the intention of
       // weighting the positions toward the outside in order to get an even
       // distribution per unit area.
-      var multiplier = phet.joist.random.nextDouble();
-      var distance = this.crossSectionOuterRadius + particle.getRadius() * 4 +
+      const multiplier = phet.joist.random.nextDouble();
+      const distance = this.crossSectionOuterRadius + particle.getRadius() * 4 +
                      multiplier * this.crossSectionOuterRadius * 2.2;
 
       particle.setPosition( distance * Math.cos( angle ), distance * Math.sin( angle ) );
@@ -777,10 +777,10 @@ define( require => {
      * @private
      */
     scanCaptureZoneForFreeParticles: function( zone, particleType ) {
-      var closestFreeParticle = null;
-      var distanceOfClosestParticle = Number.POSITIVE_INFINITY;
-      var totalNumberOfParticles = 0;
-      var captureZoneOrigin = zone.getOriginPoint();
+      let closestFreeParticle = null;
+      let distanceOfClosestParticle = Number.POSITIVE_INFINITY;
+      let totalNumberOfParticles = 0;
+      const captureZoneOrigin = zone.getOriginPoint();
 
       // loop over the contained array - this is faster, but the array can't be modified
       this.transientParticles.getArray().forEach( function( particle ) {
@@ -812,7 +812,7 @@ define( require => {
       else {
         // Currently locked out, see if that should change.
         // Currently NOT locked out, see if that should change.
-        var backwards = this.getTime() - this.getMaxRecordedTime() <= 0;
+        const backwards = this.getTime() - this.getMaxRecordedTime() <= 0;
         if ( this.isActionPotentialInProgress() || (this.isPlayback() && backwards) ) {
           this.setStimulusLockout( true );
         }
@@ -944,9 +944,9 @@ define( require => {
      * @private
      */
     createBackgroundParticle: function( particleType ) {
-      var newParticle = ParticleFactory.createParticle( particleType );
+      const newParticle = ParticleFactory.createParticle( particleType );
       this.backgroundParticles.add( newParticle );
-      var self = this;
+      const self = this;
       newParticle.continueExistingProperty.lazyLink( function( newValue ) {
         if ( newValue === false ) {
           self.backgroundParticles.remove( newParticle );
@@ -970,9 +970,9 @@ define( require => {
      * @private
      */
     addChannel: function( membraneChannelType, angle ) {
-      var membraneChannel = MembraneChannelFactory.createMembraneChannel( membraneChannelType, this, this.hodgkinHuxleyModel );
-      var radius = this.axonMembrane.getCrossSectionDiameter() / 2;
-      var newLocation = new Vector2( radius * Math.cos( angle ), radius * Math.sin( angle ) );
+      const membraneChannel = MembraneChannelFactory.createMembraneChannel( membraneChannelType, this, this.hodgkinHuxleyModel );
+      const radius = this.axonMembrane.getCrossSectionDiameter() / 2;
+      const newLocation = new Vector2( radius * Math.cos( angle ), radius * Math.sin( angle ) );
 
       // Position the channel on the membrane.
       membraneChannel.setRotationalAngle( angle );
@@ -1082,7 +1082,7 @@ define( require => {
 
       // Set the states of the membrane channels.
       this.membraneChannels.getArray().forEach( function( membraneChannel ) {
-        var mcs = state.getMembraneChannelStateMap().get( membraneChannel );
+        const mcs = state.getMembraneChannelStateMap().get( membraneChannel );
         // Error handling.
         if ( mcs === null ) {
           assert && assert( ' NeuronModel  Error: No state found for membrane channel.' );
@@ -1094,11 +1094,11 @@ define( require => {
 
       // Set the state of the playback particles.  This maps the particle mementos in to the playback particles so that
       // we don't have to delete and add back a bunch of particles at each step.
-      var additionalPlaybackParticlesNeeded = state.getPlaybackParticleMementos().length - this.playbackParticles.length;
-      var self = this;
+      const additionalPlaybackParticlesNeeded = state.getPlaybackParticleMementos().length - this.playbackParticles.length;
+      const self = this;
       if ( additionalPlaybackParticlesNeeded > 0 ) {
         _.times( additionalPlaybackParticlesNeeded, function() {
-          var newPlaybackParticle = new PlaybackParticle();
+          const newPlaybackParticle = new PlaybackParticle();
           self.playbackParticles.push( newPlaybackParticle );
         } );
       }
@@ -1109,8 +1109,8 @@ define( require => {
       }
 
       // Set playback particle states from the mementos.
-      var playbackParticleIndex = 0;
-      var mementos = state.getPlaybackParticleMementos();
+      let playbackParticleIndex = 0;
+      const mementos = state.getPlaybackParticleMementos();
       mementos.forEach( function( memento ) {
         self.playbackParticles.get( playbackParticleIndex ).restoreFromMemento( memento );
         playbackParticleIndex++;
@@ -1123,7 +1123,7 @@ define( require => {
       this.concentrationChangedProperty.set( true );
 
       // If any one channel's state is changed, emit a channel representation changed event
-      var channelStateChanged = function( membraneChannel ) {
+      const channelStateChanged = function( membraneChannel ) {
         return membraneChannel.channelStateChangedProperty.get();
       };
       if ( _.some( this.membraneChannels.getArray(), channelStateChanged ) ) {

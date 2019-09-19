@@ -24,12 +24,12 @@ define( require => {
   const WebGLNode = require( 'SCENERY/nodes/WebGLNode' );
 
   // constants
-  var MAX_PARTICLES = 2000; // several trials were run and peak number of particles was 1841, so this value should be safe
-  var VERTICES_PER_PARTICLE = 4; // basically one per corner of the rectangle that encloses the particle
-  var POSITION_VALUES_PER_VERTEX = 2; // x and y, z is considered to be always 1
-  var TEXTURE_VALUES_PER_VERTEX = 2; // x and y coordinates within the 2D texture
-  var OPACITY_VALUES_PER_VERTEX = 1; // a single value from 0 to 1
-  var scratchFloatArray = new Float32Array( 9 );
+  const MAX_PARTICLES = 2000; // several trials were run and peak number of particles was 1841, so this value should be safe
+  const VERTICES_PER_PARTICLE = 4; // basically one per corner of the rectangle that encloses the particle
+  const POSITION_VALUES_PER_VERTEX = 2; // x and y, z is considered to be always 1
+  const TEXTURE_VALUES_PER_VERTEX = 2; // x and y coordinates within the 2D texture
+  const OPACITY_VALUES_PER_VERTEX = 1; // a single value from 0 to 1
+  const scratchFloatArray = new Float32Array( 9 );
 
   /**
    * @param {NeuronModel} neuronModel
@@ -40,7 +40,7 @@ define( require => {
    * @constructor
    */
   function ParticlesWebGLNode( neuronModel, modelViewTransform, zoomMatrixProperty, bounds ) {
-    var self = this;
+    const self = this;
     WebGLNode.call( this, ParticlesPainter, {
       canvasBounds: bounds
     } );
@@ -65,7 +65,7 @@ define( require => {
     this.sodiumTextureCoords = this.particlesTexture.getTexCoords( ParticleType.SODIUM_ION );
     this.potassiumTextureCoords = this.particlesTexture.getTexCoords( ParticleType.POTASSIUM_ION );
 
-    for ( var i = 0; i < MAX_PARTICLES; i++ ) {
+    for ( let i = 0; i < MAX_PARTICLES; i++ ) {
 
       // For better performance, the array of particle data objects is initialized here and the values updated rather
       // than reallocated during each update.
@@ -77,8 +77,8 @@ define( require => {
       };
 
       // Also for better performance, the element data is initialized at the start for the max number of particles.
-      var indexBase = i * 6;
-      var valueBase = i * 4;
+      const indexBase = i * 6;
+      const valueBase = i * 4;
       this.elementData[ indexBase ] = valueBase;
       this.elementData[ indexBase + 1 ] = valueBase + 1;
       this.elementData[ indexBase + 2 ] = valueBase + 2;
@@ -135,19 +135,19 @@ define( require => {
      * @private
      */
     addParticleData: function( particle ) {
-      var xPos = this.modelViewTransform.modelToViewX( particle.positionX );
-      var yPos = this.modelViewTransform.modelToViewY( particle.positionY );
-      var radius = this.modelViewTransform.modelToViewDeltaX( particle.getRadius() );
+      const xPos = this.modelViewTransform.modelToViewX( particle.positionX );
+      const yPos = this.modelViewTransform.modelToViewY( particle.positionY );
+      const radius = this.modelViewTransform.modelToViewDeltaX( particle.getRadius() );
 
       // Figure out the location and radius of the zoomed particle.
-      var zoomMatrix = this.zoomMatrixProperty.value;
-      var zoomedXPos = zoomMatrix.m00() * xPos + zoomMatrix.m02();
-      var zoomedYPos = zoomMatrix.m11() * yPos + zoomMatrix.m12();
-      var zoomedRadius = zoomMatrix.m00() * radius;
+      const zoomMatrix = this.zoomMatrixProperty.value;
+      const zoomedXPos = zoomMatrix.m00() * xPos + zoomMatrix.m02();
+      const zoomedYPos = zoomMatrix.m11() * yPos + zoomMatrix.m12();
+      const zoomedRadius = zoomMatrix.m00() * radius;
 
       // Only add the particle if its zoomed location is within the bounds being shown.
       if ( this.particleBounds.containsCoordinates( zoomedXPos, zoomedYPos ) ) {
-        var particleDataEntry = this.particleData[ this.numActiveParticles ];
+        const particleDataEntry = this.particleData[ this.numActiveParticles ];
         particleDataEntry.pos.setXY( zoomedXPos, zoomedYPos );
         particleDataEntry.radius = zoomedRadius;
         particleDataEntry.type = particle.getType();
@@ -169,8 +169,8 @@ define( require => {
       // forEach function.  This is much more efficient.  Note that this is only safe if no mods are made to the
       // contents of the observable array.
 
-      var i;
-      var particleArray = this.neuronModel.backgroundParticles.getArray();
+      let i;
+      let particleArray = this.neuronModel.backgroundParticles.getArray();
 
       for ( i = 0; i < particleArray.length; i++ ) {
         this.addParticleData( particleArray[ i ] );
@@ -203,7 +203,7 @@ define( require => {
     this.node = node;
 
     // vertex shader
-    var vertexShaderSource = [
+    const vertexShaderSource = [
       'attribute vec2 aPosition;',
       'attribute vec2 aTextureCoordinate;',
       'attribute float aOpacity;',
@@ -227,7 +227,7 @@ define( require => {
     ].join( '\n' );
 
     // fragment shader
-    var fragmentShaderSource = [
+    const fragmentShaderSource = [
       'precision mediump float;',
       'varying vec2 vTextureCoordinate;',
       'varying float vOpacity;',
@@ -266,18 +266,18 @@ define( require => {
 
   inherit( Object, ParticlesPainter, {
     paint: function( modelViewMatrix, projectionMatrix ) {
-      var gl = this.gl;
-      var shaderProgram = this.shaderProgram;
-      var i; // loop index
+      const gl = this.gl;
+      const shaderProgram = this.shaderProgram;
+      let i; // loop index
 
       this.node.updateParticleData();
 
       // Convert particle data to vertices that represent a rectangle plus texture coordinates.
-      var vertexDataIndex = 0;
+      let vertexDataIndex = 0;
       for ( i = 0; i < this.node.numActiveParticles; i++ ) {
 
         // convenience var
-        var particleDatum = this.node.particleData[ i ];
+        const particleDatum = this.node.particleData[ i ];
 
         // Tweak Alert!  The radii of the particles are adjusted here in order to look correct.
         var adjustedParticleRadius;
@@ -346,9 +346,9 @@ define( require => {
       gl.bufferData( gl.ARRAY_BUFFER, this.node.vertexData, gl.DYNAMIC_DRAW );
 
       // Set up the attributes that will be passed into the vertex shader.
-      var elementSize = Float32Array.BYTES_PER_ELEMENT;
-      var elementsPerVertex = POSITION_VALUES_PER_VERTEX + TEXTURE_VALUES_PER_VERTEX + OPACITY_VALUES_PER_VERTEX;
-      var stride = elementSize * elementsPerVertex;
+      const elementSize = Float32Array.BYTES_PER_ELEMENT;
+      const elementsPerVertex = POSITION_VALUES_PER_VERTEX + TEXTURE_VALUES_PER_VERTEX + OPACITY_VALUES_PER_VERTEX;
+      const stride = elementSize * elementsPerVertex;
       gl.vertexAttribPointer( shaderProgram.attributeLocations.aPosition, 2, gl.FLOAT, false, stride, 0 );
       gl.vertexAttribPointer( shaderProgram.attributeLocations.aTextureCoordinate, 2, gl.FLOAT, false, stride,
         elementSize * TEXTURE_VALUES_PER_VERTEX );

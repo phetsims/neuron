@@ -11,7 +11,7 @@ define( require => {
   // modules
   const neuron = require( 'NEURON/neuron' );
 
-  var ParticleType = {
+  const ParticleType = {
     'SODIUM_ION': 'SODIUM_ION',
     'POTASSIUM_ION': 'POTASSIUM_ION'
   };

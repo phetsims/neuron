@@ -23,15 +23,15 @@ define( require => {
   const PieSliceShapedCaptureZone = require( 'NEURON/neuron/model/PieSliceShapedCaptureZone' );
 
   // constants
-  var CHANNEL_HEIGHT = NeuronConstants.MEMBRANE_THICKNESS * 1.2; // In nanometers.
-  var CHANNEL_WIDTH = NeuronConstants.MEMBRANE_THICKNESS * 0.50; // In nanometers.
+  const CHANNEL_HEIGHT = NeuronConstants.MEMBRANE_THICKNESS * 1.2; // In nanometers.
+  const CHANNEL_WIDTH = NeuronConstants.MEMBRANE_THICKNESS * 0.50; // In nanometers.
 
   // Constant used when calculating how open this gate should be based on a value that exists within the Hodgkin-Huxley
   // model.  This was empirically determined.
-  var M3H_WHEN_FULLY_OPEN = 0.25;
+  const M3H_WHEN_FULLY_OPEN = 0.25;
 
   // Possible values for internal state.
-  var GateState = {
+  const GateState = {
     IDLE: 'IDLE',
     OPENING: 'OPENING',
     BECOMING_INACTIVE: 'BECOMING_INACTIVE',
@@ -43,21 +43,21 @@ define( require => {
   if ( assert ) { Object.freeze( GateState ); }
 
   // Values used for deciding on state transitions.  These were empirically determined.
-  var ACTIVATION_DECISION_THRESHOLD = 0.002;
-  var FULLY_INACTIVE_DECISION_THRESHOLD = 0.98;
+  const ACTIVATION_DECISION_THRESHOLD = 0.002;
+  const FULLY_INACTIVE_DECISION_THRESHOLD = 0.98;
 
   // Values used for timed state transitions.
-  var INACTIVE_TO_RESETTING_TIME = 0.001; // In seconds of sim time.
-  var RESETTING_TO_IDLE_TIME = 0.001; // In seconds of sim time.
+  const INACTIVE_TO_RESETTING_TIME = 0.001; // In seconds of sim time.
+  const RESETTING_TO_IDLE_TIME = 0.001; // In seconds of sim time.
 
   // Constants that control the rate at which this channel will capture ions when it is open.  Smaller numbers here will
   // increase the capture rate and thus make the flow appear to be faster.
-  var MIN_INTER_CAPTURE_TIME = 0.00003; // In seconds of sim time.
-  var MAX_INTER_CAPTURE_TIME = 0.00013; // In seconds of sim time.
+  const MIN_INTER_CAPTURE_TIME = 0.00003; // In seconds of sim time.
+  const MAX_INTER_CAPTURE_TIME = 0.00013; // In seconds of sim time.
 
   // Delay range - used to make the timing of the instances of this gate vary a little bit in terms of when they open
   // and close.
-  var MAX_STAGGER_DELAY = NeuronConstants.MIN_ACTION_POTENTIAL_CLOCK_DT * 5; // In seconds of sim time.
+  const MAX_STAGGER_DELAY = NeuronConstants.MIN_ACTION_POTENTIAL_CLOCK_DT * 5; // In seconds of sim time.
 
   /**
    * @param {NeuronModel} modelContainingParticles
@@ -86,13 +86,13 @@ define( require => {
       // A note to maintainers: originally, several properties were maintained that were observed in the view, such as
       // openness and inactivation.  Handling these separately compromised performance, so a flag was added to mark
       // whether any change occurred, and if so, the view knows to update the representation.
-      var prevOpenness = this.openness;
-      var prevInActivationAmt = this.inactivationAmount;
+      const prevOpenness = this.openness;
+      const prevInActivationAmt = this.inactivationAmount;
 
       GatedChannel.prototype.stepInTime.call( this, dt );
 
       // Get the conductance normalized from 0 to 1.
-      var normalizedConductance = this.calculateNormalizedConductance();
+      let normalizedConductance = this.calculateNormalizedConductance();
 
       assert && assert( normalizedConductance >= 0 && normalizedConductance <= 1,
         'SodiumDualGatedChannel normalized conductance out of range, = ' + normalizedConductance );
@@ -203,7 +203,7 @@ define( require => {
 
     // @public, @override
     getState: function() {
-      var state = GatedChannel.prototype.getState.call( this );
+      const state = GatedChannel.prototype.getState.call( this );
       state.inactivationAmount = this.inactivationAmount;
       state.previousNormalizedConductance = this.previousNormalizedConductance;
       state.gateState = this.gateState;

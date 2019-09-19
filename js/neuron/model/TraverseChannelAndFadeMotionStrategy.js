@@ -51,8 +51,8 @@ define( require => {
     // @public, @override
     move: function( movableModelElement, fadableModelElement, dt ) {
 
-      var currentPositionRefX = movableModelElement.getPositionX();
-      var currentPositionRefY = movableModelElement.getPositionY();
+      const currentPositionRefX = movableModelElement.getPositionX();
+      const currentPositionRefY = movableModelElement.getPositionY();
 
       if ( dt < 0 ) {
         return this.moveBack( movableModelElement, fadableModelElement, dt );
@@ -117,10 +117,10 @@ define( require => {
      * @param {number} dt
      */
     moveBack: function( movableModelElement, fadableModelElement, dt ) {
-      var currentPositionRefX = movableModelElement.getPositionX();
-      var currentPositionRefY = movableModelElement.getPositionY();
+      const currentPositionRefX = movableModelElement.getPositionX();
+      const currentPositionRefY = movableModelElement.getPositionY();
 
-      var traveledDistance = Math.abs( this.maxVelocity * dt );
+      const traveledDistance = Math.abs( this.maxVelocity * dt );
 
       if ( this.channelHasBeenEntered ) {
         fadableModelElement.setOpacity( 1 );
@@ -131,7 +131,7 @@ define( require => {
 
       //check if it should change direction
       if ( this.currentDestinationIndex >= this.traversalPoints.length - 1 ) {
-        var distBetweenPosAndCurrentTraversePoint = this.distanceBetweenPosAndTraversalPoint( currentPositionRefX, currentPositionRefY, this.traversalPoints[ this.currentDestinationIndex - 1 ] );
+        const distBetweenPosAndCurrentTraversePoint = this.distanceBetweenPosAndTraversalPoint( currentPositionRefX, currentPositionRefY, this.traversalPoints[ this.currentDestinationIndex - 1 ] );
         if ( traveledDistance >= distBetweenPosAndCurrentTraversePoint ) {
 
           // The particle is near a traversal point, find the previous traversal point and set the particle's direction towards it.
@@ -150,7 +150,7 @@ define( require => {
 
       if ( this.currentDestinationIndex === 0 ) {
         //check if it has come close to original position, if yes remove the particle (going back in time before the particle is created)
-        var distanceToOriginalPos = MathUtils.distanceBetween( currentPositionRefX, currentPositionRefY, this.startingLocationX, this.startingLocationY );
+        const distanceToOriginalPos = MathUtils.distanceBetween( currentPositionRefX, currentPositionRefY, this.startingLocationX, this.startingLocationY );
         if ( traveledDistance >= distanceToOriginalPos ) {
           fadableModelElement.continueExistingProperty.value = false;
           return;
@@ -167,11 +167,11 @@ define( require => {
      * @private
      */
     createTraversalPoints: function( channel, startingLocationX, startingLocationY ) {
-      var points = [];
-      var ctr = channel.getCenterLocation();
-      var r = channel.getChannelSize().height * 0.65; // Make the point a little outside the channel.
-      var outerOpeningLocation = { x: ctr.x + Math.cos( channel.getRotationalAngle() ) * r, y: ctr.y + Math.sin( channel.getRotationalAngle() ) * r };
-      var innerOpeningLocation = { x: ctr.x - Math.cos( channel.getRotationalAngle() ) * r, y: ctr.y - Math.sin( channel.getRotationalAngle() ) * r };
+      const points = [];
+      const ctr = channel.getCenterLocation();
+      const r = channel.getChannelSize().height * 0.65; // Make the point a little outside the channel.
+      const outerOpeningLocation = { x: ctr.x + Math.cos( channel.getRotationalAngle() ) * r, y: ctr.y + Math.sin( channel.getRotationalAngle() ) * r };
+      const innerOpeningLocation = { x: ctr.x - Math.cos( channel.getRotationalAngle() ) * r, y: ctr.y - Math.sin( channel.getRotationalAngle() ) * r };
 
       if ( this.distanceBetweenPosAndTraversalPoint( startingLocationX, startingLocationY, innerOpeningLocation ) < this.distanceBetweenPosAndTraversalPoint( startingLocationX, startingLocationY, outerOpeningLocation ) ) {
         points.push( innerOpeningLocation );
@@ -188,9 +188,9 @@ define( require => {
     // @private
     setCourseForCurrentTraversalPoint: function( currentLocationX, currentLocationY ) {
       if ( this.currentDestinationIndex < this.traversalPoints.length ) {
-        var dest = this.traversalPoints[ this.currentDestinationIndex ];
+        const dest = this.traversalPoints[ this.currentDestinationIndex ];
         this.velocityVector.setXY( dest.x - currentLocationX, dest.y - currentLocationY );
-        var scaleFactor = this.maxVelocity / this.velocityVector.magnitude;
+        const scaleFactor = this.maxVelocity / this.velocityVector.magnitude;
         this.velocityVector.multiplyScalar( scaleFactor );
       }
       else {

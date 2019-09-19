@@ -22,21 +22,21 @@ define( require => {
   const PieSliceShapedCaptureZone = require( 'NEURON/neuron/model/PieSliceShapedCaptureZone' );
 
   // constants
-  var CHANNEL_HEIGHT = NeuronConstants.MEMBRANE_THICKNESS * 1.2; // In nanometers.
-  var CHANNEL_WIDTH = NeuronConstants.MEMBRANE_THICKNESS * 0.50; // In nanometers.
+  const CHANNEL_HEIGHT = NeuronConstants.MEMBRANE_THICKNESS * 1.2; // In nanometers.
+  const CHANNEL_WIDTH = NeuronConstants.MEMBRANE_THICKNESS * 0.50; // In nanometers.
 
   // constants that control the rate at which this channel will capture ions when it is open.  Smaller numbers here will
   // increase the capture rate and thus make the flow appear to be faster.
-  var MIN_INTER_CAPTURE_TIME = 0.00006; // In seconds of sim time.
-  var MAX_INTER_CAPTURE_TIME = 0.00025; // In seconds of sim time.
+  const MIN_INTER_CAPTURE_TIME = 0.00006; // In seconds of sim time.
+  const MAX_INTER_CAPTURE_TIME = 0.00025; // In seconds of sim time.
 
   // Constant used when calculating how open this gate should be based on a value that exists within the Hodgkin-Huxley
   // model.  This was empirically determined.
-  var N4_WHEN_FULLY_OPEN = 0.35;
+  const N4_WHEN_FULLY_OPEN = 0.35;
 
   // Delay range - used to make the timing of the instances of this gate vary a little bit in terms of when they open
   // and close.
-  var MAX_STAGGER_DELAY = NeuronConstants.MIN_ACTION_POTENTIAL_CLOCK_DT * 10; // In seconds of sim time.
+  const MAX_STAGGER_DELAY = NeuronConstants.MIN_ACTION_POTENTIAL_CLOCK_DT * 10; // In seconds of sim time.
 
   /**
    * @param {NeuronModel} modelContainingParticles
@@ -58,17 +58,17 @@ define( require => {
 
     // @public
     stepInTime: function( dt ) {
-      var prevOpenness = this.openness;
-      var prevInActivationAmt = this.inactivationAmount;
+      const prevOpenness = this.openness;
+      const prevInActivationAmt = this.inactivationAmount;
       GatedChannel.prototype.stepInTime.call( this, dt );
 
       // Update the openness factor based on the state of the HH model. This is very specific to the model and the type
       // of channel.  Note the non-linear mapping of conductance to the openness factor for the channels.  This is to
       // make the gates appear to snap open and closed more rapidly, which was requested by the IPHY folks after seeing
       // some demos.
-      var normalizedConductance =
+      const normalizedConductance =
         Math.min( Math.abs( this.hodgkinHuxleyModel.get_delayed_n4( this.staggerDelay ) ) / N4_WHEN_FULLY_OPEN, 1 );
-      var openness = 1 - Math.pow( normalizedConductance - 1, 2 );
+      let openness = 1 - Math.pow( normalizedConductance - 1, 2 );
       if ( openness > 0 && openness < 1 ) {
         // Trim off some digits, otherwise we are continuously making tiny changes to this value due to internal
         // gyrations of the HH model.

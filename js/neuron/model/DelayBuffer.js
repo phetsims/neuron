@@ -21,7 +21,7 @@ define( require => {
 
   // This value is used to tell if two numbers are different.  It was needed due to some floating point resolution
   // problems that were occurring.
-  var DIFFERENCE_RESOLUTION = 1E-15;
+  const DIFFERENCE_RESOLUTION = 1E-15;
 
   /**
    * @param {number} maxDelay // In seconds of simulation time.
@@ -29,7 +29,7 @@ define( require => {
    * @constructor
    */
   function DelayBuffer( maxDelay, minTimeStep ) {
-    var self = this;
+    const self = this;
     this.numEntries = Math.ceil( maxDelay / minTimeStep ); // @private
     this.filling = false; // @private
     this.allDeltaTimesEqual = true; // @private
@@ -101,8 +101,8 @@ define( require => {
     // @public
     getDelayedValue: function( delayAmount ) {
 
-      var delayedValue = 0;
-      var index = -1;
+      let delayedValue = 0;
+      let index = -1;
       if ( this.previousDeltaTime <= 0 ) {
         // No data has been added yet, return 0.
         delayedValue = 0;
@@ -111,7 +111,7 @@ define( require => {
 
         // All times in the buffer are equal, so we should be able to simply index to the appropriate location.  The
         // offset must be at least 1, since this buffer doesn't hold a non-delayed value.
-        var offset = Math.max( Util.roundSymmetric( delayAmount / this.previousDeltaTime ), 1 );
+        const offset = Math.max( Util.roundSymmetric( delayAmount / this.previousDeltaTime ), 1 );
         if ( (this.filling && offset > this.head) || offset > this.numEntries ) {
           // The caller is asking for data that we don't have yet, so give them the oldest data available.
           delayedValue = this.delayElements[ this.tail ].value;
@@ -128,9 +128,9 @@ define( require => {
       else {
         // There is variation in the delta time values in the buffer, so we need to go through them, add up the delays,
         // and find the closest data.
-        var delayReached = false;
+        let delayReached = false;
         index = this.head > 0 ? this.head - 1 : this.numEntries - 1;
-        var accumulatedDelay = 0;
+        let accumulatedDelay = 0;
         while ( !delayReached ) {
           accumulatedDelay += this.delayElements[ index ].deltaTime;
           if ( accumulatedDelay >= delayAmount ) {
@@ -156,7 +156,7 @@ define( require => {
 
     // @public - get a copy of this object that retains references to individual delay elements
     getCopy: function(){
-      var copy = new DelayBuffer( 0, 1 ); // create a new delay buffer, but most of its contents will be overwritten below
+      const copy = new DelayBuffer( 0, 1 ); // create a new delay buffer, but most of its contents will be overwritten below
       copy.numEntries = this.numEntries;
       copy.filling = this.filling;
       copy.allDeltaTimesEqual = this.allDeltaTimesEqual;

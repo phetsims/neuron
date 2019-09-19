@@ -28,8 +28,8 @@ define( require => {
 
     // @public
     move: function( movableModelElement, fadableModelElement, dt ) {
-      var currentPositionRefX = movableModelElement.getPositionX();
-      var currentPositionRefY = movableModelElement.getPositionY();
+      const currentPositionRefX = movableModelElement.getPositionX();
+      const currentPositionRefY = movableModelElement.getPositionY();
       movableModelElement.setPosition( currentPositionRefX + this.velocity.x * dt,
         currentPositionRefY + this.velocity.y * dt );
     }

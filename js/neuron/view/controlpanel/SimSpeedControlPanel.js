@@ -36,8 +36,8 @@ define( require => {
       yMargin: 6
     }, options );
 
-    var radioButtonFont = NeuronConstants.CONTROL_PANEL_CONTROL_FONT;
-    var speedRadioButtonGroup = new VerticalAquaRadioButtonGroup( speedProperty, [
+    const radioButtonFont = NeuronConstants.CONTROL_PANEL_CONTROL_FONT;
+    const speedRadioButtonGroup = new VerticalAquaRadioButtonGroup( speedProperty, [
       { node: new Text( fastForwardString, { font: radioButtonFont } ), value: 2 },
       { node: new Text( normalString, { font: radioButtonFont } ), value: 1 },
       { node: new Text( slowMotionString, { font: radioButtonFont } ), value: 0.5 }

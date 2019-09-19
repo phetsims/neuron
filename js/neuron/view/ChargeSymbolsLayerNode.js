@@ -17,7 +17,7 @@ define( require => {
   const Vector2 = require( 'DOT/Vector2' );
 
   // Max size of the charge symbols, tweak as needed.
-  var MAX_CHARGE_SYMBOL_SIZE = 10;
+  const MAX_CHARGE_SYMBOL_SIZE = 10;
 
   /**
    * @param {NeuronModel} neuronModel
@@ -27,7 +27,7 @@ define( require => {
   function ChargeSymbolsLayerNode( neuronModel, mvt ) {
 
     Node.call( this );
-    var self = this;
+    const self = this;
 
     neuronModel.chargesShownProperty.link( function( chargesShown ) {
       self.visible = chargesShown;
@@ -39,26 +39,26 @@ define( require => {
      */
     function addChargeSymbols() {
       // Create a sorted list of the membrane channels in the model.
-      var sortedMembraneChannels = neuronModel.membraneChannels.getArray().slice();
+      const sortedMembraneChannels = neuronModel.membraneChannels.getArray().slice();
       sortMembraneChannelList( sortedMembraneChannels );
 
       // Go through the list and put charge symbols between each pair of channels.
-      for ( var i = 0; i < sortedMembraneChannels.length; i++ ) {
+      for ( let i = 0; i < sortedMembraneChannels.length; i++ ) {
         addChargeSymbolPair( sortedMembraneChannels[ i ], sortedMembraneChannels[ (i + 1) % sortedMembraneChannels.length ] );
       }
     }
 
-    var outerChargeSymbol = new ChargeSymbolNode( neuronModel, MAX_CHARGE_SYMBOL_SIZE, 0.1, true );
-    var innerChargeSymbol = new ChargeSymbolNode( neuronModel, MAX_CHARGE_SYMBOL_SIZE, 0.1, false );
+    const outerChargeSymbol = new ChargeSymbolNode( neuronModel, MAX_CHARGE_SYMBOL_SIZE, 0.1, true );
+    const innerChargeSymbol = new ChargeSymbolNode( neuronModel, MAX_CHARGE_SYMBOL_SIZE, 0.1, false );
 
     // function to add a pair of complementary charge symbols, one inside the membrane and one outside
     function addChargeSymbolPair( channel1, channel2 ) {
 
-      var innerSymbolLocation = new Vector2( 0, 0 );
-      var outerSymbolLocation = new Vector2( 0, 0 );
-      var outerSymbolParentNode = new Node();
+      const innerSymbolLocation = new Vector2( 0, 0 );
+      const outerSymbolLocation = new Vector2( 0, 0 );
+      const outerSymbolParentNode = new Node();
       outerSymbolParentNode.addChild( outerChargeSymbol );
-      var innerSymbolParentNode = new Node();
+      const innerSymbolParentNode = new Node();
       innerSymbolParentNode.addChild( innerChargeSymbol );
 
       calcChargeSymbolLocations( channel1.getCenterLocation(), channel2.getCenterLocation(), Vector2.ZERO, outerSymbolLocation, innerSymbolLocation );
@@ -79,17 +79,17 @@ define( require => {
     function calcChargeSymbolLocations( p1, p2, neuronCenter, outerPoint, innerPoint ) {
 
       // Find the center point between the given points.
-      var center = new Vector2( (p1.x + p2.x) / 2, (p1.y + p2.y) / 2 );
+      const center = new Vector2( (p1.x + p2.x) / 2, (p1.y + p2.y) / 2 );
 
       // Convert to polar coordinates.
-      var radius = Math.sqrt( Math.pow( center.x - neuronCenter.x, 2 ) + Math.pow( center.y - neuronCenter.y, 2 ) );
-      var angle = Math.atan2( center.y - neuronCenter.y, center.x - neuronCenter.x );
+      const radius = Math.sqrt( Math.pow( center.x - neuronCenter.x, 2 ) + Math.pow( center.y - neuronCenter.y, 2 ) );
+      const angle = Math.atan2( center.y - neuronCenter.y, center.x - neuronCenter.x );
 
       // Add some distance to the radius to make the charge outside the cell.
-      var outsideRadius = radius + 5; // Tweak as needed to position outer charge symbol. (was 4)
+      const outsideRadius = radius + 5; // Tweak as needed to position outer charge symbol. (was 4)
 
       // Subtract some distance from the radius to make the charge inside the cell.
-      var insideRadius = radius - 4; // Tweak as needed to position outer charge symbol.(was 3 in java)
+      const insideRadius = radius - 4; // Tweak as needed to position outer charge symbol.(was 3 in java)
 
       // Convert to cartesian coordinates
       outerPoint.setXY( outsideRadius * Math.cos( angle ), outsideRadius * Math.sin( angle ) );
@@ -101,17 +101,17 @@ define( require => {
      * @param {Array.<MembraneChannel>} membraneChannels
      */
     function sortMembraneChannelList( membraneChannels ) {
-      var orderChanged = true;
+      let orderChanged = true;
       while ( orderChanged ) {
         orderChanged = false;
-        for ( var i = 0; i < membraneChannels.length - 1; i++ ) {
-          var p1 = membraneChannels[ i ].getCenterLocation();
-          var p2 = membraneChannels[ i + 1 ].getCenterLocation();
-          var a1 = Math.atan2( p1.y, p1.x );
-          var a2 = Math.atan2( p2.y, p2.x );
+        for ( let i = 0; i < membraneChannels.length - 1; i++ ) {
+          const p1 = membraneChannels[ i ].getCenterLocation();
+          const p2 = membraneChannels[ i + 1 ].getCenterLocation();
+          const a1 = Math.atan2( p1.y, p1.x );
+          const a2 = Math.atan2( p2.y, p2.x );
           if ( a1 > a2 ) {
             // These two need to be swapped.
-            var tempChannel = membraneChannels[ i ];
+            const tempChannel = membraneChannels[ i ];
             membraneChannels[ i ] = membraneChannels[ i + 1 ];
             membraneChannels[ i + 1 ] = tempChannel;
             orderChanged = true;

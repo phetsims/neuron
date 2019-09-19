@@ -11,7 +11,7 @@ define( require => {
   // modules
   const neuron = require( 'NEURON/neuron' );
 
-  var MembraneCrossingDirection = {
+  const MembraneCrossingDirection = {
     'OUT_TO_IN': 'OUT_TO_IN',
     'IN_TO_OUT': 'IN_TO_OUT'
   };

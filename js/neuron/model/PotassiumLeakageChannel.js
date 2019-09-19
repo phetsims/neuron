@@ -23,14 +23,14 @@ define( require => {
   const PieSliceShapedCaptureZone = require( 'NEURON/neuron/model/PieSliceShapedCaptureZone' );
 
   // constants
-  var CHANNEL_HEIGHT = NeuronConstants.MEMBRANE_THICKNESS * 1.2; // In nanometers.
-  var CHANNEL_WIDTH = NeuronConstants.MEMBRANE_THICKNESS * 0.50; // In nanometers.
-  var BASE_COLOR = Color.interpolateRGBA( NeuronConstants.POTASSIUM_COLOR, new Color( 0, 200, 255 ), 0.6 );
-  var DEFAULT_PARTICLE_VELOCITY = 5000; // In nanometers per sec of sim time.
+  const CHANNEL_HEIGHT = NeuronConstants.MEMBRANE_THICKNESS * 1.2; // In nanometers.
+  const CHANNEL_WIDTH = NeuronConstants.MEMBRANE_THICKNESS * 0.50; // In nanometers.
+  const BASE_COLOR = Color.interpolateRGBA( NeuronConstants.POTASSIUM_COLOR, new Color( 0, 200, 255 ), 0.6 );
+  const DEFAULT_PARTICLE_VELOCITY = 5000; // In nanometers per sec of sim time.
 
   // constants that define the rate and variability of particle capture.
-  var MIN_INTER_PARTICLE_CAPTURE_TIME = 0.002; // In seconds of sim time.
-  var MAX_INTER_PARTICLE_CAPTURE_TIME = 0.004; // In seconds of sim time.
+  const MIN_INTER_PARTICLE_CAPTURE_TIME = 0.002; // In seconds of sim time.
+  const MAX_INTER_PARTICLE_CAPTURE_TIME = 0.004; // In seconds of sim time.
 
   /**
    * @param {NeuronModel} modelContainingParticles
@@ -63,8 +63,8 @@ define( require => {
 
     // @public
     stepInTime: function( dt ) {
-      var prevOpenness = this.openness;
-      var prevInActivationAmt = this.inactivationAmount;
+      const prevOpenness = this.openness;
+      const prevInActivationAmt = this.inactivationAmount;
       AbstractLeakChannel.prototype.stepInTime.call( this, dt );
       this.notifyIfMembraneStateChanged( prevOpenness, prevInActivationAmt );
     },
@@ -94,7 +94,7 @@ define( require => {
       // Generally, this channel leaks from in to out, since the concentration of potassium is greater on the inside of
       // the cell. However, the IPHY people requested that there should occasionally be some leakage in the other
       // direction for greater realism, hence the random choice below.
-      var direction = MembraneCrossingDirection.IN_TO_OUT;
+      let direction = MembraneCrossingDirection.IN_TO_OUT;
       if ( phet.joist.random.nextDouble() < 0.2 ) {
         direction = MembraneCrossingDirection.OUT_TO_IN;
       }

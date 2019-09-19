@@ -26,7 +26,7 @@ define( require => {
    * @constructor
    */
   function MembraneChannelNode( membraneChannelModel, mvt ) {
-    var self = this;
+    const self = this;
     Node.call( this, {} );
     this.membraneChannelModel = membraneChannelModel;
     this.mvt = mvt;
@@ -37,9 +37,9 @@ define( require => {
      *  @param {Color} color
      */
     function createEdgeNode( size, color ) {
-      var shape = new Shape();
-      var width = size.width;
-      var height = size.height;
+      const shape = new Shape();
+      const width = size.width;
+      const height = size.height;
 
       shape.moveTo( -width / 2, height / 4 );
       shape.cubicCurveTo( -width / 2, height / 2, width / 2, height / 2, width / 2, height / 4 );
@@ -50,21 +50,21 @@ define( require => {
       return new Path( shape, { fill: color, stroke: color.colorUtilsDarker( 0.3 ), lineWidth: 0.4 } );
     }
 
-    var stringShape;
-    var channelPath;
+    let stringShape;
+    let channelPath;
 
     // Create the channel representation.
-    var channel = new Path( new Shape(), { fill: membraneChannelModel.getChannelColor(), lineWidth: 0 } );
+    const channel = new Path( new Shape(), { fill: membraneChannelModel.getChannelColor(), lineWidth: 0 } );
 
     // Skip bounds computation to improve performance
     channel.computeShapeBounds = function() {return new Bounds2( 0, 0, 0, 0 );};
 
     // Create the edge representations.
-    var edgeNodeWidth = (membraneChannelModel.overallSize.width - membraneChannelModel.channelSize.width) / 2;
-    var edgeNodeHeight = membraneChannelModel.overallSize.height;
-    var transformedEdgeNodeSize = new Dimension2( Math.abs( mvt.modelToViewDeltaX( edgeNodeWidth ) ), Math.abs( mvt.modelToViewDeltaY( edgeNodeHeight ) ) );
-    var leftEdgeNode = createEdgeNode( transformedEdgeNodeSize, membraneChannelModel.getEdgeColor() );
-    var rightEdgeNode = createEdgeNode( transformedEdgeNodeSize, membraneChannelModel.getEdgeColor() );
+    const edgeNodeWidth = (membraneChannelModel.overallSize.width - membraneChannelModel.channelSize.width) / 2;
+    const edgeNodeHeight = membraneChannelModel.overallSize.height;
+    const transformedEdgeNodeSize = new Dimension2( Math.abs( mvt.modelToViewDeltaX( edgeNodeWidth ) ), Math.abs( mvt.modelToViewDeltaY( edgeNodeHeight ) ) );
+    const leftEdgeNode = createEdgeNode( transformedEdgeNodeSize, membraneChannelModel.getEdgeColor() );
+    const rightEdgeNode = createEdgeNode( transformedEdgeNodeSize, membraneChannelModel.getEdgeColor() );
 
     // Create the layers for the channel the edges.  This makes offsets and rotations easier.  See addToCanvas on why
     // node layer is an instance member.
@@ -77,9 +77,9 @@ define( require => {
     this.edgeLayer.addChild( rightEdgeNode );
 
     // gets created and updated only if channel has InactivationGate
-    var inactivationGateBallNode;
-    var inactivationGateString;
-    var edgeColor = membraneChannelModel.getEdgeColor().colorUtilsDarker( 0.3 );
+    let inactivationGateBallNode;
+    let inactivationGateString;
+    const edgeColor = membraneChannelModel.getEdgeColor().colorUtilsDarker( 0.3 );
 
     if ( membraneChannelModel.getHasInactivationGate() ) {
 
@@ -90,7 +90,7 @@ define( require => {
       inactivationGateString.computeShapeBounds = function() {return new Bounds2( 0, 0, 0, 0 );};
       this.channelLayer.addChild( inactivationGateString );
 
-      var ballDiameter = mvt.modelToViewDeltaX( membraneChannelModel.getChannelSize().width );
+      const ballDiameter = mvt.modelToViewDeltaX( membraneChannelModel.getChannelSize().width );
 
       // inactivationBallShape is always a circle, so use the optimized version.
       inactivationGateBallNode = new Circle( ballDiameter / 2, { fill: edgeColor, lineWidth: 0.5, stroke: edgeColor } );
@@ -101,17 +101,17 @@ define( require => {
     function updateRepresentation() {
 
       // Set the channel width as a function of the openness of the membrane channel.
-      var channelWidth = membraneChannelModel.getChannelSize().width * membraneChannelModel.getOpenness();
-      var channelSize = new Dimension2( channelWidth, membraneChannelModel.getChannelSize().height );
-      var transformedChannelSize = new Dimension2( Math.abs( mvt.modelToViewDeltaX( channelSize.width ) ), Math.abs( mvt.modelToViewDeltaY( channelSize.height ) ) );
+      const channelWidth = membraneChannelModel.getChannelSize().width * membraneChannelModel.getOpenness();
+      const channelSize = new Dimension2( channelWidth, membraneChannelModel.getChannelSize().height );
+      const transformedChannelSize = new Dimension2( Math.abs( mvt.modelToViewDeltaX( channelSize.width ) ), Math.abs( mvt.modelToViewDeltaY( channelSize.height ) ) );
 
       // Make the node a bit bigger than the channel so that the edges can be placed over it with no gaps.
-      var oversizeFactor = 1.2; // was 1.1 in Java
+      const oversizeFactor = 1.2; // was 1.1 in Java
 
-      var width = transformedChannelSize.width * oversizeFactor;
-      var height = transformedChannelSize.height * oversizeFactor;
-      var edgeNodeBounds = leftEdgeNode.getBounds();
-      var edgeWidth = edgeNodeBounds.width; // Assume both edges are the same size.
+      const width = transformedChannelSize.width * oversizeFactor;
+      const height = transformedChannelSize.height * oversizeFactor;
+      const edgeNodeBounds = leftEdgeNode.getBounds();
+      const edgeWidth = edgeNodeBounds.width; // Assume both edges are the same size.
 
       channelPath = new Shape();
       channelPath.moveTo( 0, 0 );
@@ -141,27 +141,27 @@ define( require => {
       // If this membrane channel has an inactivation gate, update it.
       if ( membraneChannelModel.getHasInactivationGate() ) {
 
-        var transformedOverallSize =
+        const transformedOverallSize =
           new Dimension2( mvt.modelToViewDeltaX( membraneChannelModel.getOverallSize().width ),
             mvt.modelToViewDeltaY( membraneChannelModel.getOverallSize().height ) );
 
         // Position the ball portion of the inactivation gate.
-        var channelEdgeConnectionPoint = new Vector2( leftEdgeNode.centerX,
+        const channelEdgeConnectionPoint = new Vector2( leftEdgeNode.centerX,
           leftEdgeNode.getBounds().getMaxY() );
-        var channelCenterBottomPoint = new Vector2( 0, transformedChannelSize.height / 2 );
-        var angle = -Math.PI / 2 * (1 - membraneChannelModel.getInactivationAmount());
-        var radius = (1 - membraneChannelModel.getInactivationAmount()) * transformedOverallSize.width / 2 + membraneChannelModel.getInactivationAmount() * channelEdgeConnectionPoint.distance( channelCenterBottomPoint );
+        const channelCenterBottomPoint = new Vector2( 0, transformedChannelSize.height / 2 );
+        const angle = -Math.PI / 2 * (1 - membraneChannelModel.getInactivationAmount());
+        const radius = (1 - membraneChannelModel.getInactivationAmount()) * transformedOverallSize.width / 2 + membraneChannelModel.getInactivationAmount() * channelEdgeConnectionPoint.distance( channelCenterBottomPoint );
 
-        var ballPosition = new Vector2( channelEdgeConnectionPoint.x + Math.cos( angle ) * radius,
+        const ballPosition = new Vector2( channelEdgeConnectionPoint.x + Math.cos( angle ) * radius,
           channelEdgeConnectionPoint.y - Math.sin( angle ) * radius );
         inactivationGateBallNode.x = ballPosition.x;
         inactivationGateBallNode.y = ballPosition.y;
 
         // Redraw the "string" (actually a strand of protein in real life)
         // that connects the ball to the gate.
-        var ballConnectionPoint = new Vector2( inactivationGateBallNode.x, inactivationGateBallNode.y );
+        const ballConnectionPoint = new Vector2( inactivationGateBallNode.x, inactivationGateBallNode.y );
 
-        var connectorLength = channelCenterBottomPoint.distance( ballConnectionPoint );
+        const connectorLength = channelCenterBottomPoint.distance( ballConnectionPoint );
         stringShape = new Shape().moveTo( channelEdgeConnectionPoint.x, channelEdgeConnectionPoint.y )
           .cubicCurveTo( channelEdgeConnectionPoint.x + connectorLength * 0.25,
           channelEdgeConnectionPoint.y + connectorLength * 0.5, ballConnectionPoint.x - connectorLength * 0.75,

@@ -16,7 +16,7 @@ define( require => {
   // strings
   const neuronTitleString = require( 'string!NEURON/neuron.title' );
 
-  var simOptions = {
+  const simOptions = {
     credits: {
       leadDesign: 'Noah Podolefsky, Amanda McGarry',
       softwareDevelopment: 'John Blanco, Sharfudeen Ashraf',
@@ -30,7 +30,7 @@ define( require => {
   SimLauncher.launch( function() {
 
     // create and start the sim
-    var sim = new Sim( neuronTitleString, [ new NeuronScreen() ], simOptions );
+    const sim = new Sim( neuronTitleString, [ new NeuronScreen() ], simOptions );
     sim.start();
 
     // This sim has some sim-specific profiling that can be done.  If the query parameter checked below is present,

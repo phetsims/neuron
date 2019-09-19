@@ -29,13 +29,13 @@ define( require => {
    */
   function ZoomControl( zoomProperty, minZoom, maxZoom ) {
 
-    var zoomSliderOptions = {
+    const zoomSliderOptions = {
       thumbSize: new Dimension2( 18, 22 ),
       trackSize: new Dimension2( 100, 1 ),
       thumbTouchAreaXDilation: 8,
       thumbTouchAreaYDilation: 8
     };
-    var zoomSlider = new VSlider( zoomProperty, new Range( minZoom, maxZoom ), zoomSliderOptions );
+    const zoomSlider = new VSlider( zoomProperty, new Range( minZoom, maxZoom ), zoomSliderOptions );
 
     function createZoomControlButton( contentNode, marginOptions, listener ) {
       return new RectangularPushButton( {
@@ -50,38 +50,38 @@ define( require => {
       } );
     }
 
-    var sideLength = 24; // length of one side of the button, empirically determined
-    var symbolLength = 0.5 * sideLength;
-    var symbolLineWidth = 0.12 * sideLength;
+    const sideLength = 24; // length of one side of the button, empirically determined
+    const symbolLength = 0.5 * sideLength;
+    const symbolLineWidth = 0.12 * sideLength;
 
-    var plusSymbolShape = new Shape()
+    const plusSymbolShape = new Shape()
       .moveTo( symbolLength / 2, 0 )
       .lineTo( symbolLength / 2, symbolLength )
       .moveTo( 0, symbolLength / 2 )
       .lineTo( symbolLength, symbolLength / 2 );
 
-    var minusSymbolShape = new Shape()
+    const minusSymbolShape = new Shape()
       .moveTo( -symbolLength / 2, 0 )
       .lineTo( symbolLength / 2, 0 );
 
-    var symbolOptions = {
+    const symbolOptions = {
       lineWidth: symbolLineWidth,
       stroke: 'black',
       centerX: sideLength / 2,
       centerY: sideLength / 2
     };
 
-    var plusButton = createZoomControlButton( new Path( plusSymbolShape, symbolOptions ), { xMargin: 6, yMargin: 6 }, function() {
+    const plusButton = createZoomControlButton( new Path( plusSymbolShape, symbolOptions ), { xMargin: 6, yMargin: 6 }, function() {
       zoomProperty.set( Util.clamp( zoomProperty.value + 0.1, minZoom, maxZoom ) );
     } );
 
-    var minusButton = createZoomControlButton( new Path( minusSymbolShape, symbolOptions ), { xMargin: 6, yMargin: 10 }, function() {
+    const minusButton = createZoomControlButton( new Path( minusSymbolShape, symbolOptions ), { xMargin: 6, yMargin: 10 }, function() {
       zoomProperty.set( Util.clamp( zoomProperty.value - 0.1, minZoom, maxZoom ) );
     } );
 
     // Temporarily set the zoom to a value that puts the knob roughly half way up so that the initial layout of the
     // VBox will work.
-    var originalZoomValue = zoomProperty.value;
+    const originalZoomValue = zoomProperty.value;
     zoomProperty.set( 4 );
 
     // vertical panel

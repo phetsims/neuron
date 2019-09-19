@@ -24,8 +24,8 @@ define( require => {
   const Vector2 = require( 'DOT/Vector2' );
 
   // constants
-  var SIDE_HEIGHT_TO_CHANNEL_HEIGHT_RATIO = 1.3;
-  var DEFAULT_PARTICLE_VELOCITY = 40000; // In nanometers per sec of sim time.
+  const SIDE_HEIGHT_TO_CHANNEL_HEIGHT_RATIO = 1.3;
+  const DEFAULT_PARTICLE_VELOCITY = 40000; // In nanometers per sec of sim time.
 
   /**
    * @param {number} channelWidth
@@ -120,9 +120,9 @@ define( require => {
      * @private
      */
     updateChannelRect: function() {
-      var channelRect = new Rectangle( this.centerLocation.x - this.channelSize.height / 2,
+      const channelRect = new Rectangle( this.centerLocation.x - this.channelSize.height / 2,
         this.centerLocation.y - this.channelSize.width / 2, this.channelSize.height, this.channelSize.width );
-      var rotationTransform = Matrix3.rotationAround( this.rotationalAngle, this.centerLocation.x, this.centerLocation.y );
+      const rotationTransform = Matrix3.rotationAround( this.rotationalAngle, this.centerLocation.x, this.centerLocation.y );
       this.rotatedChannelRect = channelRect.transformed( rotationTransform );
     },
 
@@ -352,8 +352,8 @@ define( require => {
      */
     setState: function( state ) {
       assert && assert( state.type === this.getChannelType(), 'attempt to restore state from incorrect channel type' );
-      var prevOpenness = this.getOpenness();
-      var prevInactivationAmount = this.getInactivationAmount();
+      const prevOpenness = this.getOpenness();
+      const prevInactivationAmount = this.getInactivationAmount();
       this.setOpenness( state.openness );
       this.setInactivationAmount( state.inactivationAmount );
       this.setCaptureCountdownTimer( state.captureCountdownTimer );

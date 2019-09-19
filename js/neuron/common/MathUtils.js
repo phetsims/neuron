@@ -15,10 +15,10 @@ define( require => {
 
   // These vectors are used as temporary objects for calculating distance without creating new Vector2 instances, see
   // the createTraversalPoint method.
-  var distanceCalculatorVectorLHS = new Vector2( 0, 0 );
-  var distanceCalculatorVectorRHS = new Vector2( 0, 0 );
+  const distanceCalculatorVectorLHS = new Vector2( 0, 0 );
+  const distanceCalculatorVectorRHS = new Vector2( 0, 0 );
 
-  var MathUtils = {
+  const MathUtils = {
 
     /**
      * A method to calculate distance by reusing vector instances. This method is created to reduce Vector2 instance
@@ -46,14 +46,14 @@ define( require => {
      * @public
      */
     round: function( val, places ) {
-      var factor = Math.pow( 10, places );
+      const factor = Math.pow( 10, places );
 
       // Shift the decimal the correct number of places
       // to the right.
       val = val * factor;
 
       // Round to the nearest integer.
-      var tmp = Util.roundSymmetric( val );
+      const tmp = Util.roundSymmetric( val );
 
       // Shift the decimal the correct number of places
       // back to the left.

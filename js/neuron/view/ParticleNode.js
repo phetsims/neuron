@@ -19,7 +19,7 @@ define( require => {
   const Vector2 = require( 'DOT/Vector2' );
 
   // constants
-  var PARTICLE_EDGE_STROKE = 1;
+  const PARTICLE_EDGE_STROKE = 1;
 
   /**
    * @param {ViewableParticle} particle
@@ -27,13 +27,13 @@ define( require => {
    * @constructor
    */
   function ParticleNode( particle, modelViewTransform ) {
-    var self = this;
+    const self = this;
     Node.call( this, {} );
     this.particle = particle;
     this.modelViewTransform = modelViewTransform;
 
     // Create the initial representation with the aspects that don't change.
-    var representation = new Path( new Shape(), { lineWidth: PARTICLE_EDGE_STROKE, stroke: Color.BLACK } );
+    const representation = new Path( new Shape(), { lineWidth: PARTICLE_EDGE_STROKE, stroke: Color.BLACK } );
     this.addChild( representation );
 
     function updateOffset( x, y ) {
@@ -42,8 +42,8 @@ define( require => {
 
     function updateRepresentation( newOpacity ) {
 
-      var size;
-      var representationShape;
+      let size;
+      let representationShape;
 
       assert && assert( particle.getType() === ParticleType.SODIUM_ION || particle.getType() === ParticleType.POTASSIUM_ION );
 

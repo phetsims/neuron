@@ -22,8 +22,8 @@ define( require => {
   const Vector2 = require( 'DOT/Vector2' );
 
   // Fixed membrane characteristics.
-  var BODY_LENGTH = NeuronConstants.DEFAULT_DIAMETER * 1.5;
-  var BODY_TILT_ANGLE = Math.PI / 4;
+  const BODY_LENGTH = NeuronConstants.DEFAULT_DIAMETER * 1.5;
+  const BODY_TILT_ANGLE = Math.PI / 4;
 
   /**
    * @constructor
@@ -47,42 +47,42 @@ define( require => {
     this.axonBodyShape = new Shape();
 
     // points at which axon membrane would appear to vanish, used in shape creation
-    var vanishingPoint = new Vector2(
+    const vanishingPoint = new Vector2(
       BODY_LENGTH * Math.cos( BODY_TILT_ANGLE ),
       BODY_LENGTH * Math.sin( BODY_TILT_ANGLE )
     );
 
     // Find the two points at which the shape will intersect the outer edge of the cross section.
-    var r = NeuronConstants.DEFAULT_DIAMETER / 2 + this.getMembraneThickness() / 2;
-    var theta = BODY_TILT_ANGLE + Math.PI * 0.45; // Multiplier tweaked a bit for improved appearance.
-    var intersectionPointA = new Vector2( r * Math.cos( theta ), r * Math.sin( theta ) );
+    const r = NeuronConstants.DEFAULT_DIAMETER / 2 + this.getMembraneThickness() / 2;
+    let theta = BODY_TILT_ANGLE + Math.PI * 0.45; // Multiplier tweaked a bit for improved appearance.
+    const intersectionPointA = new Vector2( r * Math.cos( theta ), r * Math.sin( theta ) );
     theta += Math.PI;
-    var intersectionPointB = new Vector2( r * Math.cos( theta ), r * Math.sin( theta ) );
+    const intersectionPointB = new Vector2( r * Math.cos( theta ), r * Math.sin( theta ) );
 
     // Define the control points for the two curves.  Note that there is some tweaking in here, so change as needed
     // to get the desired look. If you can figure it out, that is.  Hints: The shape is drawn starting as a curve
     // from the vanishing point to intersection point A, then a line to intersection point B, then as a curve back to
     // the vanishing point.
-    var angleToVanishingPt = Math.atan2(
+    const angleToVanishingPt = Math.atan2(
       vanishingPoint.y - intersectionPointA.y,
       vanishingPoint.x - intersectionPointA.x );
-    var controlPtRadius = intersectionPointA.distance( vanishingPoint ) * 0.33;
-    var controlPtA1 = new Vector2(
+    let controlPtRadius = intersectionPointA.distance( vanishingPoint ) * 0.33;
+    const controlPtA1 = new Vector2(
       intersectionPointA.x + controlPtRadius * Math.cos( angleToVanishingPt + 0.15 ),
       intersectionPointA.y + controlPtRadius * Math.sin( angleToVanishingPt + 0.15 ) );
     controlPtRadius = intersectionPointA.distance( vanishingPoint ) * 0.67;
-    var controlPtA2 = new Vector2(
+    const controlPtA2 = new Vector2(
       intersectionPointA.x + controlPtRadius * Math.cos( angleToVanishingPt - 0.5 ),
       intersectionPointA.y + controlPtRadius * Math.sin( angleToVanishingPt - 0.5 ) );
 
-    var angleToIntersectionPt = Math.atan2( intersectionPointB.y - vanishingPoint.y,
+    const angleToIntersectionPt = Math.atan2( intersectionPointB.y - vanishingPoint.y,
       intersectionPointB.x - intersectionPointB.x );
     controlPtRadius = intersectionPointB.distance( vanishingPoint ) * 0.33;
-    var controlPtB1 = new Vector2(
+    const controlPtB1 = new Vector2(
       vanishingPoint.x + controlPtRadius * Math.cos( angleToIntersectionPt + 0.1 ),
       vanishingPoint.y + controlPtRadius * Math.sin( angleToIntersectionPt + 0.1 ) );
     controlPtRadius = intersectionPointB.distance( vanishingPoint ) * 0.67;
-    var controlPtB2 = new Vector2(
+    const controlPtB2 = new Vector2(
       vanishingPoint.x + controlPtRadius * Math.cos( angleToIntersectionPt - 0.25 ),
       vanishingPoint.y + controlPtRadius * Math.sin( angleToIntersectionPt - 0.25 ) );
 
@@ -155,7 +155,7 @@ define( require => {
        * @public
        */
       initiateTravelingActionPotential: function() {
-        var self = this;
+        const self = this;
         assert && assert( this.travelingActionPotential === null, 'Should not initiate a 2nd traveling action potential before prior one has completed.' );
         this.travelingActionPotential = new TravelingActionPotential( this );
         this.travelingActionPotential.crossSectionReached.addListener( function() {

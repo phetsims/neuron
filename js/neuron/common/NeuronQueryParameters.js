@@ -11,7 +11,7 @@ define( require => {
   // modules
   const neuron = require( 'NEURON/neuron' );
 
-  var NeuronQueryParameters = QueryStringMachine.getAll( {
+  const NeuronQueryParameters = QueryStringMachine.getAll( {
 
     // turn on the Neuron-specific profiler
     neuronProfiler: { type: 'number', defaultValue: -1 }

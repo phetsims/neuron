@@ -16,11 +16,11 @@ define( require => {
   const PhetFont = require( 'SCENERY_PHET/PhetFont' );
 
   // constants
-  var CLOCK_FRAME_RATE = 60;
-  var MIN_ACTION_POTENTIAL_CLOCK_DT = ( 1 / CLOCK_FRAME_RATE ) / 3000;
-  var MAX_ACTION_POTENTIAL_CLOCK_DT = ( 1 / CLOCK_FRAME_RATE ) / 1000;
+  const CLOCK_FRAME_RATE = 60;
+  const MIN_ACTION_POTENTIAL_CLOCK_DT = ( 1 / CLOCK_FRAME_RATE ) / 3000;
+  const MAX_ACTION_POTENTIAL_CLOCK_DT = ( 1 / CLOCK_FRAME_RATE ) / 1000;
 
-  var NeuronConstants = {
+  const NeuronConstants = {
 
     // Fonts
     CONTROL_PANEL_TITLE_FONT: new PhetFont( { weight: 'bold', size: 14 } ),

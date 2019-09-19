@@ -18,8 +18,8 @@ define( require => {
   const Shape = require( 'KITE/Shape' );
 
   // constants
-  var MEMBRANE_COLOR = Color.YELLOW;
-  var LINE_WIDTH = 1;
+  const MEMBRANE_COLOR = Color.YELLOW;
+  const LINE_WIDTH = 1;
 
   /**
    * Constructor for the AxonCrossSectionNode
@@ -29,18 +29,18 @@ define( require => {
    */
   function AxonCrossSectionNode( axonMembraneModel, mvt ) {
     Node.call( this, {} );
-    var outerDiameter = axonMembraneModel.getCrossSectionDiameter() + axonMembraneModel.getMembraneThickness();
-    var innerDiameter = axonMembraneModel.getCrossSectionDiameter() - axonMembraneModel.getMembraneThickness();
+    const outerDiameter = axonMembraneModel.getCrossSectionDiameter() + axonMembraneModel.getMembraneThickness();
+    const innerDiameter = axonMembraneModel.getCrossSectionDiameter() - axonMembraneModel.getMembraneThickness();
 
     // Create the cross section, which consists of an outer circle that
     // represents the outer edge of the membrane and an inner circle that
     // represents the inner edge of the membrane and the inner portion of
     // the axon.
-    var outerDiameterCircle = mvt.modelToViewShape( new Shape().ellipse( 0, 0, outerDiameter / 2, outerDiameter / 2 ) );
-    var innerDiameterCircle = mvt.modelToViewShape( new Shape().ellipse( 0, 0, innerDiameter / 2, innerDiameter / 2 ) );
-    var outerMembrane = new Path( outerDiameterCircle, { fill: MEMBRANE_COLOR, stroke: Color.BLACK, lineWidth: LINE_WIDTH } );
+    const outerDiameterCircle = mvt.modelToViewShape( new Shape().ellipse( 0, 0, outerDiameter / 2, outerDiameter / 2 ) );
+    const innerDiameterCircle = mvt.modelToViewShape( new Shape().ellipse( 0, 0, innerDiameter / 2, innerDiameter / 2 ) );
+    const outerMembrane = new Path( outerDiameterCircle, { fill: MEMBRANE_COLOR, stroke: Color.BLACK, lineWidth: LINE_WIDTH } );
     this.addChild( outerMembrane );
-    var innerMembrane = new Path( innerDiameterCircle, { fill: new Color( 73, 210, 242 ), stroke: Color.BLACK, lineWidth: LINE_WIDTH } );
+    const innerMembrane = new Path( innerDiameterCircle, { fill: new Color( 73, 210, 242 ), stroke: Color.BLACK, lineWidth: LINE_WIDTH } );
     this.addChild( innerMembrane );
   }
 

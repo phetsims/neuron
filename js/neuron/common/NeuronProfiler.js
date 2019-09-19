@@ -28,7 +28,7 @@ define( require => {
 
     assert && assert( setting >= 1 && setting <= 3, 'invalid profiler setting, value = ' + setting );
 
-    var self = this;
+    const self = this;
     this.setting = setting; // @public, read only
 
     this.frameCount = 0;
@@ -47,7 +47,7 @@ define( require => {
 
     sim.frameEndedEmitter.addListener( function() {
       if ( self.dataCollectionInProgress && self.frameStartedTimes.length !== 0 ) {
-        var currentTime = new Date().getTime();
+        const currentTime = new Date().getTime();
         self.frameEndedTimes[ self.frameCount ] = currentTime;
         self.frameProcessingTimes[ self.frameCount ] = currentTime - self.frameStartedTimes[ self.frameCount ];
         self.frameCount++;
@@ -58,19 +58,19 @@ define( require => {
           self.dataCollectionInProgress = false; // clear the collection flag
 
           // process the collected data
-          var testDurationInSeconds = self.dataCollectionDuration / 1000;
-          var maxFrameProcessingTime = 0;
-          var totalFrameProcessingTime = 0;
-          for ( var i = 0; i < self.frameCount; i++ ) {
+          const testDurationInSeconds = self.dataCollectionDuration / 1000;
+          let maxFrameProcessingTime = 0;
+          let totalFrameProcessingTime = 0;
+          for ( let i = 0; i < self.frameCount; i++ ) {
             totalFrameProcessingTime += self.frameProcessingTimes[ i ];
             if ( self.frameProcessingTimes[ i ] > maxFrameProcessingTime ) {
               maxFrameProcessingTime = self.frameProcessingTimes[ i ];
             }
           }
-          var averageFrameProcessingTime = totalFrameProcessingTime / self.frameCount;
+          const averageFrameProcessingTime = totalFrameProcessingTime / self.frameCount;
 
           // compose the message that will present the data
-          var message =
+          const message =
             'average FPS over previous ' + testDurationInSeconds + ' seconds = ' +
             Util.toFixed( self.frameCount / ( self.dataCollectionDuration / 1000 ), 2 ) + '\n' +
             'average frame processing time = ' + Util.toFixed( averageFrameProcessingTime, 2 ) + ' ms\n' +

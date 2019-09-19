@@ -25,8 +25,8 @@ define( require => {
    * whether time step is presented into units of this duration.  This is needed because below a certain time value the
    * model doesn't work - it becomes unstable.
    */
-  var INTERNAL_TIME_STEP = 0.005; // In milliseconds, not seconds.
-  var MAX_DELAY = 0.001; // In seconds of simulation time.
+  const INTERNAL_TIME_STEP = 0.005; // In milliseconds, not seconds.
+  const MAX_DELAY = 0.001; // In seconds of simulation time.
   /**
    *
    * @constructor
@@ -107,7 +107,7 @@ define( require => {
 
     // @public
     stepInTime: function( dt ) {
-      var modelIterationsToRun = Math.floor( ( dt * 1000 ) / INTERNAL_TIME_STEP );
+      let modelIterationsToRun = Math.floor( ( dt * 1000 ) / INTERNAL_TIME_STEP );
       this.timeRemainder += ( dt * 1000 ) % INTERNAL_TIME_STEP;
       if ( this.timeRemainder >= INTERNAL_TIME_STEP ) {
         // Add an additional iteration and reset the time remainder accumulation.  This is kind of like a leap year.
@@ -116,7 +116,7 @@ define( require => {
       }
 
       // Step the model the appropriate number of times.
-      for ( var i = 0; i < modelIterationsToRun; i++ ){
+      for ( let i = 0; i < modelIterationsToRun; i++ ){
 
         this.dh = (this.ah * (1 - this.h) - this.bh * this.h) * INTERNAL_TIME_STEP;
         this.dm = (this.am * (1 - this.m) - this.bm * this.m) * INTERNAL_TIME_STEP;
@@ -214,7 +214,7 @@ define( require => {
      * @public
      */
     get_delayed_m3h: function( delayAmount ) {
-      var delayedM3h = 0;
+      let delayedM3h = 0;
 
       if ( delayAmount <= 0 ) {
         delayedM3h = this.m3h;
