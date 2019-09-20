@@ -1,4 +1,4 @@
-// Copyright 2014-2017, University of Colorado Boulder
+// Copyright 2014-2019, University of Colorado Boulder
 /**
  * Base class for motion strategies that can be used to set the type of motion for elements within the model.
  *

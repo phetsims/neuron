@@ -1,4 +1,4 @@
-// Copyright 2014-2017, University of Colorado Boulder
+// Copyright 2014-2019, University of Colorado Boulder
 
 /**
  * The main screen class for the 'Neuron' simulation.  This is where the main model and view instances are created and

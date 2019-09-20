@@ -1,4 +1,4 @@
-// Copyright 2014-2017, University of Colorado Boulder
+// Copyright 2014-2019, University of Colorado Boulder
 /**
  * Abstract base class for "Capture Zones", which are essentially two dimensional spaces where particles can be
  * captured.

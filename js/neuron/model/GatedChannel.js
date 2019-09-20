@@ -1,4 +1,4 @@
-// Copyright 2014-2017, University of Colorado Boulder
+// Copyright 2014-2019, University of Colorado Boulder
 /**
  * Base class for gated membrane channels, i.e. channels that open and close.
  *

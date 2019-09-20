@@ -1,4 +1,4 @@
-// Copyright 2014-2017, University of Colorado Boulder
+// Copyright 2014-2019, University of Colorado Boulder
 /**
  * The DataPoint is the basic data structure in recording, it keeps track of a state (which should be immutable)
  * and pairs it with a time at which the state occurred.
