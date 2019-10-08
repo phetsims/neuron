@@ -27,7 +27,7 @@ define( require => {
   const showLegendString = require( 'string!NEURON/showLegend' );
 
   // constants
-  const CHECK_BOX_OPTIONS = { boxWidth: 15 };
+  const CHECKBOX_OPTIONS = { boxWidth: 15 };
   const TEXT_OPTIONS = { font: new PhetFont( 14 ) };
   const TOUCH_AREA_X_DILATION = 10;
   const TOUCH_AREA_Y_DILATION = 3;
@@ -44,13 +44,13 @@ define( require => {
    */
   function AxonCrossSectionControlPanel( neuronModel, options ) {
 
-    const allIonsSimulatedCheckbox = new Checkbox( new Text( allIonsString, TEXT_OPTIONS ), neuronModel.allIonsSimulatedProperty, CHECK_BOX_OPTIONS );
+    const allIonsSimulatedCheckbox = new Checkbox( new Text( allIonsString, TEXT_OPTIONS ), neuronModel.allIonsSimulatedProperty, CHECKBOX_OPTIONS );
     dilateTouchArea( allIonsSimulatedCheckbox );
-    const showChargesCheckbox = new Checkbox( new Text( chargesString, TEXT_OPTIONS ), neuronModel.chargesShownProperty, CHECK_BOX_OPTIONS );
+    const showChargesCheckbox = new Checkbox( new Text( chargesString, TEXT_OPTIONS ), neuronModel.chargesShownProperty, CHECKBOX_OPTIONS );
     dilateTouchArea( showChargesCheckbox );
-    const showConcentrationsCheckbox = new Checkbox( new Text( concentrationsString, TEXT_OPTIONS ), neuronModel.concentrationReadoutVisibleProperty, CHECK_BOX_OPTIONS );
+    const showConcentrationsCheckbox = new Checkbox( new Text( concentrationsString, TEXT_OPTIONS ), neuronModel.concentrationReadoutVisibleProperty, CHECKBOX_OPTIONS );
     dilateTouchArea( showConcentrationsCheckbox );
-    const showPotentialChartCheckbox = new Checkbox( new Text( potentialChartString, TEXT_OPTIONS ), neuronModel.potentialChartVisibleProperty, CHECK_BOX_OPTIONS );
+    const showPotentialChartCheckbox = new Checkbox( new Text( potentialChartString, TEXT_OPTIONS ), neuronModel.potentialChartVisibleProperty, CHECKBOX_OPTIONS );
     dilateTouchArea( showPotentialChartCheckbox );
 
     const crossSectionControlContents = [];
