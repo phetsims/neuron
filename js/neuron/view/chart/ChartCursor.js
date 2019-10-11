@@ -24,6 +24,7 @@ define( require => {
   const WIDTH_PROPORTION = 0.013; // empirically determined
   const CURSOR_FILL_COLOR = new Color( 50, 50, 200, 0.2 );
   const CURSOR_STROKE_COLOR = Color.DARK_GRAY;
+  const CURSOR_STYLE = 'ew-resize'
 
   /**
    * @param {MembranePotentialChart} membranePotentialChart
@@ -42,7 +43,7 @@ define( require => {
     const height = bottomOfPlotArea.y - topOfPlotArea.y;
 
     Rectangle.call( this, -width / 2, 0, width, height, 0, 0, {
-      cursor: 'e-resize',
+      cursor: CURSOR_STYLE,
       fill: CURSOR_FILL_COLOR,
       stroke: CURSOR_STROKE_COLOR,
       lineWidth: 0.4,
@@ -57,7 +58,7 @@ define( require => {
     let pressTime;
     const chartCursorDragHandler = new SimpleDragHandler( {
       allowTouchSnag: true,
-      dragCursor: 'e-resize',
+      dragCursor: CURSOR_STYLE,
 
       start: function( e ) {
         pressPoint = e.currentTarget.globalToParentPoint( e.pointer.point );
