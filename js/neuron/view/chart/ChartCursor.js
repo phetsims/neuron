@@ -24,7 +24,7 @@ define( require => {
   const WIDTH_PROPORTION = 0.013; // empirically determined
   const CURSOR_FILL_COLOR = new Color( 50, 50, 200, 0.2 );
   const CURSOR_STROKE_COLOR = Color.DARK_GRAY;
-  const CURSOR_STYLE = 'ew-resize'
+  const CURSOR_STYLE = 'ew-resize';
 
   /**
    * @param {MembranePotentialChart} membranePotentialChart
