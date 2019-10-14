@@ -42,7 +42,7 @@ define( function( require ) {
     var height = bottomOfPlotArea.y - topOfPlotArea.y;
 
     Rectangle.call( thisChartCursor, -width / 2, 0, width, height, 0, 0, {
-      cursor: 'e-resize',
+      cursor: 'ew-resize',
       fill: CURSOR_FILL_COLOR,
       stroke: CURSOR_STROKE_COLOR,
       lineWidth: 0.4,
@@ -57,7 +57,7 @@ define( function( require ) {
     var pressTime;
     var chartCursorDragHandler = new SimpleDragHandler( {
       allowTouchSnag: true,
-      dragCursor: 'e-resize',
+      dragCursor: 'ew-resize',
 
       start: function( e ) {
         pressPoint = e.currentTarget.globalToParentPoint( e.pointer.point );
