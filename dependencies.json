@@ -1,5 +1,5 @@
 {
-  "comment": "# neuron 1.1.17 Tue Oct 15 2019 15:51:04 GMT-0600 (Mountain Daylight Time)",
+  "comment": "# neuron 1.1.18-rc.1 Tue Oct 15 2019 19:16:07 GMT-0600 (Mountain Daylight Time)",
   "assert": {
     "sha": "7d27130a4d27da15aa7f8a21bbfb9245288c1b44",
     "branch": "HEAD"
@@ -33,12 +33,12 @@
     "branch": "HEAD"
   },
   "neuron": {
-    "sha": "9a628d9dfe3fb2d4cedcd410a9cc3ab6407278b2",
+    "sha": "e3a5f8edcc3162d4c70777aebfd64ebdd59e87c9",
     "branch": "1.1"
   },
   "phet-core": {
     "sha": "393992ce4327635da31926cad0e086d54231fe0f",
-    "branch": "neuron-1.1"
+    "branch": "HEAD"
   },
   "phetcommon": {
     "sha": "1cb9c83e3370ba3f761a11b1f8ffaf2a7d7c3b6b",
