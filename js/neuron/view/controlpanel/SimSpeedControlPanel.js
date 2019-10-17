@@ -11,6 +11,7 @@ define( require => {
 
   // modules
   const inherit = require( 'PHET_CORE/inherit' );
+  const merge = require( 'PHET_CORE/merge' );
   const neuron = require( 'NEURON/neuron' );
   const NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
   const Panel = require( 'SUN/Panel' );
@@ -29,7 +30,7 @@ define( require => {
    */
   function SimSpeedControlPanel( speedProperty, options ) {
 
-    options = _.extend( {
+    options = merge( {
       fill: NeuronConstants.CONTROL_PANEL_BACKGROUND,
       stroke: NeuronConstants.CONTROL_PANEL_STROKE,
       xMargin: 8,
