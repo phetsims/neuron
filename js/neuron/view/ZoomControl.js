@@ -29,13 +29,12 @@ define( require => {
    */
   function ZoomControl( zoomProperty, minZoom, maxZoom ) {
 
-    const zoomSliderOptions = {
-      thumbSize: new Dimension2( 18, 22 ),
-      trackSize: new Dimension2( 100, 1 ),
+    const zoomSlider = new VSlider( zoomProperty, new Range( minZoom, maxZoom ), {
+      thumbSize: new Dimension2( 22, 18 ),
+      trackSize: new Dimension2( 1, 100 ),
       thumbTouchAreaXDilation: 8,
       thumbTouchAreaYDilation: 8
-    };
-    const zoomSlider = new VSlider( zoomProperty, new Range( minZoom, maxZoom ), zoomSliderOptions );
+    } );
 
     function createZoomControlButton( contentNode, marginOptions, listener ) {
       return new RectangularPushButton( {
@@ -71,11 +70,17 @@ define( require => {
       centerY: sideLength / 2
     };
 
-    const plusButton = createZoomControlButton( new Path( plusSymbolShape, symbolOptions ), { xMargin: 6, yMargin: 6 }, function() {
+    const plusButton = createZoomControlButton( new Path( plusSymbolShape, symbolOptions ), {
+      xMargin: 6,
+      yMargin: 6
+    }, function() {
       zoomProperty.set( Util.clamp( zoomProperty.value + 0.1, minZoom, maxZoom ) );
     } );
 
-    const minusButton = createZoomControlButton( new Path( minusSymbolShape, symbolOptions ), { xMargin: 6, yMargin: 10 }, function() {
+    const minusButton = createZoomControlButton( new Path( minusSymbolShape, symbolOptions ), {
+      xMargin: 6,
+      yMargin: 10
+    }, function() {
       zoomProperty.set( Util.clamp( zoomProperty.value - 0.1, minZoom, maxZoom ) );
     } );
 
