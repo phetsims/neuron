@@ -23,6 +23,7 @@ define( require => {
   const CloseButton = require( 'SCENERY_PHET/buttons/CloseButton' );
   const DataLineCanvasNode = require( 'NEURON/neuron/view/chart/DataLineCanvasNode' );
   const dot = require( 'DOT/dot' );
+  const DynamicSeries = require( 'GRIDDLE/DynamicSeries' );
   const HBox = require( 'SCENERY/nodes/HBox' );
   const inherit = require( 'PHET_CORE/inherit' );
   const ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
@@ -37,7 +38,6 @@ define( require => {
   const Text = require( 'SCENERY/nodes/Text' );
   const TextPushButton = require( 'SUN/buttons/TextPushButton' );
   const Util = require( 'DOT/Util' );
-  const XYDataSeries = require( 'GRIDDLE/XYDataSeries' );
 
   // strings
   const chartClearString = require( 'string!NEURON/chartClear' );
@@ -71,9 +71,8 @@ define( require => {
     this.updateCountdownTimer = 0; // init to zero so that an update occurs right away
     this.timeIndexOfFirstDataPt = 0;
     this.playingWhenDragStarted = true;
-    this.dataSeries = new XYDataSeries( {
-      color: PhetColorScheme.RED_COLORBLIND,
-      maxPoints: 750 // empirically determined
+    this.dataSeries = new DynamicSeries( {
+      color: PhetColorScheme.RED_COLORBLIND
     } );
     this.domain = [ 0, TIME_SPAN ];
     this.range = [ -100, 100 ];
@@ -129,7 +128,7 @@ define( require => {
 
     this.neuronModel.stimulusPulseInitiatedProperty.link( function( stimulusPulseInitiated ) {
       if ( stimulusPulseInitiated && !self.neuronModel.isPotentialChartVisible() ) {
-          // If the chart is not visible, we clear any previous recording.
+        // If the chart is not visible, we clear any previous recording.
         self.clearChart();
       }
       if ( stimulusPulseInitiated && !self.chartIsFull ) {
@@ -180,7 +179,7 @@ define( require => {
 
     // Scale to fit the Y axis within Chart's bounds
     const yAxisMaxHeight = chartDimension.height;
-    const yAxisLabelScaleFactor = Math.min( 1, yAxisMaxHeight / (0.8 * chartYAxisLabelNode.height) );
+    const yAxisLabelScaleFactor = Math.min( 1, yAxisMaxHeight / ( 0.8 * chartYAxisLabelNode.height ) );
     chartYAxisLabelNode.scale( yAxisLabelScaleFactor );
 
     // use domain(0,25) and range(-100,100) as Model View Map
@@ -209,8 +208,8 @@ define( require => {
     const xMargin = 12;
     const xSpace = 4;
     // align exactly with clipped area's edges
-    const contentWidth = chartYAxisLabelNode.width + plotNode.width + (2 * xMargin) + xSpace;
-    const adjustMargin = (MAX_PANEL_WIDTH - contentWidth) / 2;
+    const contentWidth = chartYAxisLabelNode.width + plotNode.width + ( 2 * xMargin ) + xSpace;
+    const adjustMargin = ( MAX_PANEL_WIDTH - contentWidth ) / 2;
 
     // Put the chart, title, and controls in a node together and lay them out.
     const plotAndYLabel = new HBox( {
@@ -259,7 +258,7 @@ define( require => {
      */
     addDataPoint: function( time, voltage ) {
       let firstDataPoint = false;
-      if ( this.dataSeries.getLength() === 0 ) {
+      if ( this.dataSeries.data.length === 0 ) {
         // This is the first data point added since the last time the chart was cleared or since it was created. Record
         // the time index for future reference.
         this.timeIndexOfFirstDataPt = time;

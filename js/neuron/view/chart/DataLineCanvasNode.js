@@ -20,7 +20,7 @@ define( require => {
   /**
    * @param {number} width
    * @param {number} height
-   * @param {XYDataSeries} dataSeries
+   * @param {DynamicSeries} dataSeries
    * @param {ModelViewTransform2} mvt - model-view transform for mapping data points to the chart
    * @constructor
    */
@@ -34,14 +34,7 @@ define( require => {
     CanvasNode.call( this, { pickable: false, canvasBounds: new Bounds2( 0, 0, width, height ) } );
 
     // cause the canvas to get updated each time new data is added to the data series
-    dataSeries.addDataSeriesListener( function() {
-      self.invalidatePaint();
-    } );
-
-    // cause the data line to be cleared whenever the data series is cleared
-    dataSeries.cleared.addListener( function() {
-      self.invalidatePaint();
-    } );
+    dataSeries.addDynamicSeriesListener( () => self.invalidatePaint() );
   }
 
   neuron.register( 'DataLineCanvasNode', DataLineCanvasNode );
@@ -62,10 +55,10 @@ define( require => {
         context.strokeStyle = LINE_COLOR;
         context.lineWidth = LINE_WIDTH;
         context.beginPath();
-        context.moveTo( this.mvt.modelToViewX( this.dataSeries.getX( 0 ) ), this.mvt.modelToViewY( this.dataSeries.getY( 0 ) ) );
+        context.moveTo( this.mvt.modelToViewX( this.dataSeries.data[ 0 ].x ), this.mvt.modelToViewY( this.dataSeries.data[ 0 ].y ) );
         for ( let i = 1; i < this.dataSeries.getLength(); i++ ) {
-          const endPointX = this.mvt.modelToViewX( this.dataSeries.getX( i ) );
-          const endPointY = this.mvt.modelToViewY( this.dataSeries.getY( i ) );
+          const endPointX = this.mvt.modelToViewX( this.dataSeries.data[ i ].x );
+          const endPointY = this.mvt.modelToViewY( this.dataSeries.data[ i ].y );
           context.lineTo( endPointX, endPointY );
         }
         context.stroke();
