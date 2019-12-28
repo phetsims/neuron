@@ -258,7 +258,7 @@ define( require => {
      */
     addDataPoint: function( time, voltage ) {
       let firstDataPoint = false;
-      if ( this.dataSeries.data.length === 0 ) {
+      if ( this.dataSeries.getLength() === 0 ) {
         // This is the first data point added since the last time the chart was cleared or since it was created. Record
         // the time index for future reference.
         this.timeIndexOfFirstDataPt = time;
@@ -281,15 +281,16 @@ define( require => {
       // isn't full.
       assert && assert( time - this.timeIndexOfFirstDataPt >= 0 );
       if ( time - this.timeIndexOfFirstDataPt <= TIME_SPAN && distanceFromLastPointSquared > MIN_DISTANCE_SQUARED_BETWEEN_POINTS ) {
-        this.dataSeries.addPoint( xValue, yValue );
+        this.dataSeries.addXYDataPoint( xValue, yValue );
         this.mostRecentXValue = xValue;
         this.mostRecentYValue = yValue;
         this.chartIsFull = false;
       }
       else if ( time - this.timeIndexOfFirstDataPt > TIME_SPAN && !this.chartIsFull ) {
+
         // This is the first data point to be received that is outside of the chart's X range.  Add it anyway so that
         // there is no gap in the data shown at the end of the chart.
-        this.dataSeries.addPoint( TIME_SPAN, yValue );
+        this.dataSeries.addXYDataPoint( TIME_SPAN, yValue );
         this.chartIsFull = true;
       }
     },
@@ -302,7 +303,7 @@ define( require => {
      */
     getLastTimeValue: function() {
       let timeOfLastDataPoint = 0;
-      if ( this.dataSeries.getLength() > 0 ) {
+      if ( this.dataSeries.hasData() ) {
         timeOfLastDataPoint = this.dataSeries.getX( this.dataSeries.getLength() - 1 );
       }
       return timeOfLastDataPoint;
@@ -352,8 +353,7 @@ define( require => {
       // chart, or when stepping and recording, the cursor should be seen.
       const timeOnChart = ( this.neuronModel.getTime() - this.neuronModel.getMinRecordedTime() ) * 1000;
       const isCurrentTimeOnChart = ( timeOnChart >= 0 ) && ( timeOnChart <= TIME_SPAN );
-      const dataExists = this.dataSeries.getLength() > 0;
-      const chartCursorVisible = isCurrentTimeOnChart && dataExists;
+      const chartCursorVisible = isCurrentTimeOnChart && this.dataSeries.hasData();
       this.chartCursor.setVisible( chartCursorVisible );
     },
 

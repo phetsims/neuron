@@ -55,10 +55,10 @@ define( require => {
         context.strokeStyle = LINE_COLOR;
         context.lineWidth = LINE_WIDTH;
         context.beginPath();
-        context.moveTo( this.mvt.modelToViewX( this.dataSeries.data[ 0 ].x ), this.mvt.modelToViewY( this.dataSeries.data[ 0 ].y ) );
+        context.moveTo( this.mvt.modelToViewX( this.dataSeries.getDataPoint( 0 ).x ), this.mvt.modelToViewY( this.dataSeries.getDataPoint( 0 ).y ) );
         for ( let i = 1; i < this.dataSeries.getLength(); i++ ) {
-          const endPointX = this.mvt.modelToViewX( this.dataSeries.data[ i ].x );
-          const endPointY = this.mvt.modelToViewY( this.dataSeries.data[ i ].y );
+          const endPointX = this.mvt.modelToViewX( this.dataSeries.getDataPoint( i ).x );
+          const endPointY = this.mvt.modelToViewY( this.dataSeries.getDataPoint( i ).y );
           context.lineTo( endPointX, endPointY );
         }
         context.stroke();
