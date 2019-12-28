@@ -304,7 +304,7 @@ define( require => {
     getLastTimeValue: function() {
       let timeOfLastDataPoint = 0;
       if ( this.dataSeries.hasData() ) {
-        timeOfLastDataPoint = this.dataSeries.getX( this.dataSeries.getLength() - 1 );
+        timeOfLastDataPoint = this.dataSeries.getDataPoint( this.dataSeries.getLength() - 1 );
       }
       return timeOfLastDataPoint;
     },
