@@ -19,7 +19,6 @@ define( require => {
   const ConcentrationReadoutLayerNode = require( 'NEURON/neuron/view/ConcentrationReadoutLayerNode' );
   const DerivedProperty = require( 'AXON/DerivedProperty' );
   const Dimension2 = require( 'DOT/Dimension2' );
-  const HBox = require( 'SCENERY/nodes/HBox' );
   const inherit = require( 'PHET_CORE/inherit' );
   const IonsAndChannelsLegendPanel = require( 'NEURON/neuron/view/controlpanel/IonsAndChannelsLegendPanel' );
   const Matrix3 = require( 'DOT/Matrix3' );
@@ -35,7 +34,6 @@ define( require => {
   const Path = require( 'SCENERY/nodes/Path' );
   const PhetColorScheme = require( 'SCENERY_PHET/PhetColorScheme' );
   const PhetFont = require( 'SCENERY_PHET/PhetFont' );
-  const PlayPauseButton = require( 'SCENERY_PHET/buttons/PlayPauseButton' );
   const Property = require( 'AXON/Property' );
   const Rectangle = require( 'SCENERY/nodes/Rectangle' );
   const RectangularPushButton = require( 'SUN/buttons/RectangularPushButton' );
@@ -44,8 +42,7 @@ define( require => {
   const ScreenView = require( 'JOIST/ScreenView' );
   const Shape = require( 'KITE/Shape' );
   const SimSpeedControlPanel = require( 'NEURON/neuron/view/controlpanel/SimSpeedControlPanel' );
-  const StepBackwardButton = require( 'SCENERY_PHET/buttons/StepBackwardButton' );
-  const StepForwardButton = require( 'SCENERY_PHET/buttons/StepForwardButton' );
+  const TimeControlNode = require( 'SCENERY_PHET/TimeControlNode' );
   const Util = require( 'DOT/Util' );
   const Vector2 = require( 'DOT/Vector2' );
   const ZoomControl = require( 'NEURON/neuron/view/ZoomControl' );
@@ -210,20 +207,16 @@ define( require => {
       zoomableNode.addChild( particlesCanvasNode );
     }
 
-    const recordPlayButtons = [];
+    // figure out the center Y location for all lower controls
+    const centerYForLowerControls = ( clipAreaBounds.maxY + this.layoutBounds.height ) / 2;
+
     const playingProperty = neuronClockModelAdapter.playingProperty; // convenience variable
-    const playPauseButton = new PlayPauseButton( playingProperty, { radius: 25 } );
 
-    // step forward is enabled whenever paused.
-    const stepForwardButton = new StepForwardButton( {
-      isPlayingProperty: playingProperty,
-      listener: function() { neuronClockModelAdapter.stepClockWhilePaused(); }
-    } );
-
-    const stepBackwardButton = new StepBackwardButton( {
-      listener: function() { neuronClockModelAdapter.stepClockBackWhilePaused(); }
-    } );
-    const stepBackEnabledProperty = new DerivedProperty( [
+    // property that determines whether the StepBackwardButton should be disabled
+    // is passed in as an isPlayingProperty because isPlayingProperty is used by StepButtons to figure out whether
+    //  they should be enabled or not
+    // the StepBackwardButton doesn't use the normal playingProperty for reasons stated below
+    const stepBackDisabledProperty = new DerivedProperty( [
         playingProperty,
         this.neuronModel.timeProperty
       ],
@@ -231,28 +224,25 @@ define( require => {
         // Allow step back only if the mode is not playing and if recorded state data exists in the data buffer.  Data
         // recording is only initiated after the neuron has been stimulated, so if the sim is paused before the neuron
         // was ever stimulated, backwards stepping will not be possible.
-        return !playing && time > self.neuronModel.getMinRecordedTime() && self.neuronModel.getRecordedTimeRange() > 0;
+        return playing || time <= self.neuronModel.getMinRecordedTime() || self.neuronModel.getRecordedTimeRange() <= 0;
       }
     );
-    stepBackEnabledProperty.link( function( enabled ) {
-      stepBackwardButton.enabled = enabled;
-    } );
 
-    recordPlayButtons.push( stepBackwardButton );
-    recordPlayButtons.push( playPauseButton );
-    recordPlayButtons.push( stepForwardButton );
-
-    // figure out the center Y location for all lower controls
-    const centerYForLowerControls = ( clipAreaBounds.maxY + this.layoutBounds.height ) / 2;
-
-    const recordPlayButtonBox = new HBox( {
-      children: recordPlayButtons,
-      spacing: 5,
+    const timeControlNode = new TimeControlNode( playingProperty, {
+      includeStepBackwardButton: true,
+      playPauseOptions: { radius: 25 },
+      stepForwardOptions: {
+        listener: function() { neuronClockModelAdapter.stepClockWhilePaused(); }
+      },
+      stepBackwardOptions: {
+        listener: function() { neuronClockModelAdapter.stepClockBackWhilePaused(); },
+        isPlayingProperty: stepBackDisabledProperty
+      },
+      playPauseStepXSpacing: 5,
       right: this.layoutBounds.maxX / 2,
       centerY: centerYForLowerControls
     } );
-
-    this.addChild( recordPlayButtonBox );
+    this.addChild( timeControlNode );
 
     // space between layout edge and controls like reset, zoom control, legend, speed panel, etc.
     const leftPadding = 20;
