@@ -38,7 +38,7 @@ define( require => {
   const Rectangle = require( 'SCENERY/nodes/Rectangle' );
   const RectangularPushButton = require( 'SUN/buttons/RectangularPushButton' );
   const ResetAllButton = require( 'SCENERY_PHET/buttons/ResetAllButton' );
-  const SceneryUtil = require( 'SCENERY/util/Utils' ); // eslint-disable-line require-statement-match
+  const SceneryUtils = require( 'SCENERY/util/Utils' ); // eslint-disable-line require-statement-match
   const ScreenView = require( 'JOIST/ScreenView' );
   const Shape = require( 'KITE/Shape' );
   const SimSpeedControlPanel = require( 'NEURON/neuron/view/controlpanel/SimSpeedControlPanel' );
@@ -156,7 +156,7 @@ define( require => {
     } );
 
     // Check to see if WebGL can be used
-    const webGLSupported = SceneryUtil.isWebGLSupported && phet.chipper.queryParameters.webgl;
+    const webGLSupported = SceneryUtils.isWebGLSupported && phet.chipper.queryParameters.webgl;
 
     if ( webGLSupported ) {
 
