@@ -12,7 +12,7 @@ define( require => {
 
   // modules
   const CaptureZone = require( 'NEURON/neuron/model/CaptureZone' );
-  const DotUtil = require( 'DOT/Utils' ); // eslint-disable-line require-statement-match
+  const DotUtils = require( 'DOT/Utils' ); // eslint-disable-line require-statement-match
   const inherit = require( 'PHET_CORE/inherit' );
   const neuron = require( 'NEURON/neuron' );
   const Shape = require( 'KITE/Shape' );
@@ -97,8 +97,8 @@ define( require => {
     updateShape: function() {
 
       let startAngle = (this.fixedRotationalOffset + this.rotationAngle + this.angleOfExtent / 2) - this.angleOfExtent;
-      startAngle = DotUtil.moduloBetweenDown( startAngle, 0, Math.PI * 2 );
-      const endAngle = DotUtil.moduloBetweenDown( this.angleOfExtent, 0, Math.PI * 2 );
+      startAngle = DotUtils.moduloBetweenDown( startAngle, 0, Math.PI * 2 );
+      const endAngle = DotUtils.moduloBetweenDown( this.angleOfExtent, 0, Math.PI * 2 );
       return new Shape().arc( this.originPoint.x, this.originPoint.y, this.radius, startAngle, endAngle, true );// ARC2D.PIE startPoint and endPoint is internally added to arc's path
     }
   } );
