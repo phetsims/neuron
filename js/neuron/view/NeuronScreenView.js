@@ -38,12 +38,12 @@ define( require => {
   const Rectangle = require( 'SCENERY/nodes/Rectangle' );
   const RectangularPushButton = require( 'SUN/buttons/RectangularPushButton' );
   const ResetAllButton = require( 'SCENERY_PHET/buttons/ResetAllButton' );
-  const SceneryUtil = require( 'SCENERY/util/Util' ); // eslint-disable-line require-statement-match
+  const SceneryUtil = require( 'SCENERY/util/Utils' ); // eslint-disable-line require-statement-match
   const ScreenView = require( 'JOIST/ScreenView' );
   const Shape = require( 'KITE/Shape' );
   const SimSpeedControlPanel = require( 'NEURON/neuron/view/controlpanel/SimSpeedControlPanel' );
   const TimeControlNode = require( 'SCENERY_PHET/TimeControlNode' );
-  const Util = require( 'DOT/Util' );
+  const Utils = require( 'DOT/Utils' );
   const Vector2 = require( 'DOT/Vector2' );
   const ZoomControl = require( 'NEURON/neuron/view/ZoomControl' );
 
@@ -140,7 +140,7 @@ define( require => {
       // chart below it.
       const zoomTowardTopThreshold = 0.6;
       let scaleMatrix;
-      const scaleAroundX = Util.roundSymmetric( viewPortPosition.x );
+      const scaleAroundX = Utils.roundSymmetric( viewPortPosition.x );
       let scaleAroundY;
       if ( zoomFactor > zoomTowardTopThreshold ) {
         scaleAroundY = (zoomFactor - zoomTowardTopThreshold) * self.neuronModel.getAxonMembrane().getCrossSectionDiameter() * 0.075;

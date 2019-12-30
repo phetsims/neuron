@@ -17,7 +17,7 @@ define( require => {
   const neuron = require( 'NEURON/neuron' );
   const Rectangle = require( 'SCENERY/nodes/Rectangle' );
   const SimpleDragHandler = require( 'SCENERY/input/SimpleDragHandler' );
-  const Util = require( 'DOT/Util' );
+  const Utils = require( 'DOT/Utils' );
   const Vector2 = require( 'DOT/Vector2' );
 
   // constants
@@ -79,7 +79,7 @@ define( require => {
         const dx = new Vector2( dragPoint.x - pressPoint.x, dragPoint.y - pressPoint.y );
         const modelDiff = membranePotentialChart.chartMvt.viewToModelPosition( dx );
         let recordingTimeIndex = pressTime + modelDiff.x;
-        recordingTimeIndex = Util.clamp( recordingTimeIndex, 0, membranePotentialChart.getLastTimeValue() );
+        recordingTimeIndex = Utils.clamp( recordingTimeIndex, 0, membranePotentialChart.getLastTimeValue() );
         const compensatedRecordingTimeIndex = recordingTimeIndex / 1000 + membranePotentialChart.neuronModel.getMinRecordedTime();
         membranePotentialChart.neuronModel.setTime( compensatedRecordingTimeIndex );
       },

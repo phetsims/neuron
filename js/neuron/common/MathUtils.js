@@ -10,7 +10,7 @@ define( require => {
 
   // modules
   const neuron = require( 'NEURON/neuron' );
-  const Util = require( 'DOT/Util' );
+  const Utils = require( 'DOT/Utils' );
   const Vector2 = require( 'DOT/Vector2' );
 
   // These vectors are used as temporary objects for calculating distance without creating new Vector2 instances, see
@@ -53,7 +53,7 @@ define( require => {
       val = val * factor;
 
       // Round to the nearest integer.
-      const tmp = Util.roundSymmetric( val );
+      const tmp = Utils.roundSymmetric( val );
 
       // Shift the decimal the correct number of places
       // back to the left.

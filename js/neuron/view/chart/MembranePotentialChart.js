@@ -37,7 +37,7 @@ define( require => {
   const Shape = require( 'KITE/Shape' );
   const Text = require( 'SCENERY/nodes/Text' );
   const TextPushButton = require( 'SUN/buttons/TextPushButton' );
-  const Util = require( 'DOT/Util' );
+  const Utils = require( 'DOT/Utils' );
 
   // strings
   const chartClearString = require( 'string!NEURON/chartClear' );
@@ -374,7 +374,7 @@ define( require => {
 
     // @private
     moveChartCursorToTime: function( time ) {
-      this.chartCursor.x = Util.clamp( this.chartMvt.transformX( time ), 0, this.chartDimension.width );
+      this.chartCursor.x = Utils.clamp( this.chartMvt.transformX( time ), 0, this.chartDimension.width );
       this.chartCursor.y = this.chartMvt.transformY( this.range[ 1 ] );
     },
 

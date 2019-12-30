@@ -19,7 +19,7 @@ define( require => {
   const SodiumIon = require( 'NEURON/neuron/model/SodiumIon' );
   const StringUtils = require( 'PHETCOMMON/util/StringUtils' );
   const Text = require( 'SCENERY/nodes/Text' );
-  const Util = require( 'DOT/Util' );
+  const Utils = require( 'DOT/Utils' );
 
   // strings
   const concentrationReadoutPattern0Label1Value2UnitsString = require( 'string!NEURON/concentrationReadoutPattern.0label.1value.2units' );
@@ -67,7 +67,7 @@ define( require => {
 
     // convenience function for formatting the readouts
     function createConcentrationReadoutString( label, value ) {
-      const valueText = Util.toFixed( value, CONCENTRATION_READOUT_NUM_PLACES );
+      const valueText = Utils.toFixed( value, CONCENTRATION_READOUT_NUM_PLACES );
       return StringUtils.format( concentrationReadoutPattern0Label1Value2UnitsString, label, valueText, unitsMMString );
     }
 

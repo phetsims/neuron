@@ -17,7 +17,7 @@ define( require => {
   const DelayElement = require( 'NEURON/neuron/model/DelayElement' );
   const inherit = require( 'PHET_CORE/inherit' );
   const neuron = require( 'NEURON/neuron' );
-  const Util = require( 'DOT/Util' );
+  const Utils = require( 'DOT/Utils' );
 
   // This value is used to tell if two numbers are different.  It was needed due to some floating point resolution
   // problems that were occurring.
@@ -111,7 +111,7 @@ define( require => {
 
         // All times in the buffer are equal, so we should be able to simply index to the appropriate location.  The
         // offset must be at least 1, since this buffer doesn't hold a non-delayed value.
-        const offset = Math.max( Util.roundSymmetric( delayAmount / this.previousDeltaTime ), 1 );
+        const offset = Math.max( Utils.roundSymmetric( delayAmount / this.previousDeltaTime ), 1 );
         if ( (this.filling && offset > this.head) || offset > this.numEntries ) {
           // The caller is asking for data that we don't have yet, so give them the oldest data available.
           delayedValue = this.delayElements[ this.tail ].value;

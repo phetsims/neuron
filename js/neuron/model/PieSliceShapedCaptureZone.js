@@ -12,7 +12,7 @@ define( require => {
 
   // modules
   const CaptureZone = require( 'NEURON/neuron/model/CaptureZone' );
-  const DotUtil = require( 'DOT/Util' ); // eslint-disable-line require-statement-match
+  const DotUtil = require( 'DOT/Utils' ); // eslint-disable-line require-statement-match
   const inherit = require( 'PHET_CORE/inherit' );
   const neuron = require( 'NEURON/neuron' );
   const Shape = require( 'KITE/Shape' );

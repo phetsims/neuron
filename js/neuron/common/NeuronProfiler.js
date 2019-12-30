@@ -13,7 +13,7 @@ define( require => {
   const inherit = require( 'PHET_CORE/inherit' );
   const neuron = require( 'NEURON/neuron' );
   const platform = require( 'PHET_CORE/platform' );
-  const Util = require( 'DOT/Util' );
+  const Utils = require( 'DOT/Utils' );
 
   /**
    * @param {Sim} sim - reference to the simulation being profiled
@@ -72,9 +72,9 @@ define( require => {
           // compose the message that will present the data
           const message =
             'average FPS over previous ' + testDurationInSeconds + ' seconds = ' +
-            Util.toFixed( self.frameCount / ( self.dataCollectionDuration / 1000 ), 2 ) + '\n' +
-            'average frame processing time = ' + Util.toFixed( averageFrameProcessingTime, 2 ) + ' ms\n' +
-            'max frame processing time = ' + Util.toFixed( maxFrameProcessingTime, 2 ) + ' ms\n';
+            Utils.toFixed( self.frameCount / ( self.dataCollectionDuration / 1000 ), 2 ) + '\n' +
+            'average frame processing time = ' + Utils.toFixed( averageFrameProcessingTime, 2 ) + ' ms\n' +
+            'max frame processing time = ' + Utils.toFixed( maxFrameProcessingTime, 2 ) + ' ms\n';
 
           // display the message
           if ( platform.mobileSafari ) {

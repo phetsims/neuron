@@ -17,7 +17,7 @@ define( require => {
   const Range = require( 'DOT/Range' );
   const RectangularPushButton = require( 'SUN/buttons/RectangularPushButton' );
   const Shape = require( 'KITE/Shape' );
-  const Util = require( 'DOT/Util' );
+  const Utils = require( 'DOT/Utils' );
   const VBox = require( 'SCENERY/nodes/VBox' );
   const VSlider = require( 'SUN/VSlider' );
 
@@ -74,14 +74,14 @@ define( require => {
       xMargin: 6,
       yMargin: 6
     }, function() {
-      zoomProperty.set( Util.clamp( zoomProperty.value + 0.1, minZoom, maxZoom ) );
+      zoomProperty.set( Utils.clamp( zoomProperty.value + 0.1, minZoom, maxZoom ) );
     } );
 
     const minusButton = createZoomControlButton( new Path( minusSymbolShape, symbolOptions ), {
       xMargin: 6,
       yMargin: 10
     }, function() {
-      zoomProperty.set( Util.clamp( zoomProperty.value - 0.1, minZoom, maxZoom ) );
+      zoomProperty.set( Utils.clamp( zoomProperty.value - 0.1, minZoom, maxZoom ) );
     } );
 
     // Temporarily set the zoom to a value that puts the knob roughly half way up so that the initial layout of the
