@@ -337,7 +337,7 @@ define( require => {
         channel.stepInTime( dt );
       } );
 
-      this.transientParticles.getArray().forEach( function( particle ) {
+      this.transientParticles.forEach( function( particle ) {
         particle.stepInTime( dt );
       } );
 
