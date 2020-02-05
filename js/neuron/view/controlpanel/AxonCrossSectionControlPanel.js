@@ -40,7 +40,7 @@ define( require => {
 
   /**
    * @param {NeuronModel} neuronModel
-   * @param {Object} options
+   * @param {Object} [options]
    * @constructor
    */
   function AxonCrossSectionControlPanel( neuronModel, options ) {

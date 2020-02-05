@@ -25,7 +25,7 @@ define( require => {
 
   /**
    * @param {Property.<number>} speedProperty
-   * @param {Object} options
+   * @param {Object} [options]
    * @constructor
    */
   function SimSpeedControlPanel( speedProperty, options ) {
