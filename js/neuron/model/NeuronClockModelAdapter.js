@@ -13,140 +13,136 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  * @author John Blanco
  */
-define( require => {
-  'use strict';
 
-  // modules
-  const inherit = require( 'PHET_CORE/inherit' );
-  const neuron = require( 'NEURON/neuron' );
-  const Property = require( 'AXON/Property' );
+import Property from '../../../../axon/js/Property.js';
+import inherit from '../../../../phet-core/js/inherit.js';
+import neuron from '../../neuron.js';
 
-  // the following constants could easily be turned into options if there was a need to reuse and thus generalize
-  // this class.
-  const TIME_ADJUSTMENT_FACTOR = 7.32E-4; // in seconds, applied to the incoming dt values to scale it up or down
-  const NOMINAL_TICK_TIME = ( 1 / 60 ) * TIME_ADJUSTMENT_FACTOR; // used for single stepping, based on assumed frame rate of 60 fps
-  const TICKS_PER_SINGLE_STEP = 4;
+// the following constants could easily be turned into options if there was a need to reuse and thus generalize
+// this class.
+const TIME_ADJUSTMENT_FACTOR = 7.32E-4; // in seconds, applied to the incoming dt values to scale it up or down
+const NOMINAL_TICK_TIME = ( 1 / 60 ) * TIME_ADJUSTMENT_FACTOR; // used for single stepping, based on assumed frame rate of 60 fps
+const TICKS_PER_SINGLE_STEP = 4;
 
-  // Max time that the simulation model can handle in a single tick.  This was determined through testing the
-  // simulation and is intended to prevent odd looking graphs and incorrect behavior, see
-  // https://github.com/phetsims/neuron/issues/114 and https://github.com/phetsims/neuron/issues/109.
-  const MAX_SIM_TICK_TIME = NOMINAL_TICK_TIME * 10; // empirically determined through testing of the simulation
+// Max time that the simulation model can handle in a single tick.  This was determined through testing the
+// simulation and is intended to prevent odd looking graphs and incorrect behavior, see
+// https://github.com/phetsims/neuron/issues/114 and https://github.com/phetsims/neuron/issues/109.
+const MAX_SIM_TICK_TIME = NOMINAL_TICK_TIME * 10; // empirically determined through testing of the simulation
 
-  /**
-   * Creates a NeuronClockModelAdapter.
-   * @param {NeuronModel} model - model whose simulation timing is controlled by this adapter.  Note that the Adapter is
-   * generic and doesn't have any dependency on the model it controls.
-   * @constructor
-   */
-  function NeuronClockModelAdapter( model ) {
+/**
+ * Creates a NeuronClockModelAdapter.
+ * @param {NeuronModel} model - model whose simulation timing is controlled by this adapter.  Note that the Adapter is
+ * generic and doesn't have any dependency on the model it controls.
+ * @constructor
+ */
+function NeuronClockModelAdapter( model ) {
 
-    this.model = model;
+  this.model = model;
 
-    Object.call( this );
+  Object.call( this );
 
-    this.playingProperty = new Property( true ); // linked to playPause button
-    this.speedProperty = new Property( 1 ); // factor controlling simulation clock speed
+  this.playingProperty = new Property( true ); // linked to playPause button
+  this.speedProperty = new Property( 1 ); // factor controlling simulation clock speed
 
-    this.stepCallbacks = [];
-    this.resetCallBacks = [];
-    this.residualTime = 0;
-  }
+  this.stepCallbacks = [];
+  this.resetCallBacks = [];
+  this.residualTime = 0;
+}
 
-  neuron.register( 'NeuronClockModelAdapter', NeuronClockModelAdapter );
+neuron.register( 'NeuronClockModelAdapter', NeuronClockModelAdapter );
 
-  return inherit( Object, NeuronClockModelAdapter, {
+export default inherit( Object, NeuronClockModelAdapter, {
 
-    // @public
-    step: function( dt ) {
+  // @public
+  step: function( dt ) {
 
-      // If the step is large, it probably means that the screen was hidden for a while, so just ignore it.
-      if ( dt > 0.5 ) {
-        return;
-      }
-
-      if ( this.playingProperty.get() ) {
-
-        // 'tick' the simulation, adjusting for dt values that are higher than the sim model can handle
-        let simTickTime = dt * TIME_ADJUSTMENT_FACTOR * this.speedProperty.get();
-        let numTicks = 1;
-        if ( simTickTime > MAX_SIM_TICK_TIME ){
-
-          // this is a larger tick than the sim model can handle, so break it into multiple ticks
-          numTicks = Math.floor( simTickTime / MAX_SIM_TICK_TIME );
-          this.residualTime += simTickTime % MAX_SIM_TICK_TIME;
-          simTickTime = MAX_SIM_TICK_TIME;
-        }
-        if ( this.residualTime >= simTickTime ){
-          numTicks++;
-          this.residualTime = this.residualTime - simTickTime;
-        }
-        for ( let i = 0; i < numTicks; i++ ){
-          this.tick( simTickTime );
-        }
-      }
-    },
-
-    // @public
-    reset: function() {
-      this.playingProperty.reset();
-      this.speedProperty.reset();
-      this.lastSimulationTime = 0.0;
-      this.simulationTime = 0.0;
-      this.speedProperty.set( 1 );
-
-      //fire reset event callback
-      for ( let i = 0; i < this.resetCallBacks.length; i++ ) {
-        this.resetCallBacks[ i ]();
-      }
-      this.model.reset();
-    },
-
-    /**
-     * Registers a callback that will be notified when the step simulation occurs
-     * Neuron Clock uses specialized real time step simulation
-     * @param  {function} - callback that has a {dt} parameter
-     * @public
-     */
-    registerStepCallback: function( callback ) {
-      this.stepCallbacks.push( callback );
-    },
-
-    /**
-     * Registers a callback that will be notified when the clock is reset
-     * @public
-     */
-    registerResetCallback: function( callback ) {
-      this.resetCallBacks.push( callback );
-    },
-
-    /**
-     * Perform one 'tick' of the clock, which fires all callbacks with the provided simulation time
-     * @private
-     */
-    tick: function( simulationTimeChange ) {
-      // fire step event callback
-      for ( let i = 0; i < this.stepCallbacks.length; i++ ) {
-        this.stepCallbacks[ i ]( simulationTimeChange );
-      }
-    },
-
-    /**
-     * advance the clock by a fixed amount used when stepping manually
-     * @public
-     */
-    stepClockWhilePaused: function() {
-      const self = this;
-      _.times( TICKS_PER_SINGLE_STEP, function() { self.tick( NOMINAL_TICK_TIME ); });
-    },
-
-    /**
-     * Move the clock backwards by the tickOnceTimeChange.
-     * @public
-     */
-    stepClockBackWhilePaused: function() {
-      const self = this;
-      _.times( TICKS_PER_SINGLE_STEP, function() { self.tick( -NOMINAL_TICK_TIME ); });
+    // If the step is large, it probably means that the screen was hidden for a while, so just ignore it.
+    if ( dt > 0.5 ) {
+      return;
     }
 
-  } );
+    if ( this.playingProperty.get() ) {
+
+      // 'tick' the simulation, adjusting for dt values that are higher than the sim model can handle
+      let simTickTime = dt * TIME_ADJUSTMENT_FACTOR * this.speedProperty.get();
+      let numTicks = 1;
+      if ( simTickTime > MAX_SIM_TICK_TIME ) {
+
+        // this is a larger tick than the sim model can handle, so break it into multiple ticks
+        numTicks = Math.floor( simTickTime / MAX_SIM_TICK_TIME );
+        this.residualTime += simTickTime % MAX_SIM_TICK_TIME;
+        simTickTime = MAX_SIM_TICK_TIME;
+      }
+      if ( this.residualTime >= simTickTime ) {
+        numTicks++;
+        this.residualTime = this.residualTime - simTickTime;
+      }
+      for ( let i = 0; i < numTicks; i++ ) {
+        this.tick( simTickTime );
+      }
+    }
+  },
+
+  // @public
+  reset: function() {
+    this.playingProperty.reset();
+    this.speedProperty.reset();
+    this.lastSimulationTime = 0.0;
+    this.simulationTime = 0.0;
+    this.speedProperty.set( 1 );
+
+    //fire reset event callback
+    for ( let i = 0; i < this.resetCallBacks.length; i++ ) {
+      this.resetCallBacks[ i ]();
+    }
+    this.model.reset();
+  },
+
+  /**
+   * Registers a callback that will be notified when the step simulation occurs
+   * Neuron Clock uses specialized real time step simulation
+   * @param  {function} - callback that has a {dt} parameter
+   * @public
+   */
+  registerStepCallback: function( callback ) {
+    this.stepCallbacks.push( callback );
+  },
+
+  /**
+   * Registers a callback that will be notified when the clock is reset
+   * @public
+   */
+  registerResetCallback: function( callback ) {
+    this.resetCallBacks.push( callback );
+  },
+
+  /**
+   * Perform one 'tick' of the clock, which fires all callbacks with the provided simulation time
+   * @private
+   */
+  tick: function( simulationTimeChange ) {
+    // fire step event callback
+    for ( let i = 0; i < this.stepCallbacks.length; i++ ) {
+      this.stepCallbacks[ i ]( simulationTimeChange );
+    }
+  },
+
+  /**
+   * advance the clock by a fixed amount used when stepping manually
+   * @public
+   */
+  stepClockWhilePaused: function() {
+    const self = this;
+    _.times( TICKS_PER_SINGLE_STEP, function() { self.tick( NOMINAL_TICK_TIME ); } );
+  },
+
+  /**
+   * Move the clock backwards by the tickOnceTimeChange.
+   * @public
+   */
+  stepClockBackWhilePaused: function() {
+    const self = this;
+    _.times( TICKS_PER_SINGLE_STEP, function() { self.tick( -NOMINAL_TICK_TIME ); } );
+  }
+
 } );

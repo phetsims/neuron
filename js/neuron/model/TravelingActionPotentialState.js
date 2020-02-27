@@ -7,36 +7,32 @@
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
  */
-define( require => {
-  'use strict';
 
-  // modules
-  const inherit = require( 'PHET_CORE/inherit' );
-  const neuron = require( 'NEURON/neuron' );
+import inherit from '../../../../phet-core/js/inherit.js';
+import neuron from '../../neuron.js';
 
-  /**
-   * @param {number} travelTimeCountdownTimer
-   * @param {number} lingerCountdownTimer
-   * @constructor
-   */
-  function TravelingActionPotentialState( travelTimeCountdownTimer, lingerCountdownTimer ) {
-    this.travelTimeCountdownTimer = travelTimeCountdownTimer; // @private
-    this.lingerCountdownTimer = lingerCountdownTimer; // @private
+/**
+ * @param {number} travelTimeCountdownTimer
+ * @param {number} lingerCountdownTimer
+ * @constructor
+ */
+function TravelingActionPotentialState( travelTimeCountdownTimer, lingerCountdownTimer ) {
+  this.travelTimeCountdownTimer = travelTimeCountdownTimer; // @private
+  this.lingerCountdownTimer = lingerCountdownTimer; // @private
+}
+
+neuron.register( 'TravelingActionPotentialState', TravelingActionPotentialState );
+
+export default inherit( Object, TravelingActionPotentialState, {
+
+  // @public
+  getLingerCountdownTimer: function() {
+    return this.lingerCountdownTimer;
+  },
+
+  // @public
+  getTravelTimeCountdownTimer: function() {
+    return this.travelTimeCountdownTimer;
   }
 
-  neuron.register( 'TravelingActionPotentialState', TravelingActionPotentialState );
-
-  return inherit( Object, TravelingActionPotentialState, {
-
-    // @public
-    getLingerCountdownTimer: function() {
-      return this.lingerCountdownTimer;
-    },
-
-    // @public
-    getTravelTimeCountdownTimer: function() {
-      return this.travelTimeCountdownTimer;
-    }
-
-  } );
 } );

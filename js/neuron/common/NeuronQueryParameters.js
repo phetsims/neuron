@@ -5,19 +5,15 @@
  *
  * @author John Blanco
  */
-define( require => {
-  'use strict';
 
-  // modules
-  const neuron = require( 'NEURON/neuron' );
+import neuron from '../../neuron.js';
 
-  const NeuronQueryParameters = QueryStringMachine.getAll( {
+const NeuronQueryParameters = QueryStringMachine.getAll( {
 
-    // turn on the Neuron-specific profiler
-    neuronProfiler: { type: 'number', defaultValue: -1 }
-  } );
-
-  neuron.register( 'NeuronQueryParameters', NeuronQueryParameters );
-
-  return NeuronQueryParameters;
+  // turn on the Neuron-specific profiler
+  neuronProfiler: { type: 'number', defaultValue: -1 }
 } );
+
+neuron.register( 'NeuronQueryParameters', NeuronQueryParameters );
+
+export default NeuronQueryParameters;

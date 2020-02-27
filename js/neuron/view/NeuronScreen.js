@@ -6,32 +6,29 @@
  *
  * @author John Blanco (PhET Interactive Simulations)
  */
-define( require => {
-  'use strict';
 
-  // modules
-  const inherit = require( 'PHET_CORE/inherit' );
-  const neuron = require( 'NEURON/neuron' );
-  const NeuronClockModelAdapter = require( 'NEURON/neuron/model/NeuronClockModelAdapter' );
-  const NeuronModel = require( 'NEURON/neuron/model/NeuronModel' );
-  const NeuronScreenView = require( 'NEURON/neuron/view/NeuronScreenView' );
-  const Property = require( 'AXON/Property' );
-  const Screen = require( 'JOIST/Screen' );
+import Property from '../../../../axon/js/Property.js';
+import Screen from '../../../../joist/js/Screen.js';
+import inherit from '../../../../phet-core/js/inherit.js';
+import neuron from '../../neuron.js';
+import NeuronClockModelAdapter from '../model/NeuronClockModelAdapter.js';
+import NeuronModel from '../model/NeuronModel.js';
+import NeuronScreenView from './NeuronScreenView.js';
 
-  /**
-   * Creates the model and view for the NeuronScreen
-   * @constructor
-   */
-  function NeuronScreen() {
+/**
+ * Creates the model and view for the NeuronScreen
+ * @constructor
+ */
+function NeuronScreen() {
 
-    Screen.call( this,
-      function() { return new NeuronClockModelAdapter( new NeuronModel() ); }, // clock model adapter provides constant ticks to model
-      function( model ) { return new NeuronScreenView( model ); },
-      { backgroundColorProperty: new Property( '#ccfefa' ) }
-    );
-  }
+  Screen.call( this,
+    function() { return new NeuronClockModelAdapter( new NeuronModel() ); }, // clock model adapter provides constant ticks to model
+    function( model ) { return new NeuronScreenView( model ); },
+    { backgroundColorProperty: new Property( '#ccfefa' ) }
+  );
+}
 
-  neuron.register( 'NeuronScreen', NeuronScreen );
+neuron.register( 'NeuronScreen', NeuronScreen );
 
-  return inherit( Screen, NeuronScreen );
-} );
+inherit( Screen, NeuronScreen );
+export default NeuronScreen;

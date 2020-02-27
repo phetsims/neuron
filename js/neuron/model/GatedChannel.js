@@ -6,34 +6,29 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-define( require => {
-  'use strict';
+import inherit from '../../../../phet-core/js/inherit.js';
+import neuron from '../../neuron.js';
+import MembraneChannel from './MembraneChannel.js';
 
-  // modules
-  const inherit = require( 'PHET_CORE/inherit' );
-  const MembraneChannel = require( 'NEURON/neuron/model/MembraneChannel' );
-  const neuron = require( 'NEURON/neuron' );
+/**
+ * @param {number} channelWidth
+ * @param {number} channelHeight
+ * @param {NeuronModel} modelContainingParticles
+ * @constructor
+ */
+function GatedChannel( channelWidth, channelHeight, modelContainingParticles ) {
+  MembraneChannel.call( this, channelWidth, channelHeight, modelContainingParticles );
+  this.setOpenness( 0 );  // Gated channels are assumed to be initially closed.
+}
 
-  /**
-   * @param {number} channelWidth
-   * @param {number} channelHeight
-   * @param {NeuronModel} modelContainingParticles
-   * @constructor
-   */
-  function GatedChannel( channelWidth, channelHeight, modelContainingParticles ) {
-    MembraneChannel.call( this, channelWidth, channelHeight, modelContainingParticles );
-    this.setOpenness( 0 );  // Gated channels are assumed to be initially closed.
+neuron.register( 'GatedChannel', GatedChannel );
+
+export default inherit( MembraneChannel, GatedChannel, {
+
+  // @public
+  reset: function() {
+    this.setOpenness( 0 );         // Gated channels are assumed to be initially closed...
+    this.setInactivationAmount( 0 );  // ...but not inactivated.
   }
 
-  neuron.register( 'GatedChannel', GatedChannel );
-
-  return inherit( MembraneChannel, GatedChannel, {
-
-    // @public
-    reset: function() {
-      this.setOpenness( 0 );         // Gated channels are assumed to be initially closed...
-      this.setInactivationAmount( 0 );  // ...but not inactivated.
-    }
-
-  } );
 } );

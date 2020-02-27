@@ -7,58 +7,53 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-define( require => {
-  'use strict';
+import inherit from '../../../../phet-core/js/inherit.js';
+import neuron from '../../neuron.js';
 
-  // modules
-  const inherit = require( 'PHET_CORE/inherit' );
-  const neuron = require( 'NEURON/neuron' );
+/**
+ *
+ * @constructor
+ */
+function ViewableParticle() {}
+
+neuron.register( 'ViewableParticle', ViewableParticle );
+
+export default inherit( Object, ViewableParticle, {
+
+  // @public, subclasses must implement
+  getType: function() {
+    throw new Error( 'getType should be implemented in descendant classes.' );
+  },
+
+  // @public, subclasses must implement
+  getPositionX: function() {
+    throw new Error( 'getPositionX should be implemented in descendant classes.' );
+  },
+
+  // @public, subclasses must implement
+  getPositionY: function() {
+    throw new Error( 'getPositionY should be implemented in descendant classes.' );
+  },
 
   /**
-   *
-   * @constructor
+   * Get the radius of this particle in nano meters.  This is approximate in the case of non-round particles.
+   * @public
    */
-  function ViewableParticle() {}
+  getRadius: function() {
+    throw new Error( 'getRadius should be implemented in descendant classes.' );
+  },
 
-  neuron.register( 'ViewableParticle', ViewableParticle );
+  /**
+   * Get the base color to be used when representing this particle.
+   * @public
+   */
+  getRepresentationColor: function() {
+    throw new Error( 'getRepresentationColor should be implemented in descendant classes.' );
+  },
 
-  return inherit( Object, ViewableParticle, {
+  // @public, subclasses must implement
+  getOpacity: function() {
+    throw new Error( 'getOpacity should be implemented in descendant classes.' );
+  }
 
-    // @public, subclasses must implement
-    getType: function() {
-      throw new Error( 'getType should be implemented in descendant classes.' );
-    },
-
-    // @public, subclasses must implement
-    getPositionX: function() {
-      throw new Error( 'getPositionX should be implemented in descendant classes.' );
-    },
-
-    // @public, subclasses must implement
-    getPositionY: function() {
-      throw new Error( 'getPositionY should be implemented in descendant classes.' );
-    },
-
-    /**
-     * Get the radius of this particle in nano meters.  This is approximate in the case of non-round particles.
-     * @public
-     */
-    getRadius: function() {
-      throw new Error( 'getRadius should be implemented in descendant classes.' );
-    },
-
-    /**
-     * Get the base color to be used when representing this particle.
-     * @public
-     */
-    getRepresentationColor: function() {
-      throw new Error( 'getRepresentationColor should be implemented in descendant classes.' );
-    },
-
-    // @public, subclasses must implement
-    getOpacity: function() {
-      throw new Error( 'getOpacity should be implemented in descendant classes.' );
-    }
-
-  } );
 } );

@@ -4,42 +4,37 @@
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
  */
-define( require => {
-  'use strict';
 
-  // modules
-  const FadeStrategy = require( 'NEURON/neuron/model/FadeStrategy' );
-  const inherit = require( 'PHET_CORE/inherit' );
-  const neuron = require( 'NEURON/neuron' );
+import inherit from '../../../../phet-core/js/inherit.js';
+import neuron from '../../neuron.js';
+import FadeStrategy from './FadeStrategy.js';
 
-  /**
-   * @constructor
-   */
-  function NullFadeStrategy() {}
+/**
+ * @constructor
+ */
+function NullFadeStrategy() {}
 
-  neuron.register( 'NullFadeStrategy', NullFadeStrategy );
+neuron.register( 'NullFadeStrategy', NullFadeStrategy );
 
-  return inherit( FadeStrategy, NullFadeStrategy, {
+export default inherit( FadeStrategy, NullFadeStrategy, {
 
-      // @public, @override
-      updateOpacity: function( fadableModelElement, dt ) {
-        // Does nothing.
-      }
-
-    },
-
-    //static
-    {
-      // @public
-      getInstance: function() {
-        if ( !NullFadeStrategy.instance ) {
-          // No need to create new instance of NullFadeStrategy , it is stateless
-          // Using a single strategy instance to avoid allocation
-          NullFadeStrategy.instance = new NullFadeStrategy();
-        }
-        return NullFadeStrategy.instance;
-      }
+    // @public, @override
+    updateOpacity: function( fadableModelElement, dt ) {
+      // Does nothing.
     }
-  );
-} );
 
+  },
+
+  //static
+  {
+    // @public
+    getInstance: function() {
+      if ( !NullFadeStrategy.instance ) {
+        // No need to create new instance of NullFadeStrategy , it is stateless
+        // Using a single strategy instance to avoid allocation
+        NullFadeStrategy.instance = new NullFadeStrategy();
+      }
+      return NullFadeStrategy.instance;
+    }
+  }
+);

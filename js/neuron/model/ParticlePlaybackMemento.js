@@ -10,60 +10,55 @@
  * @author John Blanco
  * @author Sharfudeen Ashraf
  */
-define( require => {
-  'use strict';
 
-  // modules
-  const inherit = require( 'PHET_CORE/inherit' );
-  const neuron = require( 'NEURON/neuron' );
+import inherit from '../../../../phet-core/js/inherit.js';
+import neuron from '../../neuron.js';
 
-  /**
-   * @param {Particle} particle
-   * @constructor
-   */
-  function ParticlePlaybackMemento( particle ) {
-    this.positionX = particle.getPositionX();
-    this.positionY = particle.getPositionY();
-    this.opacity = particle.getOpacity();
-    this.particleType = particle.getType();
-    this.radius = particle.getRadius();
-    this.representationColor = particle.getRepresentationColor();
+/**
+ * @param {Particle} particle
+ * @constructor
+ */
+function ParticlePlaybackMemento( particle ) {
+  this.positionX = particle.getPositionX();
+  this.positionY = particle.getPositionY();
+  this.opacity = particle.getOpacity();
+  this.particleType = particle.getType();
+  this.radius = particle.getRadius();
+  this.representationColor = particle.getRepresentationColor();
+}
+
+neuron.register( 'ParticlePlaybackMemento', ParticlePlaybackMemento );
+
+export default inherit( Object, ParticlePlaybackMemento, {
+
+  // @public
+  getPositionX: function() {
+    return this.positionX;
+  },
+
+  // @public
+  getPositionY: function() {
+    return this.positionY;
+  },
+
+  // @public
+  getOpacity: function() {
+    return this.opacity;
+  },
+
+  // @public
+  getParticleType: function() {
+    return this.particleType;
+  },
+
+  // @public
+  getRadius: function() {
+    return this.radius;
+  },
+
+  // @public
+  getRepresentationColor: function() {
+    return this.representationColor;
   }
 
-  neuron.register( 'ParticlePlaybackMemento', ParticlePlaybackMemento );
-
-  return inherit( Object, ParticlePlaybackMemento, {
-
-    // @public
-    getPositionX: function() {
-      return this.positionX;
-    },
-
-    // @public
-    getPositionY: function() {
-      return this.positionY;
-    },
-
-    // @public
-    getOpacity: function() {
-      return this.opacity;
-    },
-
-    // @public
-    getParticleType: function() {
-      return this.particleType;
-    },
-
-    // @public
-    getRadius: function() {
-      return this.radius;
-    },
-
-    // @public
-    getRepresentationColor: function() {
-      return this.representationColor;
-    }
-
-  } );
 } );
-

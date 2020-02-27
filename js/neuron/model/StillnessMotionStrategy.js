@@ -5,40 +5,35 @@
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
  */
-define( require => {
-  'use strict';
 
-  // modules
-  const inherit = require( 'PHET_CORE/inherit' );
-  const MotionStrategy = require( 'NEURON/neuron/model/MotionStrategy' );
-  const neuron = require( 'NEURON/neuron' );
+import inherit from '../../../../phet-core/js/inherit.js';
+import neuron from '../../neuron.js';
+import MotionStrategy from './MotionStrategy.js';
 
-  /**
-   * @constructor
-   */
-  function StillnessMotionStrategy() {}
+/**
+ * @constructor
+ */
+function StillnessMotionStrategy() {}
 
-  neuron.register( 'StillnessMotionStrategy', StillnessMotionStrategy );
+neuron.register( 'StillnessMotionStrategy', StillnessMotionStrategy );
 
-  return inherit( MotionStrategy, StillnessMotionStrategy, {
+export default inherit( MotionStrategy, StillnessMotionStrategy, {
 
-      // @public, @override
-      move: function( movableModelElement, fadableModelElement, dt ) {
-        // Does nothing, since the object is not moving.
+    // @public, @override
+    move: function( movableModelElement, fadableModelElement, dt ) {
+      // Does nothing, since the object is not moving.
+    }
+  },
+
+  //static.
+  {
+    // @public
+    getInstance: function() {
+      if ( !StillnessMotionStrategy.instance ) {
+        // No need to create new instance of StillnessMotionStrategy , it is stateless
+        // Using a single strategy instance to avoid allocation
+        StillnessMotionStrategy.instance = new StillnessMotionStrategy();
       }
-    },
-
-    //static.
-    {
-      // @public
-      getInstance: function() {
-        if ( !StillnessMotionStrategy.instance ) {
-          // No need to create new instance of StillnessMotionStrategy , it is stateless
-          // Using a single strategy instance to avoid allocation
-          StillnessMotionStrategy.instance = new StillnessMotionStrategy();
-        }
-        return StillnessMotionStrategy.instance;
-      }
-    } );
-} );
-
+      return StillnessMotionStrategy.instance;
+    }
+  } );

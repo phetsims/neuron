@@ -7,38 +7,33 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-define( require => {
-  'use strict';
+import inherit from '../../../../phet-core/js/inherit.js';
+import neuron from '../../neuron.js';
+import MembraneChannel from './MembraneChannel.js';
 
-  // modules
-  const inherit = require( 'PHET_CORE/inherit' );
-  const MembraneChannel = require( 'NEURON/neuron/model/MembraneChannel' );
-  const neuron = require( 'NEURON/neuron' );
+/**
+ * @param {number} channelWidth
+ * @param {number} channelHeight
+ * @param {NeuronModel} modelContainingParticles
+ * @constructor
+ */
+function AbstractLeakChannel( channelWidth, channelHeight, modelContainingParticles ) {
+  MembraneChannel.call( this, channelWidth, channelHeight, modelContainingParticles );
+  this.reset();
+}
 
-  /**
-   * @param {number} channelWidth
-   * @param {number} channelHeight
-   * @param {NeuronModel} modelContainingParticles
-   * @constructor
-   */
-  function AbstractLeakChannel( channelWidth, channelHeight, modelContainingParticles ) {
-    MembraneChannel.call( this, channelWidth, channelHeight, modelContainingParticles );
-    this.reset();
+neuron.register( 'AbstractLeakChannel', AbstractLeakChannel );
+
+export default inherit( MembraneChannel, AbstractLeakChannel, {
+
+  // @public
+  stepInTime: function( dt ) {
+    MembraneChannel.prototype.stepInTime.call( this, dt );
+  },
+
+  // @public
+  reset: function() {
+    this.setOpenness( 1 );  // Leak channels are always fully open.
   }
 
-  neuron.register( 'AbstractLeakChannel', AbstractLeakChannel );
-
-  return inherit( MembraneChannel, AbstractLeakChannel, {
-
-    // @public
-    stepInTime: function( dt ) {
-      MembraneChannel.prototype.stepInTime.call( this, dt );
-    },
-
-    // @public
-    reset: function() {
-      this.setOpenness( 1 );  // Leak channels are always fully open.
-    }
-
-  } );
 } );

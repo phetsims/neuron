@@ -6,52 +6,50 @@
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
  */
-define( require => {
-  'use strict';
 
-  // modules
-  const inherit = require( 'PHET_CORE/inherit' );
-  const merge = require( 'PHET_CORE/merge' );
-  const neuron = require( 'NEURON/neuron' );
-  const NeuronConstants = require( 'NEURON/neuron/common/NeuronConstants' );
-  const Panel = require( 'SUN/Panel' );
-  const Text = require( 'SCENERY/nodes/Text' );
-  const VerticalAquaRadioButtonGroup = require( 'SUN/VerticalAquaRadioButtonGroup' );
+import inherit from '../../../../../phet-core/js/inherit.js';
+import merge from '../../../../../phet-core/js/merge.js';
+import Text from '../../../../../scenery/js/nodes/Text.js';
+import Panel from '../../../../../sun/js/Panel.js';
+import VerticalAquaRadioButtonGroup from '../../../../../sun/js/VerticalAquaRadioButtonGroup.js';
+import neuronStrings from '../../../neuron-strings.js';
+import neuron from '../../../neuron.js';
+import NeuronConstants from '../../common/NeuronConstants.js';
 
-  // strings - labels for speed radio buttons
-  const fastForwardString = require( 'string!NEURON/fastForward' );
-  const normalString = require( 'string!NEURON/normal' );
-  const slowMotionString = require( 'string!NEURON/slowMotion' );
+// strings - labels for speed radio buttons
+const fastForwardString = neuronStrings.fastForward;
+const normalString = neuronStrings.normal;
+const slowMotionString = neuronStrings.slowMotion;
 
-  /**
-   * @param {Property.<number>} speedProperty
-   * @param {Object} [options]
-   * @constructor
-   */
-  function SimSpeedControlPanel( speedProperty, options ) {
+/**
+ * @param {Property.<number>} speedProperty
+ * @param {Object} [options]
+ * @constructor
+ */
+function SimSpeedControlPanel( speedProperty, options ) {
 
-    options = merge( {
-      fill: NeuronConstants.CONTROL_PANEL_BACKGROUND,
-      stroke: NeuronConstants.CONTROL_PANEL_STROKE,
-      xMargin: 8,
-      yMargin: 6
-    }, options );
+  options = merge( {
+    fill: NeuronConstants.CONTROL_PANEL_BACKGROUND,
+    stroke: NeuronConstants.CONTROL_PANEL_STROKE,
+    xMargin: 8,
+    yMargin: 6
+  }, options );
 
-    const radioButtonFont = NeuronConstants.CONTROL_PANEL_CONTROL_FONT;
-    const speedRadioButtonGroup = new VerticalAquaRadioButtonGroup( speedProperty, [
-      { node: new Text( fastForwardString, { font: radioButtonFont } ), value: 2 },
-      { node: new Text( normalString, { font: radioButtonFont } ), value: 1 },
-      { node: new Text( slowMotionString, { font: radioButtonFont } ), value: 0.5 }
-    ], {
-      radioButtonOptions: { radius: 8 },
-      spacing: 8,
-      touchAreaXDilation: 5
-    } );
+  const radioButtonFont = NeuronConstants.CONTROL_PANEL_CONTROL_FONT;
+  const speedRadioButtonGroup = new VerticalAquaRadioButtonGroup( speedProperty, [
+    { node: new Text( fastForwardString, { font: radioButtonFont } ), value: 2 },
+    { node: new Text( normalString, { font: radioButtonFont } ), value: 1 },
+    { node: new Text( slowMotionString, { font: radioButtonFont } ), value: 0.5 }
+  ], {
+    radioButtonOptions: { radius: 8 },
+    spacing: 8,
+    touchAreaXDilation: 5
+  } );
 
-    Panel.call( this, speedRadioButtonGroup, options );
-  }
+  Panel.call( this, speedRadioButtonGroup, options );
+}
 
-  neuron.register( 'SimSpeedControlPanel', SimSpeedControlPanel );
+neuron.register( 'SimSpeedControlPanel', SimSpeedControlPanel );
 
-  return inherit( Panel, SimSpeedControlPanel );
-} );
+inherit( Panel, SimSpeedControlPanel );
+export default SimSpeedControlPanel;

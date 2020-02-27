@@ -6,125 +6,120 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-define( require => {
-  'use strict';
+import Vector2 from '../../../../dot/js/Vector2.js';
+import inherit from '../../../../phet-core/js/inherit.js';
+import Node from '../../../../scenery/js/nodes/Node.js';
+import neuron from '../../neuron.js';
+import ChargeSymbolNode from './ChargeSymbolNode.js';
 
-  // modules
-  const ChargeSymbolNode = require( 'NEURON/neuron/view/ChargeSymbolNode' );
-  const inherit = require( 'PHET_CORE/inherit' );
-  const neuron = require( 'NEURON/neuron' );
-  const Node = require( 'SCENERY/nodes/Node' );
-  const Vector2 = require( 'DOT/Vector2' );
+// Max size of the charge symbols, tweak as needed.
+const MAX_CHARGE_SYMBOL_SIZE = 10;
 
-  // Max size of the charge symbols, tweak as needed.
-  const MAX_CHARGE_SYMBOL_SIZE = 10;
+/**
+ * @param {NeuronModel} neuronModel
+ * @param {ModelViewTransform2} mvt
+ * @constructor
+ */
+function ChargeSymbolsLayerNode( neuronModel, mvt ) {
+
+  Node.call( this );
+  const self = this;
+
+  neuronModel.chargesShownProperty.link( function( chargesShown ) {
+    self.visible = chargesShown;
+  } );
 
   /**
-   * @param {NeuronModel} neuronModel
-   * @param {ModelViewTransform2} mvt
-   * @constructor
+   * Add the change symbols to the canvas.  These are added by going through the list of channels and placing two
+   * symbols - one intended to be out of the membrane one one inside of it - between each pair of gates.
    */
-  function ChargeSymbolsLayerNode( neuronModel, mvt ) {
+  function addChargeSymbols() {
+    // Create a sorted list of the membrane channels in the model.
+    const sortedMembraneChannels = neuronModel.membraneChannels.getArray().slice();
+    sortMembraneChannelList( sortedMembraneChannels );
 
-    Node.call( this );
-    const self = this;
-
-    neuronModel.chargesShownProperty.link( function( chargesShown ) {
-      self.visible = chargesShown;
-    } );
-
-    /**
-     * Add the change symbols to the canvas.  These are added by going through the list of channels and placing two
-     * symbols - one intended to be out of the membrane one one inside of it - between each pair of gates.
-     */
-    function addChargeSymbols() {
-      // Create a sorted list of the membrane channels in the model.
-      const sortedMembraneChannels = neuronModel.membraneChannels.getArray().slice();
-      sortMembraneChannelList( sortedMembraneChannels );
-
-      // Go through the list and put charge symbols between each pair of channels.
-      for ( let i = 0; i < sortedMembraneChannels.length; i++ ) {
-        addChargeSymbolPair( sortedMembraneChannels[ i ], sortedMembraneChannels[ (i + 1) % sortedMembraneChannels.length ] );
-      }
+    // Go through the list and put charge symbols between each pair of channels.
+    for ( let i = 0; i < sortedMembraneChannels.length; i++ ) {
+      addChargeSymbolPair( sortedMembraneChannels[ i ], sortedMembraneChannels[ ( i + 1 ) % sortedMembraneChannels.length ] );
     }
+  }
 
-    const outerChargeSymbol = new ChargeSymbolNode( neuronModel, MAX_CHARGE_SYMBOL_SIZE, 0.1, true );
-    const innerChargeSymbol = new ChargeSymbolNode( neuronModel, MAX_CHARGE_SYMBOL_SIZE, 0.1, false );
+  const outerChargeSymbol = new ChargeSymbolNode( neuronModel, MAX_CHARGE_SYMBOL_SIZE, 0.1, true );
+  const innerChargeSymbol = new ChargeSymbolNode( neuronModel, MAX_CHARGE_SYMBOL_SIZE, 0.1, false );
 
-    // function to add a pair of complementary charge symbols, one inside the membrane and one outside
-    function addChargeSymbolPair( channel1, channel2 ) {
+  // function to add a pair of complementary charge symbols, one inside the membrane and one outside
+  function addChargeSymbolPair( channel1, channel2 ) {
 
-      const innerSymbolLocation = new Vector2( 0, 0 );
-      const outerSymbolLocation = new Vector2( 0, 0 );
-      const outerSymbolParentNode = new Node();
-      outerSymbolParentNode.addChild( outerChargeSymbol );
-      const innerSymbolParentNode = new Node();
-      innerSymbolParentNode.addChild( innerChargeSymbol );
+    const innerSymbolLocation = new Vector2( 0, 0 );
+    const outerSymbolLocation = new Vector2( 0, 0 );
+    const outerSymbolParentNode = new Node();
+    outerSymbolParentNode.addChild( outerChargeSymbol );
+    const innerSymbolParentNode = new Node();
+    innerSymbolParentNode.addChild( innerChargeSymbol );
 
-      calcChargeSymbolLocations( channel1.getCenterLocation(), channel2.getCenterLocation(), Vector2.ZERO, outerSymbolLocation, innerSymbolLocation );
-      outerSymbolParentNode.setTranslation( mvt.modelToViewPosition( outerSymbolLocation ) );
-      self.addChild( outerSymbolParentNode );
-      innerSymbolParentNode.setTranslation( mvt.modelToViewPosition( innerSymbolLocation ) );
-      self.addChild( innerSymbolParentNode );
-    }
+    calcChargeSymbolLocations( channel1.getCenterLocation(), channel2.getCenterLocation(), Vector2.ZERO, outerSymbolLocation, innerSymbolLocation );
+    outerSymbolParentNode.setTranslation( mvt.modelToViewPosition( outerSymbolLocation ) );
+    self.addChild( outerSymbolParentNode );
+    innerSymbolParentNode.setTranslation( mvt.modelToViewPosition( innerSymbolLocation ) );
+    self.addChild( innerSymbolParentNode );
+  }
 
-    /**
-     * Calculate the locations of the charge symbols and set the two provided points accordingly.
-     * @param {Vector2} p1
-     * @param {Vector2} p2
-     * @param {Vector2} neuronCenter
-     * @param {Vector2} outerPoint // out parameter
-     * @param {Vector2} innerPoint // out parameter
-     */
-    function calcChargeSymbolLocations( p1, p2, neuronCenter, outerPoint, innerPoint ) {
+  /**
+   * Calculate the locations of the charge symbols and set the two provided points accordingly.
+   * @param {Vector2} p1
+   * @param {Vector2} p2
+   * @param {Vector2} neuronCenter
+   * @param {Vector2} outerPoint // out parameter
+   * @param {Vector2} innerPoint // out parameter
+   */
+  function calcChargeSymbolLocations( p1, p2, neuronCenter, outerPoint, innerPoint ) {
 
-      // Find the center point between the given points.
-      const center = new Vector2( (p1.x + p2.x) / 2, (p1.y + p2.y) / 2 );
+    // Find the center point between the given points.
+    const center = new Vector2( ( p1.x + p2.x ) / 2, ( p1.y + p2.y ) / 2 );
 
-      // Convert to polar coordinates.
-      const radius = Math.sqrt( Math.pow( center.x - neuronCenter.x, 2 ) + Math.pow( center.y - neuronCenter.y, 2 ) );
-      const angle = Math.atan2( center.y - neuronCenter.y, center.x - neuronCenter.x );
+    // Convert to polar coordinates.
+    const radius = Math.sqrt( Math.pow( center.x - neuronCenter.x, 2 ) + Math.pow( center.y - neuronCenter.y, 2 ) );
+    const angle = Math.atan2( center.y - neuronCenter.y, center.x - neuronCenter.x );
 
-      // Add some distance to the radius to make the charge outside the cell.
-      const outsideRadius = radius + 5; // Tweak as needed to position outer charge symbol. (was 4)
+    // Add some distance to the radius to make the charge outside the cell.
+    const outsideRadius = radius + 5; // Tweak as needed to position outer charge symbol. (was 4)
 
-      // Subtract some distance from the radius to make the charge inside the cell.
-      const insideRadius = radius - 4; // Tweak as needed to position outer charge symbol.(was 3 in java)
+    // Subtract some distance from the radius to make the charge inside the cell.
+    const insideRadius = radius - 4; // Tweak as needed to position outer charge symbol.(was 3 in java)
 
-      // Convert to cartesian coordinates
-      outerPoint.setXY( outsideRadius * Math.cos( angle ), outsideRadius * Math.sin( angle ) );
-      innerPoint.setXY( insideRadius * Math.cos( angle ), insideRadius * Math.sin( angle ) );
-    }
+    // Convert to cartesian coordinates
+    outerPoint.setXY( outsideRadius * Math.cos( angle ), outsideRadius * Math.sin( angle ) );
+    innerPoint.setXY( insideRadius * Math.cos( angle ), insideRadius * Math.sin( angle ) );
+  }
 
-    /**
-     * Sort the provided list of membrane channels such that they proceed in clockwise order around the membrane.
-     * @param {Array.<MembraneChannel>} membraneChannels
-     */
-    function sortMembraneChannelList( membraneChannels ) {
-      let orderChanged = true;
-      while ( orderChanged ) {
-        orderChanged = false;
-        for ( let i = 0; i < membraneChannels.length - 1; i++ ) {
-          const p1 = membraneChannels[ i ].getCenterLocation();
-          const p2 = membraneChannels[ i + 1 ].getCenterLocation();
-          const a1 = Math.atan2( p1.y, p1.x );
-          const a2 = Math.atan2( p2.y, p2.x );
-          if ( a1 > a2 ) {
-            // These two need to be swapped.
-            const tempChannel = membraneChannels[ i ];
-            membraneChannels[ i ] = membraneChannels[ i + 1 ];
-            membraneChannels[ i + 1 ] = tempChannel;
-            orderChanged = true;
-          }
+  /**
+   * Sort the provided list of membrane channels such that they proceed in clockwise order around the membrane.
+   * @param {Array.<MembraneChannel>} membraneChannels
+   */
+  function sortMembraneChannelList( membraneChannels ) {
+    let orderChanged = true;
+    while ( orderChanged ) {
+      orderChanged = false;
+      for ( let i = 0; i < membraneChannels.length - 1; i++ ) {
+        const p1 = membraneChannels[ i ].getCenterLocation();
+        const p2 = membraneChannels[ i + 1 ].getCenterLocation();
+        const a1 = Math.atan2( p1.y, p1.x );
+        const a2 = Math.atan2( p2.y, p2.x );
+        if ( a1 > a2 ) {
+          // These two need to be swapped.
+          const tempChannel = membraneChannels[ i ];
+          membraneChannels[ i ] = membraneChannels[ i + 1 ];
+          membraneChannels[ i + 1 ] = tempChannel;
+          orderChanged = true;
         }
       }
     }
-
-    addChargeSymbols();
   }
 
-  neuron.register( 'ChargeSymbolsLayerNode', ChargeSymbolsLayerNode );
+  addChargeSymbols();
+}
 
-  return inherit( Node, ChargeSymbolsLayerNode );
+neuron.register( 'ChargeSymbolsLayerNode', ChargeSymbolsLayerNode );
 
-} );
+inherit( Node, ChargeSymbolsLayerNode );
+export default ChargeSymbolsLayerNode;

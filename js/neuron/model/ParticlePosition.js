@@ -1,19 +1,16 @@
 // Copyright 2014-2019, University of Colorado Boulder
-define( require => {
-  'use strict';
 
-  // modules
-  const neuron = require( 'NEURON/neuron' );
 
-  const ParticlePosition = {
-    'INSIDE_MEMBRANE': 'INSIDE_MEMBRANE',
-    'OUTSIDE_MEMBRANE': 'OUTSIDE_MEMBRANE'
-  };
+import neuron from '../../neuron.js';
 
-  // verify that enum is immutable, without the runtime penalty in production code
-  if ( assert ) { Object.freeze( ParticlePosition ); }
+const ParticlePosition = {
+  'INSIDE_MEMBRANE': 'INSIDE_MEMBRANE',
+  'OUTSIDE_MEMBRANE': 'OUTSIDE_MEMBRANE'
+};
 
-  neuron.register( 'ParticlePosition', ParticlePosition );
+// verify that enum is immutable, without the runtime penalty in production code
+if ( assert ) { Object.freeze( ParticlePosition ); }
 
-  return ParticlePosition;
-} );
+neuron.register( 'ParticlePosition', ParticlePosition );
+
+export default ParticlePosition;

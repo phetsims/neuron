@@ -9,32 +9,28 @@
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
  */
-define( require => {
-  'use strict';
 
-  // modules
-  const inherit = require( 'PHET_CORE/inherit' );
-  const neuron = require( 'NEURON/neuron' );
+import inherit from '../../../../phet-core/js/inherit.js';
+import neuron from '../../neuron.js';
+
+/**
+ * @param {TravelingActionPotentialState} travelingActionPotentialState
+ * @constructor
+ */
+function AxonMembraneState( travelingActionPotentialState ) {
+  this.travelingActionPotentialState = travelingActionPotentialState;  // @private
+}
+
+neuron.register( 'AxonMembraneState', AxonMembraneState );
+
+export default inherit( Object, AxonMembraneState, {
 
   /**
-   * @param {TravelingActionPotentialState} travelingActionPotentialState
-   * @constructor
+   * Return the state of the traveling action potential.  If null, no traveling action potential exists.
+   * @return
+   * @public
    */
-  function AxonMembraneState( travelingActionPotentialState ) {
-    this.travelingActionPotentialState = travelingActionPotentialState;  // @private
+  getTravelingActionPotentialState: function() {
+    return this.travelingActionPotentialState;
   }
-
-  neuron.register( 'AxonMembraneState', AxonMembraneState );
-
-  return inherit( Object, AxonMembraneState, {
-
-    /**
-     * Return the state of the traveling action potential.  If null, no traveling action potential exists.
-     * @return
-     * @public
-     */
-    getTravelingActionPotentialState: function() {
-      return this.travelingActionPotentialState;
-    }
-  } );
 } );

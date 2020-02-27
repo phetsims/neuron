@@ -7,44 +7,40 @@
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
  */
-define( require => {
-  'use strict';
 
-  // modules
-  const inherit = require( 'PHET_CORE/inherit' );
-  const MotionStrategy = require( 'NEURON/neuron/model/MotionStrategy' );
-  const neuron = require( 'NEURON/neuron' );
+import inherit from '../../../../phet-core/js/inherit.js';
+import neuron from '../../neuron.js';
+import MotionStrategy from './MotionStrategy.js';
 
-  /**
-   * @param {Vector2} initialVelocity
-   * @param {number} speedScaleFactor
-   * @param {number} timeAtFirstSpeed
-   * @constructor
-   */
-  function SpeedChangeLinearMotionStrategy( initialVelocity, speedScaleFactor, timeAtFirstSpeed ) {
-    this.velocityVectorX = initialVelocity.x;
-    this.velocityVectorY = initialVelocity.y;
-    this.speedScaleFactor = speedScaleFactor;
-    this.firstSpeedCountdownTimer = timeAtFirstSpeed;
-  }
+/**
+ * @param {Vector2} initialVelocity
+ * @param {number} speedScaleFactor
+ * @param {number} timeAtFirstSpeed
+ * @constructor
+ */
+function SpeedChangeLinearMotionStrategy( initialVelocity, speedScaleFactor, timeAtFirstSpeed ) {
+  this.velocityVectorX = initialVelocity.x;
+  this.velocityVectorY = initialVelocity.y;
+  this.speedScaleFactor = speedScaleFactor;
+  this.firstSpeedCountdownTimer = timeAtFirstSpeed;
+}
 
-  neuron.register( 'SpeedChangeLinearMotionStrategy', SpeedChangeLinearMotionStrategy );
+neuron.register( 'SpeedChangeLinearMotionStrategy', SpeedChangeLinearMotionStrategy );
 
-  return inherit( MotionStrategy, SpeedChangeLinearMotionStrategy, {
+export default inherit( MotionStrategy, SpeedChangeLinearMotionStrategy, {
 
-    // @public, @override
-    move: function( movable, fadableModelElement, dt ) {
-      movable.setPosition( movable.getPositionX() + this.velocityVectorX * dt,
-        movable.getPositionY() + this.velocityVectorY * dt );
-      if ( this.firstSpeedCountdownTimer > 0 ) {
-        this.firstSpeedCountdownTimer -= dt;
-        if ( this.firstSpeedCountdownTimer <= 0 ) {
-          // Scale the speed.
-          this.velocityVectorX = this.velocityVectorX * this.speedScaleFactor;
-          this.velocityVectorY = this.velocityVectorY * this.speedScaleFactor;
-        }
+  // @public, @override
+  move: function( movable, fadableModelElement, dt ) {
+    movable.setPosition( movable.getPositionX() + this.velocityVectorX * dt,
+      movable.getPositionY() + this.velocityVectorY * dt );
+    if ( this.firstSpeedCountdownTimer > 0 ) {
+      this.firstSpeedCountdownTimer -= dt;
+      if ( this.firstSpeedCountdownTimer <= 0 ) {
+        // Scale the speed.
+        this.velocityVectorX = this.velocityVectorX * this.speedScaleFactor;
+        this.velocityVectorY = this.velocityVectorY * this.speedScaleFactor;
       }
     }
+  }
 
-  } );
 } );

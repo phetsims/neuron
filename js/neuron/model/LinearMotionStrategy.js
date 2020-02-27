@@ -6,33 +6,29 @@
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
  */
-define( require => {
-  'use strict';
 
-  // modules
-  const inherit = require( 'PHET_CORE/inherit' );
-  const MotionStrategy = require( 'NEURON/neuron/model/MotionStrategy' );
-  const neuron = require( 'NEURON/neuron' );
+import inherit from '../../../../phet-core/js/inherit.js';
+import neuron from '../../neuron.js';
+import MotionStrategy from './MotionStrategy.js';
 
-  /**
-   * @param {Vector2} velocity
-   * @constructor
-   */
-  function LinearMotionStrategy( velocity ) {
-    this.velocity = velocity; // @private, in nanometers per second of simulation time
+/**
+ * @param {Vector2} velocity
+ * @constructor
+ */
+function LinearMotionStrategy( velocity ) {
+  this.velocity = velocity; // @private, in nanometers per second of simulation time
+}
+
+neuron.register( 'LinearMotionStrategy', LinearMotionStrategy );
+
+export default inherit( MotionStrategy, LinearMotionStrategy, {
+
+  // @public
+  move: function( movableModelElement, fadableModelElement, dt ) {
+    const currentPositionRefX = movableModelElement.getPositionX();
+    const currentPositionRefY = movableModelElement.getPositionY();
+    movableModelElement.setPosition( currentPositionRefX + this.velocity.x * dt,
+      currentPositionRefY + this.velocity.y * dt );
   }
 
-  neuron.register( 'LinearMotionStrategy', LinearMotionStrategy );
-
-  return inherit( MotionStrategy, LinearMotionStrategy, {
-
-    // @public
-    move: function( movableModelElement, fadableModelElement, dt ) {
-      const currentPositionRefX = movableModelElement.getPositionX();
-      const currentPositionRefY = movableModelElement.getPositionY();
-      movableModelElement.setPosition( currentPositionRefX + this.velocity.x * dt,
-        currentPositionRefY + this.velocity.y * dt );
-    }
-
-  } );
 } );

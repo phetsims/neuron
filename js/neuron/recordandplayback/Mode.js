@@ -6,31 +6,27 @@
  * @author Sam Reid
  * @author Sharfudeen Ashraf (for Ghent University)
  */
-define( require => {
-  'use strict';
 
-  // modules
-  const inherit = require( 'PHET_CORE/inherit' );
-  const neuron = require( 'NEURON/neuron' );
+import inherit from '../../../../phet-core/js/inherit.js';
+import neuron from '../../neuron.js';
 
-  /**
-   * @constructor
-   */
-  function Mode() {}
+/**
+ * @constructor
+ */
+function Mode() {}
 
-  neuron.register( 'Mode', Mode );
+neuron.register( 'Mode', Mode );
 
-  return inherit( Object, Mode, {
+export default inherit( Object, Mode, {
 
-    // @public
-    step: function( simulationTimeChange ) {
-      throw new Error( 'step should be implemented in descendant classes.' );
-    },
+  // @public
+  step: function( simulationTimeChange ) {
+    throw new Error( 'step should be implemented in descendant classes.' );
+  },
 
-    // @public
-    toString: function() {
-      throw new Error( 'toString should be implemented in descendant classes.' );
-    }
+  // @public
+  toString: function() {
+    throw new Error( 'toString should be implemented in descendant classes.' );
+  }
 
-  } );
 } );

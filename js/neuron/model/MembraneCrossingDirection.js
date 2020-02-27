@@ -5,21 +5,17 @@
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
  */
-define( require => {
-  'use strict';
 
-  // modules
-  const neuron = require( 'NEURON/neuron' );
+import neuron from '../../neuron.js';
 
-  const MembraneCrossingDirection = {
-    'OUT_TO_IN': 'OUT_TO_IN',
-    'IN_TO_OUT': 'IN_TO_OUT'
-  };
+const MembraneCrossingDirection = {
+  'OUT_TO_IN': 'OUT_TO_IN',
+  'IN_TO_OUT': 'IN_TO_OUT'
+};
 
-  // verify that enum is immutable, without the runtime penalty in production code
-  if ( assert ) { Object.freeze( MembraneCrossingDirection ); }
+// verify that enum is immutable, without the runtime penalty in production code
+if ( assert ) { Object.freeze( MembraneCrossingDirection ); }
 
-  neuron.register( 'MembraneCrossingDirection', MembraneCrossingDirection );
+neuron.register( 'MembraneCrossingDirection', MembraneCrossingDirection );
 
-  return MembraneCrossingDirection;
-} );
+export default MembraneCrossingDirection;

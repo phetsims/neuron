@@ -5,21 +5,17 @@
  * @author Sam Reid (PhET Interactive Simulations)
  * @author Sharfudeen Ashraf (for Ghent University)
  */
-define( require => {
-  'use strict';
 
-  // modules
-  const neuron = require( 'NEURON/neuron' );
+import neuron from '../../neuron.js';
 
-  const BehaviourModeType = {
-    pauseAtEndOfPlayback: true,
-    recordAtEndOfPlayback: false
-  };
+const BehaviourModeType = {
+  pauseAtEndOfPlayback: true,
+  recordAtEndOfPlayback: false
+};
 
-  // verify that enum is immutable, without the runtime penalty in production code
-  if ( assert ) { Object.freeze( BehaviourModeType ); }
+// verify that enum is immutable, without the runtime penalty in production code
+if ( assert ) { Object.freeze( BehaviourModeType ); }
 
-  neuron.register( 'BehaviourModeType', BehaviourModeType );
+neuron.register( 'BehaviourModeType', BehaviourModeType );
 
-  return BehaviourModeType;
-} );
+export default BehaviourModeType;

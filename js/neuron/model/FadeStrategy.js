@@ -7,34 +7,29 @@
  * @Sharfudeen Ashraf (for Ghent University)
  */
 
-define( require => {
-  'use strict';
+import inherit from '../../../../phet-core/js/inherit.js';
+import neuron from '../../neuron.js';
 
-  // modules
-  const inherit = require( 'PHET_CORE/inherit' );
-  const neuron = require( 'NEURON/neuron' );
+function FadeStrategy() {}
 
-  function FadeStrategy() {}
+neuron.register( 'FadeStrategy', FadeStrategy );
 
-  neuron.register( 'FadeStrategy', FadeStrategy );
+export default inherit( Object, FadeStrategy, {
 
-  return inherit( Object, FadeStrategy, {
+  /**
+   * Fade the associated model element according to the specified amount of time and the nature of the strategy.
+   * @protected
+   */
+  updateOpacity: function( fadableModelElement, dt ) {
+    throw new Error( 'updateOpacity should be implemented in descendant classes.' );
+  },
 
-    /**
-     * Fade the associated model element according to the specified amount of time and the nature of the strategy.
-     * @protected
-     */
-    updateOpacity: function( fadableModelElement, dt ) {
-      throw new Error( 'updateOpacity should be implemented in descendant classes.' );
-    },
-
-    /**
-     * Get an indication of whether or not the model element that is associated with this strategy should continue to
-     * exist.  This is generally used to figure out when to remove a model element that has faded away.
-     * @public
-     */
-    shouldContinueExisting: function( fadableModelElement ) {
-      return true;
-    }
-  } );
+  /**
+   * Get an indication of whether or not the model element that is associated with this strategy should continue to
+   * exist.  This is generally used to figure out when to remove a model element that has faded away.
+   * @public
+   */
+  shouldContinueExisting: function( fadableModelElement ) {
+    return true;
+  }
 } );

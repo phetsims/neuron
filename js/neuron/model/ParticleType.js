@@ -5,21 +5,17 @@
  * @author John Blanco
  * @author Sharfudeen Ashraf (for Ghent University)
  */
-define( require => {
-  'use strict';
 
-  // modules
-  const neuron = require( 'NEURON/neuron' );
+import neuron from '../../neuron.js';
 
-  const ParticleType = {
-    'SODIUM_ION': 'SODIUM_ION',
-    'POTASSIUM_ION': 'POTASSIUM_ION'
-  };
+const ParticleType = {
+  'SODIUM_ION': 'SODIUM_ION',
+  'POTASSIUM_ION': 'POTASSIUM_ION'
+};
 
-  // verify that enum is immutable, without the runtime penalty in production code
-  if ( assert ) { Object.freeze( ParticleType ); }
+// verify that enum is immutable, without the runtime penalty in production code
+if ( assert ) { Object.freeze( ParticleType ); }
 
-  neuron.register( 'ParticleType', ParticleType );
+neuron.register( 'ParticleType', ParticleType );
 
-  return ParticleType;
-} );
+export default ParticleType;

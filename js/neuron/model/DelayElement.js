@@ -7,34 +7,28 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-define( require => {
-  'use strict';
+import inherit from '../../../../phet-core/js/inherit.js';
+import neuron from '../../neuron.js';
 
-  // modules
-  const inherit = require( 'PHET_CORE/inherit' );
-  const neuron = require( 'NEURON/neuron' );
+/**
+ * @param {number} value
+ * @param {number} deltaTime
+ * @constructor
+ */
+function DelayElement( value, deltaTime ) {
+  value = value || 0;
+  deltaTime = deltaTime || 0;
+  this.value = value;
+  this.deltaTime = deltaTime;
+}
 
-  /**
-   * @param {number} value
-   * @param {number} deltaTime
-   * @constructor
-   */
-  function DelayElement( value, deltaTime ) {
-    value = value || 0;
-    deltaTime = deltaTime || 0;
+neuron.register( 'DelayElement', DelayElement );
+
+export default inherit( Object, DelayElement, {
+
+  // @public
+  setValueAndTime: function( value, deltaTime ) {
     this.value = value;
     this.deltaTime = deltaTime;
   }
-
-  neuron.register( 'DelayElement', DelayElement );
-
-  return inherit( Object, DelayElement, {
-
-    // @public
-    setValueAndTime: function( value, deltaTime ) {
-      this.value = value;
-      this.deltaTime = deltaTime;
-    }
-  } );
 } );
-
