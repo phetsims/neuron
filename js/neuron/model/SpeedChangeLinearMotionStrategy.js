@@ -1,4 +1,4 @@
-// Copyright 2014-2019, University of Colorado Boulder
+// Copyright 2014-2020, University of Colorado Boulder
 /**
  * This is a very specialized motion strategy that is basically a linear motion but that starts at one speed and then
  * changes to another.  It was created for a specific application - getting particles to move quickly away from the exit
