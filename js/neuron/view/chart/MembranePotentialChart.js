@@ -301,7 +301,7 @@ export default inherit( Panel, MembranePotentialChart, {
   getLastTimeValue: function() {
     let timeOfLastDataPoint = 0;
     if ( this.dataSeries.hasData() ) {
-      timeOfLastDataPoint = this.dataSeries.getDataPoint( this.dataSeries.getLength() - 1 );
+      timeOfLastDataPoint = this.dataSeries.getDataPoint( this.dataSeries.getLength() - 1 ).x;
     }
     return timeOfLastDataPoint;
   },
