@@ -253,7 +253,6 @@ function NeuronScreenView( neuronClockModelAdapter ) {
       yMargin: 6
     },
     speedRadioButtonGroupOptions: {
-      radioButtonOptions: { radius: 8 },
       spacing: 8,
       touchAreaXDilation: 5
     },
@@ -317,13 +316,6 @@ function NeuronScreenView( neuronClockModelAdapter ) {
   this.neuronModel.concentrationReadoutVisibleProperty.link( function( concentrationVisible ) {
     concentrationReadoutLayerNode.visible = concentrationVisible;
   } );
-
-  // const simSpeedControlPanel = new SimSpeedControlPanel( neuronClockModelAdapter.speedProperty, {
-  //   left: this.layoutBounds.minX + leftPadding,
-  //   centerY: centerYForLowerControls,
-  //   maxWidth: 250 // empirically determined
-  // } );
-  // this.addChild( simSpeedControlPanel );
 
   const zoomControl = new ZoomControl( zoomProperty, MIN_ZOOM, MAX_ZOOM );
   this.addChild( zoomControl );
