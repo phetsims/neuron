@@ -257,10 +257,11 @@ function NeuronScreenView( neuronClockModelAdapter ) {
       spacing: 8,
       touchAreaXDilation: 5
     },
-    left: this.layoutBounds.minX + leftPadding,
-    buttonGroupXSpacing: 175, // determined empirically
     centerY: centerYForLowerControls
   } );
+
+  timeControlNode.setButtonGroupXSpacing( 175 ); // determined empirically
+  timeControlNode.left =  this.layoutBounds.minX + leftPadding;
   this.addChild( timeControlNode );
 
   const stimulateNeuronButton = new RectangularPushButton( {
