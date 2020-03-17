@@ -257,15 +257,15 @@ function NeuronScreenView( neuronClockModelAdapter ) {
       spacing: 8,
       touchAreaXDilation: 5
     },
+    right: this.layoutBounds.maxX / 2,
     centerY: centerYForLowerControls
   } );
 
-  timeControlNode.setButtonGroupXSpacing( 175 ); // determined empirically
-  timeControlNode.left =  this.layoutBounds.minX + leftPadding;
+  timeControlNode.setButtonGroupXSpacing( timeControlNode.left - this.layoutBounds.minX + leftPadding );
   this.addChild( timeControlNode );
 
   const stimulateNeuronButton = new RectangularPushButton( {
-    content: new MultiLineText( stimulateNeuronString, { font: BUTTON_FONT } ),
+    content: new MultiLineText( stimulateNeuronString, { font: BUTTON_FONT, maxWidth: 120 } ),
     listener: function() { self.neuronModel.initiateStimulusPulse(); },
     baseColor: PhetColorScheme.BUTTON_YELLOW,
     right: worldNodeClipArea.bounds.maxX,
