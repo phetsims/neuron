@@ -24,6 +24,7 @@ import MultiLineText from '../../../../scenery-phet/js/MultiLineText.js';
 import PhetColorScheme from '../../../../scenery-phet/js/PhetColorScheme.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import TimeControlNode from '../../../../scenery-phet/js/TimeControlNode.js';
+import TimeControlSpeed from '../../../../scenery-phet/js/TimeControlSpeed.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
 import Path from '../../../../scenery/js/nodes/Path.js';
 import Rectangle from '../../../../scenery/js/nodes/Rectangle.js';
@@ -39,7 +40,7 @@ import MembranePotentialChart from './chart/MembranePotentialChart.js';
 import ConcentrationReadoutLayerNode from './ConcentrationReadoutLayerNode.js';
 import AxonCrossSectionControlPanel from './controlpanel/AxonCrossSectionControlPanel.js';
 import IonsAndChannelsLegendPanel from './controlpanel/IonsAndChannelsLegendPanel.js';
-import SimSpeedControlPanel from './controlpanel/SimSpeedControlPanel.js';
+// import SimSpeedControlPanel from './controlpanel/SimSpeedControlPanel.js';
 import MembraneChannelGateCanvasNode from './MembraneChannelGateCanvasNode.js';
 import ParticlesCanvasNode from './ParticlesCanvasNode.js';
 import ParticlesWebGLNode from './ParticlesWebGLNode.js';
@@ -224,25 +225,43 @@ function NeuronScreenView( neuronClockModelAdapter ) {
       return playing || time <= self.neuronModel.getMinRecordedTime() || self.neuronModel.getRecordedTimeRange() <= 0;
     }
   );
+  
+  // space between layout edge and controls like reset, zoom control, legend, speed panel, etc.
+  const leftPadding = 20;
 
   const timeControlNode = new TimeControlNode( playingProperty, {
-    includeStepBackwardButton: true,
-    playPauseOptions: { radius: 25 },
-    stepForwardOptions: {
-      listener: function() { neuronClockModelAdapter.stepClockWhilePaused(); }
+    timeControlSpeedProperty: neuronClockModelAdapter.timeControlSpeedProperty,
+    timeControlSpeeds: [ TimeControlSpeed.FAST, TimeControlSpeed.NORMAL, TimeControlSpeed.SLOW ],
+    playPauseStepButtonOptions: {
+      includeStepBackwardButton: true,
+      playPauseButtonOptions: { radius: 25 },
+      stepForwardButtonOptions: {
+        listener: function() { neuronClockModelAdapter.stepClockWhilePaused(); }
+      },
+      stepBackwardButtonOptions: {
+        listener: function() { neuronClockModelAdapter.stepClockBackWhilePaused(); },
+        isPlayingProperty: stepBackDisabledProperty
+      },
+      playPauseStepXSpacing: 5
     },
-    stepBackwardOptions: {
-      listener: function() { neuronClockModelAdapter.stepClockBackWhilePaused(); },
-      isPlayingProperty: stepBackDisabledProperty
+    speedRadioButtonGroupOnLeft: true,
+    wrapSpeedRadioButtonGroupInPanel: true,
+    speedRadioButtonGroupPanelOptions: {
+      fill: NeuronConstants.CONTROL_PANEL_BACKGROUND,
+      stroke: NeuronConstants.CONTROL_PANEL_STROKE,
+      xMargin: 8,
+      yMargin: 6
     },
-    playPauseStepXSpacing: 5,
-    right: this.layoutBounds.maxX / 2,
+    speedRadioButtonGroupOptions: {
+      radioButtonOptions: { radius: 8 },
+      spacing: 8,
+      touchAreaXDilation: 5
+    },
+    left: this.layoutBounds.minX + leftPadding,
+    buttonGroupXSpacing: 175, // determined empirically
     centerY: centerYForLowerControls
   } );
   this.addChild( timeControlNode );
-
-  // space between layout edge and controls like reset, zoom control, legend, speed panel, etc.
-  const leftPadding = 20;
 
   const stimulateNeuronButton = new RectangularPushButton( {
     content: new MultiLineText( stimulateNeuronString, { font: BUTTON_FONT } ),
@@ -298,12 +317,12 @@ function NeuronScreenView( neuronClockModelAdapter ) {
     concentrationReadoutLayerNode.visible = concentrationVisible;
   } );
 
-  const simSpeedControlPanel = new SimSpeedControlPanel( neuronClockModelAdapter.speedProperty, {
-    left: this.layoutBounds.minX + leftPadding,
-    centerY: centerYForLowerControls,
-    maxWidth: 250 // empirically determined
-  } );
-  this.addChild( simSpeedControlPanel );
+  // const simSpeedControlPanel = new SimSpeedControlPanel( neuronClockModelAdapter.speedProperty, {
+  //   left: this.layoutBounds.minX + leftPadding,
+  //   centerY: centerYForLowerControls,
+  //   maxWidth: 250 // empirically determined
+  // } );
+  // this.addChild( simSpeedControlPanel );
 
   const zoomControl = new ZoomControl( zoomProperty, MIN_ZOOM, MAX_ZOOM );
   this.addChild( zoomControl );

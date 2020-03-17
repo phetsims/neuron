@@ -14,8 +14,11 @@
  * @author John Blanco
  */
 
+import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
+import EnumerationProperty from '../../../../axon/js/EnumerationProperty.js';
 import Property from '../../../../axon/js/Property.js';
 import inherit from '../../../../phet-core/js/inherit.js';
+import TimeControlSpeed from '../../../../scenery-phet/js/TimeControlSpeed.js';
 import neuron from '../../neuron.js';
 
 // the following constants could easily be turned into options if there was a need to reuse and thus generalize
@@ -42,7 +45,19 @@ function NeuronClockModelAdapter( model ) {
   Object.call( this );
 
   this.playingProperty = new Property( true ); // linked to playPause button
-  this.speedProperty = new Property( 1 ); // factor controlling simulation clock speed
+
+  // @public {EnumerationProperty.<TimeControlSpeed>}
+  this.timeControlSpeedProperty = new EnumerationProperty( TimeControlSpeed, TimeControlSpeed.NORMAL );
+
+  // @public {DerivedProperty.<number>} - factor controlling simulation clock speed
+  this.speedProperty = new DerivedProperty( [ this.timeControlSpeedProperty ], timeControlSpeed => {
+    const speed = timeControlSpeed === TimeControlSpeed.FAST ? 2 :
+                  timeControlSpeed === TimeControlSpeed.NORMAL ? 1 :
+                  timeControlSpeed === TimeControlSpeed.SLOW ? 0.5 :
+                  null;
+    assert && assert( speed !== null, 'no speed found for TimeControlSpeed ' + timeControlSpeed );
+    return speed;
+  } );
 
   this.stepCallbacks = [];
   this.resetCallBacks = [];
@@ -86,10 +101,9 @@ export default inherit( Object, NeuronClockModelAdapter, {
   // @public
   reset: function() {
     this.playingProperty.reset();
-    this.speedProperty.reset();
+    this.timeControlSpeedProperty.reset();
     this.lastSimulationTime = 0.0;
     this.simulationTime = 0.0;
-    this.speedProperty.set( 1 );
 
     //fire reset event callback
     for ( let i = 0; i < this.resetCallBacks.length; i++ ) {
