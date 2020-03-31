@@ -30,7 +30,7 @@ import Path from '../../../../scenery/js/nodes/Path.js';
 import Rectangle from '../../../../scenery/js/nodes/Rectangle.js';
 import SceneryUtils from '../../../../scenery/js/util/Utils.js'; // eslint-disable-line require-statement-match
 import RectangularPushButton from '../../../../sun/js/buttons/RectangularPushButton.js';
-import neuronStrings from '../../neuron-strings.js';
+import neuronStrings from '../../neuronStrings.js';
 import neuron from '../../neuron.js';
 import NeuronConstants from '../common/NeuronConstants.js';
 import AxonBodyNode from './AxonBodyNode.js';

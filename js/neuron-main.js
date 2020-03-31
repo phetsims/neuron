@@ -6,7 +6,7 @@
 
 import Sim from '../../joist/js/Sim.js';
 import SimLauncher from '../../joist/js/SimLauncher.js';
-import neuronStrings from './neuron-strings.js';
+import neuronStrings from './neuronStrings.js';
 import NeuronProfiler from './neuron/common/NeuronProfiler.js';
 import NeuronQueryParameters from './neuron/common/NeuronQueryParameters.js';
 import NeuronScreen from './neuron/view/NeuronScreen.js';

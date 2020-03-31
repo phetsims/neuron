@@ -14,7 +14,7 @@ import Text from '../../../../../scenery/js/nodes/Text.js';
 import VBox from '../../../../../scenery/js/nodes/VBox.js';
 import Checkbox from '../../../../../sun/js/Checkbox.js';
 import Panel from '../../../../../sun/js/Panel.js';
-import neuronStrings from '../../../neuron-strings.js';
+import neuronStrings from '../../../neuronStrings.js';
 import neuron from '../../../neuron.js';
 import NeuronConstants from '../../common/NeuronConstants.js';
 
