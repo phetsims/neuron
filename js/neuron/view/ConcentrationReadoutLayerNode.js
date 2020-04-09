@@ -149,7 +149,7 @@ function ConcentrationReadoutLayerNode( neuronModel, zoomProperty, zoomableRootN
   } );
 
   // update the readouts when this node transitions from invisible to visible
-  this.on( 'visibility', function( a ) {
+  this.visibleProperty.lazyLink( function( a ) {
     if ( self.visible ) {
       updateConcentrationReadoutValues();
     }
