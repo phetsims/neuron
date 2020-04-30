@@ -17,7 +17,7 @@ function Mode() {}
 
 neuron.register( 'Mode', Mode );
 
-export default inherit( Object, Mode, {
+inherit( Object, Mode, {
 
   // @public
   step: function( simulationTimeChange ) {
@@ -30,3 +30,5 @@ export default inherit( Object, Mode, {
   }
 
 } );
+
+export default Mode;

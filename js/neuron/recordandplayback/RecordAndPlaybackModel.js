@@ -52,7 +52,7 @@ function RecordAndPlaybackModel( maxRecordPoints ) {
 
 neuron.register( 'RecordAndPlaybackModel', RecordAndPlaybackModel );
 
-export default inherit( Object, RecordAndPlaybackModel, {
+inherit( Object, RecordAndPlaybackModel, {
 
   /**
    * Update the simulation model (should cause side effects to update the view), returning a snapshot of the state after the update.
@@ -291,3 +291,5 @@ export default inherit( Object, RecordAndPlaybackModel, {
   }
 
 } );
+
+export default RecordAndPlaybackModel;

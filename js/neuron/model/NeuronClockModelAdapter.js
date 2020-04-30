@@ -66,7 +66,7 @@ function NeuronClockModelAdapter( model ) {
 
 neuron.register( 'NeuronClockModelAdapter', NeuronClockModelAdapter );
 
-export default inherit( Object, NeuronClockModelAdapter, {
+inherit( Object, NeuronClockModelAdapter, {
 
   // @public
   step: function( dt ) {
@@ -160,3 +160,5 @@ export default inherit( Object, NeuronClockModelAdapter, {
   }
 
 } );
+
+export default NeuronClockModelAdapter;

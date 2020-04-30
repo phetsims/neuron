@@ -21,7 +21,7 @@ function Live( recordAndPlaybackModel ) {
 
 neuron.register( 'Live', Live );
 
-export default inherit( Mode, Live, {
+inherit( Mode, Live, {
 
   // @public, @override
   step: function( simulationTimeChange ) {
@@ -35,3 +35,5 @@ export default inherit( Mode, Live, {
   }
 
 } );
+
+export default Live;

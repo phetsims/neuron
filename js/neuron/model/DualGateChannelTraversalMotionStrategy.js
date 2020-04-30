@@ -47,7 +47,7 @@ function DualGateChannelTraversalMotionStrategy( channel, startingLocationX, sta
 
 neuron.register( 'DualGateChannelTraversalMotionStrategy', DualGateChannelTraversalMotionStrategy );
 
-export default inherit( MotionStrategy, DualGateChannelTraversalMotionStrategy, {
+inherit( MotionStrategy, DualGateChannelTraversalMotionStrategy, {
 
   // @public, @override
   move: function( movableModelElement, fadableModelElement, dt ) {
@@ -292,3 +292,5 @@ export default inherit( MotionStrategy, DualGateChannelTraversalMotionStrategy, 
 
   }
 } );
+
+export default DualGateChannelTraversalMotionStrategy;

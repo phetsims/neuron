@@ -45,7 +45,7 @@ function NeuronParticlesTexture( modelViewTransform ) {
 
 neuron.register( 'NeuronParticlesTexture', NeuronParticlesTexture );
 
-export default inherit( Object, NeuronParticlesTexture, {
+inherit( Object, NeuronParticlesTexture, {
 
   /**
    * Draw the particles on the provided canvas.
@@ -128,3 +128,5 @@ export default inherit( Object, NeuronParticlesTexture, {
   }
 
 } );
+
+export default NeuronParticlesTexture;

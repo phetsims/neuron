@@ -65,7 +65,7 @@ function ModifiedHodgkinHuxleyModel() {
 
 neuron.register( 'ModifiedHodgkinHuxleyModel', ModifiedHodgkinHuxleyModel );
 
-export default inherit( Object, ModifiedHodgkinHuxleyModel, {
+inherit( Object, ModifiedHodgkinHuxleyModel, {
 
   // @public
   reset: function() {
@@ -409,3 +409,5 @@ export default inherit( Object, ModifiedHodgkinHuxleyModel, {
   }
 
 } );
+
+export default ModifiedHodgkinHuxleyModel;

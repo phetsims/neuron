@@ -74,7 +74,7 @@ function SodiumDualGatedChannel( modelContainingParticles, hodgkinHuxleyModel ) 
 
 neuron.register( 'SodiumDualGatedChannel', SodiumDualGatedChannel );
 
-export default inherit( GatedChannel, SodiumDualGatedChannel, {
+inherit( GatedChannel, SodiumDualGatedChannel, {
 
   // @public
   stepInTime: function( dt ) {
@@ -267,3 +267,5 @@ export default inherit( GatedChannel, SodiumDualGatedChannel, {
   }
 
 } );
+
+export default SodiumDualGatedChannel;

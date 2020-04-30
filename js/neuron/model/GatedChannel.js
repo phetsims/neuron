@@ -23,7 +23,7 @@ function GatedChannel( channelWidth, channelHeight, modelContainingParticles ) {
 
 neuron.register( 'GatedChannel', GatedChannel );
 
-export default inherit( MembraneChannel, GatedChannel, {
+inherit( MembraneChannel, GatedChannel, {
 
   // @public
   reset: function() {
@@ -32,3 +32,5 @@ export default inherit( MembraneChannel, GatedChannel, {
   }
 
 } );
+
+export default GatedChannel;

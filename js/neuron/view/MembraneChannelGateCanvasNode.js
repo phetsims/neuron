@@ -154,7 +154,7 @@ function MembraneChannelGateCanvasNode( neuronModel, modelViewTransform, bounds 
 
 neuron.register( 'MembraneChannelGateCanvasNode', MembraneChannelGateCanvasNode );
 
-export default inherit( CanvasNode, MembraneChannelGateCanvasNode, {
+inherit( CanvasNode, MembraneChannelGateCanvasNode, {
 
   /**
    * Paint the canvas with all of the membrane channels
@@ -268,3 +268,5 @@ export default inherit( CanvasNode, MembraneChannelGateCanvasNode, {
   }
 
 } );
+
+export default MembraneChannelGateCanvasNode;

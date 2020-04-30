@@ -14,7 +14,7 @@ function FadeStrategy() {}
 
 neuron.register( 'FadeStrategy', FadeStrategy );
 
-export default inherit( Object, FadeStrategy, {
+inherit( Object, FadeStrategy, {
 
   /**
    * Fade the associated model element according to the specified amount of time and the nature of the strategy.
@@ -33,3 +33,5 @@ export default inherit( Object, FadeStrategy, {
     return true;
   }
 } );
+
+export default FadeStrategy;

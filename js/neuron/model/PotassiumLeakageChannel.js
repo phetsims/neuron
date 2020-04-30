@@ -55,7 +55,7 @@ function PotassiumLeakageChannel( modelContainingParticles, hodgkinHuxleyModel )
 
 neuron.register( 'PotassiumLeakageChannel', PotassiumLeakageChannel );
 
-export default inherit( AbstractLeakChannel, PotassiumLeakageChannel, {
+inherit( AbstractLeakChannel, PotassiumLeakageChannel, {
 
   // @public
   stepInTime: function( dt ) {
@@ -98,3 +98,5 @@ export default inherit( AbstractLeakChannel, PotassiumLeakageChannel, {
   }
 
 } );
+
+export default PotassiumLeakageChannel;

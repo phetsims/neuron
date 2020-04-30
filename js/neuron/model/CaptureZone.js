@@ -17,7 +17,7 @@ function CaptureZone() {}
 
 neuron.register( 'CaptureZone', CaptureZone );
 
-export default inherit( Object, CaptureZone, {
+inherit( Object, CaptureZone, {
 
   // @public
   isPointInZone: function( x, y ) {
@@ -44,3 +44,5 @@ export default inherit( Object, CaptureZone, {
     throw new Error( 'setOriginPoint should be implemented in descendant classes.' );
   }
 } );
+
+export default CaptureZone;

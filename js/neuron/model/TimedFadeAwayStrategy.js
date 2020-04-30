@@ -24,7 +24,7 @@ function TimedFadeAwayStrategy( fadeTime ) {
 
 neuron.register( 'TimedFadeAwayStrategy', TimedFadeAwayStrategy );
 
-export default inherit( FadeStrategy, TimedFadeAwayStrategy, {
+inherit( FadeStrategy, TimedFadeAwayStrategy, {
 
   // @public, @override
   updateOpacity: function( fadableModelElement, dt ) {
@@ -38,3 +38,5 @@ export default inherit( FadeStrategy, TimedFadeAwayStrategy, {
   }
 
 } );
+
+export default TimedFadeAwayStrategy;

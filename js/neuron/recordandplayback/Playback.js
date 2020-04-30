@@ -22,7 +22,7 @@ function Playback( recordAndPlaybackModel ) {
 
 neuron.register( 'Playback', Playback );
 
-export default inherit( Mode, Playback, {
+inherit( Mode, Playback, {
 
   // @public, @override
   step: function( simulationTimeChange ) {
@@ -52,3 +52,5 @@ export default inherit( Mode, Playback, {
     return 'Playback';
   }
 } );
+
+export default Playback;

@@ -63,7 +63,7 @@ function SodiumLeakageChannel( modelContainingParticles, hodgkinHuxleyModel ) {
 
 neuron.register( 'SodiumLeakageChannel', SodiumLeakageChannel );
 
-export default inherit( AbstractLeakChannel, SodiumLeakageChannel, {
+inherit( AbstractLeakChannel, SodiumLeakageChannel, {
 
   // @public, @override
   stepInTime: function( dt ) {
@@ -157,3 +157,5 @@ export default inherit( AbstractLeakChannel, SodiumLeakageChannel, {
   }
 
 } );
+
+export default SodiumLeakageChannel;

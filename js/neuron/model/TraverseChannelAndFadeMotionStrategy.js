@@ -43,7 +43,7 @@ function TraverseChannelAndFadeMotionStrategy( channel, startingLocationX, start
 
 neuron.register( 'TraverseChannelAndFadeMotionStrategy', TraverseChannelAndFadeMotionStrategy );
 
-export default inherit( MotionStrategy, TraverseChannelAndFadeMotionStrategy, {
+inherit( MotionStrategy, TraverseChannelAndFadeMotionStrategy, {
 
   // @public, @override
   move: function( movableModelElement, fadableModelElement, dt ) {
@@ -214,3 +214,5 @@ export default inherit( MotionStrategy, TraverseChannelAndFadeMotionStrategy, {
   }
 
 } );
+
+export default TraverseChannelAndFadeMotionStrategy;

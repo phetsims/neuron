@@ -29,7 +29,7 @@ function ParticlePlaybackMemento( particle ) {
 
 neuron.register( 'ParticlePlaybackMemento', ParticlePlaybackMemento );
 
-export default inherit( Object, ParticlePlaybackMemento, {
+inherit( Object, ParticlePlaybackMemento, {
 
   // @public
   getPositionX: function() {
@@ -62,3 +62,5 @@ export default inherit( Object, ParticlePlaybackMemento, {
   }
 
 } );
+
+export default ParticlePlaybackMemento;

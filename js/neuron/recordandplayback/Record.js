@@ -22,7 +22,7 @@ function Record( recordAndPlaybackModel ) {
 
 neuron.register( 'Record', Record );
 
-export default inherit( Mode, Record, {
+inherit( Mode, Record, {
 
   // @public, @override
   step: function( simulationTimeChange ) {
@@ -38,3 +38,5 @@ export default inherit( Mode, Record, {
   }
 
 } );
+
+export default Record;

@@ -24,7 +24,7 @@ function DelayElement( value, deltaTime ) {
 
 neuron.register( 'DelayElement', DelayElement );
 
-export default inherit( Object, DelayElement, {
+inherit( Object, DelayElement, {
 
   // @public
   setValueAndTime: function( value, deltaTime ) {
@@ -32,3 +32,5 @@ export default inherit( Object, DelayElement, {
     this.deltaTime = deltaTime;
   }
 } );
+
+export default DelayElement;

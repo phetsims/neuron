@@ -33,7 +33,7 @@ function SlowBrownianMotionStrategy( initialLocationX, initialLocationY ) {
 
 neuron.register( 'SlowBrownianMotionStrategy', SlowBrownianMotionStrategy );
 
-export default inherit( MotionStrategy, SlowBrownianMotionStrategy, {
+inherit( MotionStrategy, SlowBrownianMotionStrategy, {
 
   // @public, @override
   move: function( movableModelElement, fadableModelElement, dt ) {
@@ -74,3 +74,5 @@ export default inherit( MotionStrategy, SlowBrownianMotionStrategy, {
   }
 
 } );
+
+export default SlowBrownianMotionStrategy;

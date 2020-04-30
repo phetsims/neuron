@@ -22,7 +22,7 @@ function NullCaptureZone() {
 
 neuron.register( 'NullCaptureZone', NullCaptureZone );
 
-export default inherit( CaptureZone, NullCaptureZone, {
+inherit( CaptureZone, NullCaptureZone, {
 
   // @public
   getShape: function() {
@@ -55,3 +55,5 @@ export default inherit( CaptureZone, NullCaptureZone, {
   }
 
 } );
+
+export default NullCaptureZone;

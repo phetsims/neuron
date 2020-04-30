@@ -21,7 +21,7 @@ function LinearMotionStrategy( velocity ) {
 
 neuron.register( 'LinearMotionStrategy', LinearMotionStrategy );
 
-export default inherit( MotionStrategy, LinearMotionStrategy, {
+inherit( MotionStrategy, LinearMotionStrategy, {
 
   // @public
   move: function( movableModelElement, fadableModelElement, dt ) {
@@ -32,3 +32,5 @@ export default inherit( MotionStrategy, LinearMotionStrategy, {
   }
 
 } );
+
+export default LinearMotionStrategy;

@@ -31,7 +31,7 @@ function TravelingActionPotentialCanvasNode( mvt, bounds ) {
 
 neuron.register( 'TravelingActionPotentialCanvasNode', TravelingActionPotentialCanvasNode );
 
-export default inherit( CanvasNode, TravelingActionPotentialCanvasNode, {
+inherit( CanvasNode, TravelingActionPotentialCanvasNode, {
 
   /**
    * Attach the model of the action potential to this node.  This is done rather than creating an entirely new node
@@ -106,3 +106,5 @@ export default inherit( CanvasNode, TravelingActionPotentialCanvasNode, {
     }
   }
 } );
+
+export default TravelingActionPotentialCanvasNode;

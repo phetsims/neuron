@@ -22,7 +22,7 @@ function DataPoint( time, state ) {
 
 neuron.register( 'DataPoint', DataPoint );
 
-export default inherit( Object, DataPoint, {
+inherit( Object, DataPoint, {
 
   // @public
   getTime: function() {
@@ -40,3 +40,5 @@ export default inherit( Object, DataPoint, {
   }
 
 } );
+
+export default DataPoint;

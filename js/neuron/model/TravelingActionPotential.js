@@ -84,7 +84,7 @@ function TravelingActionPotential( axonMembrane ) {
 
 neuron.register( 'TravelingActionPotential', TravelingActionPotential );
 
-export default inherit( Object, TravelingActionPotential, {
+inherit( Object, TravelingActionPotential, {
 
   /**
    * Step this model component forward by the specified time.  This will update the shape such that it will appear to
@@ -178,3 +178,5 @@ export default inherit( Object, TravelingActionPotential, {
   }
 
 } );
+
+export default TravelingActionPotential;

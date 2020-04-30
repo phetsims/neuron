@@ -27,7 +27,7 @@ function SpeedChangeLinearMotionStrategy( initialVelocity, speedScaleFactor, tim
 
 neuron.register( 'SpeedChangeLinearMotionStrategy', SpeedChangeLinearMotionStrategy );
 
-export default inherit( MotionStrategy, SpeedChangeLinearMotionStrategy, {
+inherit( MotionStrategy, SpeedChangeLinearMotionStrategy, {
 
   // @public, @override
   move: function( movable, fadableModelElement, dt ) {
@@ -44,3 +44,5 @@ export default inherit( MotionStrategy, SpeedChangeLinearMotionStrategy, {
   }
 
 } );
+
+export default SpeedChangeLinearMotionStrategy;

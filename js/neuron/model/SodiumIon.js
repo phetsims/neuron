@@ -21,7 +21,7 @@ function SodiumIon() {
 
 neuron.register( 'SodiumIon', SodiumIon );
 
-export default inherit( Particle, SodiumIon, {
+inherit( Particle, SodiumIon, {
 
   // @public, @override
   getType: function() {
@@ -34,3 +34,5 @@ export default inherit( Particle, SodiumIon, {
   }
 
 } );
+
+export default SodiumIon;

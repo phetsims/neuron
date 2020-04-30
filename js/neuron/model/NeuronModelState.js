@@ -70,7 +70,7 @@ function NeuronModelState( neuronModel ) {
 
 neuron.register( 'NeuronModelState', NeuronModelState );
 
-export default inherit( Object, NeuronModelState, {
+inherit( Object, NeuronModelState, {
 
   // @public
   getAxonMembraneState: function() {
@@ -117,3 +117,5 @@ export default inherit( Object, NeuronModelState, {
     return this.potassiumExteriorConcentration;
   }
 } );
+
+export default NeuronModelState;

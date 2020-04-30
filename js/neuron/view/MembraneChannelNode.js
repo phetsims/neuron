@@ -188,7 +188,7 @@ function MembraneChannelNode( membraneChannelModel, mvt ) {
 
 neuron.register( 'MembraneChannelNode', MembraneChannelNode );
 
-export default inherit( Node, MembraneChannelNode, {
+inherit( Node, MembraneChannelNode, {
 
   /**
    * Add this node to the two specified parent nodes.  This is done in order to achieve a better layering effect that
@@ -208,3 +208,5 @@ export default inherit( Node, MembraneChannelNode, {
   }
 
 } );
+
+export default MembraneChannelNode;

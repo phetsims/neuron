@@ -88,7 +88,7 @@ function NeuronProfiler( sim, setting ) {
 
 neuron.register( 'NeuronProfiler', NeuronProfiler );
 
-export default inherit( Object, NeuronProfiler, {
+inherit( Object, NeuronProfiler, {
 
   /**
    * Initiate the collection of data for the specified duration.  Once the specified time has passed, the results
@@ -110,3 +110,5 @@ export default inherit( Object, NeuronProfiler, {
   }
 
 } );
+
+export default NeuronProfiler;

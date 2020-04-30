@@ -98,7 +98,7 @@ function ChargeSymbolNode( axonModel, maxWidth, maxPotential, polarityReversed )
 
 neuron.register( 'ChargeSymbolNode', ChargeSymbolNode );
 
-export default inherit( Path, ChargeSymbolNode, {
+inherit( Path, ChargeSymbolNode, {
 
   // @public, @override
   computeShapeBounds: function() {
@@ -107,3 +107,5 @@ export default inherit( Path, ChargeSymbolNode, {
   }
 
 } );
+
+export default ChargeSymbolNode;

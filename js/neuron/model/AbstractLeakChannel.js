@@ -24,7 +24,7 @@ function AbstractLeakChannel( channelWidth, channelHeight, modelContainingPartic
 
 neuron.register( 'AbstractLeakChannel', AbstractLeakChannel );
 
-export default inherit( MembraneChannel, AbstractLeakChannel, {
+inherit( MembraneChannel, AbstractLeakChannel, {
 
   // @public
   stepInTime: function( dt ) {
@@ -37,3 +37,5 @@ export default inherit( MembraneChannel, AbstractLeakChannel, {
   }
 
 } );
+
+export default AbstractLeakChannel;

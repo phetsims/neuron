@@ -23,7 +23,7 @@ function TravelingActionPotentialState( travelTimeCountdownTimer, lingerCountdow
 
 neuron.register( 'TravelingActionPotentialState', TravelingActionPotentialState );
 
-export default inherit( Object, TravelingActionPotentialState, {
+inherit( Object, TravelingActionPotentialState, {
 
   // @public
   getLingerCountdownTimer: function() {
@@ -36,3 +36,5 @@ export default inherit( Object, TravelingActionPotentialState, {
   }
 
 } );
+
+export default TravelingActionPotentialState;

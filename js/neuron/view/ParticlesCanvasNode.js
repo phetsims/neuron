@@ -57,7 +57,7 @@ function ParticlesCanvasNode( neuronModel, modelViewTransform, clipArea ) {
 
 neuron.register( 'ParticlesCanvasNode', ParticlesCanvasNode );
 
-export default inherit( CanvasNode, ParticlesCanvasNode, {
+inherit( CanvasNode, ParticlesCanvasNode, {
 
   // @private
   renderSodiumParticles: function( particles, context ) {
@@ -134,3 +134,5 @@ export default inherit( CanvasNode, ParticlesCanvasNode, {
   }
 
 } );
+
+export default ParticlesCanvasNode;

@@ -268,7 +268,7 @@ function NeuronModel() {
 
 neuron.register( 'NeuronModel', NeuronModel );
 
-export default inherit( RecordAndPlaybackModel, NeuronModel, {
+inherit( RecordAndPlaybackModel, NeuronModel, {
 
   /**
    * dispatched from NeuronClockModelAdapter's step function
@@ -1128,3 +1128,5 @@ export default inherit( RecordAndPlaybackModel, NeuronModel, {
     }
   }
 } );
+
+export default NeuronModel;

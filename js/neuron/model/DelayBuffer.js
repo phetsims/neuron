@@ -47,7 +47,7 @@ function DelayBuffer( maxDelay, minTimeStep ) {
 
 neuron.register( 'DelayBuffer', DelayBuffer );
 
-export default inherit( Object, DelayBuffer, {
+inherit( Object, DelayBuffer, {
 
   // @public
   addValue: function( value, deltaTime ) {
@@ -172,3 +172,5 @@ export default inherit( Object, DelayBuffer, {
     this.filling = true;
   }
 } );
+
+export default DelayBuffer;

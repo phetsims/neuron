@@ -23,7 +23,7 @@ function AxonMembraneState( travelingActionPotentialState ) {
 
 neuron.register( 'AxonMembraneState', AxonMembraneState );
 
-export default inherit( Object, AxonMembraneState, {
+inherit( Object, AxonMembraneState, {
 
   /**
    * Return the state of the traveling action potential.  If null, no traveling action potential exists.
@@ -34,3 +34,5 @@ export default inherit( Object, AxonMembraneState, {
     return this.travelingActionPotentialState;
   }
 } );
+
+export default AxonMembraneState;

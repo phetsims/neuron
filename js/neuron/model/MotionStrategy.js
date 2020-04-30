@@ -13,7 +13,7 @@ function MotionStrategy() { }
 
 neuron.register( 'MotionStrategy', MotionStrategy );
 
-export default inherit( Object, MotionStrategy, {
+inherit( Object, MotionStrategy, {
 
   /**
    * Move the associated model element according to the specified amount of time and the nature of the motion
@@ -29,3 +29,5 @@ export default inherit( Object, MotionStrategy, {
   }
 
 } );
+
+export default MotionStrategy;

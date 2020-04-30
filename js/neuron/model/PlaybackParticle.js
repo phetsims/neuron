@@ -38,7 +38,7 @@ function PlaybackParticle( particle ) {
 
 neuron.register( 'PlaybackParticle', PlaybackParticle );
 
-export default inherit( ViewableParticle, PlaybackParticle, {
+inherit( ViewableParticle, PlaybackParticle, {
 
   /**
    *
@@ -101,3 +101,5 @@ export default inherit( ViewableParticle, PlaybackParticle, {
     return this.particleType;
   }
 } );
+
+export default PlaybackParticle;

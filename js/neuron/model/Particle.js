@@ -55,7 +55,7 @@ function Particle( xPos, yPos ) {
 
 neuron.register( 'Particle', Particle );
 
-export default inherit( ViewableParticle, Particle, {
+inherit( ViewableParticle, Particle, {
 
   // @public
   stepInTime: function( dt ) {
@@ -137,3 +137,5 @@ export default inherit( ViewableParticle, Particle, {
     return this.opacity;
   }
 } );
+
+export default Particle;

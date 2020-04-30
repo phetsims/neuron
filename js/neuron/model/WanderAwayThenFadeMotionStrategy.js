@@ -54,7 +54,7 @@ function WanderAwayThenFadeMotionStrategy( awayPoint, currentLocationX, currentL
 
 neuron.register( 'WanderAwayThenFadeMotionStrategy', WanderAwayThenFadeMotionStrategy );
 
-export default inherit( MotionStrategy, WanderAwayThenFadeMotionStrategy, {
+inherit( MotionStrategy, WanderAwayThenFadeMotionStrategy, {
 
   // @public, @override
   move: function( movableModelElement, fadableModelElement, dt ) {
@@ -96,3 +96,5 @@ export default inherit( MotionStrategy, WanderAwayThenFadeMotionStrategy, {
   }
 
 } );
+
+export default WanderAwayThenFadeMotionStrategy;

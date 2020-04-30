@@ -16,7 +16,7 @@ function NullFadeStrategy() {}
 
 neuron.register( 'NullFadeStrategy', NullFadeStrategy );
 
-export default inherit( FadeStrategy, NullFadeStrategy, {
+inherit( FadeStrategy, NullFadeStrategy, {
 
     // @public, @override
     updateOpacity: function( fadableModelElement, dt ) {
@@ -38,3 +38,5 @@ export default inherit( FadeStrategy, NullFadeStrategy, {
     }
   }
 );
+
+export default NullFadeStrategy;

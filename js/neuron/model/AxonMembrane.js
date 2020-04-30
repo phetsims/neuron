@@ -134,7 +134,7 @@ function AxonMembrane() {
 
 neuron.register( 'AxonMembrane', AxonMembrane );
 
-export default inherit( Object, AxonMembrane, {
+inherit( Object, AxonMembrane, {
 
     /**
      * Step this model element forward in time by the specified delta.
@@ -283,3 +283,5 @@ export default inherit( Object, AxonMembrane, {
     }
   }
 );
+
+export default AxonMembrane;

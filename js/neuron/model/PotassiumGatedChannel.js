@@ -50,7 +50,7 @@ function PotassiumGatedChannel( modelContainingParticles, hodgkinHuxleyModel ) {
 
 neuron.register( 'PotassiumGatedChannel', PotassiumGatedChannel );
 
-export default inherit( GatedChannel, PotassiumGatedChannel, {
+inherit( GatedChannel, PotassiumGatedChannel, {
 
   // @public
   stepInTime: function( dt ) {
@@ -116,3 +116,5 @@ export default inherit( GatedChannel, PotassiumGatedChannel, {
   }
 
 } );
+
+export default PotassiumGatedChannel;

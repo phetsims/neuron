@@ -17,7 +17,7 @@ function StillnessMotionStrategy() {}
 
 neuron.register( 'StillnessMotionStrategy', StillnessMotionStrategy );
 
-export default inherit( MotionStrategy, StillnessMotionStrategy, {
+inherit( MotionStrategy, StillnessMotionStrategy, {
 
     // @public, @override
     move: function( movableModelElement, fadableModelElement, dt ) {
@@ -37,3 +37,5 @@ export default inherit( MotionStrategy, StillnessMotionStrategy, {
       return StillnessMotionStrategy.instance;
     }
   } );
+
+export default StillnessMotionStrategy;

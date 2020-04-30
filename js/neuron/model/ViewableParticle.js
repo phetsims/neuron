@@ -18,7 +18,7 @@ function ViewableParticle() {}
 
 neuron.register( 'ViewableParticle', ViewableParticle );
 
-export default inherit( Object, ViewableParticle, {
+inherit( Object, ViewableParticle, {
 
   // @public, subclasses must implement
   getType: function() {
@@ -57,3 +57,5 @@ export default inherit( Object, ViewableParticle, {
   }
 
 } );
+
+export default ViewableParticle;

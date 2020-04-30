@@ -50,7 +50,7 @@ function PieSliceShapedCaptureZone( center, radius, fixedRotationalOffset, angle
 
 neuron.register( 'PieSliceShapedCaptureZone', PieSliceShapedCaptureZone );
 
-export default inherit( CaptureZone, PieSliceShapedCaptureZone, {
+inherit( CaptureZone, PieSliceShapedCaptureZone, {
 
   // @public, @override
   getShape: function() {
@@ -99,3 +99,5 @@ export default inherit( CaptureZone, PieSliceShapedCaptureZone, {
     return new Shape().arc( this.originPoint.x, this.originPoint.y, this.radius, startAngle, endAngle, true );// ARC2D.PIE startPoint and endPoint is internally added to arc's path
   }
 } );
+
+export default PieSliceShapedCaptureZone;

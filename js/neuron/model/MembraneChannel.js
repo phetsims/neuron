@@ -83,7 +83,7 @@ function MembraneChannel( channelWidth, channelHeight, modelContainingParticles 
 
 neuron.register( 'MembraneChannel', MembraneChannel );
 
-export default inherit( Object, MembraneChannel, {
+inherit( Object, MembraneChannel, {
 
   /**
    * Implements the time-dependent behavior of the channel.
@@ -374,3 +374,5 @@ export default inherit( Object, MembraneChannel, {
   }
 
 } );
+
+export default MembraneChannel;

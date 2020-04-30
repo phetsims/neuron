@@ -36,7 +36,7 @@ function DataLineCanvasNode( width, height, dataSeries, mvt ) {
 
 neuron.register( 'DataLineCanvasNode', DataLineCanvasNode );
 
-export default inherit( CanvasNode, DataLineCanvasNode, {
+inherit( CanvasNode, DataLineCanvasNode, {
 
   /**
    * method that paints the data line on the canvas
@@ -64,3 +64,5 @@ export default inherit( CanvasNode, DataLineCanvasNode, {
     context.restore();
   }
 } );
+
+export default DataLineCanvasNode;

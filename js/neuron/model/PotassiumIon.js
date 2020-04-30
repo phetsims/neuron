@@ -22,7 +22,7 @@ function PotassiumIon() {
 
 neuron.register( 'PotassiumIon', PotassiumIon );
 
-export default inherit( Particle, PotassiumIon, {
+inherit( Particle, PotassiumIon, {
 
   // @public
   getType: function() {
@@ -35,3 +35,5 @@ export default inherit( Particle, PotassiumIon, {
   }
 
 } );
+
+export default PotassiumIon;
