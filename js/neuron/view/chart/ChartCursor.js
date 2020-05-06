@@ -106,5 +106,5 @@ function ChartCursor( membranePotentialChart ) {
 }
 
 neuron.register( 'ChartCursor', ChartCursor );
-
-export default inherit( Rectangle, ChartCursor, {} );
+inherit( Rectangle, ChartCursor );
+export default ChartCursor;
