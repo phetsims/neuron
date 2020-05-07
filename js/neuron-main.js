@@ -5,7 +5,7 @@
  */
 
 import Sim from '../../joist/js/Sim.js';
-import SimLauncher from '../../joist/js/SimLauncher.js';
+import simLauncher from '../../joist/js/simLauncher.js';
 import neuronStrings from './neuronStrings.js';
 import NeuronProfiler from './neuron/common/NeuronProfiler.js';
 import NeuronQueryParameters from './neuron/common/NeuronQueryParameters.js';
@@ -24,7 +24,7 @@ const simOptions = {
   webgl: true
 };
 
-SimLauncher.launch( function() {
+simLauncher.launch( function() {
 
   // create and start the sim
   const sim = new Sim( neuronTitleString, [ new NeuronScreen() ], simOptions );
