@@ -35,7 +35,7 @@ inherit( CaptureZone, NullCaptureZone, {
   },
 
   // @public - assign a random point that is somewhere within the shape.
-  assignNewParticleLocation: function( particle ) {
+  assignNewParticlePosition: function( particle ) {
     particle.setPosition( 0, 0 );
   },
 

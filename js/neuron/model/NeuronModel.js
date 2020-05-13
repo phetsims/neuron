@@ -1,7 +1,7 @@
 // Copyright 2014-2020, University of Colorado Boulder
 /**
  * Model for the 'Neuron' screen. This class represents the main class for modeling the axon.  It acts as the central
- * location where the interaction between the membrane, the particles (i.e. ions), and the gates is all governed.
+ * place where the interaction between the membrane, the particles (i.e. ions), and the gates is all governed.
  *
  * @author John Blanco
  * @author Sam Reid (PhET Interactive Simulations)
@@ -638,7 +638,7 @@ inherit( RecordAndPlaybackModel, NeuronModel, {
     if ( captureZone ) {
 
       // to avoid creation of new Vector2 instances the capture zone updates the particles position
-      captureZone.assignNewParticleLocation( newParticle );
+      captureZone.assignNewParticlePosition( newParticle );
     }
     const self = this;
     newParticle.continueExistingProperty.lazyLink( function( newValue ) {
@@ -689,7 +689,7 @@ inherit( RecordAndPlaybackModel, NeuronModel, {
     for ( let i = 0; i < numberToAdd; i++ ) {
       newParticle = this.createBackgroundParticle( particleType );
       newParticle.setOpacity( FOREGROUND_PARTICLE_DEFAULT_OPACITY );
-      captureZone.assignNewParticleLocation( newParticle );
+      captureZone.assignNewParticlePosition( newParticle );
     }
   },
 
@@ -716,7 +716,7 @@ inherit( RecordAndPlaybackModel, NeuronModel, {
   },
 
   /**
-   * Place a particle at a random location inside the axon membrane.
+   * Place a particle at a random position inside the axon membrane.
    * @param {Particle} particle
    * @private
    */
@@ -746,7 +746,7 @@ inherit( RecordAndPlaybackModel, NeuronModel, {
   },
 
   /**
-   * Place a particle at a random location outside the axon membrane.
+   * Place a particle at a random position outside the axon membrane.
    * @param {Particle} particle
    * @private
    */
@@ -959,7 +959,7 @@ inherit( RecordAndPlaybackModel, NeuronModel, {
   },
 
   /**
-   * Add the provided channel at the specified rotational location. Locations are specified in terms of where on the
+   * Add the provided channel at the specified rotational position. Positions are specified in terms of where on the
    * circle of the membrane they are, with a value of 0 being on the far right, PI/2 on the top, PI on the far left,
    * etc.
    * @param {MembraneChannelTypes} membraneChannelType
@@ -969,11 +969,11 @@ inherit( RecordAndPlaybackModel, NeuronModel, {
   addChannel: function( membraneChannelType, angle ) {
     const membraneChannel = MembraneChannelFactory.createMembraneChannel( membraneChannelType, this, this.hodgkinHuxleyModel );
     const radius = this.axonMembrane.getCrossSectionDiameter() / 2;
-    const newLocation = new Vector2( radius * Math.cos( angle ), radius * Math.sin( angle ) );
+    const newPosition = new Vector2( radius * Math.cos( angle ), radius * Math.sin( angle ) );
 
     // Position the channel on the membrane.
     membraneChannel.setRotationalAngle( angle );
-    membraneChannel.setCenterLocation( newLocation );
+    membraneChannel.setCenterPosition( newPosition );
 
     // Add the channel and let everyone know it exists.
     this.membraneChannels.push( membraneChannel );

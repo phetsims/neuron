@@ -41,7 +41,7 @@ function MembraneChannel( channelWidth, channelHeight, modelContainingParticles 
   this.representationChangedProperty = new Property( false );// @public
 
   // position of the channel
-  this.centerLocation = new Vector2( 0, 0 ); // @public
+  this.centerPosition = new Vector2( 0, 0 ); // @public
 
   // Variable that defines how open the channel is. Valid range is 0 to 1, 0 means fully closed, 1 is fully open.
   this.openness = 0; // @public
@@ -116,9 +116,9 @@ inherit( Object, MembraneChannel, {
    * @private
    */
   updateChannelRect: function() {
-    const channelRect = new Rectangle( this.centerLocation.x - this.channelSize.height / 2,
-      this.centerLocation.y - this.channelSize.width / 2, this.channelSize.height, this.channelSize.width );
-    const rotationTransform = Matrix3.rotationAround( this.rotationalAngle, this.centerLocation.x, this.centerLocation.y );
+    const channelRect = new Rectangle( this.centerPosition.x - this.channelSize.height / 2,
+      this.centerPosition.y - this.channelSize.width / 2, this.channelSize.height, this.channelSize.width );
+    const rotationTransform = Matrix3.rotationAround( this.rotationalAngle, this.centerPosition.x, this.centerPosition.y );
     this.rotatedChannelRect = channelRect.transformed( rotationTransform );
   },
 
@@ -169,8 +169,8 @@ inherit( Object, MembraneChannel, {
   },
 
   // @public
-  getCenterLocation: function() {
-    return this.centerLocation;
+  getCenterPosition: function() {
+    return this.centerPosition;
   },
 
   /**
@@ -308,11 +308,11 @@ inherit( Object, MembraneChannel, {
   },
 
   // @public
-  setCenterLocation: function( newCenterLocation ) {
-    if ( !newCenterLocation.equals( this.centerLocation ) ) {
-      this.centerLocation = newCenterLocation;
-      this.interiorCaptureZone.setOriginPoint( newCenterLocation );
-      this.exteriorCaptureZone.setOriginPoint( newCenterLocation );
+  setCenterPosition: function( newCenterPosition ) {
+    if ( !newCenterPosition.equals( this.centerPosition ) ) {
+      this.centerPosition = newCenterPosition;
+      this.interiorCaptureZone.setOriginPoint( newCenterPosition );
+      this.exteriorCaptureZone.setOriginPoint( newCenterPosition );
     }
   },
 

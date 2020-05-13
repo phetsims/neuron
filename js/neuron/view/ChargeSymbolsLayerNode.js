@@ -50,29 +50,29 @@ function ChargeSymbolsLayerNode( neuronModel, mvt ) {
   // function to add a pair of complementary charge symbols, one inside the membrane and one outside
   function addChargeSymbolPair( channel1, channel2 ) {
 
-    const innerSymbolLocation = new Vector2( 0, 0 );
-    const outerSymbolLocation = new Vector2( 0, 0 );
+    const innerSymbolPosition = new Vector2( 0, 0 );
+    const outerSymbolPosition = new Vector2( 0, 0 );
     const outerSymbolParentNode = new Node();
     outerSymbolParentNode.addChild( outerChargeSymbol );
     const innerSymbolParentNode = new Node();
     innerSymbolParentNode.addChild( innerChargeSymbol );
 
-    calcChargeSymbolLocations( channel1.getCenterLocation(), channel2.getCenterLocation(), Vector2.ZERO, outerSymbolLocation, innerSymbolLocation );
-    outerSymbolParentNode.setTranslation( mvt.modelToViewPosition( outerSymbolLocation ) );
+    calcChargeSymbolPositions( channel1.getCenterPosition(), channel2.getCenterPosition(), Vector2.ZERO, outerSymbolPosition, innerSymbolPosition );
+    outerSymbolParentNode.setTranslation( mvt.modelToViewPosition( outerSymbolPosition ) );
     self.addChild( outerSymbolParentNode );
-    innerSymbolParentNode.setTranslation( mvt.modelToViewPosition( innerSymbolLocation ) );
+    innerSymbolParentNode.setTranslation( mvt.modelToViewPosition( innerSymbolPosition ) );
     self.addChild( innerSymbolParentNode );
   }
 
   /**
-   * Calculate the locations of the charge symbols and set the two provided points accordingly.
+   * Calculate the positions of the charge symbols and set the two provided points accordingly.
    * @param {Vector2} p1
    * @param {Vector2} p2
    * @param {Vector2} neuronCenter
    * @param {Vector2} outerPoint // out parameter
    * @param {Vector2} innerPoint // out parameter
    */
-  function calcChargeSymbolLocations( p1, p2, neuronCenter, outerPoint, innerPoint ) {
+  function calcChargeSymbolPositions( p1, p2, neuronCenter, outerPoint, innerPoint ) {
 
     // Find the center point between the given points.
     const center = new Vector2( ( p1.x + p2.x ) / 2, ( p1.y + p2.y ) / 2 );
@@ -101,8 +101,8 @@ function ChargeSymbolsLayerNode( neuronModel, mvt ) {
     while ( orderChanged ) {
       orderChanged = false;
       for ( let i = 0; i < membraneChannels.length - 1; i++ ) {
-        const p1 = membraneChannels[ i ].getCenterLocation();
-        const p2 = membraneChannels[ i + 1 ].getCenterLocation();
+        const p1 = membraneChannels[ i ].getCenterPosition();
+        const p2 = membraneChannels[ i + 1 ].getCenterPosition();
         const a1 = Math.atan2( p1.y, p1.x );
         const a2 = Math.atan2( p2.y, p2.x );
         if ( a1 > a2 ) {

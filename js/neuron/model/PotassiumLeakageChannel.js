@@ -40,8 +40,8 @@ function PotassiumLeakageChannel( modelContainingParticles, hodgkinHuxleyModel )
   this.setParticleVelocity( DEFAULT_PARTICLE_VELOCITY );
 
   // Set up the capture zones for this channel.
-  this.setInteriorCaptureZone( new PieSliceShapedCaptureZone( this.getCenterLocation(), CHANNEL_WIDTH * 5, Math.PI, Math.PI * 0.5 ) );
-  this.setExteriorCaptureZone( new PieSliceShapedCaptureZone( this.getCenterLocation(), CHANNEL_WIDTH * 5, 0, Math.PI * 0.5 ) );
+  this.setInteriorCaptureZone( new PieSliceShapedCaptureZone( this.getCenterPosition(), CHANNEL_WIDTH * 5, Math.PI, Math.PI * 0.5 ) );
+  this.setExteriorCaptureZone( new PieSliceShapedCaptureZone( this.getCenterPosition(), CHANNEL_WIDTH * 5, 0, Math.PI * 0.5 ) );
 
   // Set the rate of particle capture for leakage.
   this.setMinInterCaptureTime( MIN_INTER_PARTICLE_CAPTURE_TIME );

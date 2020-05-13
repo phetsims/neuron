@@ -2,7 +2,7 @@
 
 /**
  * Class that defines the behavior of the action potential that travels
- * along the membrane before reaching the location of the transverse cross
+ * along the membrane before reaching the position of the transverse cross
  * section.  This is essentially just a shape that is intended to look
  * like something moving along the outer membrane.  The shape moves for a
  * while, then reaches the cross section, and then lingers there for a

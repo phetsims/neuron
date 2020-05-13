@@ -49,8 +49,8 @@ function SodiumLeakageChannel( modelContainingParticles, hodgkinHuxleyModel ) {
   this.setParticleVelocity( DEFAULT_PARTICLE_VELOCITY );
 
   // Set up the capture zones for this channel.
-  this.setExteriorCaptureZone( new PieSliceShapedCaptureZone( this.getCenterLocation(), CHANNEL_WIDTH * 5, 0, Math.PI * 0.6 ) );
-  this.setInteriorCaptureZone( new PieSliceShapedCaptureZone( this.getCenterLocation(), CHANNEL_WIDTH * 5, Math.PI, Math.PI * 0.8 ) );
+  this.setExteriorCaptureZone( new PieSliceShapedCaptureZone( this.getCenterPosition(), CHANNEL_WIDTH * 5, 0, Math.PI * 0.6 ) );
+  this.setInteriorCaptureZone( new PieSliceShapedCaptureZone( this.getCenterPosition(), CHANNEL_WIDTH * 5, Math.PI, Math.PI * 0.8 ) );
 
   // Update the capture times.
   this.updateParticleCaptureRate( NOMINAL_LEAK_LEVEL );

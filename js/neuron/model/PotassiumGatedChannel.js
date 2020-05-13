@@ -43,7 +43,7 @@ function PotassiumGatedChannel( modelContainingParticles, hodgkinHuxleyModel ) {
   GatedChannel.call( this, CHANNEL_WIDTH, CHANNEL_HEIGHT, modelContainingParticles );
   this.staggerDelay = phet.joist.random.nextDouble() * MAX_STAGGER_DELAY;
   this.hodgkinHuxleyModel = hodgkinHuxleyModel;
-  this.setInteriorCaptureZone( new PieSliceShapedCaptureZone( this.getCenterLocation(), CHANNEL_WIDTH * 5, Math.PI, Math.PI * 0.5 ) );
+  this.setInteriorCaptureZone( new PieSliceShapedCaptureZone( this.getCenterPosition(), CHANNEL_WIDTH * 5, Math.PI, Math.PI * 0.5 ) );
   this.channelColor = NeuronConstants.POTASSIUM_COLOR.colorUtilsDarker( 0.2 );
   this.reset();
 }

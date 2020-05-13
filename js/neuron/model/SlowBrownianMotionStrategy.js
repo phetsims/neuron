@@ -2,7 +2,7 @@
 
 /**
  * A motion strategy for showing some slow Brownian motion, which is basically just an occasional small jump from its
- * initial location to a new nearby location and then back.  This is intended to create noticeable but non-distracting
+ * initial position to a new nearby position and then back.  This is intended to create noticeable but non-distracting
  * motion that doesn't consume much processor time.
  *
  * @author John Blanco
@@ -20,13 +20,13 @@ const MIN_TIME_TO_NEXT_JUMP = 0.0009;  // In seconds of sim time, not wall time.
 const MAX_TIME_TO_NEXT_JUMP = 0.0015;  // In seconds of sim time, not wall time.
 
 /**
- * @param {number} initialLocationX
- * @param {number} initialLocationY
+ * @param {number} initialPositionX
+ * @param {number} initialPositionY
  * @constructor
  */
-function SlowBrownianMotionStrategy( initialLocationX, initialLocationY ) {
-  this.initialLocationX = initialLocationX;
-  this.initialLocationY = initialLocationY;
+function SlowBrownianMotionStrategy( initialPositionX, initialPositionY ) {
+  this.initialPositionX = initialPositionX;
+  this.initialPositionY = initialPositionY;
   // In seconds of sim time.
   this.timeUntilNextJump = this.generateNewJumpTime();
 }
@@ -40,8 +40,8 @@ inherit( MotionStrategy, SlowBrownianMotionStrategy, {
     this.timeUntilNextJump -= dt;
     if ( this.timeUntilNextJump <= 0 ) {
       // It is time to jump.
-      if ( movableModelElement.isPositionEqual( this.initialLocationX, this.initialLocationY ) ) {
-        // Jump away from this location.
+      if ( movableModelElement.isPositionEqual( this.initialPositionX, this.initialPositionY ) ) {
+        // Jump away from this position.
         const jumpAngle = this.generateNewJumpAngle();
         const jumpDistance = this.generateNewJumpDistance();
         const currentPosRefX = movableModelElement.getPositionX();
@@ -50,8 +50,8 @@ inherit( MotionStrategy, SlowBrownianMotionStrategy, {
           currentPosRefY + jumpDistance * Math.sin( jumpAngle ) );
       }
       else {
-        // Jump back to initial location.
-        movableModelElement.setPosition( this.initialLocationX, this.initialLocationY );
+        // Jump back to initial position.
+        movableModelElement.setPosition( this.initialPositionX, this.initialPositionY );
       }
       // Reset the jump counter time.
       this.timeUntilNextJump = this.generateNewJumpTime();

@@ -67,7 +67,7 @@ function SodiumDualGatedChannel( modelContainingParticles, hodgkinHuxleyModel ) 
   this.stateTransitionTimer = 0;
   this.staggerDelay = 0;
   this.previousNormalizedConductance = 0;
-  this.setExteriorCaptureZone( new PieSliceShapedCaptureZone( this.getCenterLocation(), CHANNEL_WIDTH * 5, 0, Math.PI * 0.7 ) );
+  this.setExteriorCaptureZone( new PieSliceShapedCaptureZone( this.getCenterPosition(), CHANNEL_WIDTH * 5, 0, Math.PI * 0.7 ) );
   this.reset();
   this.channelColor = NeuronConstants.SODIUM_COLOR.colorUtilsDarker( 0.2 );
 }

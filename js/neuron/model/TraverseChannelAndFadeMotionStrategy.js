@@ -18,12 +18,12 @@ import WanderAwayThenFadeMotionStrategy from './WanderAwayThenFadeMotionStrategy
 
 /**
  * @param {MembraneChannel} channel
- * @param {number} startingLocationX
- * @param {number} startingLocationY
+ * @param {number} startingPositionX
+ * @param {number} startingPositionY
  * @param {number} maxVelocity
  * @constructor
  */
-function TraverseChannelAndFadeMotionStrategy( channel, startingLocationX, startingLocationY, maxVelocity ) {
+function TraverseChannelAndFadeMotionStrategy( channel, startingPositionX, startingPositionY, maxVelocity ) {
   maxVelocity = maxVelocity || NeuronConstants.DEFAULT_MAX_VELOCITY;
   this.velocityVector = new Vector2( 0, 0 );
   this.channel = channel;
@@ -31,14 +31,14 @@ function TraverseChannelAndFadeMotionStrategy( channel, startingLocationX, start
 
   // Holds array of objects with x and y properties (doesn't use vector for performance reasons)
   // http://jsperf.com/object-notation-vs-constructor
-  this.traversalPoints = this.createTraversalPoints( channel, startingLocationX, startingLocationY );
+  this.traversalPoints = this.createTraversalPoints( channel, startingPositionX, startingPositionY );
   this.currentDestinationIndex = 0;
   this.channelHasBeenEntered = false;
 
-  this.startingLocationX = startingLocationX;
-  this.startingLocationY = startingLocationY;
+  this.startingPositionX = startingPositionX;
+  this.startingPositionY = startingPositionY;
 
-  this.setCourseForCurrentTraversalPoint( startingLocationX, startingLocationY );
+  this.setCourseForCurrentTraversalPoint( startingPositionX, startingPositionY );
 }
 
 neuron.register( 'TraverseChannelAndFadeMotionStrategy', TraverseChannelAndFadeMotionStrategy );
@@ -98,7 +98,7 @@ inherit( MotionStrategy, TraverseChannelAndFadeMotionStrategy, {
     else {
       // The channel has closed and this element has not yet entered it.
       // Time to replace this motion strategy with a different one.
-      movableModelElement.setMotionStrategy( new WanderAwayThenFadeMotionStrategy( this.channel.getCenterLocation(),
+      movableModelElement.setMotionStrategy( new WanderAwayThenFadeMotionStrategy( this.channel.getCenterPosition(),
         movableModelElement.getPositionX(), movableModelElement.getPositionY(), 0, 0.002 ) );
     }
   },
@@ -106,9 +106,9 @@ inherit( MotionStrategy, TraverseChannelAndFadeMotionStrategy, {
   /**
    * The directional movement of the particle is guided by a set of predefined traversal points.  When a particle
    * reaches one of the traversal points, its direction and velocity is recalculated based on the next traversal
-   * point's location.  When the particle goes back in time, the "currentDestinationIndex" which is the pointer to the
+   * point's position.  When the particle goes back in time, the "currentDestinationIndex" which is the pointer to the
    * traversal points array needs to be decremented and when the traversal index reaches zero, original starting
-   * location needs to be used for finding the reverse direction.
+   * position needs to be used for finding the reverse direction.
    * @param {Particle} movableModelElement
    * @param {Particle} fadableModelElement
    * @param {number} dt
@@ -139,7 +139,7 @@ inherit( MotionStrategy, TraverseChannelAndFadeMotionStrategy, {
         }
         else {
           movableModelElement.setPosition( this.traversalPoints[ 0 ].x, this.traversalPoints[ 0 ].y );
-          this.setCourseForCurrentTraversalPoint( this.startingLocationX, this.startingLocationY );
+          this.setCourseForCurrentTraversalPoint( this.startingPositionX, this.startingPositionY );
           this.channelHasBeenEntered = !this.channelHasBeenEntered;
         }
       }
@@ -147,7 +147,7 @@ inherit( MotionStrategy, TraverseChannelAndFadeMotionStrategy, {
 
     if ( this.currentDestinationIndex === 0 ) {
       //check if it has come close to original position, if yes remove the particle (going back in time before the particle is created)
-      const distanceToOriginalPos = MathUtils.distanceBetween( currentPositionRefX, currentPositionRefY, this.startingLocationX, this.startingLocationY );
+      const distanceToOriginalPos = MathUtils.distanceBetween( currentPositionRefX, currentPositionRefY, this.startingPositionX, this.startingPositionY );
       if ( traveledDistance >= distanceToOriginalPos ) {
         fadableModelElement.continueExistingProperty.value = false;
         return;
@@ -163,36 +163,36 @@ inherit( MotionStrategy, TraverseChannelAndFadeMotionStrategy, {
    * this channel.
    * @private
    */
-  createTraversalPoints: function( channel, startingLocationX, startingLocationY ) {
+  createTraversalPoints: function( channel, startingPositionX, startingPositionY ) {
     const points = [];
-    const ctr = channel.getCenterLocation();
+    const ctr = channel.getCenterPosition();
     const r = channel.getChannelSize().height * 0.65; // Make the point a little outside the channel.
-    const outerOpeningLocation = {
+    const outerOpeningPosition = {
       x: ctr.x + Math.cos( channel.getRotationalAngle() ) * r,
       y: ctr.y + Math.sin( channel.getRotationalAngle() ) * r
     };
-    const innerOpeningLocation = {
+    const innerOpeningPosition = {
       x: ctr.x - Math.cos( channel.getRotationalAngle() ) * r,
       y: ctr.y - Math.sin( channel.getRotationalAngle() ) * r
     };
 
-    if ( this.distanceBetweenPosAndTraversalPoint( startingLocationX, startingLocationY, innerOpeningLocation ) < this.distanceBetweenPosAndTraversalPoint( startingLocationX, startingLocationY, outerOpeningLocation ) ) {
-      points.push( innerOpeningLocation );
-      points.push( outerOpeningLocation );
+    if ( this.distanceBetweenPosAndTraversalPoint( startingPositionX, startingPositionY, innerOpeningPosition ) < this.distanceBetweenPosAndTraversalPoint( startingPositionX, startingPositionY, outerOpeningPosition ) ) {
+      points.push( innerOpeningPosition );
+      points.push( outerOpeningPosition );
     }
     else {
-      points.push( outerOpeningLocation );
-      points.push( innerOpeningLocation );
+      points.push( outerOpeningPosition );
+      points.push( innerOpeningPosition );
     }
 
     return points;
   },
 
   // @private
-  setCourseForCurrentTraversalPoint: function( currentLocationX, currentLocationY ) {
+  setCourseForCurrentTraversalPoint: function( currentPositionX, currentPositionY ) {
     if ( this.currentDestinationIndex < this.traversalPoints.length ) {
       const dest = this.traversalPoints[ this.currentDestinationIndex ];
-      this.velocityVector.setXY( dest.x - currentLocationX, dest.y - currentLocationY );
+      this.velocityVector.setXY( dest.x - currentPositionX, dest.y - currentPositionY );
       const scaleFactor = this.maxVelocity / this.velocityVector.magnitude;
       this.velocityVector.multiplyScalar( scaleFactor );
     }

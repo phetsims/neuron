@@ -205,7 +205,7 @@ function NeuronScreenView( neuronClockModelAdapter ) {
     zoomableNode.addChild( particlesCanvasNode );
   }
 
-  // figure out the center Y location for all lower controls
+  // figure out the center Y position for all lower controls
   const centerYForLowerControls = ( clipAreaBounds.maxY + this.layoutBounds.height ) / 2;
 
   const playingProperty = neuronClockModelAdapter.playingProperty; // convenience variable

@@ -26,12 +26,12 @@ const INACTIVATION_BOUNCE_THRESHOLD = 0.5;
 
 /**
  * @param {MembraneChannel} channel
- * @param {number} startingLocationX
- * @param {number} startingLocationY
+ * @param {number} startingPositionX
+ * @param {number} startingPositionY
  * @param {number} maxVelocity
  * @constructor
  */
-function DualGateChannelTraversalMotionStrategy( channel, startingLocationX, startingLocationY, maxVelocity ) {
+function DualGateChannelTraversalMotionStrategy( channel, startingPositionX, startingPositionY, maxVelocity ) {
   maxVelocity = maxVelocity || NeuronConstants.DEFAULT_MAX_VELOCITY;
   this.velocityVector = new Vector2( 0, 0 );
   this.channel = channel;
@@ -39,10 +39,10 @@ function DualGateChannelTraversalMotionStrategy( channel, startingLocationX, sta
 
   // Holds array of objects with x and y properties (doesn't use vector for performance reasons)
   // http://jsperf.com/object-notation-vs-constructor
-  this.traversalPoints = this.createTraversalPoints( channel, startingLocationX, startingLocationY ); // @private
+  this.traversalPoints = this.createTraversalPoints( channel, startingPositionX, startingPositionY ); // @private
   this.currentDestinationIndex = 0; // @private
   this.bouncing = false; // @private
-  this.setCourseForCurrentTraversalPoint( startingLocationX, startingLocationY );
+  this.setCourseForCurrentTraversalPoint( startingPositionX, startingPositionY );
 }
 
 neuron.register( 'DualGateChannelTraversalMotionStrategy', DualGateChannelTraversalMotionStrategy );
@@ -62,7 +62,7 @@ inherit( MotionStrategy, DualGateChannelTraversalMotionStrategy, {
       if ( !this.channel.isOpen() ) {
         // The channel has closed, so there is no sense in continuing
         // towards it.  The particle should wander and then fade out.
-        movableModelElement.setMotionStrategy( new WanderAwayThenFadeMotionStrategy( this.channel.getCenterLocation(), movableModelElement.getPositionX(), movableModelElement.getPositionY(), 0, 0.002 ) );
+        movableModelElement.setMotionStrategy( new WanderAwayThenFadeMotionStrategy( this.channel.getCenterPosition(), movableModelElement.getPositionX(), movableModelElement.getPositionY(), 0, 0.002 ) );
         // For error checking, set the destination index really high.
         // That way it will be detected if this strategy instance is
         // used again.
@@ -192,14 +192,14 @@ inherit( MotionStrategy, DualGateChannelTraversalMotionStrategy, {
    * this channel.
    *
    * @param {MembraneChannel} channel
-   * @param {number} startingLocationX
-   * @param {number} startingLocationY
+   * @param {number} startingPositionX
+   * @param {number} startingPositionY
    * @returns {Array.<Vector2>}
    * @private
    */
-  createTraversalPoints: function( channel, startingLocationX, startingLocationY ) {
+  createTraversalPoints: function( channel, startingPositionX, startingPositionY ) {
     const points = [];
-    const ctr = channel.getCenterLocation();
+    const ctr = channel.getCenterPosition();
     const r = channel.getChannelSize().height * 0.5;
 
     // The profiler shows too many vector instances are created from createTravesal method, Since we are dealing with
@@ -207,53 +207,53 @@ inherit( MotionStrategy, DualGateChannelTraversalMotionStrategy, {
     // function to use object literal http://jsperf.com/object-notation-vs-constructor.
 
     // Create points that represent the inner and outer mouths of the channel.
-    const outerOpeningLocation = {
+    const outerOpeningPosition = {
       x: ctr.x + Math.cos( channel.getRotationalAngle() ) * r,
       y: ctr.y + Math.sin( channel.getRotationalAngle() ) * r
     };
-    const innerOpeningLocation = {
+    const innerOpeningPosition = {
       x: ctr.x - Math.cos( channel.getRotationalAngle() ) * r,
       y: ctr.y - Math.sin( channel.getRotationalAngle() ) * r
     };
 
     // Create a point that just above where the inactivation gate would be if the channel were inactivated.  Since the
-    // model doesn't actually track the location of the inactivation gate (it is left up to the view), this location
+    // model doesn't actually track the position of the inactivation gate (it is left up to the view), this position
     // is a guess, and may have to be tweaked in order to work well with the view.
-    const aboveInactivationGateLocation =
+    const aboveInactivationGatePosition =
       {
         x: ctr.x - Math.cos( channel.getRotationalAngle() ) * r * 0.5,
         y: ctr.y - Math.sin( channel.getRotationalAngle() ) * r * 0.5
       };
 
-    if ( this.distanceBetweenPosAndTraversalPoint( startingLocationX, startingLocationY, innerOpeningLocation ) < this.distanceBetweenPosAndTraversalPoint( startingLocationX, startingLocationY, outerOpeningLocation ) ) {
-      points.push( innerOpeningLocation );
-      points.push( aboveInactivationGateLocation );
-      points.push( outerOpeningLocation );
+    if ( this.distanceBetweenPosAndTraversalPoint( startingPositionX, startingPositionY, innerOpeningPosition ) < this.distanceBetweenPosAndTraversalPoint( startingPositionX, startingPositionY, outerOpeningPosition ) ) {
+      points.push( innerOpeningPosition );
+      points.push( aboveInactivationGatePosition );
+      points.push( outerOpeningPosition );
     }
     else {
-      points.push( outerOpeningLocation );
-      points.push( aboveInactivationGateLocation );
-      points.push( innerOpeningLocation );
+      points.push( outerOpeningPosition );
+      points.push( aboveInactivationGatePosition );
+      points.push( innerOpeningPosition );
     }
 
     return points;
   },
 
   // @private
-  setCourseForPoint: function( startLocationX, startLocationY, destination, velocityScaler ) {
-    this.velocityVector.setXY( destination.x - startLocationX,
-      destination.y - startLocationY );
+  setCourseForPoint: function( startPositionX, startPositionY, destination, velocityScaler ) {
+    this.velocityVector.setXY( destination.x - startPositionX,
+      destination.y - startPositionY );
     const scaleFactor = this.maxVelocity / this.velocityVector.magnitude;
     this.velocityVector.multiplyScalar( scaleFactor );
 
   },
 
   // @private
-  setCourseForCurrentTraversalPoint: function( currentLocationX, currentLocationY ) {
+  setCourseForCurrentTraversalPoint: function( currentPositionX, currentPositionY ) {
     let angularRange = 0;
     if ( this.currentDestinationIndex < this.traversalPoints.length ) {
       const dest = this.traversalPoints[ this.currentDestinationIndex ];
-      this.velocityVector.setXY( dest.x - currentLocationX, dest.y - currentLocationY );
+      this.velocityVector.setXY( dest.x - currentPositionX, dest.y - currentPositionY );
       const scaleFactor = this.maxVelocity / this.velocityVector.magnitude;
       this.velocityVector.multiplyScalar( scaleFactor );
     }

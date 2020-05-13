@@ -36,7 +36,7 @@ function drawEdge( context, transformedEdgeNodeSize ) {
 }
 
 // utility function that draws the edges of the channel
-function updateEdgeShapes( context, thisNode, transformedChannelLocation, transformedChannelSize, edgeNodeBounds,
+function updateEdgeShapes( context, thisNode, transformedChannelPosition, transformedChannelSize, edgeNodeBounds,
                            transformedEdgeNodeSize, membraneChannelModel ) {
 
   // create the edge representations
@@ -56,7 +56,7 @@ function updateEdgeShapes( context, thisNode, transformedChannelLocation, transf
 
   // left edge
   context.save();
-  context.translate( transformedChannelLocation.x, transformedChannelLocation.y );
+  context.translate( transformedChannelPosition.x, transformedChannelPosition.y );
   context.rotate( rotation );
   context.translate( -transformedChannelSize.width / 2 - edgeNodeBounds.width / 2, 0 );
 
@@ -66,7 +66,7 @@ function updateEdgeShapes( context, thisNode, transformedChannelLocation, transf
 
   // right edge
   context.save();
-  context.translate( transformedChannelLocation.x, transformedChannelLocation.y );
+  context.translate( transformedChannelPosition.x, transformedChannelPosition.y );
   context.rotate( rotation );
   context.translate( transformedChannelSize.width / 2 + edgeNodeBounds.width / 2, 0 );
   drawEdge( context, transformedEdgeNodeSize );
@@ -134,7 +134,7 @@ function MembraneChannelGateCanvasNode( neuronModel, modelViewTransform, bounds 
   this.edgeGateStringColor = Color.BLACK.getCanvasStyle();
 
   // each iteration during channel rendering updates the same local variable in order to avoid new vector creation
-  this.transformedChannelLocation = new Vector2( 0, 0 );
+  this.transformedChannelPosition = new Vector2( 0, 0 );
   this.viewTransformationMatrix = this.mvt.getMatrix();
 
   // avoid creation of new vector instances, update x, y positions and use it during rendering
@@ -168,7 +168,7 @@ inherit( CanvasNode, MembraneChannelGateCanvasNode, {
 
     // Use the same object reference.  These are intermediary objects and don't hold any state, and are used only for
     // rendering.
-    const transformedChannelLocation = this.transformedChannelLocation;
+    const transformedChannelPosition = this.transformedChannelPosition;
     const viewTransformationMatrix = this.viewTransformationMatrix;
 
     const channelEdgeConnectionPoint = this.channelEdgeConnectionPoint;
@@ -185,9 +185,9 @@ inherit( CanvasNode, MembraneChannelGateCanvasNode, {
     this.membraneChannels.getArray().forEach( function( membraneChannelModel ) {
 
       // avoid creating new vectors and use the multiplyVector2 since it doesn't create new vectors
-      transformedChannelLocation.x = membraneChannelModel.getCenterLocation().x;
-      transformedChannelLocation.y = membraneChannelModel.getCenterLocation().y;
-      viewTransformationMatrix.multiplyVector2( transformedChannelLocation );
+      transformedChannelPosition.x = membraneChannelModel.getCenterPosition().x;
+      transformedChannelPosition.y = membraneChannelModel.getCenterPosition().y;
+      viewTransformationMatrix.multiplyVector2( transformedChannelPosition );
 
       const rotation = -membraneChannelModel.rotationalAngle + Math.PI / 2;
 
@@ -205,7 +205,7 @@ inherit( CanvasNode, MembraneChannelGateCanvasNode, {
       const height = transformedChannelSize.height * oversizeFactor;
       const edgeWidth = edgeNodeBounds.width; // Assume both edges are the same size.
       context.save();
-      context.translate( transformedChannelLocation.x, transformedChannelLocation.y );
+      context.translate( transformedChannelPosition.x, transformedChannelPosition.y );
       context.rotate( rotation );
       context.translate( -( width + edgeWidth ) / 2, -height / 2 );
       context.fillStyle = self.channelColors[ membraneChannelModel.getChannelType() ];
@@ -243,7 +243,7 @@ inherit( CanvasNode, MembraneChannelGateCanvasNode, {
         ballConnectionPoint.y = ballPosition.y;
         const connectorLength = channelCenterBottomPoint.distance( ballConnectionPoint );
         context.save();
-        context.translate( transformedChannelLocation.x, transformedChannelLocation.y );
+        context.translate( transformedChannelPosition.x, transformedChannelPosition.y );
         context.rotate( rotation );
         context.lineWidth = 1.1;
         context.strokeStyle = self.edgeGateStringColor;
@@ -262,7 +262,7 @@ inherit( CanvasNode, MembraneChannelGateCanvasNode, {
       }
 
       // for better layering draw edges after ball and string
-      updateEdgeShapes( context, self, transformedChannelLocation, transformedChannelSize, edgeNodeBounds,
+      updateEdgeShapes( context, self, transformedChannelPosition, transformedChannelSize, edgeNodeBounds,
         transformedEdgeNodeSize, membraneChannelModel );
     } );
   }

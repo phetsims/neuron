@@ -38,7 +38,7 @@ function Particle( xPos, yPos ) {
   // @public, used to signal if and when this particle should be removed from the model
   this.continueExistingProperty = new Property( true );
 
-  // @private, location in space of this particle, units are nanometers, accessed through getter/setter methods
+  // @private, position in space of this particle, units are nanometers, accessed through getter/setter methods
   this.positionX = xPos;
   this.positionY = yPos;
 

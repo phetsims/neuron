@@ -168,9 +168,9 @@ function MembraneChannelNode( membraneChannelModel, mvt ) {
 
   }
 
-  function updateLocation() {
-    self.channelLayer.translate( mvt.modelToViewPosition( membraneChannelModel.getCenterLocation() ) );
-    self.edgeLayer.translate( mvt.modelToViewPosition( membraneChannelModel.getCenterLocation() ) );
+  function updatePosition() {
+    self.channelLayer.translate( mvt.modelToViewPosition( membraneChannelModel.getCenterPosition() ) );
+    self.edgeLayer.translate( mvt.modelToViewPosition( membraneChannelModel.getCenterPosition() ) );
   }
 
   function updateRotation() {
@@ -180,9 +180,9 @@ function MembraneChannelNode( membraneChannelModel, mvt ) {
     self.edgeLayer.setRotation( -membraneChannelModel.rotationalAngle + Math.PI / 2 );
   }
 
-  // Update the representation and location.
+  // Update the representation and position.
   updateRepresentation();
-  updateLocation();
+  updatePosition();
   updateRotation();
 }
 

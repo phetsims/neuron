@@ -29,13 +29,13 @@ const RAND = {
 
 /**
  * @param {Vector2} awayPoint - Point that should be moved away from.
- * @param {number} currentLocationX - Starting locationX
- * @param {number} currentLocationY - Starting locationY
+ * @param {number} currentPositionX - Starting x position
+ * @param {number} currentPositionY - Starting y position
  * @param {number} preFadeTime     - Time before fade out starts, in sim time
  * @param {number} fadeOutDuration - Time of fade out
  * @constructor
  */
-function WanderAwayThenFadeMotionStrategy( awayPoint, currentLocationX, currentLocationY, preFadeTime, fadeOutDuration ) {
+function WanderAwayThenFadeMotionStrategy( awayPoint, currentPositionX, currentPositionY, preFadeTime, fadeOutDuration ) {
 
   this.awayPoint = awayPoint;
   this.preFadeCountdownTimer = preFadeTime;
@@ -49,7 +49,7 @@ function WanderAwayThenFadeMotionStrategy( awayPoint, currentLocationX, currentL
   this.velocityY = 0;
 
   // Set an initial velocity and direction.
-  this.updateVelocity( currentLocationX, currentLocationY );
+  this.updateVelocity( currentPositionX, currentPositionY );
 }
 
 neuron.register( 'WanderAwayThenFadeMotionStrategy', WanderAwayThenFadeMotionStrategy );

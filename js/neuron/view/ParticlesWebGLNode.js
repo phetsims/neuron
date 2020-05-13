@@ -136,13 +136,13 @@ inherit( WebGLNode, ParticlesWebGLNode, {
     const yPos = this.modelViewTransform.modelToViewY( particle.positionY );
     const radius = this.modelViewTransform.modelToViewDeltaX( particle.getRadius() );
 
-    // Figure out the location and radius of the zoomed particle.
+    // Figure out the position and radius of the zoomed particle.
     const zoomMatrix = this.zoomMatrixProperty.value;
     const zoomedXPos = zoomMatrix.m00() * xPos + zoomMatrix.m02();
     const zoomedYPos = zoomMatrix.m11() * yPos + zoomMatrix.m12();
     const zoomedRadius = zoomMatrix.m00() * radius;
 
-    // Only add the particle if its zoomed location is within the bounds being shown.
+    // Only add the particle if its zoomed position is within the bounds being shown.
     if ( this.particleBounds.containsCoordinates( zoomedXPos, zoomedYPos ) ) {
       const particleDataEntry = this.particleData[ this.numActiveParticles ];
       particleDataEntry.pos.setXY( zoomedXPos, zoomedYPos );

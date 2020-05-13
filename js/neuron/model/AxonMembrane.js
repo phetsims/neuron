@@ -249,7 +249,7 @@ inherit( Object, AxonMembrane, {
      *
      * @param {Cubic} curve - The curve shape that is being evaluated.
      * @param {number} proportion - proportional distance along the curve from the first control point, must be from 0 to 1.
-     * @returns {Vector2} point corresponding to the location of the curve at the specified distance.
+     * @returns {Vector2} point corresponding to the position of the curve at the specified distance.
      * @public
      */
     evaluateCurve: function( curve, proportion ) {

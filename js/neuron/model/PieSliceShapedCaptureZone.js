@@ -24,7 +24,7 @@ const pointZoneCheckPoint = new Vector2( 0, 0 );
  * is shaped like a pie slice.  For more information on what exactly a
  * capture zone is, see the parent class documentation.
  *
- * @param {Vector2} center - Location of the center of this capture zone, i.e. where
+ * @param {Vector2} center - Position of the center of this capture zone, i.e. where
  * the point of the pie is.
  * @param {number} radius - specifies the distance from the point of
  * the pie slice to the outer rounded edge, in nanometers.
@@ -82,7 +82,7 @@ inherit( CaptureZone, PieSliceShapedCaptureZone, {
   },
 
   // @public, assign a random point that is somewhere within the shape.
-  assignNewParticleLocation: function( particle ) {
+  assignNewParticlePosition: function( particle ) {
     const placementAngle = this.rotationAngle + this.fixedRotationalOffset + ( phet.joist.random.nextDouble() - 0.5 ) * this.angleOfExtent;
     const distanceFromOrigin = this.radius * 0.9;
     const xPos = this.originPoint.x + distanceFromOrigin * Math.cos( placementAngle );
