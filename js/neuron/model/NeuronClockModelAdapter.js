@@ -18,7 +18,7 @@ import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import EnumerationProperty from '../../../../axon/js/EnumerationProperty.js';
 import Property from '../../../../axon/js/Property.js';
 import inherit from '../../../../phet-core/js/inherit.js';
-import TimeControlSpeed from '../../../../scenery-phet/js/TimeControlSpeed.js';
+import TimeSpeed from '../../../../scenery-phet/js/TimeSpeed.js';
 import neuron from '../../neuron.js';
 
 // the following constants could easily be turned into options if there was a need to reuse and thus generalize
@@ -46,16 +46,16 @@ function NeuronClockModelAdapter( model ) {
 
   this.playingProperty = new Property( true ); // linked to playPause button
 
-  // @public {EnumerationProperty.<TimeControlSpeed>}
-  this.timeControlSpeedProperty = new EnumerationProperty( TimeControlSpeed, TimeControlSpeed.NORMAL );
+  // @public {EnumerationProperty.<TimeSpeed>}
+  this.timeSpeedProperty = new EnumerationProperty( TimeSpeed, TimeSpeed.NORMAL );
 
   // @public {DerivedProperty.<number>} - factor controlling simulation clock speed
-  this.speedProperty = new DerivedProperty( [ this.timeControlSpeedProperty ], timeControlSpeed => {
-    const speed = timeControlSpeed === TimeControlSpeed.FAST ? 2 :
-                  timeControlSpeed === TimeControlSpeed.NORMAL ? 1 :
-                  timeControlSpeed === TimeControlSpeed.SLOW ? 0.5 :
+  this.speedProperty = new DerivedProperty( [ this.timeSpeedProperty ], timeSpeed => {
+    const speed = timeSpeed === TimeSpeed.FAST ? 2 :
+                  timeSpeed === TimeSpeed.NORMAL ? 1 :
+                  timeSpeed === TimeSpeed.SLOW ? 0.5 :
                   null;
-    assert && assert( speed !== null, 'no speed found for TimeControlSpeed ' + timeControlSpeed );
+    assert && assert( speed !== null, 'no speed found for TimeSpeed ' + timeSpeed );
     return speed;
   } );
 
@@ -101,7 +101,7 @@ inherit( Object, NeuronClockModelAdapter, {
   // @public
   reset: function() {
     this.playingProperty.reset();
-    this.timeControlSpeedProperty.reset();
+    this.timeSpeedProperty.reset();
     this.lastSimulationTime = 0.0;
     this.simulationTime = 0.0;
 

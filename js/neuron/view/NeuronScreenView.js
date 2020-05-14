@@ -24,14 +24,14 @@ import MultiLineText from '../../../../scenery-phet/js/MultiLineText.js';
 import PhetColorScheme from '../../../../scenery-phet/js/PhetColorScheme.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import TimeControlNode from '../../../../scenery-phet/js/TimeControlNode.js';
-import TimeControlSpeed from '../../../../scenery-phet/js/TimeControlSpeed.js';
+import TimeSpeed from '../../../../scenery-phet/js/TimeSpeed.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
 import Path from '../../../../scenery/js/nodes/Path.js';
 import Rectangle from '../../../../scenery/js/nodes/Rectangle.js';
 import SceneryUtils from '../../../../scenery/js/util/Utils.js'; // eslint-disable-line require-statement-match
 import RectangularPushButton from '../../../../sun/js/buttons/RectangularPushButton.js';
-import neuronStrings from '../../neuronStrings.js';
 import neuron from '../../neuron.js';
+import neuronStrings from '../../neuronStrings.js';
 import NeuronConstants from '../common/NeuronConstants.js';
 import AxonBodyNode from './AxonBodyNode.js';
 import AxonCrossSectionNode from './AxonCrossSectionNode.js';
@@ -230,8 +230,8 @@ function NeuronScreenView( neuronClockModelAdapter ) {
   const leftPadding = 20;
 
   const timeControlNode = new TimeControlNode( playingProperty, {
-    timeControlSpeedProperty: neuronClockModelAdapter.timeControlSpeedProperty,
-    timeControlSpeeds: [ TimeControlSpeed.FAST, TimeControlSpeed.NORMAL, TimeControlSpeed.SLOW ],
+    timeSpeedProperty: neuronClockModelAdapter.timeSpeedProperty,
+    timeSpeeds: [ TimeSpeed.FAST, TimeSpeed.NORMAL, TimeSpeed.SLOW ],
     playPauseStepButtonOptions: {
       includeStepBackwardButton: true,
       playPauseButtonOptions: { radius: 25 },
