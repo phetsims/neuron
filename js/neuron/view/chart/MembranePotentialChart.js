@@ -158,7 +158,7 @@ function MembranePotentialChart( chartDimension, neuronClockModelAdapter ) {
 
   // close button
   const closeButton = new CloseButton( {
-    iconLength: 6,
+    iconLength: 12,
     listener: function() {
       self.neuronModel.potentialChartVisibleProperty.set( false );
     }
