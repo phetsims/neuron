@@ -9,7 +9,7 @@
  */
 
 import Emitter from '../../../../axon/js/Emitter.js';
-import ObservableArray from '../../../../axon/js/ObservableArray.js';
+import createObservableArray from '../../../../axon/js/createObservableArray.js';
 import Property from '../../../../axon/js/Property.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import inherit from '../../../../phet-core/js/inherit.js';
@@ -101,19 +101,19 @@ function NeuronModel() {
   this.particlesMoved = new Emitter();
 
   // @public, read-only - list of the particles that come and go when the simulation is working in real time
-  this.transientParticles = new ObservableArray();
+  this.transientParticles = createObservableArray();
 
   // @private - backup of the transient particles, used to restore them when returning to live mode after doing playback
-  this.transientParticlesBackup = new ObservableArray();
+  this.transientParticlesBackup = createObservableArray();
 
   // @public, read-only - particles that are "in the background", meaning that they are always present and they don't
   // cross the membrane
-  this.backgroundParticles = new ObservableArray();
+  this.backgroundParticles = createObservableArray();
 
   // @public, read-only - list of particles that are shown during playback
-  this.playbackParticles = new ObservableArray();
+  this.playbackParticles = createObservableArray();
 
-  this.membraneChannels = new ObservableArray(); // @public, read-only
+  this.membraneChannels = createObservableArray(); // @public, read-only
   this.hodgkinHuxleyModel = new ModifiedHodgkinHuxleyModel(); // @public
 
   // @public, read-only - various model values

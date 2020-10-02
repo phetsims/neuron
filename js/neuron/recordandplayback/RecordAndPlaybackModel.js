@@ -12,7 +12,7 @@
  * @author Sam Reid
  */
 
-import ObservableArray from '../../../../axon/js/ObservableArray.js';
+import createObservableArray from '../../../../axon/js/createObservableArray.js';
 import Property from '../../../../axon/js/Property.js';
 import inherit from '../../../../phet-core/js/inherit.js';
 import neuron from '../../neuron.js';
@@ -37,7 +37,7 @@ function RecordAndPlaybackModel( maxRecordPoints ) {
   this.maxRecordPoints = maxRecordPoints;
 
   // @private - the history of data points that have been recorded from the model.
-  this.recordHistory = new ObservableArray();
+  this.recordHistory = createObservableArray();
 
   this.recordMode = new Record( this ); // @private - samples data from the mode and stores it
   this.playbackMode = new Playback( this ); // @private - plays back recorded data
