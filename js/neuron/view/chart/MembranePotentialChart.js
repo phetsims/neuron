@@ -245,7 +245,7 @@ function MembranePotentialChart( chartDimension, neuronClockModelAdapter ) {
 
 neuron.register( 'MembranePotentialChart', MembranePotentialChart );
 
-inherit( Panel, MembranePotentialChart, {
+inherit( Node, MembranePotentialChart, {
 
   /**
    * Add a data point to the graph.
