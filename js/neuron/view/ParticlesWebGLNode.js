@@ -167,19 +167,19 @@ inherit( WebGLNode, ParticlesWebGLNode, {
     // contents of the observable array.
 
     let i;
-    let particleArray = this.neuronModel.backgroundParticles.getArray();
+    let particleArray = this.neuronModel.backgroundParticles;
 
     for ( i = 0; i < particleArray.length; i++ ) {
       this.addParticleData( particleArray[ i ] );
     }
 
-    particleArray = this.neuronModel.transientParticles.getArray();
+    particleArray = this.neuronModel.transientParticles;
 
     for ( i = 0; i < particleArray.length; i++ ) {
       this.addParticleData( particleArray[ i ] );
     }
 
-    particleArray = this.neuronModel.playbackParticles.getArray();
+    particleArray = this.neuronModel.playbackParticles;
 
     for ( i = 0; i < particleArray.length; i++ ) {
       this.addParticleData( particleArray[ i ] );

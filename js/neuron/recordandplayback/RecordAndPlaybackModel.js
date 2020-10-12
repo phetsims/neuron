@@ -195,7 +195,7 @@ inherit( Object, RecordAndPlaybackModel, {
    */
   getPlaybackState: function() {
     const self = this;
-    const sortedHistory = this.recordHistory.getArray().slice();
+    const sortedHistory = this.recordHistory.slice();
 
     sortedHistory.sort( function( o1, o2 ) {
       // Though inefficient, this hasn't caused noticeable slowdown during testing.

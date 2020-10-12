@@ -182,7 +182,7 @@ inherit( CanvasNode, MembraneChannelGateCanvasNode, {
     const transformedOverallSize = this.transformedOverallSize;
     const transformedEdgeNodeSize = this.transformedEdgeNodeSize;
 
-    this.membraneChannels.getArray().forEach( function( membraneChannelModel ) {
+    this.membraneChannels.forEach( function( membraneChannelModel ) {
 
       // avoid creating new vectors and use the multiplyVector2 since it doesn't create new vectors
       transformedChannelPosition.x = membraneChannelModel.getCenterPosition().x;

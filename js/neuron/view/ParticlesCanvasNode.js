@@ -128,9 +128,9 @@ inherit( CanvasNode, ParticlesCanvasNode, {
    * @public
    */
   paintCanvas: function( context ) {
-    this.renderParticles( this.neuronModel.backgroundParticles.getArray(), context );
-    this.renderParticles( this.neuronModel.transientParticles.getArray(), context );
-    this.renderParticles( this.neuronModel.playbackParticles.getArray(), context );
+    this.renderParticles( this.neuronModel.backgroundParticles, context );
+    this.renderParticles( this.neuronModel.transientParticles, context );
+    this.renderParticles( this.neuronModel.playbackParticles, context );
   }
 
 } );

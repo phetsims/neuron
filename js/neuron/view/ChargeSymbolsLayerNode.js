@@ -35,7 +35,7 @@ function ChargeSymbolsLayerNode( neuronModel, mvt ) {
    */
   function addChargeSymbols() {
     // Create a sorted list of the membrane channels in the model.
-    const sortedMembraneChannels = neuronModel.membraneChannels.getArray().slice();
+    const sortedMembraneChannels = neuronModel.membraneChannels.slice();
     sortMembraneChannelList( sortedMembraneChannels );
 
     // Go through the list and put charge symbols between each pair of channels.

@@ -330,7 +330,7 @@ inherit( RecordAndPlaybackModel, NeuronModel, {
     // modified, the following loops reach into the observable arrays and loop on the regular array contained within.
 
     // Step the channels.
-    this.membraneChannels.getArray().forEach( function( channel ) {
+    this.membraneChannels.forEach( function( channel ) {
       channel.stepInTime( dt );
     } );
 
@@ -340,7 +340,7 @@ inherit( RecordAndPlaybackModel, NeuronModel, {
 
     // Step the background particles, which causes them to exhibit a
     // little Brownian motion
-    this.backgroundParticles.getArray().forEach( function( particle ) {
+    this.backgroundParticles.forEach( function( particle ) {
       particle.stepInTime( dt );
     } );
 
@@ -434,7 +434,7 @@ inherit( RecordAndPlaybackModel, NeuronModel, {
     const channelStateChanged = function( membraneChannel ) {
       return membraneChannel.channelStateChangedProperty.get();
     };
-    if ( _.some( this.membraneChannels.getArray(), channelStateChanged ) ) {
+    if ( _.some( this.membraneChannels, channelStateChanged ) ) {
       this.channelRepresentationChanged.emit();
     }
 
@@ -597,7 +597,7 @@ inherit( RecordAndPlaybackModel, NeuronModel, {
     const self = this;
 
     // Make a list of pre-existing particles.
-    const preExistingParticles = _.clone( this.transientParticles.getArray() );
+    const preExistingParticles = _.clone( this.transientParticles);
 
     // Add the initial particles.
     this.addBackgroundParticles( ParticleType.SODIUM_ION, ParticlePosition.INSIDE_MEMBRANE, NUM_SODIUM_IONS_INSIDE_CELL );
@@ -780,7 +780,7 @@ inherit( RecordAndPlaybackModel, NeuronModel, {
     const captureZoneOrigin = zone.getOriginPoint();
 
     // loop over the contained array - this is faster, but the array can't be modified
-    this.transientParticles.getArray().forEach( function( particle ) {
+    this.transientParticles.forEach( function( particle ) {
 
       // This method is refactored to use position x,y components instead of vector2 instances
       if ( ( particle.getType() === particleType ) && ( particle.isAvailableForCapture() ) && ( zone.isPointInZone( particle.getPositionX(), particle.getPositionY() ) ) ) {
@@ -833,7 +833,7 @@ inherit( RecordAndPlaybackModel, NeuronModel, {
         this.playbackParticles.clear();
 
         // Show the simulation particles.
-        this.transientParticles.addAll( this.transientParticlesBackup.getArray().slice() );
+        this.transientParticles.addAll( this.transientParticlesBackup.slice() );
         this.transientParticlesBackup.clear();
 
         // Update the state variable.
@@ -846,7 +846,7 @@ inherit( RecordAndPlaybackModel, NeuronModel, {
       if ( !this.playbackParticlesVisibleProperty.get() ) {
         // Hide the simulation particles.  This is done by making a backup copy of them (so that they can be added
         // back later) and then removing them from the model.
-        this.transientParticlesBackup.addAll( this.transientParticles.getArray().slice() );
+        this.transientParticlesBackup.addAll( this.transientParticles.slice() ); // TODO: https://github.com/phetsims/axon/issues/279 is slice necessary here?
         this.transientParticles.clear();
 
         // Note that we don't explicitly add the playback particles
@@ -1078,7 +1078,7 @@ inherit( RecordAndPlaybackModel, NeuronModel, {
     this.hodgkinHuxleyModel.setState( state.getHodgkinHuxleyModelState() );
 
     // Set the states of the membrane channels.
-    this.membraneChannels.getArray().forEach( function( membraneChannel ) {
+    this.membraneChannels.forEach( function( membraneChannel ) {
       const mcs = state.getMembraneChannelStateMap().get( membraneChannel );
       // Error handling.
       if ( mcs === null ) {
@@ -1123,7 +1123,7 @@ inherit( RecordAndPlaybackModel, NeuronModel, {
     const channelStateChanged = function( membraneChannel ) {
       return membraneChannel.channelStateChangedProperty.get();
     };
-    if ( _.some( this.membraneChannels.getArray(), channelStateChanged ) ) {
+    if ( _.some( this.membraneChannels, channelStateChanged ) ) {
       this.channelRepresentationChanged.emit();
     }
   }
