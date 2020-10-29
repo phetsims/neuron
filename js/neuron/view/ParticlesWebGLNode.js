@@ -13,7 +13,6 @@
  */
 
 import Vector2 from '../../../../dot/js/Vector2.js';
-import inherit from '../../../../phet-core/js/inherit.js';
 import WebGLNode from '../../../../scenery/js/nodes/WebGLNode.js';
 import ShaderProgram from '../../../../scenery/js/util/ShaderProgram.js';
 import neuron from '../../neuron.js';
@@ -28,102 +27,98 @@ const TEXTURE_VALUES_PER_VERTEX = 2; // x and y coordinates within the 2D textur
 const OPACITY_VALUES_PER_VERTEX = 1; // a single value from 0 to 1
 const scratchFloatArray = new Float32Array( 9 );
 
-/**
- * @param {NeuronModel} neuronModel
- * @param {ModelViewTransform2} modelViewTransform
- * @param {Property.<Matrix3>} zoomMatrixProperty - a matrix that tracks how zoomed in or out this node is, used to
- * determine whether a given particle needs to be rendered
- * @param {Shape} bounds
- * @constructor
- */
-function ParticlesWebGLNode( neuronModel, modelViewTransform, zoomMatrixProperty, bounds ) {
-  const self = this;
-  WebGLNode.call( this, ParticlesPainter, {
-    canvasBounds: bounds
-  } );
+class ParticlesWebGLNode extends WebGLNode {
+  /**
+   * @param {NeuronModel} neuronModel
+   * @param {ModelViewTransform2} modelViewTransform
+   * @param {Property.<Matrix3>} zoomMatrixProperty - a matrix that tracks how zoomed in or out this node is, used to
+   * determine whether a given particle needs to be rendered
+   * @param {Shape} bounds
+   */
+  constructor( neuronModel, modelViewTransform, zoomMatrixProperty, bounds ) {
+    super( ParticlesPainter, {
+      canvasBounds: bounds
+    } );
 
-  // Keep references to the things that needed in order to render the particles.
-  this.neuronModel = neuronModel; // @private
-  this.modelViewTransform = modelViewTransform; // @private
-  this.viewTransformationMatrix = modelViewTransform.getMatrix(); // @private
-  this.zoomMatrixProperty = zoomMatrixProperty; // @private
-  this.particleBounds = bounds; // @private
+    // Keep references to the things that needed in order to render the particles.
+    this.neuronModel = neuronModel; // @private
+    this.modelViewTransform = modelViewTransform; // @private
+    this.viewTransformationMatrix = modelViewTransform.getMatrix(); // @private
+    this.zoomMatrixProperty = zoomMatrixProperty; // @private
+    this.particleBounds = bounds; // @private
 
-  // Create the texture for the particles.
-  this.particlesTexture = new NeuronParticlesTexture( modelViewTransform ); // @private
+    // Create the texture for the particles.
+    this.particlesTexture = new NeuronParticlesTexture( modelViewTransform ); // @private
 
-  // @private - pre-allocated arrays and values that are reused for better performance
-  this.vertexData = new Float32Array( MAX_PARTICLES * VERTICES_PER_PARTICLE *
-                                      ( POSITION_VALUES_PER_VERTEX + TEXTURE_VALUES_PER_VERTEX + OPACITY_VALUES_PER_VERTEX ) );
-  this.elementData = new Uint16Array( MAX_PARTICLES * ( VERTICES_PER_PARTICLE + 2 ) );
-  this.particleData = new Array( MAX_PARTICLES );
+    // @private - pre-allocated arrays and values that are reused for better performance
+    this.vertexData = new Float32Array( MAX_PARTICLES * VERTICES_PER_PARTICLE *
+                                        ( POSITION_VALUES_PER_VERTEX + TEXTURE_VALUES_PER_VERTEX + OPACITY_VALUES_PER_VERTEX ) );
+    this.elementData = new Uint16Array( MAX_PARTICLES * ( VERTICES_PER_PARTICLE + 2 ) );
+    this.particleData = new Array( MAX_PARTICLES );
 
-  // pre-calculate the texture coordinates for the two different particle types
-  this.sodiumTextureCoords = this.particlesTexture.getTexCoords( ParticleType.SODIUM_ION );
-  this.potassiumTextureCoords = this.particlesTexture.getTexCoords( ParticleType.POTASSIUM_ION );
+    // pre-calculate the texture coordinates for the two different particle types
+    this.sodiumTextureCoords = this.particlesTexture.getTexCoords( ParticleType.SODIUM_ION );
+    this.potassiumTextureCoords = this.particlesTexture.getTexCoords( ParticleType.POTASSIUM_ION );
 
-  for ( let i = 0; i < MAX_PARTICLES; i++ ) {
+    for ( let i = 0; i < MAX_PARTICLES; i++ ) {
 
-    // For better performance, the array of particle data objects is initialized here and the values updated rather
-    // than reallocated during each update.
-    this.particleData[ i ] = {
-      pos: new Vector2( 0, 0 ),
-      radius: 1,
-      type: null,
-      opacity: 1
-    };
+      // For better performance, the array of particle data objects is initialized here and the values updated rather
+      // than reallocated during each update.
+      this.particleData[ i ] = {
+        pos: new Vector2( 0, 0 ),
+        radius: 1,
+        type: null,
+        opacity: 1
+      };
 
-    // Also for better performance, the element data is initialized at the start for the max number of particles.
-    const indexBase = i * 6;
-    const valueBase = i * 4;
-    this.elementData[ indexBase ] = valueBase;
-    this.elementData[ indexBase + 1 ] = valueBase + 1;
-    this.elementData[ indexBase + 2 ] = valueBase + 2;
-    this.elementData[ indexBase + 3 ] = valueBase + 3;
-    if ( i + 1 < MAX_PARTICLES ) {
-      // Add the 'degenerate triangle' that will force a discontinuity in the triangle strip.
-      this.elementData[ indexBase + 4 ] = valueBase + 3;
-      this.elementData[ indexBase + 5 ] = valueBase + 4;
+      // Also for better performance, the element data is initialized at the start for the max number of particles.
+      const indexBase = i * 6;
+      const valueBase = i * 4;
+      this.elementData[ indexBase ] = valueBase;
+      this.elementData[ indexBase + 1 ] = valueBase + 1;
+      this.elementData[ indexBase + 2 ] = valueBase + 2;
+      this.elementData[ indexBase + 3 ] = valueBase + 3;
+      if ( i + 1 < MAX_PARTICLES ) {
+        // Add the 'degenerate triangle' that will force a discontinuity in the triangle strip.
+        this.elementData[ indexBase + 4 ] = valueBase + 3;
+        this.elementData[ indexBase + 5 ] = valueBase + 4;
+      }
     }
+
+    this.numActiveParticles = 0; // @private
+
+    // initial update
+    this.updateParticleData();
+
+    // monitor a property that indicates when a particle state has changed and initiate a redraw
+    neuronModel.particlesMoved.addListener( () => {
+      this.invalidatePaint();
+    } );
+
+    // monitor a property that indicates whether all ions are being depicted and initiate a redraw on a change
+    neuronModel.allIonsSimulatedProperty.lazyLink( () => {
+      this.invalidatePaint();
+    } );
+
+    // monitor a property that indicates when the zoom level and changes and initiate a redraw
+    zoomMatrixProperty.lazyLink( () => {
+      this.invalidatePaint();
+    } );
+
+    /**
+     * There is an issue in Scenery where, if nothing is drawn, whatever was previously drawn stays there.  This was
+     * causing problems in this sim when turning off the "Show All Ions" setting, see
+     * https://github.com/phetsims/neuron/issues/100.  The Scenery issue is
+     * https://github.com/phetsims/scenery/issues/503.  To work around this problem, a property was added to the model
+     * and linked here that can be used to set the node invisible if there are no particles to be rendered.  This can
+     * probably be removed if and when the Scenery issue is addressed.
+     */
+    neuronModel.atLeastOneParticlePresentProperty.lazyLink( atLeastOneParticlePresent => {
+      this.visible = atLeastOneParticlePresent;
+      this.invalidatePaint();
+    } );
   }
 
-  this.numActiveParticles = 0; // @private
-
-  // initial update
-  this.updateParticleData();
-
-  // monitor a property that indicates when a particle state has changed and initiate a redraw
-  neuronModel.particlesMoved.addListener( function() {
-    self.invalidatePaint();
-  } );
-
-  // monitor a property that indicates whether all ions are being depicted and initiate a redraw on a change
-  neuronModel.allIonsSimulatedProperty.lazyLink( function() {
-    self.invalidatePaint();
-  } );
-
-  // monitor a property that indicates when the zoom level and changes and initiate a redraw
-  zoomMatrixProperty.lazyLink( function() {
-    self.invalidatePaint();
-  } );
-
-  /**
-   * There is an issue in Scenery where, if nothing is drawn, whatever was previously drawn stays there.  This was
-   * causing problems in this sim when turning off the "Show All Ions" setting, see
-   * https://github.com/phetsims/neuron/issues/100.  The Scenery issue is
-   * https://github.com/phetsims/scenery/issues/503.  To work around this problem, a property was added to the model
-   * and linked here that can be used to set the node invisible if there are no particles to be rendered.  This can
-   * probably be removed if and when the Scenery issue is addressed.
-   */
-  neuronModel.atLeastOneParticlePresentProperty.lazyLink( function( atLeastOneParticlePresent ) {
-    self.visible = atLeastOneParticlePresent;
-    self.invalidatePaint();
-  } );
-}
-
-neuron.register( 'ParticlesWebGLNode', ParticlesWebGLNode );
-
-inherit( WebGLNode, ParticlesWebGLNode, {
 
   /**
    * Check if the provided particle is in the current rendering bounds and, if so, create a particle data object and
@@ -131,7 +126,7 @@ inherit( WebGLNode, ParticlesWebGLNode, {
    * @param {Particle} particle
    * @private
    */
-  addParticleData: function( particle ) {
+  addParticleData( particle ) {
     const xPos = this.modelViewTransform.modelToViewX( particle.positionX );
     const yPos = this.modelViewTransform.modelToViewY( particle.positionY );
     const radius = this.modelViewTransform.modelToViewDeltaX( particle.getRadius() );
@@ -152,14 +147,14 @@ inherit( WebGLNode, ParticlesWebGLNode, {
       assert && assert( this.numActiveParticles < MAX_PARTICLES - 1 );
       this.numActiveParticles = Math.min( this.numActiveParticles + 1, MAX_PARTICLES );
     }
-  },
+  }
 
   /**
    * Update the representation shown in the canvas based on the model state.  This is intended to be called any time
    * one or more particles move in a given time step, which means once per frame or less.
    * @private
    */
-  updateParticleData: function() {
+  updateParticleData() {
     this.numActiveParticles = 0;
 
     // For better performance, we loop over the arrays contained within the observable arrays rather than using the
@@ -185,84 +180,91 @@ inherit( WebGLNode, ParticlesWebGLNode, {
       this.addParticleData( particleArray[ i ] );
     }
   }
-
-} );
-
-/**
- * Constructor for the object that will do the actual painting for this node.  This constructor, rather than an
- * instance, is passed to the parent WebGLNode type.
- * @constructor
- * @param {WebGLRenderingContext} gl
- * @param {WaveWebGLNode} node
- */
-function ParticlesPainter( gl, node ) {
-  this.gl = gl;
-  this.node = node;
-
-  // vertex shader
-  const vertexShaderSource = [
-    'attribute vec2 aPosition;',
-    'attribute vec2 aTextureCoordinate;',
-    'attribute float aOpacity;',
-    'varying vec2 vTextureCoordinate;',
-    'varying float vOpacity;',
-    'uniform mat3 uModelViewMatrix;',
-    'uniform mat3 uProjectionMatrix;',
-
-    'void main( void ) {',
-    // homogeneous model-view transformation
-    '  vec3 view = uModelViewMatrix * vec3( aPosition.xy, 1 );',
-    // homogeneous map to to normalized device coordinates
-    '  vec3 ndc = uProjectionMatrix * vec3( view.xy, 1 );',
-    // texture coordinate
-    '  vTextureCoordinate = aTextureCoordinate;',
-    // opacity
-    '  vOpacity = aOpacity;',
-    // assume a z value of 1 for the position
-    '  gl_Position = vec4( ndc.xy, 1.0, 1.0 );',
-    '}'
-  ].join( '\n' );
-
-  // fragment shader
-  const fragmentShaderSource = [
-    'precision mediump float;',
-    'varying vec2 vTextureCoordinate;',
-    'varying float vOpacity;',
-    'uniform sampler2D uSampler;',
-    'void main( void ) {',
-    '  gl_FragColor = texture2D( uSampler, vTextureCoordinate );',
-    '  gl_FragColor.a *= vOpacity;',
-
-    // Use premultipled alpha, see https://github.com/phetsims/energy-skate-park/issues/39
-    '  gl_FragColor.rgb *= gl_FragColor.a;',
-    '}'
-  ].join( '\n' );
-
-  this.shaderProgram = new ShaderProgram( gl, vertexShaderSource, fragmentShaderSource, {
-    attributes: [ 'aPosition', 'aTextureCoordinate', 'aOpacity' ],
-    uniforms: [ 'uModelViewMatrix', 'uProjectionMatrix' ]
-  } );
-
-  this.texture = gl.createTexture();
-  this.vertexBuffer = gl.createBuffer();
-  this.elementBuffer = gl.createBuffer();
-
-  // bind the texture that contains the particle images
-  gl.bindTexture( gl.TEXTURE_2D, this.texture );
-  gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE );
-  gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE );
-  // Texture filtering, see http://learningwebgl.com/blog/?p=571
-  gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR );
-  gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR );
-  // ship the texture data to the GPU
-  gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.node.particlesTexture.canvas );
-
-  // generate a mipmap for better handling of zoom in/out
-  gl.generateMipmap( gl.TEXTURE_2D );
 }
 
-inherit( Object, ParticlesPainter, {
-  paint: function( modelViewMatrix, projectionMatrix ) {
+neuron.register( 'ParticlesWebGLNode', ParticlesWebGLNode );
+
+class ParticlesPainter {
+  /**
+   * Constructor for the object that will do the actual painting for this node.  This constructor, rather than an
+   * instance, is passed to the parent WebGLNode type.
+   * @param {WebGLRenderingContext} gl
+   * @param {WaveWebGLNode} node
+   */
+  constructor( gl, node ) {
+    this.gl = gl;
+    this.node = node;
+
+    // vertex shader
+    const vertexShaderSource = [
+      'attribute vec2 aPosition;',
+      'attribute vec2 aTextureCoordinate;',
+      'attribute float aOpacity;',
+      'varying vec2 vTextureCoordinate;',
+      'varying float vOpacity;',
+      'uniform mat3 uModelViewMatrix;',
+      'uniform mat3 uProjectionMatrix;',
+
+      'void main( void ) {',
+      // homogeneous model-view transformation
+      '  vec3 view = uModelViewMatrix * vec3( aPosition.xy, 1 );',
+      // homogeneous map to to normalized device coordinates
+      '  vec3 ndc = uProjectionMatrix * vec3( view.xy, 1 );',
+      // texture coordinate
+      '  vTextureCoordinate = aTextureCoordinate;',
+      // opacity
+      '  vOpacity = aOpacity;',
+      // assume a z value of 1 for the position
+      '  gl_Position = vec4( ndc.xy, 1.0, 1.0 );',
+      '}'
+    ].join( '\n' );
+
+    // fragment shader
+    const fragmentShaderSource = [
+      'precision mediump float;',
+      'varying vec2 vTextureCoordinate;',
+      'varying float vOpacity;',
+      'uniform sampler2D uSampler;',
+      'void main( void ) {',
+      '  gl_FragColor = texture2D( uSampler, vTextureCoordinate );',
+      '  gl_FragColor.a *= vOpacity;',
+
+      // Use premultipled alpha, see https://github.com/phetsims/energy-skate-park/issues/39
+      '  gl_FragColor.rgb *= gl_FragColor.a;',
+      '}'
+    ].join( '\n' );
+
+    this.shaderProgram = new ShaderProgram( gl, vertexShaderSource, fragmentShaderSource, {
+      attributes: [ 'aPosition', 'aTextureCoordinate', 'aOpacity' ],
+      uniforms: [ 'uModelViewMatrix', 'uProjectionMatrix' ]
+    } );
+
+    this.texture = gl.createTexture();
+    this.vertexBuffer = gl.createBuffer();
+    this.elementBuffer = gl.createBuffer();
+
+    // bind the texture that contains the particle images
+    gl.bindTexture( gl.TEXTURE_2D, this.texture );
+    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE );
+    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE );
+    // Texture filtering, see http://learningwebgl.com/blog/?p=571
+    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR );
+    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR );
+    // ship the texture data to the GPU
+    gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.node.particlesTexture.canvas );
+
+    // generate a mipmap for better handling of zoom in/out
+    gl.generateMipmap( gl.TEXTURE_2D );
+  }
+
+  /**
+   * @public
+   *
+   * @param {Matrix3} modelViewMatrix
+   * @param {Matrix3} projectionMatrix
+   * @returns {WebGLNode.PAINTED_SOMETHING}
+   */
+  paint( modelViewMatrix, projectionMatrix ) {
     const gl = this.gl;
     const shaderProgram = this.shaderProgram;
     let i; // loop index
@@ -372,15 +374,19 @@ inherit( Object, ParticlesPainter, {
     shaderProgram.unuse();
 
     return WebGLNode.PAINTED_SOMETHING;
-  },
+  }
 
-  dispose: function() {
+  /**
+   * Releases references
+   * @public
+   */
+  dispose() {
     this.shaderProgram.dispose();
     this.gl.deleteBuffer( this.vertexBuffer );
     this.gl.deleteTexture( this.texture );
     this.gl.deleteBuffer( this.elementBuffer );
     this.shaderProgram = null;
   }
-} );
+}
 
 export default ParticlesWebGLNode;
