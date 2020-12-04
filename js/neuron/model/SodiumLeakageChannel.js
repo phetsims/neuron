@@ -8,7 +8,6 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-import inherit from '../../../../phet-core/js/inherit.js';
 import Color from '../../../../scenery/js/util/Color.js';
 import neuron from '../../neuron.js';
 import MathUtils from '../common/MathUtils.js';
@@ -34,43 +33,40 @@ const NOMINAL_LEAK_LEVEL = 0.005;
 // testing the Hodgkin-Huxley model.
 const PEAK_NEGATIVE_CURRENT = 3.44;
 
-/**
- * @param {number} channelWidth
- * @param {NeuronModel} modelContainingParticles
- * @param {ModifiedHodgkinHuxleyModel} hodgkinHuxleyModel
- * @constructor
- */
-function SodiumLeakageChannel( modelContainingParticles, hodgkinHuxleyModel ) {
-  AbstractLeakChannel.call( this, CHANNEL_WIDTH, CHANNEL_HEIGHT, modelContainingParticles );
-  this.previousNormalizedLeakCurrent = 0;
-  this.hodgkinHuxleyModel = hodgkinHuxleyModel;
+class SodiumLeakageChannel extends AbstractLeakChannel {
+  /**
+   * @param {number} channelWidth
+   * @param {NeuronModel} modelContainingParticles
+   * @param {ModifiedHodgkinHuxleyModel} hodgkinHuxleyModel
+   */
+  constructor( modelContainingParticles, hodgkinHuxleyModel ) {
+    super( CHANNEL_WIDTH, CHANNEL_HEIGHT, modelContainingParticles );
+    this.previousNormalizedLeakCurrent = 0;
+    this.hodgkinHuxleyModel = hodgkinHuxleyModel;
 
-  // Set the speed at which particles will move through the channel.
-  this.setParticleVelocity( DEFAULT_PARTICLE_VELOCITY );
+    // Set the speed at which particles will move through the channel.
+    this.setParticleVelocity( DEFAULT_PARTICLE_VELOCITY );
 
-  // Set up the capture zones for this channel.
-  this.setExteriorCaptureZone( new PieSliceShapedCaptureZone( this.getCenterPosition(), CHANNEL_WIDTH * 5, 0, Math.PI * 0.6 ) );
-  this.setInteriorCaptureZone( new PieSliceShapedCaptureZone( this.getCenterPosition(), CHANNEL_WIDTH * 5, Math.PI, Math.PI * 0.8 ) );
+    // Set up the capture zones for this channel.
+    this.setExteriorCaptureZone( new PieSliceShapedCaptureZone( this.getCenterPosition(), CHANNEL_WIDTH * 5, 0, Math.PI * 0.6 ) );
+    this.setInteriorCaptureZone( new PieSliceShapedCaptureZone( this.getCenterPosition(), CHANNEL_WIDTH * 5, Math.PI, Math.PI * 0.8 ) );
 
-  // Update the capture times.
-  this.updateParticleCaptureRate( NOMINAL_LEAK_LEVEL );
-  this.channelColor = BASE_COLOR.colorUtilsDarker( 0.15 );
+    // Update the capture times.
+    this.updateParticleCaptureRate( NOMINAL_LEAK_LEVEL );
+    this.channelColor = BASE_COLOR.colorUtilsDarker( 0.15 );
 
-  // Start the capture timer now, since leak channels are always
-  // capturing particles.
-  this.restartCaptureCountdownTimer( false );
-}
+    // Start the capture timer now, since leak channels are always
+    // capturing particles.
+    this.restartCaptureCountdownTimer( false );
+  }
 
-neuron.register( 'SodiumLeakageChannel', SodiumLeakageChannel );
-
-inherit( AbstractLeakChannel, SodiumLeakageChannel, {
 
   // @public, @override
-  stepInTime: function( dt ) {
+  stepInTime( dt ) {
     const prevOpenness = this.openness;
     const prevInActivationAmt = this.inactivationAmount;
 
-    AbstractLeakChannel.prototype.stepInTime.call( this, dt );
+    super.stepInTime( dt );
     // Since this is a leak channel, it is always open, so the openness
     // is not updated as it is for the gated channels.  However, we DO
     // want more sodium to flow through when the leak current in the
@@ -89,25 +85,25 @@ inherit( AbstractLeakChannel, SodiumLeakageChannel, {
     }
 
     this.notifyIfMembraneStateChanged( prevOpenness, prevInActivationAmt );
-  },
+  }
 
   // @public, @override
-  getChannelColor: function() {
+  getChannelColor() {
     return this.channelColor;
-  },
+  }
 
   // @public, @override
-  getEdgeColor: function() {
+  getEdgeColor() {
     return BASE_COLOR;
-  },
+  }
 
   // @public, @override
-  getParticleTypeToCapture: function() {
+  getParticleTypeToCapture() {
     return ParticleType.SODIUM_ION;
-  },
+  }
 
   // @public, @override
-  chooseCrossingDirection: function() {
+  chooseCrossingDirection() {
     let result = MembraneCrossingDirection.OUT_TO_IN;
     if ( this.previousNormalizedLeakCurrent === 0 ) {
       // The cell is idle, not recovering from an action potential, so
@@ -119,12 +115,12 @@ inherit( AbstractLeakChannel, SodiumLeakageChannel, {
       }
     }
     return result;
-  },
+  }
 
   // @public, @override
-  getChannelType: function() {
+  getChannelType() {
     return MembraneChannelTypes.SODIUM_LEAKAGE_CHANNEL;
-  },
+  }
 
   /**
    * Update the rate of particle capture based on the supplied normalized value.
@@ -132,7 +128,7 @@ inherit( AbstractLeakChannel, SodiumLeakageChannel, {
    * particles and 1 represents the max.
    * @private
    */
-  updateParticleCaptureRate: function( normalizedRate ) {
+  updateParticleCaptureRate( normalizedRate ) {
     if ( normalizedRate <= 0.001 ) {
       // No captures at this rate.
       this.setMinInterCaptureTime( Number.POSITIVE_INFINITY );
@@ -155,7 +151,8 @@ inherit( AbstractLeakChannel, SodiumLeakageChannel, {
       }
     }
   }
+}
 
-} );
+neuron.register( 'SodiumLeakageChannel', SodiumLeakageChannel );
 
 export default SodiumLeakageChannel;

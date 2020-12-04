@@ -8,7 +8,6 @@
  * @author John Blanco
  */
 
-import inherit from '../../../../phet-core/js/inherit.js';
 import CanvasNode from '../../../../scenery/js/nodes/CanvasNode.js';
 import neuron from '../../neuron.js';
 
@@ -18,20 +17,17 @@ const BACKGROUND_LINE_WIDTH = 10;
 const FOREGROUND_COLOR = 'yellow';
 const FOREGROUND_LINE_WIDTH = 5;
 
-/**
- * @param {ModelViewTransform2} mvt
- * @param {Bounds2} bounds - bounds where the canvas should appear
- * @constructor
- */
-function TravelingActionPotentialCanvasNode( mvt, bounds ) {
-  this.mvt = mvt;
-  this.travelingActionPotential = null; // @private - must hook up an action potential using methods defined below
-  CanvasNode.call( this, { canvasBounds: bounds } );
-}
+class TravelingActionPotentialCanvasNode extends CanvasNode {
+  /**
+   * @param {ModelViewTransform2} mvt
+   * @param {Bounds2} bounds - bounds where the canvas should appear
+   */
+  constructor( mvt, bounds ) {
+    super( { canvasBounds: bounds } );
+    this.mvt = mvt;
+    this.travelingActionPotential = null; // @private - must hook up an action potential using methods defined below
+  }
 
-neuron.register( 'TravelingActionPotentialCanvasNode', TravelingActionPotentialCanvasNode );
-
-inherit( CanvasNode, TravelingActionPotentialCanvasNode, {
 
   /**
    * Attach the model of the action potential to this node.  This is done rather than creating an entirely new node
@@ -39,24 +35,24 @@ inherit( CanvasNode, TravelingActionPotentialCanvasNode, {
    * {TravelingActionPotential} travelingActionPotential
    * @public
    */
-  travelingActionPotentialStarted: function( travelingActionPotential ) {
+  travelingActionPotentialStarted( travelingActionPotential ) {
 
     this.travelingActionPotential = travelingActionPotential;
 
     // cause the canvas to get repainted each time the shape of the action potential changes
     this.shapeChangeListener = this.invalidatePaint.bind( this );
     travelingActionPotential.shapeChanged.addListener( this.shapeChangeListener );
-  },
+  }
 
   /**
    * Signal that the action potential has ended and no longer needs to be depicted in the view.
    * @public
    */
-  travelingActionPotentialEnded: function() {
+  travelingActionPotentialEnded() {
     this.travelingActionPotential.shapeChanged.removeListener( this.shapeChangeListener );
     this.travelingActionPotential = null;
     this.invalidatePaint();
-  },
+  }
 
   /**
    * Paint the canvas with all of the membrane channels
@@ -64,7 +60,7 @@ inherit( CanvasNode, TravelingActionPotentialCanvasNode, {
    * @override
    * @public
    */
-  paintCanvas: function( context ) {
+  paintCanvas( context ) {
 
     if ( this.travelingActionPotential !== null ) {
       const shapeDescription = this.travelingActionPotential.shapeDescription; // convenience var
@@ -105,6 +101,8 @@ inherit( CanvasNode, TravelingActionPotentialCanvasNode, {
       context.stroke();
     }
   }
-} );
+}
+
+neuron.register( 'TravelingActionPotentialCanvasNode', TravelingActionPotentialCanvasNode );
 
 export default TravelingActionPotentialCanvasNode;

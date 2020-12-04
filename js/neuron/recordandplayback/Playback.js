@@ -7,25 +7,26 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-import inherit from '../../../../phet-core/js/inherit.js';
 import neuron from '../../neuron.js';
 import BehaviourModeType from './BehaviourModeType.js';
 import Mode from './Mode.js';
 
-/**
- * @param {RecordAndPlaybackModel} recordAndPlaybackModel
- * @constructor
- */
-function Playback( recordAndPlaybackModel ) {
-  this.recordAndPlaybackModel = recordAndPlaybackModel;
-}
+class Playback extends Mode {
 
-neuron.register( 'Playback', Playback );
+  /**
+   * @param {RecordAndPlaybackModel} recordAndPlaybackModel
+   */
+  constructor( recordAndPlaybackModel ) {
+    super();
+    this.recordAndPlaybackModel = recordAndPlaybackModel;
+  }
 
-inherit( Mode, Playback, {
-
-  // @public, @override
-  step: function( simulationTimeChange ) {
+  /**
+   * @override
+   * @public
+   * @param {number} simulationTimeChange
+   */
+  step( simulationTimeChange ) {
 
     if ( simulationTimeChange > 0 ) {
       if ( this.recordAndPlaybackModel.getTime() < this.recordAndPlaybackModel.getMaxRecordedTime() ) {
@@ -45,12 +46,17 @@ inherit( Mode, Playback, {
         this.recordAndPlaybackModel.setTime( this.recordAndPlaybackModel.timeProperty.get() + simulationTimeChange );
       }
     }
-  },
+  }
 
-  // @public, @override
-  toString: function() {
+  /**
+   * @override
+   * @public
+   */
+  toString() {
     return 'Playback';
   }
-} );
+}
+
+neuron.register( 'Playback', Playback );
 
 export default Playback;

@@ -11,56 +11,53 @@
  * @author Sharfudeen Ashraf
  */
 
-import inherit from '../../../../phet-core/js/inherit.js';
 import neuron from '../../neuron.js';
 
-/**
- * @param {Particle} particle
- * @constructor
- */
-function ParticlePlaybackMemento( particle ) {
-  this.positionX = particle.getPositionX();
-  this.positionY = particle.getPositionY();
-  this.opacity = particle.getOpacity();
-  this.particleType = particle.getType();
-  this.radius = particle.getRadius();
-  this.representationColor = particle.getRepresentationColor();
+class ParticlePlaybackMemento {
+  /**
+   * @param {Particle} particle
+   */
+  constructor( particle ) {
+    this.positionX = particle.getPositionX();
+    this.positionY = particle.getPositionY();
+    this.opacity = particle.getOpacity();
+    this.particleType = particle.getType();
+    this.radius = particle.getRadius();
+    this.representationColor = particle.getRepresentationColor();
+  }
+
+
+  // @public
+  getPositionX() {
+    return this.positionX;
+  }
+
+  // @public
+  getPositionY() {
+    return this.positionY;
+  }
+
+  // @public
+  getOpacity() {
+    return this.opacity;
+  }
+
+  // @public
+  getParticleType() {
+    return this.particleType;
+  }
+
+  // @public
+  getRadius() {
+    return this.radius;
+  }
+
+  // @public
+  getRepresentationColor() {
+    return this.representationColor;
+  }
 }
 
 neuron.register( 'ParticlePlaybackMemento', ParticlePlaybackMemento );
-
-inherit( Object, ParticlePlaybackMemento, {
-
-  // @public
-  getPositionX: function() {
-    return this.positionX;
-  },
-
-  // @public
-  getPositionY: function() {
-    return this.positionY;
-  },
-
-  // @public
-  getOpacity: function() {
-    return this.opacity;
-  },
-
-  // @public
-  getParticleType: function() {
-    return this.particleType;
-  },
-
-  // @public
-  getRadius: function() {
-    return this.radius;
-  },
-
-  // @public
-  getRepresentationColor: function() {
-    return this.representationColor;
-  }
-
-} );
 
 export default ParticlePlaybackMemento;

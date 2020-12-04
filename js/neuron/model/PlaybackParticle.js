@@ -10,41 +10,37 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-import inherit from '../../../../phet-core/js/inherit.js';
 import neuron from '../../neuron.js';
 import PotassiumIon from './PotassiumIon.js';
 import ViewableParticle from './ViewableParticle.js';
 
-/**
- * Construct a playback particle.
- * @param {Particle} particle - Real particle from which this playback particle should be constructed.
- * @constructor
- */
-function PlaybackParticle( particle ) {
-  particle = particle || new PotassiumIon();// Construct as potassium by default.  This choice is arbitrary.
+class PlaybackParticle extends ViewableParticle {
+  /**
+   * Construct a playback particle.
+   * @param {Particle} particle - Real particle from which this playback particle should be constructed.
+   */
+  constructor( particle ) {
+    particle = particle || new PotassiumIon();// Construct as potassium by default.  This choice is arbitrary.
 
-  ViewableParticle.call( this, {
-    appearanceChanged: false
-  } );
+    super( {
+      appearanceChanged: false
+    } );
 
-  // @private, accessed through methods defined below
-  this.positionX = particle.getPositionX();
-  this.positionY = particle.getPositionY();
-  this.opacity = particle.getOpacity();
-  this.representationColor = particle.getRepresentationColor();
-  this.radius = particle.getRadius();
-  this.particleType = particle.getType();
-}
+    // @private, accessed through methods defined below
+    this.positionX = particle.getPositionX();
+    this.positionY = particle.getPositionY();
+    this.opacity = particle.getOpacity();
+    this.representationColor = particle.getRepresentationColor();
+    this.radius = particle.getRadius();
+    this.particleType = particle.getType();
+  }
 
-neuron.register( 'PlaybackParticle', PlaybackParticle );
-
-inherit( ViewableParticle, PlaybackParticle, {
 
   /**
-   *
+   * @public
    * @param {ParticlePlaybackMemento} memento
    */
-  restoreFromMemento: function( memento ) {
+  restoreFromMemento( memento ) {
     this.setPosition( memento.getPositionX(), memento.getPositionY() );
 
     let appearanceChanged = false;
@@ -63,43 +59,45 @@ inherit( ViewableParticle, PlaybackParticle, {
     if ( appearanceChanged ) {
       this.appearanceChanged = !this.appearanceChanged;
     }
-  },
+  }
 
   // @public
-  getPositionX: function() {
+  getPositionX() {
     return this.positionX;
-  },
+  }
 
   // @public
-  getPositionY: function() {
+  getPositionY() {
     return this.positionY;
-  },
+  }
 
   // @public
-  setPosition: function( x, y ) {
+  setPosition( x, y ) {
     this.positionX = x;
     this.positionY = y;
-  },
+  }
 
   // @public
-  getRepresentationColor: function() {
+  getRepresentationColor() {
     return this.representationColor;
-  },
+  }
 
   // @public
-  getOpacity: function() {
+  getOpacity() {
     return this.opacity;
-  },
+  }
 
   // @public
-  getRadius: function() {
+  getRadius() {
     return this.radius;
-  },
+  }
 
   // @public
-  getType: function() {
+  getType() {
     return this.particleType;
   }
-} );
+}
+
+neuron.register( 'PlaybackParticle', PlaybackParticle );
 
 export default PlaybackParticle;

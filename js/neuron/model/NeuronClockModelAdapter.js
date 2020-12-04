@@ -17,7 +17,6 @@
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import EnumerationProperty from '../../../../axon/js/EnumerationProperty.js';
 import Property from '../../../../axon/js/Property.js';
-import inherit from '../../../../phet-core/js/inherit.js';
 import TimeSpeed from '../../../../scenery-phet/js/TimeSpeed.js';
 import neuron from '../../neuron.js';
 
@@ -32,44 +31,39 @@ const TICKS_PER_SINGLE_STEP = 4;
 // https://github.com/phetsims/neuron/issues/114 and https://github.com/phetsims/neuron/issues/109.
 const MAX_SIM_TICK_TIME = NOMINAL_TICK_TIME * 10; // empirically determined through testing of the simulation
 
-/**
- * Creates a NeuronClockModelAdapter.
- * @param {NeuronModel} model - model whose simulation timing is controlled by this adapter.  Note that the Adapter is
- * generic and doesn't have any dependency on the model it controls.
- * @constructor
- */
-function NeuronClockModelAdapter( model ) {
+class NeuronClockModelAdapter {
+  /**
+   * Creates a NeuronClockModelAdapter.
+   * @param {NeuronModel} model - model whose simulation timing is controlled by this adapter.  Note that the Adapter is
+   * generic and doesn't have any dependency on the model it controls.
+   */
+  constructor( model ) {
 
-  this.model = model;
+    this.model = model;
 
-  Object.call( this );
+    this.playingProperty = new Property( true ); // linked to playPause button
 
-  this.playingProperty = new Property( true ); // linked to playPause button
+    // @public {EnumerationProperty.<TimeSpeed>}
+    this.timeSpeedProperty = new EnumerationProperty( TimeSpeed, TimeSpeed.NORMAL );
 
-  // @public {EnumerationProperty.<TimeSpeed>}
-  this.timeSpeedProperty = new EnumerationProperty( TimeSpeed, TimeSpeed.NORMAL );
+    // @public {DerivedProperty.<number>} - factor controlling simulation clock speed
+    this.speedProperty = new DerivedProperty( [ this.timeSpeedProperty ], timeSpeed => {
+      const speed = timeSpeed === TimeSpeed.FAST ? 2 :
+                    timeSpeed === TimeSpeed.NORMAL ? 1 :
+                    timeSpeed === TimeSpeed.SLOW ? 0.5 :
+                    null;
+      assert && assert( speed !== null, 'no speed found for TimeSpeed ' + timeSpeed );
+      return speed;
+    } );
 
-  // @public {DerivedProperty.<number>} - factor controlling simulation clock speed
-  this.speedProperty = new DerivedProperty( [ this.timeSpeedProperty ], timeSpeed => {
-    const speed = timeSpeed === TimeSpeed.FAST ? 2 :
-                  timeSpeed === TimeSpeed.NORMAL ? 1 :
-                  timeSpeed === TimeSpeed.SLOW ? 0.5 :
-                  null;
-    assert && assert( speed !== null, 'no speed found for TimeSpeed ' + timeSpeed );
-    return speed;
-  } );
+    this.stepCallbacks = [];
+    this.resetCallBacks = [];
+    this.residualTime = 0;
+  }
 
-  this.stepCallbacks = [];
-  this.resetCallBacks = [];
-  this.residualTime = 0;
-}
-
-neuron.register( 'NeuronClockModelAdapter', NeuronClockModelAdapter );
-
-inherit( Object, NeuronClockModelAdapter, {
 
   // @public
-  step: function( dt ) {
+  step( dt ) {
 
     // If the step is large, it probably means that the screen was hidden for a while, so just ignore it.
     if ( dt > 0.5 ) {
@@ -96,10 +90,10 @@ inherit( Object, NeuronClockModelAdapter, {
         this.tick( simTickTime );
       }
     }
-  },
+  }
 
   // @public
-  reset: function() {
+  reset() {
     this.playingProperty.reset();
     this.timeSpeedProperty.reset();
     this.lastSimulationTime = 0.0;
@@ -110,7 +104,7 @@ inherit( Object, NeuronClockModelAdapter, {
       this.resetCallBacks[ i ]();
     }
     this.model.reset();
-  },
+  }
 
   /**
    * Registers a callback that will be notified when the step simulation occurs
@@ -118,47 +112,46 @@ inherit( Object, NeuronClockModelAdapter, {
    * @param  {function} - callback that has a {dt} parameter
    * @public
    */
-  registerStepCallback: function( callback ) {
+  registerStepCallback( callback ) {
     this.stepCallbacks.push( callback );
-  },
+  }
 
   /**
    * Registers a callback that will be notified when the clock is reset
    * @public
    */
-  registerResetCallback: function( callback ) {
+  registerResetCallback( callback ) {
     this.resetCallBacks.push( callback );
-  },
+  }
 
   /**
    * Perform one 'tick' of the clock, which fires all callbacks with the provided simulation time
    * @private
    */
-  tick: function( simulationTimeChange ) {
+  tick( simulationTimeChange ) {
     // fire step event callback
     for ( let i = 0; i < this.stepCallbacks.length; i++ ) {
       this.stepCallbacks[ i ]( simulationTimeChange );
     }
-  },
+  }
 
   /**
    * advance the clock by a fixed amount used when stepping manually
    * @public
    */
-  stepClockWhilePaused: function() {
-    const self = this;
-    _.times( TICKS_PER_SINGLE_STEP, function() { self.tick( NOMINAL_TICK_TIME ); } );
-  },
+  stepClockWhilePaused() {
+    _.times( TICKS_PER_SINGLE_STEP, () => { this.tick( NOMINAL_TICK_TIME ); } );
+  }
 
   /**
    * Move the clock backwards by the tickOnceTimeChange.
    * @public
    */
-  stepClockBackWhilePaused: function() {
-    const self = this;
-    _.times( TICKS_PER_SINGLE_STEP, function() { self.tick( -NOMINAL_TICK_TIME ); } );
+  stepClockBackWhilePaused() {
+    _.times( TICKS_PER_SINGLE_STEP, () => { this.tick( -NOMINAL_TICK_TIME ); } );
   }
+}
 
-} );
+neuron.register( 'NeuronClockModelAdapter', NeuronClockModelAdapter );
 
 export default NeuronClockModelAdapter;

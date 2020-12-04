@@ -11,7 +11,6 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-import inherit from '../../../../phet-core/js/inherit.js';
 import neuron from '../../neuron.js';
 import NeuronConstants from '../common/NeuronConstants.js';
 import DelayBuffer from './DelayBuffer.js';
@@ -23,52 +22,48 @@ import DelayBuffer from './DelayBuffer.js';
  */
 const INTERNAL_TIME_STEP = 0.005; // In milliseconds, not seconds.
 const MAX_DELAY = 0.001; // In seconds of simulation time.
-/**
- *
- * @constructor
- */
-function ModifiedHodgkinHuxleyModel() {
+class ModifiedHodgkinHuxleyModel {
+  /**
+   */
+  constructor() {
 
-  this.perNaChannels = 100; // @private
-  this.perKChannels = 100; // @private
-  this.elapsedTime = 0; // @private
-  this.timeSinceActionPotential = Number.POSITIVE_INFINITY; // @private
-  this.m3hDelayBuffer = new DelayBuffer( MAX_DELAY, NeuronConstants.MIN_ACTION_POTENTIAL_CLOCK_DT ); // @private
-  this.n4DelayBuffer = new DelayBuffer( MAX_DELAY, NeuronConstants.MIN_ACTION_POTENTIAL_CLOCK_DT ); // @private
+    this.perNaChannels = 100; // @private
+    this.perKChannels = 100; // @private
+    this.elapsedTime = 0; // @private
+    this.timeSinceActionPotential = Number.POSITIVE_INFINITY; // @private
+    this.m3hDelayBuffer = new DelayBuffer( MAX_DELAY, NeuronConstants.MIN_ACTION_POTENTIAL_CLOCK_DT ); // @private
+    this.n4DelayBuffer = new DelayBuffer( MAX_DELAY, NeuronConstants.MIN_ACTION_POTENTIAL_CLOCK_DT ); // @private
 
-  this.resting_v = 65;// @private, final doesn't change
+    this.resting_v = 65;// @private, final doesn't change
 
-  // deltas of voltage-dependent gating parameters
-  this.dn = 0; // @private
-  this.dm = 0; // @private
-  this.dh = 0; // @private
+    // deltas of voltage-dependent gating parameters
+    this.dn = 0; // @private
+    this.dm = 0; // @private
+    this.dh = 0; // @private
 
-  this.timeRemainder = 0; // @private
+    this.timeRemainder = 0; // @private
 
-  // Ek-Er, Ena - Er, Eleak - Er
-  this.vk = 0; // @private
-  this.vna = 0; // @private
-  this.vl = 0; // @private
+    // Ek-Er, Ena - Er, Eleak - Er
+    this.vk = 0; // @private
+    this.vna = 0; // @private
+    this.vl = 0; // @private
 
-  this.n4 = 0; // @private
-  this.m3h = 0; // @private
-  this.na_current = 0; // @private
-  this.k_current = 0; // @private
-  this.l_current = 0; // @private
+    this.n4 = 0; // @private
+    this.m3h = 0; // @private
+    this.na_current = 0; // @private
+    this.k_current = 0; // @private
+    this.l_current = 0; // @private
 
-  this.vClampOn = false; // @private
+    this.vClampOn = false; // @private
 
-  this.vClampValue = this.convertV( 0 ); // @private
+    this.vClampValue = this.convertV( 0 ); // @private
 
-  this.reset();// reset and initialize
-}
+    this.reset();// reset and initialize
+  }
 
-neuron.register( 'ModifiedHodgkinHuxleyModel', ModifiedHodgkinHuxleyModel );
-
-inherit( Object, ModifiedHodgkinHuxleyModel, {
 
   // @public
-  reset: function() {
+  reset() {
     this.n4DelayBuffer.clear();
     this.m3hDelayBuffer.clear();
 
@@ -99,10 +94,10 @@ inherit( Object, ModifiedHodgkinHuxleyModel, {
 
     // Time values.
     this.timeSinceActionPotential = Number.POSITIVE_INFINITY;
-  },
+  }
 
   // @public
-  stepInTime: function( dt ) {
+  stepInTime( dt ) {
     let modelIterationsToRun = Math.floor( ( dt * 1000 ) / INTERNAL_TIME_STEP );
     this.timeRemainder += ( dt * 1000 ) % INTERNAL_TIME_STEP;
     if ( this.timeRemainder >= INTERNAL_TIME_STEP ) {
@@ -172,12 +167,12 @@ inherit( Object, ModifiedHodgkinHuxleyModel, {
     if ( this.vClampOn ) {
       this.v = this.vClampValue;
     }
-  },
+  }
 
   // @public
-  get_n4: function() {
+  get_n4() {
     return this.n4;
-  },
+  }
 
   /**
    * Get a delayed version of the n^4 amount, which is the variable factor that governs the potassium channel
@@ -187,19 +182,19 @@ inherit( Object, ModifiedHodgkinHuxleyModel, {
    * @returns {number}
    * @public
    */
-  get_delayed_n4: function( delayAmount ) {
+  get_delayed_n4( delayAmount ) {
     if ( delayAmount <= 0 ) {
       return this.n4;
     }
     else {
       return this.n4DelayBuffer.getDelayedValue( delayAmount );
     }
-  },
+  }
 
   // @public
-  get_m3h: function() {
+  get_m3h() {
     return this.m3h;
-  },
+  }
 
   /**
    * Get a delayed version of the m3h amount, which is the variable factor
@@ -209,7 +204,7 @@ inherit( Object, ModifiedHodgkinHuxleyModel, {
    * @returns {number}
    * @public
    */
-  get_delayed_m3h: function( delayAmount ) {
+  get_delayed_m3h( delayAmount ) {
     let delayedM3h = 0;
 
     if ( delayAmount <= 0 ) {
@@ -220,17 +215,17 @@ inherit( Object, ModifiedHodgkinHuxleyModel, {
     }
 
     return delayedM3h;
-  },
+  }
 
   // @public
-  getEna: function() {
+  getEna() {
     return ( -1 * ( this.vna + this.resting_v ) );
-  },
+  }
 
   // @public
-  getEk: function() {
+  getEk() {
     return ( -1 * ( this.vk + this.resting_v ) );
-  },
+  }
 
   // NOTE: A number of unused setters were removed from this portion of the code because they were unused and I
   // (@jbphet) felt that if they weren't available via setters I could more safely assume that the didn't need to
@@ -238,44 +233,44 @@ inherit( Object, ModifiedHodgkinHuxleyModel, {
   // for more information.
 
   // @public
-  get_na_current: function() {
+  get_na_current() {
     return -1 * this.na_current;
-  },
+  }
 
   // @public
-  get_k_current: function() {
+  get_k_current() {
     return -1 * this.k_current;
-  },
+  }
 
   // @public
-  get_l_current: function() {
+  get_l_current() {
     return -1 * this.l_current;
-  },
+  }
 
   // @public
-  getPerNaChannels: function() {
+  getPerNaChannels() {
     return this.perNaChannels;
-  },
+  }
 
   // @public
-  getPerKChannels: function() {
+  getPerKChannels() {
     return this.perKChannels;
-  },
+  }
 
   // @public
-  get_gk: function() {
+  get_gk() {
     return this.gk;
-  },
+  }
 
   // @public
-  get_gna: function() {
+  get_gna() {
     return this.gna;
-  },
+  }
 
   // @public
-  get_gl: function() {
+  get_gl() {
     return this.gl;
-  },
+  }
 
   // remember that H&H voltages are -1 * present convention
   // should eventually calculate this instead of setting it
@@ -283,79 +278,79 @@ inherit( Object, ModifiedHodgkinHuxleyModel, {
   // the V will be membrane voltage using present day conventions
   // see p. 505 of Hodgkin & Huxley, J Physiol. 1952, 117:500-544
   // @public
-  setV: function( inV ) {
+  setV( inV ) {
     this.v = -1 * inV - this.resting_v;
-  },
+  }
 
   // @public
-  getV: function() {
+  getV() {
     return -1 * ( this.v + this.resting_v );
-  },
+  }
 
   // @public
-  getRestingV: function() {
+  getRestingV() {
     return -1 * this.resting_v;
-  },
+  }
 
   // @public
-  getCm: function() {
+  getCm() {
     return this.cm;
-  },
+  }
 
   // @public
-  getElapsedTime: function() {
+  getElapsedTime() {
     return this.elapsedTime;
-  },
+  }
 
   // @public
-  resetElapsedTime: function() {
+  resetElapsedTime() {
     this.elapsedTime = 0.0;
-  },
+  }
 
   // @public
-  getN: function() {
+  getN() {
     return this.n;
-  },
+  }
 
   // @public
-  getM: function() {
+  getM() {
     return this.m;
-  },
+  }
 
   // @public
-  getH: function() {
+  getH() {
     return this.h;
-  },
+  }
 
   /**
    * Converts a voltage from the modern convention to the convention used by the program
    * @private
    */
-  convertV: function( voltage ) {
+  convertV( voltage ) {
     return ( -1 * voltage - this.resting_v );
-  },
+  }
 
   // @public
-  getVClampOn: function() {
+  getVClampOn() {
     return this.vClampOn;
-  },
+  }
 
   // @public
-  get_vClampValue: function() {
+  get_vClampValue() {
     return ( -1 * ( this.vClampValue + this.resting_v ) );
-  },
+  }
 
   // @public
-  getMembraneVoltage: function() {
+  getMembraneVoltage() {
     // getV() converts the model's v to present day convention
     return this.getV() / 1000;
-  },
+  }
 
   /**
    * Get the state of the model.  This is generally used in support of record and playback.
    * @public
    */
-  getState: function() {
+  getState() {
     return {
       ah: this.ah,
       h: this.h,
@@ -371,13 +366,13 @@ inherit( Object, ModifiedHodgkinHuxleyModel, {
       m3hDelayBuffer: this.m3hDelayBuffer.getCopy(),
       n4DelayBuffer: this.n4DelayBuffer.getCopy()
     };
-  },
+  }
 
   /**
    * Set the state of the model.  This is generally used in support of record and playback.
    * @public
    */
-  setState: function( state ) {
+  setState( state ) {
     this.ah = state.ah;
     this.h = state.h;
     this.bh = state.bh;
@@ -394,7 +389,7 @@ inherit( Object, ModifiedHodgkinHuxleyModel, {
     // should not have been altered anywhere.
     this.m3hDelayBuffer = state.m3hDelayBuffer;
     this.n4DelayBuffer = state.n4DelayBuffer;
-  },
+  }
 
   /**
    * Stimulate the neuron in a way that simulates a depolarization signal
@@ -402,12 +397,13 @@ inherit( Object, ModifiedHodgkinHuxleyModel, {
    * will trigger an action potential.
    * @public
    */
-  stimulate: function() {
+  stimulate() {
     // Add a fixed amount to the voltage across the membrane.
     this.setV( this.getV() + 15 );
     this.timeSinceActionPotential = 0;
   }
+}
 
-} );
+neuron.register( 'ModifiedHodgkinHuxleyModel', ModifiedHodgkinHuxleyModel );
 
 export default ModifiedHodgkinHuxleyModel;

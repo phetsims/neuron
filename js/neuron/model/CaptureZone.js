@@ -7,42 +7,40 @@
  *@author Sharfudeen Ashraf (for Ghent University)
  */
 
-import inherit from '../../../../phet-core/js/inherit.js';
 import neuron from '../../neuron.js';
 
-/**
- * @constructor
- */
-function CaptureZone() {}
+class CaptureZone {
+  /**
+   */
+  constructor() {}
 
-neuron.register( 'CaptureZone', CaptureZone );
-
-inherit( Object, CaptureZone, {
 
   // @public
-  isPointInZone: function( x, y ) {
+  isPointInZone( x, y ) {
     throw new Error( 'isPointInZone should be implemented in descendant classes.' );
-  },
+  }
 
   // @public, assign a random point that is somewhere within the shape.
-  assignNewParticlePosition: function(particle ) {
+  assignNewParticlePosition( particle ) {
     particle.setPosition( 0, 0 );
-  },
+  }
 
   // @public
-  getOriginPoint: function() {
+  getOriginPoint() {
     throw new Error( 'getOriginPoint should be implemented in descendant classes.' );
-  },
+  }
 
   // @public
-  setRotationalAngle: function( angle ) {
+  setRotationalAngle( angle ) {
     throw new Error( 'setRotationalAngle should be implemented in descendant classes.' );
-  },
+  }
 
   // @public
-  setOriginPoint: function( centerPoint ) {
+  setOriginPoint( centerPoint ) {
     throw new Error( 'setOriginPoint should be implemented in descendant classes.' );
   }
-} );
+}
+
+neuron.register( 'CaptureZone', CaptureZone );
 
 export default CaptureZone;

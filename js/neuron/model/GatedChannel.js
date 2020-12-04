@@ -6,31 +6,28 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-import inherit from '../../../../phet-core/js/inherit.js';
 import neuron from '../../neuron.js';
 import MembraneChannel from './MembraneChannel.js';
 
-/**
- * @param {number} channelWidth
- * @param {number} channelHeight
- * @param {NeuronModel} modelContainingParticles
- * @constructor
- */
-function GatedChannel( channelWidth, channelHeight, modelContainingParticles ) {
-  MembraneChannel.call( this, channelWidth, channelHeight, modelContainingParticles );
-  this.setOpenness( 0 );  // Gated channels are assumed to be initially closed.
-}
+class GatedChannel extends MembraneChannel {
+  /**
+   * @param {number} channelWidth
+   * @param {number} channelHeight
+   * @param {NeuronModel} modelContainingParticles
+   */
+  constructor( channelWidth, channelHeight, modelContainingParticles ) {
+    super( channelWidth, channelHeight, modelContainingParticles );
+    this.setOpenness( 0 );  // Gated channels are assumed to be initially closed.
+  }
 
-neuron.register( 'GatedChannel', GatedChannel );
-
-inherit( MembraneChannel, GatedChannel, {
 
   // @public
-  reset: function() {
+  reset() {
     this.setOpenness( 0 );         // Gated channels are assumed to be initially closed...
     this.setInactivationAmount( 0 );  // ...but not inactivated.
   }
+}
 
-} );
+neuron.register( 'GatedChannel', GatedChannel );
 
 export default GatedChannel;

@@ -7,38 +7,35 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-import inherit from '../../../../phet-core/js/inherit.js';
 import neuron from '../../neuron.js';
 
-/**
- * @param {number} time
- * @param {Object} state
- * @constructor
- */
-function DataPoint( time, state ) {
-  this.time = time; // @private
-  this.state = state; // @private
+class DataPoint {
+  /**
+   * @param {number} time
+   * @param {Object} state
+   */
+  constructor( time, state ) {
+    this.time = time; // @private
+    this.state = state; // @private
+  }
+
+
+  // @public
+  getTime() {
+    return this.time;
+  }
+
+  // @public
+  getState() {
+    return this.state;
+  }
+
+  // @public
+  toString() {
+    return 'time = ' + this.time + ', state = ' + this.state;
+  }
 }
 
 neuron.register( 'DataPoint', DataPoint );
-
-inherit( Object, DataPoint, {
-
-  // @public
-  getTime: function() {
-    return this.time;
-  },
-
-  // @public
-  getState: function() {
-    return this.state;
-  },
-
-  // @public
-  toString: function() {
-    return 'time = ' + this.time + ', state = ' + this.state;
-  }
-
-} );
 
 export default DataPoint;

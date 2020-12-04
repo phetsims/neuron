@@ -6,33 +6,30 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-import inherit from '../../../../phet-core/js/inherit.js';
 import neuron from '../../neuron.js';
 import NeuronConstants from '../common/NeuronConstants.js';
 import Particle from './Particle.js';
 import ParticleType from './ParticleType.js';
 
-/**
- * @constructor
- */
-function SodiumIon() {
-  Particle.call( this );
+class SodiumIon extends Particle {
+  /**
+   */
+  constructor() {
+    super();
+  }
+
+
+  // @public, @override
+  getType() {
+    return ParticleType.SODIUM_ION;
+  }
+
+  // @public, @override
+  getRepresentationColor() {
+    return NeuronConstants.SODIUM_COLOR;
+  }
 }
 
 neuron.register( 'SodiumIon', SodiumIon );
-
-inherit( Particle, SodiumIon, {
-
-  // @public, @override
-  getType: function() {
-    return ParticleType.SODIUM_ION;
-  },
-
-  // @public, @override
-  getRepresentationColor: function() {
-    return NeuronConstants.SODIUM_COLOR;
-  }
-
-} );
 
 export default SodiumIon;

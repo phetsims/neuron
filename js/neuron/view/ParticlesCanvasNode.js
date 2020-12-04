@@ -9,86 +9,84 @@
  * @author John Blanco
  */
 
-import inherit from '../../../../phet-core/js/inherit.js';
 import CanvasNode from '../../../../scenery/js/nodes/CanvasNode.js';
 import neuron from '../../neuron.js';
 import ParticleType from '../model/ParticleType.js';
 
-/**
- * @param {NeuronModel} neuronModel
- * @param {ModelViewTransform2} modelViewTransform
- * @param {Shape} clipArea
- * @constructor
- */
-function ParticlesCanvasNode( neuronModel, modelViewTransform, clipArea ) {
-  const self = this;
-  CanvasNode.call( this, {
-    pickable: false,
-    canvasBounds: clipArea.bounds,
-    clipArea: clipArea,
-    layerSplit: true
-  } );
-  this.modelViewTransform = modelViewTransform;
-  this.neuronModel = neuronModel;
-
-  // Monitor a property that indicates when a particle state has changed and initiate a redraw.
-  neuronModel.particlesMoved.addListener( function() {
-    self.invalidatePaint();
-  } );
-
-  // monitor a property that indicates whether all ions are being depicted and initiate a redraw on a change
-  neuronModel.allIonsSimulatedProperty.lazyLink( function() {
-    self.invalidatePaint();
-  } );
-
+class ParticlesCanvasNode extends CanvasNode {
   /**
-   * There is an issue in Scenery where, if nothing is drawn, whatever was previously drawn stays there.  This was
-   * causing problems in this sim when turning off the "Show All Ions" setting, see
-   * https://github.com/phetsims/neuron/issues/100.  The Scenery issue is
-   * https://github.com/phetsims/scenery/issues/503.  To work around this problem, a property was added to the model
-   * and linked here that can be used to set the node invisible if there are no particles to be rendered.  This can
-   * probably be removed if and when the Scenery issue is addressed.
+   * @param {NeuronModel} neuronModel
+   * @param {ModelViewTransform2} modelViewTransform
+   * @param {Shape} clipArea
    */
-  neuronModel.atLeastOneParticlePresentProperty.lazyLink( function( atLeastOneParticlePresent ) {
-    self.visible = atLeastOneParticlePresent;
-    self.invalidatePaint();
-  } );
-}
+  constructor( neuronModel, modelViewTransform, clipArea ) {
+    super( {
+      pickable: false,
+      canvasBounds: clipArea.bounds,
+      clipArea: clipArea,
+      layerSplit: true
+    } );
+    this.modelViewTransform = modelViewTransform;
+    this.neuronModel = neuronModel;
 
-neuron.register( 'ParticlesCanvasNode', ParticlesCanvasNode );
+    // Monitor a property that indicates when a particle state has changed and initiate a redraw.
+    neuronModel.particlesMoved.addListener( () => {
+      this.invalidatePaint();
+    } );
 
-inherit( CanvasNode, ParticlesCanvasNode, {
+    // monitor a property that indicates whether all ions are being depicted and initiate a redraw on a change
+    neuronModel.allIonsSimulatedProperty.lazyLink( () => {
+      this.invalidatePaint();
+    } );
+
+    /**
+     * There is an issue in Scenery where, if nothing is drawn, whatever was previously drawn stays there.  This was
+     * causing problems in this sim when turning off the "Show All Ions" setting, see
+     * https://github.com/phetsims/neuron/issues/100.  The Scenery issue is
+     * https://github.com/phetsims/scenery/issues/503.  To work around this problem, a property was added to the model
+     * and linked here that can be used to set the node invisible if there are no particles to be rendered.  This can
+     * probably be removed if and when the Scenery issue is addressed.
+     */
+    neuronModel.atLeastOneParticlePresentProperty.lazyLink( atLeastOneParticlePresent => {
+      this.visible = atLeastOneParticlePresent;
+      this.invalidatePaint();
+    } );
+  }
+
 
   // @private
-  renderSodiumParticles: function( particles, context ) {
-    const self = this;
+  renderSodiumParticles( particles, context ) {
     context.fillStyle = particles[ 0 ].getRepresentationColor().getCanvasStyle(); // All sodium ions are of the same color,
     const transformedRadius = this.modelViewTransform.modelToViewDeltaX( particles[ 0 ].getRadius() );
     context.lineWidth = 0.3;
     context.strokeStyle = 'black';
-    particles.forEach( function( particle ) {
+    particles.forEach( particle => {
       context.globalAlpha = particle.getOpacity();
       context.beginPath();
-      const x = self.modelViewTransform.modelToViewX( particle.getPositionX() );
-      const y = self.modelViewTransform.modelToViewY( particle.getPositionY() );
+      const x = this.modelViewTransform.modelToViewX( particle.getPositionX() );
+      const y = this.modelViewTransform.modelToViewY( particle.getPositionY() );
       context.arc( x, y, transformedRadius, 0, 2 * Math.PI, true );
       context.closePath();
       context.stroke();
       context.fill();
     } );
-  },
+  }
 
-  renderPotassiumParticles: function( particles, context ) {
-    const self = this;
+  /**
+   * @private
+   * @param particles
+   * @param context
+   */
+  renderPotassiumParticles( particles, context ) {
     context.fillStyle = particles[ 0 ].getRepresentationColor().getCanvasStyle();
     const size = this.modelViewTransform.modelToViewDeltaX( particles[ 0 ].getRadius() * 2 ) * 0.55;
     context.lineWidth = 0.3;
     context.strokeStyle = 'black';
-    particles.forEach( function( particle ) {
+    particles.forEach( particle => {
       context.globalAlpha = particle.getOpacity();
       context.beginPath();
-      const x = self.modelViewTransform.modelToViewX( particle.getPositionX() );
-      const y = self.modelViewTransform.modelToViewY( particle.getPositionY() );
+      const x = this.modelViewTransform.modelToViewX( particle.getPositionX() );
+      const y = this.modelViewTransform.modelToViewY( particle.getPositionY() );
       context.moveTo( x - size, y );
       context.lineTo( x, y - size );
       context.lineTo( x + size, y );
@@ -97,42 +95,39 @@ inherit( CanvasNode, ParticlesCanvasNode, {
       context.stroke();
       context.fill();
     } );
-  },
+  }
 
   // @private
-  renderParticles: function( particles, context ) {
-    const self = this;
-
+  renderParticles( particles, context ) {
     // group by particle type, this way no need to set the fillStyle for every particle instance
-    const particlesGroupedByType = _.groupBy( particles, function( particle ) {
-      return particle.getType();
-    } );
+    const particlesGroupedByType = _.groupBy( particles, particle => particle.getType() );
 
-    _.forOwn( particlesGroupedByType, function( particlesOfSameType, particleType ) {
+    _.forOwn( particlesGroupedByType, ( particlesOfSameType, particleType ) => {
       switch( particleType ) {
         case ParticleType.SODIUM_ION:
-          self.renderSodiumParticles( particlesOfSameType, context );
+          this.renderSodiumParticles( particlesOfSameType, context );
           break;
         case ParticleType.POTASSIUM_ION:
-          self.renderPotassiumParticles( particlesOfSameType, context );
+          this.renderPotassiumParticles( particlesOfSameType, context );
           break;
         default:
           throw new Error( 'invalid particleType: ' + particleType );
       }
     } );
-  },
+  }
 
   /**
    * @param {CanvasRenderingContext2D} context
    * @override
    * @public
    */
-  paintCanvas: function( context ) {
+  paintCanvas( context ) {
     this.renderParticles( this.neuronModel.backgroundParticles, context );
     this.renderParticles( this.neuronModel.transientParticles, context );
     this.renderParticles( this.neuronModel.playbackParticles, context );
   }
+}
 
-} );
+neuron.register( 'ParticlesCanvasNode', ParticlesCanvasNode );
 
 export default ParticlesCanvasNode;

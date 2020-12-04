@@ -79,7 +79,7 @@ class AxonCrossSectionControlPanel extends Panel {
       }, options )
     );
 
-    neuronModel.stimulusLockoutProperty.link( function( stimulusLockout ) {
+    neuronModel.stimulusLockoutProperty.link( stimulusLockout => {
       // When stimulation is locked out, we also lock out the ability to change the "All Ions Simulated" state, since
       // otherwise ions would have to disappear during an action potential, which would be tricky.
       allIonsSimulatedCheckbox.enabled = !neuronModel.isStimulusInitiationLockedOut();

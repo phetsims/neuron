@@ -64,7 +64,6 @@ class NeuronScreenView extends ScreenView {
   constructor( neuronClockModelAdapter ) {
     super( { layoutBounds: new Bounds2( 0, 0, 834, 504 ) } );
 
-    const self = this;
     this.neuronModel = neuronClockModelAdapter.model; // model is neuron model
 
     const viewPortPosition = new Vector2( this.layoutBounds.width * 0.40, this.layoutBounds.height - 255 );
@@ -133,7 +132,7 @@ class NeuronScreenView extends ScreenView {
     const zoomMatrixProperty = new Property();
 
     // Watch the zoom property and zoom in and out correspondingly.
-    zoomProperty.link( function( zoomFactor ) {
+    zoomProperty.link( zoomFactor => {
 
       // Zoom toward the top so that when zoomed in the membrane is in a reasonable place and there is room for the
       // chart below it.
@@ -142,7 +141,7 @@ class NeuronScreenView extends ScreenView {
       const scaleAroundX = Utils.roundSymmetric( viewPortPosition.x );
       let scaleAroundY;
       if ( zoomFactor > zoomTowardTopThreshold ) {
-        scaleAroundY = ( zoomFactor - zoomTowardTopThreshold ) * self.neuronModel.getAxonMembrane().getCrossSectionDiameter() * 0.075;
+        scaleAroundY = ( zoomFactor - zoomTowardTopThreshold ) * this.neuronModel.getAxonMembrane().getCrossSectionDiameter() * 0.075;
         scaleMatrix = Matrix3.translation( scaleAroundX, scaleAroundY ).timesMatrix( Matrix3.scaling( zoomFactor, zoomFactor ) ).timesMatrix( Matrix3.translation( -scaleAroundX, -scaleAroundY ) );
       }
       else {
@@ -219,12 +218,7 @@ class NeuronScreenView extends ScreenView {
         playingProperty,
         this.neuronModel.timeProperty
       ],
-      function( playing, time ) {
-        // Allow step back only if the mode is not playing and if recorded state data exists in the data buffer.  Data
-        // recording is only initiated after the neuron has been stimulated, so if the sim is paused before the neuron
-        // was ever stimulated, backwards stepping will not be possible.
-        return playing || time <= self.neuronModel.getMinRecordedTime() || self.neuronModel.getRecordedTimeRange() <= 0;
-      }
+      ( playing, time ) => playing || time <= this.neuronModel.getMinRecordedTime() || this.neuronModel.getRecordedTimeRange() <= 0
     );
 
     // space between layout edge and controls like reset, zoom control, legend, speed panel, etc.
@@ -237,10 +231,10 @@ class NeuronScreenView extends ScreenView {
         includeStepBackwardButton: true,
         playPauseButtonOptions: { radius: 25 },
         stepForwardButtonOptions: {
-          listener: function() { neuronClockModelAdapter.stepClockWhilePaused(); }
+          listener: () => { neuronClockModelAdapter.stepClockWhilePaused(); }
         },
         stepBackwardButtonOptions: {
-          listener: function() { neuronClockModelAdapter.stepClockBackWhilePaused(); },
+          listener: () => { neuronClockModelAdapter.stepClockBackWhilePaused(); },
           isPlayingProperty: stepBackDisabledProperty
         },
         playPauseStepXSpacing: 5
@@ -266,7 +260,7 @@ class NeuronScreenView extends ScreenView {
 
     const stimulateNeuronButton = new RectangularPushButton( {
       content: new MultiLineText( stimulateNeuronString, { font: BUTTON_FONT, maxWidth: 120 } ),
-      listener: function() { self.neuronModel.initiateStimulusPulse(); },
+      listener: () => { this.neuronModel.initiateStimulusPulse(); },
       baseColor: PhetColorScheme.BUTTON_YELLOW,
       right: worldNodeClipArea.bounds.maxX,
       centerY: centerYForLowerControls,
@@ -277,7 +271,7 @@ class NeuronScreenView extends ScreenView {
 
     this.addChild( stimulateNeuronButton );
 
-    this.neuronModel.stimulusLockoutProperty.link( function( stimulusLockout ) {
+    this.neuronModel.stimulusLockoutProperty.link( stimulusLockout => {
       stimulateNeuronButton.enabled = !stimulusLockout;
     } );
 
@@ -301,7 +295,7 @@ class NeuronScreenView extends ScreenView {
 
     // Create and add the Reset All Button in the bottom right
     const resetAllButton = new ResetAllButton( {
-      listener: function() {
+      listener: () => {
         zoomProperty.reset();
         neuronClockModelAdapter.reset();
       },
@@ -314,7 +308,7 @@ class NeuronScreenView extends ScreenView {
       zoomableNode, worldNodeClipArea.bounds, axonCrossSectionNode );
     this.addChild( concentrationReadoutLayerNode );
 
-    this.neuronModel.concentrationReadoutVisibleProperty.link( function( concentrationVisible ) {
+    this.neuronModel.concentrationReadoutVisibleProperty.link( concentrationVisible => {
       concentrationReadoutLayerNode.visible = concentrationVisible;
     } );
 

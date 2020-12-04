@@ -15,7 +15,6 @@
 import Emitter from '../../../../axon/js/Emitter.js';
 import Utils from '../../../../dot/js/Utils.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
-import inherit from '../../../../phet-core/js/inherit.js';
 import neuron from '../../neuron.js';
 import TravelingActionPotentialState from './TravelingActionPotentialState.js';
 
@@ -40,58 +39,55 @@ function calculateInterpolatedPoint( proportion, points, outputPoint ) {
   outputPoint.setY( weight * closestPoint.y + ( 1 - weight ) * nextClosestPoint.y );
 }
 
-/**
- *
- * @param {AxonMembrane} axonMembrane
- * @constructor
- */
-function TravelingActionPotential( axonMembrane ) {
+class TravelingActionPotential {
+  /**
+   * @param {AxonMembrane} axonMembrane
+   */
+  constructor( axonMembrane ) {
 
-  this.axonMembrane = axonMembrane; // @private
+    this.axonMembrane = axonMembrane; // @private
 
-  // @public - events emitted as the action potential changes
-  this.shapeChanged = new Emitter();
-  this.crossSectionReached = new Emitter();
-  this.lingeringCompleted = new Emitter();
+    // @public - events emitted as the action potential changes
+    this.shapeChanged = new Emitter();
+    this.crossSectionReached = new Emitter();
+    this.lingeringCompleted = new Emitter();
 
-  // @public - describes the shape of the action potential
-  this.shapeDescription = {
-    mode: 'curve', // valid values are 'curve' and 'circle'
-    startPoint: new Vector2( 0, 0 ),
-    controlPoint1: new Vector2( 0, 0 ),
-    controlPoint2: new Vector2( 0, 0 ),
-    endPoint: new Vector2( 0, 0 ),
-    circleCenter: axonMembrane.crossSectionCircleCenter,
-    circleRadius: 0
-  };
+    // @public - describes the shape of the action potential
+    this.shapeDescription = {
+      mode: 'curve', // valid values are 'curve' and 'circle'
+      startPoint: new Vector2( 0, 0 ),
+      controlPoint1: new Vector2( 0, 0 ),
+      controlPoint2: new Vector2( 0, 0 ),
+      endPoint: new Vector2( 0, 0 ),
+      circleCenter: axonMembrane.crossSectionCircleCenter,
+      circleRadius: 0
+    };
 
-  this.travelTimeCountdownTimer = TRAVELING_TIME; // @private
-  this.lingerCountdownTimer = 0; // @private
-  this.upperCurvePoints = new Array( NUM_CURVE_POINTS ); // @private
-  this.lowerCurvePoints = new Array( NUM_CURVE_POINTS ); // @private
-  this.curveMidPoint = new Vector2( 0, 0 ); // @private, pre-allocated for performance reasons
+    this.travelTimeCountdownTimer = TRAVELING_TIME; // @private
+    this.lingerCountdownTimer = 0; // @private
+    this.upperCurvePoints = new Array( NUM_CURVE_POINTS ); // @private
+    this.lowerCurvePoints = new Array( NUM_CURVE_POINTS ); // @private
+    this.curveMidPoint = new Vector2( 0, 0 ); // @private, pre-allocated for performance reasons
 
-  // Set up the points that will be used to determine the ends of the action potential curve.  These are calculated
-  // during construction instead of in real time as a performance optimization.
-  for ( let i = 0; i < NUM_CURVE_POINTS; i++ ) {
-    this.upperCurvePoints[ i ] = axonMembrane.evaluateCurve( axonMembrane.getCurveA(), i / ( NUM_CURVE_POINTS - 1 ) );
-    this.lowerCurvePoints[ i ] = axonMembrane.evaluateCurve( axonMembrane.getCurveB(), i / ( NUM_CURVE_POINTS - 1 ) );
+    // Set up the points that will be used to determine the ends of the action potential curve.  These are calculated
+    // during construction instead of in real time as a performance optimization.
+    for ( let i = 0; i < NUM_CURVE_POINTS; i++ ) {
+      this.upperCurvePoints[ i ] = axonMembrane.evaluateCurve( axonMembrane.getCurveA(), i / ( NUM_CURVE_POINTS - 1 ) );
+      this.lowerCurvePoints[ i ] = axonMembrane.evaluateCurve( axonMembrane.getCurveB(), i / ( NUM_CURVE_POINTS - 1 ) );
+    }
+
+    // create the initial shape
+    this.updateShapeDescription(); // Also create an initialize Shape
   }
 
-  // create the initial shape
-  this.updateShapeDescription(); // Also create an initialize Shape
-}
-
-neuron.register( 'TravelingActionPotential', TravelingActionPotential );
-
-inherit( Object, TravelingActionPotential, {
 
   /**
    * Step this model component forward by the specified time.  This will update the shape such that it will appear to
    * move down the axon membrane.
+   * @public
    * @param {number} dt
    */
-  stepInTime: function( dt ) {
+  stepInTime( dt ) {
     if ( this.travelTimeCountdownTimer > 0 ) {
       this.travelTimeCountdownTimer -= dt;
       this.updateShapeDescription();
@@ -110,7 +106,7 @@ inherit( Object, TravelingActionPotential, {
         this.updateShapeDescription();
       }
     }
-  },
+  }
 
   /**
    * Update the information that describes the shape of the action potential.
@@ -121,7 +117,7 @@ inherit( Object, TravelingActionPotential, {
    * need to be updated.
    * @private
    */
-  updateShapeDescription: function() {
+  updateShapeDescription() {
     if ( this.travelTimeCountdownTimer > 0 ) {
       // Depict the traveling action potential as a curved line moving down the axon.  Start by calculating the start
       // and end points.
@@ -157,26 +153,27 @@ inherit( Object, TravelingActionPotential, {
     }
 
     this.shapeChanged.emit();
-  },
+  }
 
   /**
    * Set the state from a (probably previously captured) version of the internal state.
    * @public
    */
-  setState: function( state ) {
+  setState( state ) {
     this.travelTimeCountdownTimer = state.getTravelTimeCountdownTimer();
     this.lingerCountdownTimer = state.getLingerCountdownTimer();
     this.updateShapeDescription();
-  },
+  }
 
   /**
    * Get the state, generally for use in setting the state later for some sort of playback.
    * @public
    */
-  getState: function() {
+  getState() {
     return new TravelingActionPotentialState( this.travelTimeCountdownTimer, this.lingerCountdownTimer );
   }
+}
 
-} );
+neuron.register( 'TravelingActionPotential', TravelingActionPotential );
 
 export default TravelingActionPotential;

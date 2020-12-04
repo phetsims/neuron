@@ -11,7 +11,6 @@
  */
 
 import Utils from '../../../../dot/js/Utils.js';
-import inherit from '../../../../phet-core/js/inherit.js';
 import neuron from '../../neuron.js';
 import DelayElement from './DelayElement.js';
 
@@ -19,38 +18,34 @@ import DelayElement from './DelayElement.js';
 // problems that were occurring.
 const DIFFERENCE_RESOLUTION = 1E-15;
 
-/**
- * @param {number} maxDelay // In seconds of simulation time.
- * @param {number} minTimeStep // sim the clock rate, often several orders of magnitude slower than real time.
- * @constructor
- */
-function DelayBuffer( maxDelay, minTimeStep ) {
-  const self = this;
-  this.numEntries = Math.ceil( maxDelay / minTimeStep ); // @private
-  this.filling = false; // @private
-  this.allDeltaTimesEqual = true; // @private
-  this.previousDeltaTime = -1; // @private
-  this.countAtThisDeltaTime = 0; // @private
-  // Allocate the memory that will be used.
-  this.delayElements = new Array( this.numEntries ); // @private
+class DelayBuffer {
+  /**
+   * @param {number} maxDelay // In seconds of simulation time.
+   * @param {number} minTimeStep // sim the clock rate, often several orders of magnitude slower than real time.
+   */
+  constructor( maxDelay, minTimeStep ) {
+    this.numEntries = Math.ceil( maxDelay / minTimeStep ); // @private
+    this.filling = false; // @private
+    this.allDeltaTimesEqual = true; // @private
+    this.previousDeltaTime = -1; // @private
+    this.countAtThisDeltaTime = 0; // @private
+    // Allocate the memory that will be used.
+    this.delayElements = new Array( this.numEntries ); // @private
 
-  _.times( this.numEntries, function( idx ) {
-    self.delayElements[ idx ] = new DelayElement();
-  } );
+    _.times( this.numEntries, idx => {
+      this.delayElements[ idx ] = new DelayElement();
+    } );
 
-  // Head and tail pointers for FIFO-type behavior.
-  this.head = 0; // @private
-  this.tail = 0; // @private
-  // Set the initial conditions.
-  this.clear();
-}
+    // Head and tail pointers for FIFO-type behavior.
+    this.head = 0; // @private
+    this.tail = 0; // @private
+    // Set the initial conditions.
+    this.clear();
+  }
 
-neuron.register( 'DelayBuffer', DelayBuffer );
-
-inherit( Object, DelayBuffer, {
 
   // @public
-  addValue: function( value, deltaTime ) {
+  addValue( value, deltaTime ) {
     this.delayElements[ this.head ].setValueAndTime( value, deltaTime );
     this.head = ( this.head + 1 ) % this.numEntries;
     if ( this.head === this.tail ) {
@@ -92,10 +87,10 @@ inherit( Object, DelayBuffer, {
       }
       this.previousDeltaTime = deltaTime;
     }
-  },
+  }
 
   // @public
-  getDelayedValue: function( delayAmount ) {
+  getDelayedValue( delayAmount ) {
 
     let delayedValue = 0;
     let index = -1;
@@ -148,10 +143,10 @@ inherit( Object, DelayBuffer, {
     }
 
     return delayedValue;
-  },
+  }
 
   // @public - get a copy of this object that retains references to individual delay elements
-  getCopy: function() {
+  getCopy() {
     const copy = new DelayBuffer( 0, 1 ); // create a new delay buffer, but most of its contents will be overwritten below
     copy.numEntries = this.numEntries;
     copy.filling = this.filling;
@@ -162,15 +157,17 @@ inherit( Object, DelayBuffer, {
     copy.head = 0; // @private
     copy.tail = 0; // @private
     return copy;
-  },
+  }
 
   // @public
-  clear: function() {
+  clear() {
     this.head = 0;
     this.tail = 0;
     this.previousDeltaTime = -1;
     this.filling = true;
   }
-} );
+}
+
+neuron.register( 'DelayBuffer', DelayBuffer );
 
 export default DelayBuffer;

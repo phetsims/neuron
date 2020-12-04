@@ -84,7 +84,7 @@ class IonsAndChannelsLegendPanel extends Panel {
 
     // Figure out the maximum icon width.
     let maxIconWidth = 0;
-    iconList.forEach( function( icon ) {
+    iconList.forEach( icon => {
       maxIconWidth = icon.width > maxIconWidth ? icon.width : maxIconWidth;
     } );
 

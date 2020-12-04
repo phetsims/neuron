@@ -7,7 +7,6 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-import inherit from '../../../../phet-core/js/inherit.js';
 import neuron from '../../neuron.js';
 
 /*
@@ -20,7 +19,7 @@ function map() {
   const values = [];
 
   return {
-    put: function( key, value ) {
+    put: ( key, value ) => {
       const index = keys.indexOf( key );
       if ( index === -1 ) {
         keys.push( key );
@@ -30,92 +29,89 @@ function map() {
         values[ index ] = value;
       }
     },
-    get: function( key ) {
-      return values[ keys.indexOf( key ) ];
-    }
+    get: key => values[ keys.indexOf( key ) ]
   };
 }
 
-/**
- * @param {NeuronModel} neuronModel
- * @constructor
- */
-function NeuronModelState( neuronModel ) {
+class NeuronModelState {
+  /**
+   * @param {NeuronModel} neuronModel
+   */
+  constructor( neuronModel ) {
 
-  // @private, accessed via getter methods
-  this.axonMembraneState = neuronModel.getAxonMembrane().getState();
-  this.hodgkinHuxleyModelState = neuronModel.hodgkinHuxleyModel.getState();
-  this.membranePotential = neuronModel.getMembranePotential();
-  this.sodiumExteriorConcentration = neuronModel.getSodiumExteriorConcentration();
-  this.sodiumInteriorConcentration = neuronModel.getSodiumInteriorConcentration();
-  this.potassiumExteriorConcentration = neuronModel.getPotassiumExteriorConcentration();
-  this.potassiumInteriorConcentration = neuronModel.getPotassiumInteriorConcentration();
+    // @private, accessed via getter methods
+    this.axonMembraneState = neuronModel.getAxonMembrane().getState();
+    this.hodgkinHuxleyModelState = neuronModel.hodgkinHuxleyModel.getState();
+    this.membranePotential = neuronModel.getMembranePotential();
+    this.sodiumExteriorConcentration = neuronModel.getSodiumExteriorConcentration();
+    this.sodiumInteriorConcentration = neuronModel.getSodiumInteriorConcentration();
+    this.potassiumExteriorConcentration = neuronModel.getPotassiumExteriorConcentration();
+    this.potassiumInteriorConcentration = neuronModel.getPotassiumInteriorConcentration();
 
-  // use c-style loops below for better performance
+    // use c-style loops below for better performance
 
-  let i;
-  this.membraneChannelStateMap = map();
-  for ( i = 0; i < neuronModel.membraneChannels.length; i++ ) {
-    const membraneChannel = neuronModel.membraneChannels.get( i );
-    this.membraneChannelStateMap.put( membraneChannel, membraneChannel.getState() );
+    let i;
+    this.membraneChannelStateMap = map();
+    for ( i = 0; i < neuronModel.membraneChannels.length; i++ ) {
+      const membraneChannel = neuronModel.membraneChannels.get( i );
+      this.membraneChannelStateMap.put( membraneChannel, membraneChannel.getState() );
+    }
+
+    this.particlePlaybackMementos = [];
+
+    for ( i = 0; i < neuronModel.transientParticles.length; i++ ) {
+      const transientParticle = neuronModel.transientParticles.get( i );
+      this.particlePlaybackMementos.push( transientParticle.getPlaybackMemento() );
+    }
   }
 
-  this.particlePlaybackMementos = [];
 
-  for ( i = 0; i < neuronModel.transientParticles.length; i++ ) {
-    const transientParticle = neuronModel.transientParticles.get( i );
-    this.particlePlaybackMementos.push( transientParticle.getPlaybackMemento() );
+  // @public
+  getAxonMembraneState() {
+    return this.axonMembraneState;
+  }
+
+  // @public
+  getHodgkinHuxleyModelState() {
+    return this.hodgkinHuxleyModelState;
+  }
+
+  // @public
+  getMembraneChannelStateMap() {
+    return this.membraneChannelStateMap;
+  }
+
+  // @public
+  getPlaybackParticleMementos() {
+    return this.particlePlaybackMementos;
+  }
+
+  // @public
+  getMembranePotential() {
+    return this.membranePotential;
+  }
+
+  // @public
+  getSodiumInteriorConcentration() {
+    return this.sodiumInteriorConcentration;
+  }
+
+  // @public
+  getSodiumExteriorConcentration() {
+    return this.sodiumExteriorConcentration;
+  }
+
+  // @public
+  getPotassiumInteriorConcentration() {
+    return this.potassiumInteriorConcentration;
+  }
+
+  // @public
+  getPotassiumExteriorConcentration() {
+    return this.potassiumExteriorConcentration;
   }
 }
 
 neuron.register( 'NeuronModelState', NeuronModelState );
-
-inherit( Object, NeuronModelState, {
-
-  // @public
-  getAxonMembraneState: function() {
-    return this.axonMembraneState;
-  },
-
-  // @public
-  getHodgkinHuxleyModelState: function() {
-    return this.hodgkinHuxleyModelState;
-  },
-
-  // @public
-  getMembraneChannelStateMap: function() {
-    return this.membraneChannelStateMap;
-  },
-
-  // @public
-  getPlaybackParticleMementos: function() {
-    return this.particlePlaybackMementos;
-  },
-
-  // @public
-  getMembranePotential: function() {
-    return this.membranePotential;
-  },
-
-  // @public
-  getSodiumInteriorConcentration: function() {
-    return this.sodiumInteriorConcentration;
-  },
-
-  // @public
-  getSodiumExteriorConcentration: function() {
-    return this.sodiumExteriorConcentration;
-  },
-
-  // @public
-  getPotassiumInteriorConcentration: function() {
-    return this.potassiumInteriorConcentration;
-  },
-
-  // @public
-  getPotassiumExteriorConcentration: function() {
-    return this.potassiumExteriorConcentration;
-  }
-} );
 
 export default NeuronModelState;

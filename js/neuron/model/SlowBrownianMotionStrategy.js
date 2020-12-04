@@ -9,7 +9,6 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-import inherit from '../../../../phet-core/js/inherit.js';
 import neuron from '../../neuron.js';
 import MotionStrategy from './MotionStrategy.js';
 
@@ -19,24 +18,22 @@ const MIN_JUMP_DISTANCE = 0.1;  // In nanometers.
 const MIN_TIME_TO_NEXT_JUMP = 0.0009;  // In seconds of sim time, not wall time.
 const MAX_TIME_TO_NEXT_JUMP = 0.0015;  // In seconds of sim time, not wall time.
 
-/**
- * @param {number} initialPositionX
- * @param {number} initialPositionY
- * @constructor
- */
-function SlowBrownianMotionStrategy( initialPositionX, initialPositionY ) {
-  this.initialPositionX = initialPositionX;
-  this.initialPositionY = initialPositionY;
-  // In seconds of sim time.
-  this.timeUntilNextJump = this.generateNewJumpTime();
-}
+class SlowBrownianMotionStrategy extends MotionStrategy {
+  /**
+   * @param {number} initialPositionX
+   * @param {number} initialPositionY
+   */
+  constructor( initialPositionX, initialPositionY ) {
+    super();
+    this.initialPositionX = initialPositionX;
+    this.initialPositionY = initialPositionY;
+    // In seconds of sim time.
+    this.timeUntilNextJump = this.generateNewJumpTime();
+  }
 
-neuron.register( 'SlowBrownianMotionStrategy', SlowBrownianMotionStrategy );
-
-inherit( MotionStrategy, SlowBrownianMotionStrategy, {
 
   // @public, @override
-  move: function( movableModelElement, fadableModelElement, dt ) {
+  move( movableModelElement, fadableModelElement, dt ) {
     this.timeUntilNextJump -= dt;
     if ( this.timeUntilNextJump <= 0 ) {
       // It is time to jump.
@@ -56,23 +53,24 @@ inherit( MotionStrategy, SlowBrownianMotionStrategy, {
       // Reset the jump counter time.
       this.timeUntilNextJump = this.generateNewJumpTime();
     }
-  },
-
-  // @private
-  generateNewJumpTime: function() {
-    return MIN_TIME_TO_NEXT_JUMP + phet.joist.random.nextDouble() * ( MAX_TIME_TO_NEXT_JUMP - MIN_TIME_TO_NEXT_JUMP );
-  },
-
-  // @private
-  generateNewJumpDistance: function() {
-    return MIN_JUMP_DISTANCE + phet.joist.random.nextDouble() * ( MAX_JUMP_DISTANCE - MIN_JUMP_DISTANCE );
-  },
-
-  // @private
-  generateNewJumpAngle: function() {
-    return phet.joist.random.nextDouble() * Math.PI * 2;
   }
 
-} );
+  // @private
+  generateNewJumpTime() {
+    return MIN_TIME_TO_NEXT_JUMP + phet.joist.random.nextDouble() * ( MAX_TIME_TO_NEXT_JUMP - MIN_TIME_TO_NEXT_JUMP );
+  }
+
+  // @private
+  generateNewJumpDistance() {
+    return MIN_JUMP_DISTANCE + phet.joist.random.nextDouble() * ( MAX_JUMP_DISTANCE - MIN_JUMP_DISTANCE );
+  }
+
+  // @private
+  generateNewJumpAngle() {
+    return phet.joist.random.nextDouble() * Math.PI * 2;
+  }
+}
+
+neuron.register( 'SlowBrownianMotionStrategy', SlowBrownianMotionStrategy );
 
 export default SlowBrownianMotionStrategy;

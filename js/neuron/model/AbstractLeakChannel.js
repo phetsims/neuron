@@ -7,35 +7,32 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-import inherit from '../../../../phet-core/js/inherit.js';
 import neuron from '../../neuron.js';
 import MembraneChannel from './MembraneChannel.js';
 
-/**
- * @param {number} channelWidth
- * @param {number} channelHeight
- * @param {NeuronModel} modelContainingParticles
- * @constructor
- */
-function AbstractLeakChannel( channelWidth, channelHeight, modelContainingParticles ) {
-  MembraneChannel.call( this, channelWidth, channelHeight, modelContainingParticles );
-  this.reset();
+class AbstractLeakChannel extends MembraneChannel {
+  /**
+   * @param {number} channelWidth
+   * @param {number} channelHeight
+   * @param {NeuronModel} modelContainingParticles
+   */
+  constructor( channelWidth, channelHeight, modelContainingParticles ) {
+    super( channelWidth, channelHeight, modelContainingParticles );
+    this.reset();
+  }
+
+
+  // @public
+  stepInTime( dt ) {
+    super.stepInTime( dt );
+  }
+
+  // @public
+  reset() {
+    this.setOpenness( 1 );  // Leak channels are always fully open.
+  }
 }
 
 neuron.register( 'AbstractLeakChannel', AbstractLeakChannel );
-
-inherit( MembraneChannel, AbstractLeakChannel, {
-
-  // @public
-  stepInTime: function( dt ) {
-    MembraneChannel.prototype.stepInTime.call( this, dt );
-  },
-
-  // @public
-  reset: function() {
-    this.setOpenness( 1 );  // Leak channels are always fully open.
-  }
-
-} );
 
 export default AbstractLeakChannel;

@@ -7,30 +7,28 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-import inherit from '../../../../phet-core/js/inherit.js';
 import neuron from '../../neuron.js';
 
-/**
- * @param {number} value
- * @param {number} deltaTime
- * @constructor
- */
-function DelayElement( value, deltaTime ) {
-  value = value || 0;
-  deltaTime = deltaTime || 0;
-  this.value = value;
-  this.deltaTime = deltaTime;
-}
-
-neuron.register( 'DelayElement', DelayElement );
-
-inherit( Object, DelayElement, {
-
-  // @public
-  setValueAndTime: function( value, deltaTime ) {
+class DelayElement {
+  /**
+   * @param {number} value
+   * @param {number} deltaTime
+   */
+  constructor( value, deltaTime ) {
+    value = value || 0;
+    deltaTime = deltaTime || 0;
     this.value = value;
     this.deltaTime = deltaTime;
   }
-} );
+
+
+  // @public
+  setValueAndTime( value, deltaTime ) {
+    this.value = value;
+    this.deltaTime = deltaTime;
+  }
+}
+
+neuron.register( 'DelayElement', DelayElement );
 
 export default DelayElement;

@@ -14,193 +14,262 @@
 
 import createObservableArray from '../../../../axon/js/createObservableArray.js';
 import Property from '../../../../axon/js/Property.js';
-import inherit from '../../../../phet-core/js/inherit.js';
 import neuron from '../../neuron.js';
 import Live from './Live.js';
 import Playback from './Playback.js';
 import Record from './Record.js';
 
-/**
- * @param {number} maxRecordPoints
- * @constructor
- */
-function RecordAndPlaybackModel( maxRecordPoints ) {
+class RecordAndPlaybackModel {
+  constructor() { }
 
-  const self = this;
+  /**
+   * TODO: ideally this could be in the constructor, https://github.com/phetsims/neuron/issues/146
+   * @public
+   * @param {number} maxRecordPoints
+   */
+  initialize( maxRecordPoints ) {
+    assert && assert( !this.initialized, 'already initialized' );
 
-  this.playingProperty = new Property( true ); // True if playing, false if paused
-  this.timeProperty = new Property( 0 ); // Current time of recording or playback
-  this.historyRemainderClearedProperty = new Property( false );
-  this.historyClearedProperty = new Property( false );
-  this.modeProperty = new Property( null ); // The current operational mode, valid values are playback, record or live
+    this.playingProperty = new Property( true ); // True if playing, false if paused
+    this.timeProperty = new Property( 0 ); // Current time of recording or playback
+    this.historyRemainderClearedProperty = new Property( false );
+    this.historyClearedProperty = new Property( false );
+    this.modeProperty = new Property( null ); // The current operational mode, valid values are playback, record or live
 
-  this.maxRecordPoints = maxRecordPoints;
+    this.maxRecordPoints = maxRecordPoints;
 
-  // @private - the history of data points that have been recorded from the model.
-  this.recordHistory = createObservableArray();
+    // @private - the history of data points that have been recorded from the model.
+    this.recordHistory = createObservableArray();
 
-  this.recordMode = new Record( this ); // @private - samples data from the mode and stores it
-  this.playbackMode = new Playback( this ); // @private - plays back recorded data
-  this.liveMode = new Live( this ); // @private - runs the model without recording it
+    this.recordMode = new Record( this ); // @private - samples data from the mode and stores it
+    this.playbackMode = new Playback( this ); // @private - plays back recorded data
+    this.liveMode = new Live( this ); // @private - runs the model without recording it
 
-  this.timeProperty.link( function() {
-    self.updateRecordPlayBack();
-  } );
+    this.timeProperty.lazyLink( () => {
+      this.updateRecordPlayBack();
+    } );
 
-  this.resetAll();
-}
+    this.resetAll();
+    this.initialized = true;
+  }
 
-neuron.register( 'RecordAndPlaybackModel', RecordAndPlaybackModel );
-
-inherit( Object, RecordAndPlaybackModel, {
 
   /**
    * Update the simulation model (should cause side effects to update the view), returning a snapshot of the state after the update.
    * The returned state could be ignored if the simulation is not in record mode.
-   *
+   * @public
+   * @abstract
    * @param {number} dt - the amount of time to update the simulation (in whatever units the simulation model is using).
    * @returns the updated state, which can be used to restore the model during playback
    */
-  stepInTime: function( dt ) {
+  stepInTime( dt ) {
     throw new Error( 'stepInTime should be implemented in descendant classes.' );
-  },
+  }
 
   /**
    * Called by the Animation Loop
+   * @public
    * @param {number} dt
    */
-  step: function( dt ) {
+  step( dt ) {
     if ( this.playingProperty.get() ) {
       this.stepMode( dt );
     }
-  },
+  }
 
   /**
    * Steps the currently active mode by the specified amount of time.
+   * @private
    * @param {number} dt - the amount of time to step the current mode
    */
-  stepMode: function( dt ) {
+  stepMode( dt ) {
     this.modeProperty.get().step( dt );
-  },
+  }
 
-  isPlayback: function() {
+  /**
+   * @public
+   * @returns {boolean}
+   */
+  isPlayback() {
     return this.modeProperty.get() === this.playbackMode;
-  },
+  }
 
-  updateRecordPlayBack: function() {
+  /**
+   * @abstract
+   * @protected
+   */
+  updateRecordPlayBack() {
     throw new Error( 'updateRecordPlayBack should be implemented in descendant classes.' );
-  },
+  }
 
-  isRecord: function() {
+  /**
+   * @public
+   * @returns {boolean}
+   */
+  isRecord() {
     return this.modeProperty.get() === this.recordMode;
-  },
+  }
 
-  isLive: function() {
+  /**
+   * @protected
+   * @returns {boolean}
+   */
+  isLive() {
     return this.modeProperty.get() === this.liveMode;
-  },
+  }
 
-  setPlaying: function( playing ) {
+  /**
+   * @public
+   * @param {boolean} playing
+   */
+  setPlaying( playing ) {
     this.playingProperty.set( playing );
-  },
+  }
 
-  isPlaying: function() {
-    return this.playingProperty.get();
-  },
-
-  isRecordingFull: function() {
+  /**
+   * TODO: this isn't used, https://github.com/phetsims/neuron/issues/146
+   * @public
+   * @returns {boolean}
+   */
+  isRecordingFull() {
     return this.recordHistory.length >= this.getMaxRecordPoints();
-  },
+  }
 
-  getRecordedTimeRange: function() {
+  /**
+   * @public
+   * @returns {number}
+   */
+  getRecordedTimeRange() {
     if ( this.recordHistory.length === 0 ) {
       return 0;
     }
     return this.recordHistory.get( this.recordHistory.length - 1 ).getTime() - this.recordHistory.get( 0 ).getTime();
 
-  },
+  }
 
-  getTime: function() {
+  /**
+   * @public
+   * @returns {number}
+   */
+  getTime() {
     return this.timeProperty.get();
-  },
+  }
 
-  getMaxRecordedTime: function() {
+  /**
+   * @public
+   * @returns {number}
+   */
+  getMaxRecordedTime() {
     if ( this.recordHistory.length === 0 ) { return 0.0; }
     return this.recordHistory.get( this.recordHistory.length - 1 ).getTime();
-  },
+  }
 
-  getMinRecordedTime: function() {
+  /**
+   * @public
+   * @returns {number}
+   */
+  getMinRecordedTime() {
     if ( this.recordHistory.length === 0 ) { return 0.0; }
     return this.recordHistory.get( 0 ).getTime();
-  },
+  }
 
-  setMode: function( mode ) {
+  /**
+   * @public
+   * @param {Mode} mode
+   */
+  setMode( mode ) {
     this.modeProperty.set( mode );
-  },
+  }
 
-  setModeLive: function() {
+  /**
+   * @public
+   */
+  setModeLive() {
     this.setMode( this.liveMode );
-  },
+  }
 
-  setModeRecord: function() {
+  /**
+   * @public
+   */
+  setModeRecord() {
     this.setMode( this.recordMode );
-  },
+  }
 
-  setModePlayback: function() {
+  /**
+   * TODO: this isn't used, https://github.com/phetsims/neuron/issues/146
+   * @public
+   */
+  setModePlayback() {
     this.setMode( this.playbackMode );
-  },
+  }
 
-  setTime: function( t ) {
+  /**
+   * @public
+   * @param {number} t
+   */
+  setTime( t ) {
     this.timeProperty.set( t );
     const isPlayBackVal = this.isPlayback();
     const recordPtsLength = this.getNumRecordedPoints();
     if ( isPlayBackVal && ( recordPtsLength > 0 ) ) { // Only restore state if during playback and state has been recorded
       this.setPlaybackState( this.getPlaybackState().getState() ); // Sets the model state to reflect the current playback index
     }
-  },
+  }
 
   /**
    * This method should populate the model + view of the application with the data from the specified state.
    * This state was obtained through playing back or stepping the recorded history.
+   * @private
    * @param {Object} state - the state to display
    */
-  setPlaybackState: function( state ) {
+  setPlaybackState( state ) {
     throw new Error( 'setPlaybackState should be implemented in descendant classes.' );
-  },
+  }
 
-  getNumRecordedPoints: function() {
+  /**
+   * @private
+   * @returns {number}
+   */
+  getNumRecordedPoints() {
     return this.recordHistory.length;
-  },
+  }
 
-  startRecording: function() {
+  /**
+   * @public
+   */
+  startRecording() {
     this.setModeRecord();
     this.setPlaying( true );
-  },
+  }
 
-  clearHistory: function() {
+  /**
+   * @public
+   */
+  clearHistory() {
     this.recordHistory.clear();
     this.setTime( 0.0 );// for some reason, time has to be reset to 0.0 here, or charts don't clear in motion-series on first press of clear button
     this.historyClearedProperty.set( !this.historyClearedProperty.get() );
-  },
+  }
 
   /**
+   * TODO: this isn't used, https://github.com/phetsims/neuron/issues/146
    * Empty function handle, which can be overridden to provide custom functionality when record was pressed
    * during playback.  This is useful since many sims have other data (or charts) that must be cleared when
    * record is pressed during playback.
+   * @abstract
+   * @public
    */
-  handleRecordStartedDuringPlayback: function() {
-  },
+  handleRecordStartedDuringPlayback() {
+  }
 
   /**
    * Look up a recorded state based on the specified time
+   * @private
    */
-  getPlaybackState: function() {
-    const self = this;
+  getPlaybackState() {
     const sortedHistory = this.recordHistory.slice();
 
-    sortedHistory.sort( function( o1, o2 ) {
-      // Though inefficient, this hasn't caused noticeable slowdown during testing.
-      return compare( Math.abs( o1.getTime() - self.timeProperty.get() ), Math.abs( o2.getTime() - self.timeProperty.get() ) );
-    } );
+    sortedHistory.sort( ( o1, o2 ) => compare( Math.abs( o1.getTime() - this.timeProperty.get() ), Math.abs( o2.getTime() - this.timeProperty.get() ) ) );
 
     function compare( d1, d2 ) {
       if ( d1 < d2 ) {
@@ -213,46 +282,58 @@ inherit( Object, RecordAndPlaybackModel, {
     }
 
     return sortedHistory[ 0 ];
-  },
+  }
 
-  //Estimates what DT should be by the spacing of the data points.
-  //This should provide some support for non-equal spaced samples, but other algorithms may be better
-  getPlaybackDT: function() {
+  /**
+   * TODO: this isn't used, https://github.com/phetsims/neuron/issues/146
+   * @private
+   * @returns {number}
+   */
+  getPlaybackDT() {
     if ( this.getNumRecordedPoints() === 0 ) { return 0; }
     else if ( this.getNumRecordedPoints() === 1 ) { return this.recordHistory.get( 0 ).getTime(); }
     else { return ( this.recordHistory.get( this.recordHistory.length - 1 ).getTime() - this.recordHistory.get( 0 ).getTime() ) / this.recordHistory.length; }
-  },
+  }
 
   /**
    * Switches to playback mode.  This is a no-op if already in that mode.
+   * @public
    */
-  setPlayback: function() {
+  setPlayback() {
     this.setRecord( false );
-  },
-
-  rewind: function() {
-    this.setTime( this.getMinRecordedTime() );
-  },
+  }
 
   /**
+   * TODO: this isn't used, https://github.com/phetsims/neuron/issues/146
+   * @public
+   */
+  rewind() {
+    this.setTime( this.getMinRecordedTime() );
+  }
+
+  /**
+   * @public
    * @param {DataPoint} point
    */
-  addRecordedPoint: function( point ) {
+  addRecordedPoint( point ) {
     this.recordHistory.add( point );
-  },
+  }
 
   /**
+   * TODO: this isn't used, https://github.com/phetsims/neuron/issues/146
+   * @public
    * @param {number} point index of the item to be removed
    */
-  removeHistoryPoint: function( point ) {
+  removeHistoryPoint( point ) {
     this.recordHistory.remove( this.recordHistory[ point ] );
-  },
+  }
 
   /**
+   * @public
    * @param {boolean} rec
    * use setmode
    */
-  setRecord: function( rec ) {
+  setRecord( rec ) {
     if ( rec && this.modeProperty.get() !== this.recordMode ) {
       this.clearHistoryRemainder();
       this.handleRecordStartedDuringPlayback();
@@ -261,14 +342,16 @@ inherit( Object, RecordAndPlaybackModel, {
     else if ( !rec && this.modeProperty.get() !== this.playbackMode ) {
       this.modeProperty.set( this.playbackMode );
     }
-  },
+  }
 
-  clearHistoryRemainder: function() {
+  /**
+   * @private
+   */
+  clearHistoryRemainder() {
     this.historyRemainderClearedProperty.set( false );
     const keep = [];
-    const self = this;
-    this.recordHistory.forEach( function( dataPoint ) {
-      if ( dataPoint.getTime() < self.timeProperty.get() ) {
+    this.recordHistory.forEach( dataPoint => {
+      if ( dataPoint.getTime() < this.timeProperty.get() ) {
         keep.push( dataPoint );
       }
     } );
@@ -276,9 +359,12 @@ inherit( Object, RecordAndPlaybackModel, {
     this.recordHistory.clear();
     this.recordHistory.addAll( keep.slice() );
     this.historyRemainderClearedProperty.set( true );
-  },
+  }
 
-  resetAll: function() {
+  /**
+   * @public
+   */
+  resetAll() {
     this.playingProperty.reset();
     this.timeProperty.reset();
     this.historyRemainderClearedProperty.reset();
@@ -289,7 +375,8 @@ inherit( Object, RecordAndPlaybackModel, {
     this.setRecord( true );
     this.setPlaying( false );
   }
+}
 
-} );
+neuron.register( 'RecordAndPlaybackModel', RecordAndPlaybackModel );
 
 export default RecordAndPlaybackModel;

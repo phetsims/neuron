@@ -9,51 +9,48 @@
  */
 
 import Shape from '../../../../kite/js/Shape.js';
-import inherit from '../../../../phet-core/js/inherit.js';
 import neuron from '../../neuron.js';
 import CaptureZone from './CaptureZone.js';
 
-/**
- * @constructor
- */
-function NullCaptureZone() {
-  CaptureZone.call( this, {} );
-}
+class NullCaptureZone extends CaptureZone {
+  /**
+   */
+  constructor() {
+    super( {} );
+  }
 
-neuron.register( 'NullCaptureZone', NullCaptureZone );
-
-inherit( CaptureZone, NullCaptureZone, {
 
   // @public
-  getShape: function() {
+  getShape() {
     return new Shape().ellipse( 0, 0, 0, 0 );
-  },
+  }
 
   // @public
-  isPointInZone: function( x, y ) {
+  isPointInZone( x, y ) {
     return false;
-  },
+  }
 
   // @public - assign a random point that is somewhere within the shape.
-  assignNewParticlePosition: function( particle ) {
+  assignNewParticlePosition( particle ) {
     particle.setPosition( 0, 0 );
-  },
+  }
 
   // @public
-  getOriginPoint: function() {
+  getOriginPoint() {
     return null;
-  },
+  }
 
   // @public
-  setRotationalAngle: function( angle ) {
-    // necessary to override, but does nothing in this particular subclass
-  },
-
-  // @public
-  setOriginPoint: function( centerPoint ) {
+  setRotationalAngle( angle ) {
     // necessary to override, but does nothing in this particular subclass
   }
 
-} );
+  // @public
+  setOriginPoint( centerPoint ) {
+    // necessary to override, but does nothing in this particular subclass
+  }
+}
+
+neuron.register( 'NullCaptureZone', NullCaptureZone );
 
 export default NullCaptureZone;

@@ -18,7 +18,7 @@ const ParticleFactory = {
    * @returns {Particle}
    * @public
    */
-  createParticle: function( particleType ) {
+  createParticle( particleType ) {
     let newParticle = null;
 
     switch( particleType ) {

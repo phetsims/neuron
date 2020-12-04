@@ -8,7 +8,6 @@
  */
 
 import Vector2 from '../../../../dot/js/Vector2.js';
-import inherit from '../../../../phet-core/js/inherit.js';
 import neuron from '../../neuron.js';
 import MathUtils from '../common/MathUtils.js';
 import NeuronConstants from '../common/NeuronConstants.js';
@@ -16,37 +15,36 @@ import MotionStrategy from './MotionStrategy.js';
 import TimedFadeAwayStrategy from './TimedFadeAwayStrategy.js';
 import WanderAwayThenFadeMotionStrategy from './WanderAwayThenFadeMotionStrategy.js';
 
-/**
- * @param {MembraneChannel} channel
- * @param {number} startingPositionX
- * @param {number} startingPositionY
- * @param {number} maxVelocity
- * @constructor
- */
-function TraverseChannelAndFadeMotionStrategy( channel, startingPositionX, startingPositionY, maxVelocity ) {
-  maxVelocity = maxVelocity || NeuronConstants.DEFAULT_MAX_VELOCITY;
-  this.velocityVector = new Vector2( 0, 0 );
-  this.channel = channel;
-  this.maxVelocity = maxVelocity;
+class TraverseChannelAndFadeMotionStrategy extends MotionStrategy {
+  /**
+   * @param {MembraneChannel} channel
+   * @param {number} startingPositionX
+   * @param {number} startingPositionY
+   * @param {number} maxVelocity
+   */
+  constructor( channel, startingPositionX, startingPositionY, maxVelocity ) {
 
-  // Holds array of objects with x and y properties (doesn't use vector for performance reasons)
-  // http://jsperf.com/object-notation-vs-constructor
-  this.traversalPoints = this.createTraversalPoints( channel, startingPositionX, startingPositionY );
-  this.currentDestinationIndex = 0;
-  this.channelHasBeenEntered = false;
+    super();
+    maxVelocity = maxVelocity || NeuronConstants.DEFAULT_MAX_VELOCITY;
+    this.velocityVector = new Vector2( 0, 0 );
+    this.channel = channel;
+    this.maxVelocity = maxVelocity;
 
-  this.startingPositionX = startingPositionX;
-  this.startingPositionY = startingPositionY;
+    // Holds array of objects with x and y properties (doesn't use vector for performance reasons)
+    // http://jsperf.com/object-notation-vs-constructor
+    this.traversalPoints = this.createTraversalPoints( channel, startingPositionX, startingPositionY );
+    this.currentDestinationIndex = 0;
+    this.channelHasBeenEntered = false;
 
-  this.setCourseForCurrentTraversalPoint( startingPositionX, startingPositionY );
-}
+    this.startingPositionX = startingPositionX;
+    this.startingPositionY = startingPositionY;
 
-neuron.register( 'TraverseChannelAndFadeMotionStrategy', TraverseChannelAndFadeMotionStrategy );
+    this.setCourseForCurrentTraversalPoint( startingPositionX, startingPositionY );
+  }
 
-inherit( MotionStrategy, TraverseChannelAndFadeMotionStrategy, {
 
   // @public, @override
-  move: function( movableModelElement, fadableModelElement, dt ) {
+  move( movableModelElement, fadableModelElement, dt ) {
 
     const currentPositionRefX = movableModelElement.getPositionX();
     const currentPositionRefY = movableModelElement.getPositionY();
@@ -101,7 +99,7 @@ inherit( MotionStrategy, TraverseChannelAndFadeMotionStrategy, {
       movableModelElement.setMotionStrategy( new WanderAwayThenFadeMotionStrategy( this.channel.getCenterPosition(),
         movableModelElement.getPositionX(), movableModelElement.getPositionY(), 0, 0.002 ) );
     }
-  },
+  }
 
   /**
    * The directional movement of the particle is guided by a set of predefined traversal points.  When a particle
@@ -109,11 +107,12 @@ inherit( MotionStrategy, TraverseChannelAndFadeMotionStrategy, {
    * point's position.  When the particle goes back in time, the "currentDestinationIndex" which is the pointer to the
    * traversal points array needs to be decremented and when the traversal index reaches zero, original starting
    * position needs to be used for finding the reverse direction.
+   * @private
    * @param {Particle} movableModelElement
    * @param {Particle} fadableModelElement
    * @param {number} dt
    */
-  moveBack: function( movableModelElement, fadableModelElement, dt ) {
+  moveBack( movableModelElement, fadableModelElement, dt ) {
     const currentPositionRefX = movableModelElement.getPositionX();
     const currentPositionRefY = movableModelElement.getPositionY();
 
@@ -156,14 +155,14 @@ inherit( MotionStrategy, TraverseChannelAndFadeMotionStrategy, {
 
     movableModelElement.setPosition( currentPositionRefX + this.velocityVector.x * dt,
       currentPositionRefY + this.velocityVector.y * dt );
-  },
+  }
 
   /**
    * Create the points through which a particle must move when traversing
    * this channel.
    * @private
    */
-  createTraversalPoints: function( channel, startingPositionX, startingPositionY ) {
+  createTraversalPoints( channel, startingPositionX, startingPositionY ) {
     const points = [];
     const ctr = channel.getCenterPosition();
     const r = channel.getChannelSize().height * 0.65; // Make the point a little outside the channel.
@@ -186,10 +185,10 @@ inherit( MotionStrategy, TraverseChannelAndFadeMotionStrategy, {
     }
 
     return points;
-  },
+  }
 
   // @private
-  setCourseForCurrentTraversalPoint: function( currentPositionX, currentPositionY ) {
+  setCourseForCurrentTraversalPoint( currentPositionX, currentPositionY ) {
     if ( this.currentDestinationIndex < this.traversalPoints.length ) {
       const dest = this.traversalPoints[ this.currentDestinationIndex ];
       this.velocityVector.setXY( dest.x - currentPositionX, dest.y - currentPositionY );
@@ -201,7 +200,7 @@ inherit( MotionStrategy, TraverseChannelAndFadeMotionStrategy, {
       // order to make things look a little more "Brownian".
       this.velocityVector.rotate( ( phet.joist.random.nextDouble() - 0.5 ) * Math.PI * 0.9 );
     }
-  },
+  }
 
   /**
    * @param {number} posX
@@ -209,10 +208,11 @@ inherit( MotionStrategy, TraverseChannelAndFadeMotionStrategy, {
    * @param {Object} traversalPoint - and object literal with x and y properties
    * @private
    */
-  distanceBetweenPosAndTraversalPoint: function( posX, posY, traversalPoint ) {
+  distanceBetweenPosAndTraversalPoint( posX, posY, traversalPoint ) {
     return MathUtils.distanceBetween( posX, posY, traversalPoint.x, traversalPoint.y );
   }
+}
 
-} );
+neuron.register( 'TraverseChannelAndFadeMotionStrategy', TraverseChannelAndFadeMotionStrategy );
 
 export default TraverseChannelAndFadeMotionStrategy;

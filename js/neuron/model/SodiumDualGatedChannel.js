@@ -7,7 +7,6 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-import inherit from '../../../../phet-core/js/inherit.js';
 import neuron from '../../neuron.js';
 import MathUtils from '../common/MathUtils.js';
 import NeuronConstants from '../common/NeuronConstants.js';
@@ -55,29 +54,26 @@ const MAX_INTER_CAPTURE_TIME = 0.00013; // In seconds of sim time.
 // and close.
 const MAX_STAGGER_DELAY = NeuronConstants.MIN_ACTION_POTENTIAL_CLOCK_DT * 5; // In seconds of sim time.
 
-/**
- * @param {NeuronModel} modelContainingParticles
- * @param {ModifiedHodgkinHuxleyModel} hodgkinHuxleyModel
- * @constructor
- */
-function SodiumDualGatedChannel( modelContainingParticles, hodgkinHuxleyModel ) {
-  GatedChannel.call( this, CHANNEL_WIDTH, CHANNEL_HEIGHT, modelContainingParticles );
-  this.gateState = GateState.IDLE;
-  this.hodgkinHuxleyModel = hodgkinHuxleyModel;
-  this.stateTransitionTimer = 0;
-  this.staggerDelay = 0;
-  this.previousNormalizedConductance = 0;
-  this.setExteriorCaptureZone( new PieSliceShapedCaptureZone( this.getCenterPosition(), CHANNEL_WIDTH * 5, 0, Math.PI * 0.7 ) );
-  this.reset();
-  this.channelColor = NeuronConstants.SODIUM_COLOR.colorUtilsDarker( 0.2 );
-}
+class SodiumDualGatedChannel extends GatedChannel {
+  /**
+   * @param {NeuronModel} modelContainingParticles
+   * @param {ModifiedHodgkinHuxleyModel} hodgkinHuxleyModel
+   */
+  constructor( modelContainingParticles, hodgkinHuxleyModel ) {
+    super( CHANNEL_WIDTH, CHANNEL_HEIGHT, modelContainingParticles );
+    this.gateState = GateState.IDLE;
+    this.hodgkinHuxleyModel = hodgkinHuxleyModel;
+    this.stateTransitionTimer = 0;
+    this.staggerDelay = 0;
+    this.previousNormalizedConductance = 0;
+    this.setExteriorCaptureZone( new PieSliceShapedCaptureZone( this.getCenterPosition(), CHANNEL_WIDTH * 5, 0, Math.PI * 0.7 ) );
+    this.reset();
+    this.channelColor = NeuronConstants.SODIUM_COLOR.colorUtilsDarker( 0.2 );
+  }
 
-neuron.register( 'SodiumDualGatedChannel', SodiumDualGatedChannel );
-
-inherit( GatedChannel, SodiumDualGatedChannel, {
 
   // @public
-  stepInTime: function( dt ) {
+  stepInTime( dt ) {
 
     // A note to maintainers: originally, several properties were maintained that were observed in the view, such as
     // openness and inactivation.  Handling these separately compromised performance, so a flag was added to mark
@@ -85,7 +81,7 @@ inherit( GatedChannel, SodiumDualGatedChannel, {
     const prevOpenness = this.openness;
     const prevInActivationAmt = this.inactivationAmount;
 
-    GatedChannel.prototype.stepInTime.call( this, dt );
+    super.stepInTime( dt );
 
     // Get the conductance normalized from 0 to 1.
     let normalizedConductance = this.calculateNormalizedConductance();
@@ -176,11 +172,11 @@ inherit( GatedChannel, SodiumDualGatedChannel, {
     this.previousNormalizedConductance = normalizedConductance;
 
     this.notifyIfMembraneStateChanged( prevOpenness, prevInActivationAmt );
-  },
+  }
 
   // @public, @override
-  reset: function() {
-    GatedChannel.prototype.reset.call( this );
+  reset() {
+    super.reset();
 
     // Set up the capture time range, which will be used to control the rate of particle capture when this gate is open.
     this.setMinInterCaptureTime( MIN_INTER_CAPTURE_TIME );
@@ -195,77 +191,78 @@ inherit( GatedChannel, SodiumDualGatedChannel, {
 
     // Initialize the stagger delay.
     this.updateStaggerDelay();
-  },
+  }
 
   // @public, @override
-  getState: function() {
-    const state = GatedChannel.prototype.getState.call( this );
+  getState() {
+    const state = super.getState();
     state.inactivationAmount = this.inactivationAmount;
     state.previousNormalizedConductance = this.previousNormalizedConductance;
     state.gateState = this.gateState;
     state.stateTransitionTimer = this.stateTransitionTimer;
     return state;
-  },
+  }
 
   // @public, @override
-  setState: function( state ) {
+  setState( state ) {
     this.gateState = state.gateState;
     this.previousNormalizedConductance = state.previousNormalizedConductance;
     this.stateTransitionTimer = state.stateTransitionTimer;
-    GatedChannel.prototype.setState.call( this, state );
-  },
-
-  // @public, @override
-  getChannelColor: function() {
-    return this.channelColor;
-  },
-
-  // @public, @override
-  getEdgeColor: function() {
-    return NeuronConstants.SODIUM_COLOR;
-  },
-
-  // @public, @override
-  getParticleTypeToCapture: function() {
-    return ParticleType.SODIUM_ION;
-  },
-
-  // @private
-  updateStaggerDelay: function() {
-    this.staggerDelay = phet.joist.random.nextDouble() * MAX_STAGGER_DELAY;
-  },
-
-  // @public, @override
-  chooseCrossingDirection: function() {
-    return MembraneCrossingDirection.OUT_TO_IN;
-  },
-
-  // @public, @override
-  getHasInactivationGate: function() {
-    return true;
-  },
-
-  // @public, @override
-  moveParticleThroughNeuronMembrane: function( particle, maxVelocity ) {
-    particle.setMotionStrategy( new DualGateChannelTraversalMotionStrategy( this, particle.getPositionX(), particle.getPositionY() ) );
-  },
-
-  // @private
-  mapOpennessToNormalizedConductance: function( normalizedConductance ) {
-    assert && assert( normalizedConductance >= 0 && normalizedConductance <= 1 );
-    return 1 - Math.pow( normalizedConductance - 1, 20 );
-  },
-
-  // @private
-  calculateNormalizedConductance: function() {
-    return Math.min( Math.abs( this.hodgkinHuxleyModel.get_delayed_m3h( this.staggerDelay ) ) / M3H_WHEN_FULLY_OPEN, 1 );
-  },
-
-  // @public, @override
-  getChannelType: function() {
-    return MembraneChannelTypes.SODIUM_GATED_CHANNEL;
+    super.setState( state );
   }
 
-} );
+  // @public, @override
+  getChannelColor() {
+    return this.channelColor;
+  }
+
+  // @public, @override
+  getEdgeColor() {
+    return NeuronConstants.SODIUM_COLOR;
+  }
+
+  // @public, @override
+  getParticleTypeToCapture() {
+    return ParticleType.SODIUM_ION;
+  }
+
+  // @private
+  updateStaggerDelay() {
+    this.staggerDelay = phet.joist.random.nextDouble() * MAX_STAGGER_DELAY;
+  }
+
+  // @public, @override
+  chooseCrossingDirection() {
+    return MembraneCrossingDirection.OUT_TO_IN;
+  }
+
+  // @public, @override
+  getHasInactivationGate() {
+    return true;
+  }
+
+  // @public, @override
+  moveParticleThroughNeuronMembrane( particle, maxVelocity ) {
+    particle.setMotionStrategy( new DualGateChannelTraversalMotionStrategy( this, particle.getPositionX(), particle.getPositionY() ) );
+  }
+
+  // @private
+  mapOpennessToNormalizedConductance( normalizedConductance ) {
+    assert && assert( normalizedConductance >= 0 && normalizedConductance <= 1 );
+    return 1 - Math.pow( normalizedConductance - 1, 20 );
+  }
+
+  // @private
+  calculateNormalizedConductance() {
+    return Math.min( Math.abs( this.hodgkinHuxleyModel.get_delayed_m3h( this.staggerDelay ) ) / M3H_WHEN_FULLY_OPEN, 1 );
+  }
+
+  // @public, @override
+  getChannelType() {
+    return MembraneChannelTypes.SODIUM_GATED_CHANNEL;
+  }
+}
+
+neuron.register( 'SodiumDualGatedChannel', SodiumDualGatedChannel );
 
 export default SodiumDualGatedChannel;

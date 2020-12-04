@@ -8,11 +8,10 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-import Emitter from '../../../../axon/js/Emitter.js';
 import createObservableArray from '../../../../axon/js/createObservableArray.js';
+import Emitter from '../../../../axon/js/Emitter.js';
 import Property from '../../../../axon/js/Property.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
-import inherit from '../../../../phet-core/js/inherit.js';
 import neuron from '../../neuron.js';
 import MathUtils from '../common/MathUtils.js';
 import NeuronConstants from '../common/NeuronConstants.js';
@@ -88,194 +87,192 @@ const MEMBRANE_POTENTIAL_CHANGE_THRESHOLD = 0.005;
 const FOREGROUND_PARTICLE_DEFAULT_OPACITY = 0.25;
 const BACKGROUND_PARTICLE_DEFAULT_OPACITY = 0.10; // default alpha in Java was 0.05, which isn't visible in the canvas so slightly increasing to 0.10
 
-/**
- * @constructor
- */
-function NeuronModel() {
-  const self = this;
-  const maxRecordPoints = Math.ceil( NeuronConstants.TIME_SPAN * 1000 / NeuronConstants.MIN_ACTION_POTENTIAL_CLOCK_DT );
-  this.axonMembrane = new AxonMembrane();
+class NeuronModel extends RecordAndPlaybackModel {
+  /**
+   */
+  constructor() {
+    super();
 
-  // @public - events emitted by this model
-  this.channelRepresentationChanged = new Emitter();
-  this.particlesMoved = new Emitter();
+    const maxRecordPoints = Math.ceil( NeuronConstants.TIME_SPAN * 1000 / NeuronConstants.MIN_ACTION_POTENTIAL_CLOCK_DT );
 
-  // @public, read-only - list of the particles that come and go when the simulation is working in real time
-  this.transientParticles = createObservableArray();
+    this.axonMembrane = new AxonMembrane();
 
-  // @private - backup of the transient particles, used to restore them when returning to live mode after doing playback
-  this.transientParticlesBackup = createObservableArray();
+    // @public - events emitted by this model
+    this.channelRepresentationChanged = new Emitter();
+    this.particlesMoved = new Emitter();
 
-  // @public, read-only - particles that are "in the background", meaning that they are always present and they don't
-  // cross the membrane
-  this.backgroundParticles = createObservableArray();
+    // @public, read-only - list of the particles that come and go when the simulation is working in real time
+    this.transientParticles = createObservableArray();
 
-  // @public, read-only - list of particles that are shown during playback
-  this.playbackParticles = createObservableArray();
+    // @private - backup of the transient particles, used to restore them when returning to live mode after doing playback
+    this.transientParticlesBackup = createObservableArray();
 
-  this.membraneChannels = createObservableArray(); // @public, read-only
-  this.hodgkinHuxleyModel = new ModifiedHodgkinHuxleyModel(); // @public
+    // @public, read-only - particles that are "in the background", meaning that they are always present and they don't
+    // cross the membrane
+    this.backgroundParticles = createObservableArray();
 
-  // @public, read-only - various model values
-  this.crossSectionInnerRadius = ( this.axonMembrane.getCrossSectionDiameter() - this.axonMembrane.getMembraneThickness() ) / 2;
-  this.crossSectionOuterRadius = ( this.axonMembrane.getCrossSectionDiameter() + this.axonMembrane.getMembraneThickness() ) / 2;
-  this.sodiumInteriorConcentration = NOMINAL_SODIUM_INTERIOR_CONCENTRATION;
-  this.sodiumExteriorConcentration = NOMINAL_SODIUM_EXTERIOR_CONCENTRATION;
-  this.potassiumInteriorConcentration = NOMINAL_POTASSIUM_INTERIOR_CONCENTRATION;
-  this.potassiumExteriorConcentration = NOMINAL_POTASSIUM_EXTERIOR_CONCENTRATION;
+    // @public, read-only - list of particles that are shown during playback
+    this.playbackParticles = createObservableArray();
+
+    this.membraneChannels = createObservableArray(); // @public, read-only
+    this.hodgkinHuxleyModel = new ModifiedHodgkinHuxleyModel(); // @public
+
+    // @public, read-only - various model values
+    this.crossSectionInnerRadius = ( this.axonMembrane.getCrossSectionDiameter() - this.axonMembrane.getMembraneThickness() ) / 2;
+    this.crossSectionOuterRadius = ( this.axonMembrane.getCrossSectionDiameter() + this.axonMembrane.getMembraneThickness() ) / 2;
+    this.sodiumInteriorConcentration = NOMINAL_SODIUM_INTERIOR_CONCENTRATION;
+    this.sodiumExteriorConcentration = NOMINAL_SODIUM_EXTERIOR_CONCENTRATION;
+    this.potassiumInteriorConcentration = NOMINAL_POTASSIUM_INTERIOR_CONCENTRATION;
+    this.potassiumExteriorConcentration = NOMINAL_POTASSIUM_EXTERIOR_CONCENTRATION;
 
 
-  // @public
-  this.potentialChartVisibleProperty = new Property( DEFAULT_FOR_MEMBRANE_CHART_VISIBILITY ); // @public
-  this.chargesShownProperty = new Property( DEFAULT_FOR_CHARGES_SHOWN ); // @public
-  this.concentrationReadoutVisibleProperty = new Property( DEFAULT_FOR_CONCENTRATION_READOUT_SHOWN );
-  this.membranePotentialProperty = new Property( 0 );
-  this.stimulusLockoutProperty = new Property( false );
-  this.allIonsSimulatedProperty = new Property( DEFAULT_FOR_SHOW_ALL_IONS ); // controls whether all ions, or just those near membrane, are simulated
-  this.playbackParticlesVisibleProperty = new Property( false );
-  this.concentrationChangedProperty = new Property( false );
-  this.stimulusPulseInitiatedProperty = new Property( false );
-  this.neuronModelPlaybackStateProperty = new Property( null );
+    // @public
+    this.potentialChartVisibleProperty = new Property( DEFAULT_FOR_MEMBRANE_CHART_VISIBILITY ); // @public
+    this.chargesShownProperty = new Property( DEFAULT_FOR_CHARGES_SHOWN ); // @public
+    this.concentrationReadoutVisibleProperty = new Property( DEFAULT_FOR_CONCENTRATION_READOUT_SHOWN );
+    this.membranePotentialProperty = new Property( 0 );
+    this.stimulusLockoutProperty = new Property( false );
+    this.allIonsSimulatedProperty = new Property( DEFAULT_FOR_SHOW_ALL_IONS ); // controls whether all ions, or just those near membrane, are simulated
+    this.playbackParticlesVisibleProperty = new Property( false );
+    this.concentrationChangedProperty = new Property( false );
+    this.stimulusPulseInitiatedProperty = new Property( false );
+    this.neuronModelPlaybackStateProperty = new Property( null );
 
-  // @public, part of a workaround for an issue with refreshing canvases when nothing is drawn, see
-  // https://github.com/phetsims/neuron/issues/100 and https://github.com/phetsims/scenery/issues/503
-  this.atLeastOneParticlePresentProperty = new Property( false );
+    // @public, part of a workaround for an issue with refreshing canvases when nothing is drawn, see
+    // https://github.com/phetsims/neuron/issues/100 and https://github.com/phetsims/scenery/issues/503
+    this.atLeastOneParticlePresentProperty = new Property( false );
 
-  // add a listener that will stimulate the HH model then the traveling action potential reaches the cross section
-  this.axonMembrane.travelingActionPotentialReachedCrossSection.addListener( function() {
+    // add a listener that will stimulate the HH model then the traveling action potential reaches the cross section
+    this.axonMembrane.travelingActionPotentialReachedCrossSection.addListener( () => {
 
-    // The action potential has arrived at the cross section, so stimulate the model the simulates the action
-    // potential voltages and current flows.
-    self.hodgkinHuxleyModel.stimulate();
+      // The action potential has arrived at the cross section, so stimulate the model the simulates the action
+      // potential voltages and current flows.
+      this.hodgkinHuxleyModel.stimulate();
 
-    if ( window.phet.neuron.profiler && window.phet.neuron.profiler.setting === 1 ) {
-      // If enabled, start collecting profiling data, which will automatically be spat out to the console (or as
-      // an alert dialog on iOS) when completed.  The duration value is empirically determined to be the time for
-      // the particles to appear, cross the membrane, and fade out.
-      window.phet.neuron.profiler.startDataAnalysis( 6000 );
-    }
-  } );
-
-  // add a listener that will add and remove the background or 'bulk' particles based on simulation settings
-  this.allIonsSimulatedProperty.lazyLink( function( allIonsSimulated ) {
-
-    // This should never change while stimulus is locked out, and we depend on the UI to enforce this rule.
-    // Otherwise, background particles could come and go during and action potential or during playback, which would
-    // be hard to handle.
-    assert && assert( !self.isStimulusInitiationLockedOut(), 'all ions setting changed when stimulus was locked out' );
-
-    if ( allIonsSimulated ) {
-
-      // add the background particles
-      self.addInitialBulkParticles();
-    }
-    else {
-      // remove the background particles
-      self.backgroundParticles.clear();
-    }
-
-    // update the property that indicates whether there is at least one particle present
-    self.atLeastOneParticlePresentProperty.set( ( self.backgroundParticles.length +
-                                                  self.transientParticles.length +
-                                                  self.playbackParticles.length ) > 0 );
-  } );
-
-  // Use an immediately invoked function expression (IIFE) a function to add the initial channels.  The pattern is
-  // intended to be such that the potassium and sodium gated channels are right next to each other, with occasional
-  // leak channels interspersed.  There should be one or more of each type of channel on the top of the membrane so
-  // when the user zooms in, they can see all types.
-  ( function() {
-    let angle = Math.PI * 0.45;
-    const totalNumChannels = NUM_GATED_SODIUM_CHANNELS + NUM_GATED_POTASSIUM_CHANNELS + NUM_SODIUM_LEAK_CHANNELS +
-                             NUM_POTASSIUM_LEAK_CHANNELS;
-    const angleIncrement = Math.PI * 2 / totalNumChannels;
-    let gatedSodiumChannelsAdded = 0;
-    let gatedPotassiumChannelsAdded = 0;
-    let sodiumLeakChannelsAdded = 0;
-    let potassiumLeakChannelsAdded = 0;
-
-    // Add some of each type so that they are visible at the top portion of the membrane.
-    if ( NUM_SODIUM_LEAK_CHANNELS > 0 ) {
-      self.addChannel( MembraneChannelTypes.SODIUM_LEAKAGE_CHANNEL, angle );
-      sodiumLeakChannelsAdded++;
-      angle += angleIncrement;
-    }
-    if ( NUM_GATED_POTASSIUM_CHANNELS > 0 ) {
-      self.addChannel( MembraneChannelTypes.POTASSIUM_GATED_CHANNEL, angle );
-      gatedPotassiumChannelsAdded++;
-      angle += angleIncrement;
-    }
-    if ( NUM_GATED_SODIUM_CHANNELS > 0 ) {
-      self.addChannel( MembraneChannelTypes.SODIUM_GATED_CHANNEL, angle );
-      gatedSodiumChannelsAdded++;
-      angle += angleIncrement;
-    }
-    if ( NUM_POTASSIUM_LEAK_CHANNELS > 0 ) {
-      self.addChannel( MembraneChannelTypes.POTASSIUM_LEAKAGE_CHANNEL, angle );
-      potassiumLeakChannelsAdded++;
-      angle += angleIncrement;
-    }
-
-    // Now loop through the rest of the membrane's circumference adding
-    // the various types of gates.
-    for ( let i = 0; i < totalNumChannels - 4; i++ ) {
-      // Calculate the "urgency" for each type of gate.
-      const gatedSodiumUrgency = NUM_GATED_SODIUM_CHANNELS / gatedSodiumChannelsAdded;
-      const gatedPotassiumUrgency = NUM_GATED_POTASSIUM_CHANNELS / gatedPotassiumChannelsAdded;
-      const potassiumLeakUrgency = NUM_POTASSIUM_LEAK_CHANNELS / potassiumLeakChannelsAdded;
-      const sodiumLeakUrgency = NUM_SODIUM_LEAK_CHANNELS / sodiumLeakChannelsAdded;
-      let channelTypeToAdd = null;
-      if ( gatedSodiumUrgency >= gatedPotassiumUrgency && gatedSodiumUrgency >= potassiumLeakUrgency &&
-           gatedSodiumUrgency >= sodiumLeakUrgency ) {
-        // Add a gated sodium channel.
-        channelTypeToAdd = MembraneChannelTypes.SODIUM_GATED_CHANNEL;
-        gatedSodiumChannelsAdded++;
+      if ( window.phet.neuron.profiler && window.phet.neuron.profiler.setting === 1 ) {
+        // If enabled, start collecting profiling data, which will automatically be spat out to the console (or as
+        // an alert dialog on iOS) when completed.  The duration value is empirically determined to be the time for
+        // the particles to appear, cross the membrane, and fade out.
+        window.phet.neuron.profiler.startDataAnalysis( 6000 );
       }
-      else if ( gatedPotassiumUrgency > gatedSodiumUrgency && gatedPotassiumUrgency >= potassiumLeakUrgency &&
-                gatedPotassiumUrgency >= sodiumLeakUrgency ) {
-        // Add a gated potassium channel.
-        channelTypeToAdd = MembraneChannelTypes.POTASSIUM_GATED_CHANNEL;
-        gatedPotassiumChannelsAdded++;
-      }
-      else if ( potassiumLeakUrgency > gatedSodiumUrgency && potassiumLeakUrgency > gatedPotassiumUrgency && potassiumLeakUrgency >= sodiumLeakUrgency ) {
-        // Add a potassium leak channel.
-        channelTypeToAdd = MembraneChannelTypes.POTASSIUM_LEAKAGE_CHANNEL;
-        potassiumLeakChannelsAdded++;
-      }
-      else if ( sodiumLeakUrgency > gatedSodiumUrgency && sodiumLeakUrgency > gatedPotassiumUrgency && sodiumLeakUrgency > potassiumLeakUrgency ) {
-        // Add a sodium leak channel.
-        channelTypeToAdd = MembraneChannelTypes.SODIUM_LEAKAGE_CHANNEL;
-        sodiumLeakChannelsAdded++;
+    } );
+
+    // add a listener that will add and remove the background or 'bulk' particles based on simulation settings
+    this.allIonsSimulatedProperty.lazyLink( allIonsSimulated => {
+
+      // This should never change while stimulus is locked out, and we depend on the UI to enforce this rule.
+      // Otherwise, background particles could come and go during and action potential or during playback, which would
+      // be hard to handle.
+      assert && assert( !this.isStimulusInitiationLockedOut(), 'all ions setting changed when stimulus was locked out' );
+
+      if ( allIonsSimulated ) {
+
+        // add the background particles
+        this.addInitialBulkParticles();
       }
       else {
-        assert && assert( false ); // Should never get here, so debug if it does.
+        // remove the background particles
+        this.backgroundParticles.clear();
       }
 
-      self.addChannel( channelTypeToAdd, angle );
-      angle += angleIncrement;
-    }
-  } )();
+      // update the property that indicates whether there is at least one particle present
+      this.atLeastOneParticlePresentProperty.set( ( this.backgroundParticles.length +
+                                                    this.transientParticles.length +
+                                                    this.playbackParticles.length ) > 0 );
+    } );
 
-  RecordAndPlaybackModel.call( this, maxRecordPoints );
+    // Use an immediately invoked function expression (IIFE) a function to add the initial channels.  The pattern is
+    // intended to be such that the potassium and sodium gated channels are right next to each other, with occasional
+    // leak channels interspersed.  There should be one or more of each type of channel on the top of the membrane so
+    // when the user zooms in, they can see all types.
+    ( () => {
+      let angle = Math.PI * 0.45;
+      const totalNumChannels = NUM_GATED_SODIUM_CHANNELS + NUM_GATED_POTASSIUM_CHANNELS + NUM_SODIUM_LEAK_CHANNELS +
+                               NUM_POTASSIUM_LEAK_CHANNELS;
+      const angleIncrement = Math.PI * 2 / totalNumChannels;
+      let gatedSodiumChannelsAdded = 0;
+      let gatedPotassiumChannelsAdded = 0;
+      let sodiumLeakChannelsAdded = 0;
+      let potassiumLeakChannelsAdded = 0;
 
-  // Note: It is expected that the model will be reset once it has been created, and this will set the initial state,
-  // including adding the particles to the model.
-  this.timeProperty.link( this.updateRecordPlayBack.bind( this ) );
-  this.modeProperty.link( this.updateRecordPlayBack.bind( this ) );
+      // Add some of each type so that they are visible at the top portion of the membrane.
+      if ( NUM_SODIUM_LEAK_CHANNELS > 0 ) {
+        this.addChannel( MembraneChannelTypes.SODIUM_LEAKAGE_CHANNEL, angle );
+        sodiumLeakChannelsAdded++;
+        angle += angleIncrement;
+      }
+      if ( NUM_GATED_POTASSIUM_CHANNELS > 0 ) {
+        this.addChannel( MembraneChannelTypes.POTASSIUM_GATED_CHANNEL, angle );
+        gatedPotassiumChannelsAdded++;
+        angle += angleIncrement;
+      }
+      if ( NUM_GATED_SODIUM_CHANNELS > 0 ) {
+        this.addChannel( MembraneChannelTypes.SODIUM_GATED_CHANNEL, angle );
+        gatedSodiumChannelsAdded++;
+        angle += angleIncrement;
+      }
+      if ( NUM_POTASSIUM_LEAK_CHANNELS > 0 ) {
+        this.addChannel( MembraneChannelTypes.POTASSIUM_LEAKAGE_CHANNEL, angle );
+        potassiumLeakChannelsAdded++;
+        angle += angleIncrement;
+      }
 
-  this.reset(); // This does initialization
-}
+      // Now loop through the rest of the membrane's circumference adding
+      // the various types of gates.
+      for ( let i = 0; i < totalNumChannels - 4; i++ ) {
+        // Calculate the "urgency" for each type of gate.
+        const gatedSodiumUrgency = NUM_GATED_SODIUM_CHANNELS / gatedSodiumChannelsAdded;
+        const gatedPotassiumUrgency = NUM_GATED_POTASSIUM_CHANNELS / gatedPotassiumChannelsAdded;
+        const potassiumLeakUrgency = NUM_POTASSIUM_LEAK_CHANNELS / potassiumLeakChannelsAdded;
+        const sodiumLeakUrgency = NUM_SODIUM_LEAK_CHANNELS / sodiumLeakChannelsAdded;
+        let channelTypeToAdd = null;
+        if ( gatedSodiumUrgency >= gatedPotassiumUrgency && gatedSodiumUrgency >= potassiumLeakUrgency &&
+             gatedSodiumUrgency >= sodiumLeakUrgency ) {
+          // Add a gated sodium channel.
+          channelTypeToAdd = MembraneChannelTypes.SODIUM_GATED_CHANNEL;
+          gatedSodiumChannelsAdded++;
+        }
+        else if ( gatedPotassiumUrgency > gatedSodiumUrgency && gatedPotassiumUrgency >= potassiumLeakUrgency &&
+                  gatedPotassiumUrgency >= sodiumLeakUrgency ) {
+          // Add a gated potassium channel.
+          channelTypeToAdd = MembraneChannelTypes.POTASSIUM_GATED_CHANNEL;
+          gatedPotassiumChannelsAdded++;
+        }
+        else if ( potassiumLeakUrgency > gatedSodiumUrgency && potassiumLeakUrgency > gatedPotassiumUrgency && potassiumLeakUrgency >= sodiumLeakUrgency ) {
+          // Add a potassium leak channel.
+          channelTypeToAdd = MembraneChannelTypes.POTASSIUM_LEAKAGE_CHANNEL;
+          potassiumLeakChannelsAdded++;
+        }
+        else if ( sodiumLeakUrgency > gatedSodiumUrgency && sodiumLeakUrgency > gatedPotassiumUrgency && sodiumLeakUrgency > potassiumLeakUrgency ) {
+          // Add a sodium leak channel.
+          channelTypeToAdd = MembraneChannelTypes.SODIUM_LEAKAGE_CHANNEL;
+          sodiumLeakChannelsAdded++;
+        }
+        else {
+          assert && assert( false ); // Should never get here, so debug if it does.
+        }
 
-neuron.register( 'NeuronModel', NeuronModel );
+        this.addChannel( channelTypeToAdd, angle );
+        angle += angleIncrement;
+      }
+    } )();
 
-inherit( RecordAndPlaybackModel, NeuronModel, {
+    this.initialize( maxRecordPoints );
+
+    // Note: It is expected that the model will be reset once it has been created, and this will set the initial state,
+    // including adding the particles to the model.
+    this.timeProperty.link( this.updateRecordPlayBack.bind( this ) );
+    this.modeProperty.link( this.updateRecordPlayBack.bind( this ) );
+
+    this.reset(); // This does initialization
+  }
 
   /**
    * dispatched from NeuronClockModelAdapter's step function
    * @param {number} dt - delta time, in seconds
    * @public
    */
-  step: function( dt ) {
+  step( dt ) {
 
     if ( dt < 0 ) {
 
@@ -289,7 +286,7 @@ inherit( RecordAndPlaybackModel, NeuronModel, {
       }
     }
 
-    RecordAndPlaybackModel.prototype.step.call( this, dt );
+    super.step( dt );
 
     // If we are currently in playback mode and we have reached the end of the recorded data, we should automatically
     // switch to record mode.
@@ -297,7 +294,7 @@ inherit( RecordAndPlaybackModel, NeuronModel, {
       this.setModeRecord();
       this.setPlaying( true );
     }
-  },
+  }
 
   /**
    * Step the actual mode, which is done by stepping each of the constituent elements of the model.  This is called
@@ -306,7 +303,7 @@ inherit( RecordAndPlaybackModel, NeuronModel, {
    * @returns {NeuronModelState}
    * @public
    */
-  stepInTime: function( dt ) {
+  stepInTime( dt ) {
 
     // Step the membrane in time.  This is done prior to stepping the HH model because the traveling action potential
     // is part of the membrane, so if it reaches the cross section in this time step the membrane potential will be
@@ -330,17 +327,17 @@ inherit( RecordAndPlaybackModel, NeuronModel, {
     // modified, the following loops reach into the observable arrays and loop on the regular array contained within.
 
     // Step the channels.
-    this.membraneChannels.forEach( function( channel ) {
+    this.membraneChannels.forEach( channel => {
       channel.stepInTime( dt );
     } );
 
-    this.transientParticles.forEach( function( particle ) {
+    this.transientParticles.forEach( particle => {
       particle.stepInTime( dt );
     } );
 
     // Step the background particles, which causes them to exhibit a
     // little Brownian motion
-    this.backgroundParticles.forEach( function( particle ) {
+    this.backgroundParticles.forEach( particle => {
       particle.stepInTime( dt );
     } );
 
@@ -431,34 +428,32 @@ inherit( RecordAndPlaybackModel, NeuronModel, {
     this.particlesMoved.emit();
 
     // If any one channel's state is changed, trigger a channel representation changed event
-    const channelStateChanged = function( membraneChannel ) {
-      return membraneChannel.channelStateChangedProperty.get();
-    };
+    const channelStateChanged = membraneChannel => membraneChannel.channelStateChangedProperty.get();
     if ( _.some( this.membraneChannels, channelStateChanged ) ) {
       this.channelRepresentationChanged.emit();
     }
 
     // Return model state after each time step.
     return this.getState();
-  },
+  }
 
   /**
    * update some properties that can change as playback progresses
    * @protected
    */
-  updateRecordPlayBack: function() {
+  updateRecordPlayBack() {
     this.updateStimulusLockoutState();
     this.updateSimAndPlaybackParticleVisibility();
-  },
+  }
 
   /**
    * Reset the neuron model.  This should restore everything to the initial state.
    * @public
    */
-  reset: function() {
+  reset() {
 
     // Reset the superclass, which contains the recording state & data.
-    RecordAndPlaybackModel.prototype.resetAll.call( this );
+    super.resetAll();
 
     // Reset the axon membrane.
     this.axonMembrane.reset();
@@ -470,7 +465,7 @@ inherit( RecordAndPlaybackModel, NeuronModel, {
     this.hodgkinHuxleyModel.reset();
 
     // Reset all membrane channels.
-    this.membraneChannels.forEach( function( membraneChannel ) {
+    this.membraneChannels.forEach( membraneChannel => {
       membraneChannel.reset();
     } );
 
@@ -522,17 +517,17 @@ inherit( RecordAndPlaybackModel, NeuronModel, {
     this.clearHistory();
     this.setModeLive();
     this.setPlaying( true );
-  },
+  }
 
   /**
    * Clear the recorded data.
    * @public
    * @override
    */
-  clearHistory: function() {
+  clearHistory() {
     this.transientParticlesBackup.clear();
-    RecordAndPlaybackModel.prototype.clearHistory.call( this );
-  },
+    super.clearHistory();
+  }
 
   /**
    * Starts a particle of the specified type moving through the specified channel.  If one or more particles of the
@@ -550,7 +545,7 @@ inherit( RecordAndPlaybackModel, NeuronModel, {
    * @param {MembraneCrossingDirection.string} direction
    * @public
    */
-  requestParticleThroughChannel: function( particleType, channel, maxVelocity, direction ) {
+  requestParticleThroughChannel( particleType, channel, maxVelocity, direction ) {
     let captureZone;
     if ( direction === MembraneCrossingDirection.IN_TO_OUT ) {
       captureZone = channel.getInteriorCaptureZone();
@@ -566,7 +561,7 @@ inherit( RecordAndPlaybackModel, NeuronModel, {
 
     // Set a motion strategy that will cause this particle to move across the membrane.
     channel.moveParticleThroughNeuronMembrane( particleToCapture, maxVelocity );
-  },
+  }
 
   /**
    * Return a value indicating whether simulation of all ions is currently turned on in the simulation.  And yes, it
@@ -574,9 +569,9 @@ inherit( RecordAndPlaybackModel, NeuronModel, {
    * boolean variables.  So get over it.
    * @public
    */
-  isAllIonsSimulated: function() {
+  isAllIonsSimulated() {
     return this.allIonsSimulatedProperty.get();
-  },
+  }
 
   /**
    * Set the boolean value that indicates whether all ions are shown in the simulation, or just those that are moving
@@ -584,20 +579,18 @@ inherit( RecordAndPlaybackModel, NeuronModel, {
    * @param {boolean} allIonsSimulated
    * @public
    */
-  setAllIonsSimulated: function( allIonsSimulated ) {
+  setAllIonsSimulated( allIonsSimulated ) {
     this.allIonsSimulatedProperty.set( allIonsSimulated );
-  },
+  }
 
   /**
    * Add the "bulk particles", which are particles that are inside and outside of the membrane and, except in cases
    * where they happen to end up positioned close to the membrane, they generally stay where initially positioned.
    * @private
    */
-  addInitialBulkParticles: function() {
-    const self = this;
-
+  addInitialBulkParticles() {
     // Make a list of pre-existing particles.
-    const preExistingParticles = _.clone( this.transientParticles);
+    const preExistingParticles = _.clone( this.transientParticles );
 
     // Add the initial particles.
     this.addBackgroundParticles( ParticleType.SODIUM_ION, ParticlePosition.INSIDE_MEMBRANE, NUM_SODIUM_IONS_INSIDE_CELL );
@@ -606,23 +599,23 @@ inherit( RecordAndPlaybackModel, NeuronModel, {
     this.addBackgroundParticles( ParticleType.POTASSIUM_ION, ParticlePosition.OUTSIDE_MEMBRANE, NUM_POTASSIUM_IONS_OUTSIDE_CELL );
 
     // Look at each sodium gate and, if there are no ions in its capture zone, add some.
-    this.membraneChannels.forEach( function( membraneChannel ) {
+    this.membraneChannels.forEach( membraneChannel => {
       if ( membraneChannel instanceof SodiumDualGatedChannel ) {
         const captureZone = membraneChannel.getExteriorCaptureZone();
-        const numParticlesInZone = self.scanCaptureZoneForFreeParticles( captureZone, ParticleType.SODIUM_ION );
+        const numParticlesInZone = this.scanCaptureZoneForFreeParticles( captureZone, ParticleType.SODIUM_ION );
         if ( numParticlesInZone === 0 ) {
-          self.addBackgroundParticlesToZone( ParticleType.SODIUM_ION, captureZone, Math.floor( phet.joist.random.nextDouble() * 2 ) + 1 );
+          this.addBackgroundParticlesToZone( ParticleType.SODIUM_ION, captureZone, Math.floor( phet.joist.random.nextDouble() * 2 ) + 1 );
         }
       }
     } );
 
     // Set all new particles to exhibit simple Brownian motion.
-    this.backgroundParticles.forEach( function( backgroundParticle ) {
+    this.backgroundParticles.forEach( backgroundParticle => {
       if ( preExistingParticles.indexOf( backgroundParticle ) === -1 ) {
         backgroundParticle.setMotionStrategy( new SlowBrownianMotionStrategy( backgroundParticle.getPositionX(), backgroundParticle.getPositionY() ) );
       }
     } );
-  },
+  }
 
   /**
    * Create a particle of the specified type in the specified capture zone. In general, this method will be used when
@@ -632,7 +625,7 @@ inherit( RecordAndPlaybackModel, NeuronModel, {
    * @returns {Particle}
    * @private
    */
-  createTransientParticle: function( particleType, captureZone ) {
+  createTransientParticle( particleType, captureZone ) {
     const newParticle = ParticleFactory.createParticle( particleType );
     this.transientParticles.add( newParticle );
     if ( captureZone ) {
@@ -640,14 +633,13 @@ inherit( RecordAndPlaybackModel, NeuronModel, {
       // to avoid creation of new Vector2 instances the capture zone updates the particles position
       captureZone.assignNewParticlePosition( newParticle );
     }
-    const self = this;
-    newParticle.continueExistingProperty.lazyLink( function( newValue ) {
+    newParticle.continueExistingProperty.lazyLink( newValue => {
       if ( !newValue ) {
-        self.transientParticles.remove( newParticle );
+        this.transientParticles.remove( newParticle );
       }
     } );
     return newParticle;
-  },
+  }
 
   /**
    * Add the specified particles to the model.
@@ -656,16 +648,15 @@ inherit( RecordAndPlaybackModel, NeuronModel, {
    * @param {number} numberToAdd
    * @private
    */
-  addBackgroundParticles: function( particleType, position, numberToAdd ) {
+  addBackgroundParticles( particleType, position, numberToAdd ) {
     let newParticle = null;
-    const self = this;
-    _.times( numberToAdd, function( value ) {
-      newParticle = self.createBackgroundParticle( particleType );
+    _.times( numberToAdd, value => {
+      newParticle = this.createBackgroundParticle( particleType );
       if ( position === ParticlePosition.INSIDE_MEMBRANE ) {
-        self.positionParticleInsideMembrane( newParticle );
+        this.positionParticleInsideMembrane( newParticle );
       }
       else {
-        self.positionParticleOutsideMembrane( newParticle );
+        this.positionParticleOutsideMembrane( newParticle );
       }
       // Set the opacity.
       if ( phet.joist.random.nextDouble() >= 0.5 ) { // replaced for nextBoolean
@@ -675,7 +666,7 @@ inherit( RecordAndPlaybackModel, NeuronModel, {
         newParticle.setOpacity( BACKGROUND_PARTICLE_DEFAULT_OPACITY );
       }
     } );
-  },
+  }
 
   /**
    * Add the specified particles to the given capture zone.
@@ -684,17 +675,17 @@ inherit( RecordAndPlaybackModel, NeuronModel, {
    * @param {number} numberToAdd
    * @private
    */
-  addBackgroundParticlesToZone: function( particleType, captureZone, numberToAdd ) {
+  addBackgroundParticlesToZone( particleType, captureZone, numberToAdd ) {
     let newParticle = null;
     for ( let i = 0; i < numberToAdd; i++ ) {
       newParticle = this.createBackgroundParticle( particleType );
       newParticle.setOpacity( FOREGROUND_PARTICLE_DEFAULT_OPACITY );
       captureZone.assignNewParticlePosition( newParticle );
     }
-  },
+  }
 
   // @public
-  initiateStimulusPulse: function() {
+  initiateStimulusPulse() {
     if ( !this.isStimulusInitiationLockedOut() ) {
       this.stimulusPulseInitiatedProperty.set( true );
       this.axonMembrane.initiateTravelingActionPotential();
@@ -713,14 +704,14 @@ inherit( RecordAndPlaybackModel, NeuronModel, {
         window.phet.neuron.profiler.startDataAnalysis( 9500 );
       }
     }
-  },
+  }
 
   /**
    * Place a particle at a random position inside the axon membrane.
    * @param {Particle} particle
    * @private
    */
-  positionParticleInsideMembrane: function( particle ) {
+  positionParticleInsideMembrane( particle ) {
     // Choose any angle.
     const angle = phet.joist.random.nextDouble() * Math.PI * 2;
 
@@ -729,7 +720,7 @@ inherit( RecordAndPlaybackModel, NeuronModel, {
     const multiplier = Math.max( phet.joist.random.nextDouble(), phet.joist.random.nextDouble() );
     const distance = ( this.crossSectionInnerRadius - particle.getRadius() * 2 ) * multiplier;
     particle.setPosition( distance * Math.cos( angle ), distance * Math.sin( angle ) );
-  },
+  }
 
   /**
    * Returns a boolean values indicating whether or not an action potential is in progress.  For the purposes of this
@@ -738,19 +729,19 @@ inherit( RecordAndPlaybackModel, NeuronModel, {
    * @returns {boolean}
    * @public
    */
-  isActionPotentialInProgress: function() {
+  isActionPotentialInProgress() {
     return this.axonMembrane.getTravelingActionPotential() ||
            Math.abs( this.hodgkinHuxleyModel.get_k_current() ) > POTASSIUM_CURRENT_THRESH_FOR_ACTION_POTENTIAL ||
            Math.abs( this.hodgkinHuxleyModel.get_na_current() ) > SODIUM_CURRENT_THRESH_FOR_ACTION_POTENTIAL ||
            Math.abs( this.hodgkinHuxleyModel.get_l_current() ) > LEAKAGE_CURRENT_THRESH_FOR_ACTION_POTENTIAL;
-  },
+  }
 
   /**
    * Place a particle at a random position outside the axon membrane.
    * @param {Particle} particle
    * @private
    */
-  positionParticleOutsideMembrane: function( particle ) {
+  positionParticleOutsideMembrane( particle ) {
 
     // Choose any angle.
     const angle = phet.joist.random.nextDouble() * Math.PI * 2;
@@ -764,7 +755,7 @@ inherit( RecordAndPlaybackModel, NeuronModel, {
                      multiplier * this.crossSectionOuterRadius * 2.2;
 
     particle.setPosition( distance * Math.cos( angle ), distance * Math.sin( angle ) );
-  },
+  }
 
   /**
    * Scan the supplied capture zone for particles of the specified type.
@@ -773,14 +764,14 @@ inherit( RecordAndPlaybackModel, NeuronModel, {
    * @returns {number}
    * @private
    */
-  scanCaptureZoneForFreeParticles: function( zone, particleType ) {
+  scanCaptureZoneForFreeParticles( zone, particleType ) {
     let closestFreeParticle = null;
     let distanceOfClosestParticle = Number.POSITIVE_INFINITY;
     let totalNumberOfParticles = 0;
     const captureZoneOrigin = zone.getOriginPoint();
 
     // loop over the contained array - this is faster, but the array can't be modified
-    this.transientParticles.forEach( function( particle ) {
+    this.transientParticles.forEach( particle => {
 
       // This method is refactored to use position x,y components instead of vector2 instances
       if ( ( particle.getType() === particleType ) && ( particle.isAvailableForCapture() ) && ( zone.isPointInZone( particle.getPositionX(), particle.getPositionY() ) ) ) {
@@ -796,10 +787,10 @@ inherit( RecordAndPlaybackModel, NeuronModel, {
       }
     } );
     return totalNumberOfParticles;
-  },
+  }
 
   // @private
-  updateStimulusLockoutState: function() {
+  updateStimulusLockoutState() {
     if ( this.stimulusLockoutProperty.get() ) {
       // Currently locked out, see if that should change.
       if ( !this.isPlayback() && !this.isActionPotentialInProgress() ) {
@@ -814,14 +805,14 @@ inherit( RecordAndPlaybackModel, NeuronModel, {
         this.setStimulusLockout( true );
       }
     }
-  },
+  }
 
   /**
    * There are two sets of particles in this simulation, one set that is used when actually simulating, and one that
    * is used when playing back.  This routine updates which set is visible based on state information.
    * @private
    */
-  updateSimAndPlaybackParticleVisibility: function() {
+  updateSimAndPlaybackParticleVisibility() {
 
     if ( this.isRecord() || this.isLive() ) {
 
@@ -862,7 +853,7 @@ inherit( RecordAndPlaybackModel, NeuronModel, {
       // Should never happen, debug if it does.
       assert && assert( 'Neuron Model updateSimAndPlaybackParticleVisibility Error: Unrecognized record-and-playback mode.' );
     }
-  },
+  }
 
   /**
    * Get the state of this model.  This is generally used in support of the record-and-playback feature, and the
@@ -870,69 +861,69 @@ inherit( RecordAndPlaybackModel, NeuronModel, {
    * @returns {NeuronModelState}
    * @public
    */
-  getState: function() {
+  getState() {
     return new NeuronModelState( this );
-  },
+  }
 
   /**
    * @returns {AxonMembrane}
    * @public
    */
-  getAxonMembrane: function() {
+  getAxonMembrane() {
     return this.axonMembrane;
-  },
+  }
 
   /**
    * @returns {number}
    * @public
    */
-  getSodiumInteriorConcentration: function() {
+  getSodiumInteriorConcentration() {
     if ( this.isPlayback() ) {
       return this.neuronModelPlaybackStateProperty.get().getSodiumInteriorConcentration();
     }
     else {
       return this.sodiumInteriorConcentration;
     }
-  },
+  }
 
   /**
    * @returns {number}
    * @public
    */
-  getSodiumExteriorConcentration: function() {
+  getSodiumExteriorConcentration() {
     if ( this.isPlayback() ) {
       return this.neuronModelPlaybackStateProperty.get().getSodiumExteriorConcentration();
     }
     else {
       return this.sodiumExteriorConcentration;
     }
-  },
+  }
 
   /**
    * @returns {number}
    * @public
    */
-  getPotassiumInteriorConcentration: function() {
+  getPotassiumInteriorConcentration() {
     if ( this.isPlayback() ) {
       return this.neuronModelPlaybackStateProperty.get().getPotassiumInteriorConcentration();
     }
     else {
       return this.potassiumInteriorConcentration;
     }
-  },
+  }
 
   /**
    * @returns {number}
    * @public
    */
-  getPotassiumExteriorConcentration: function() {
+  getPotassiumExteriorConcentration() {
     if ( this.isPlayback() ) {
       return this.neuronModelPlaybackStateProperty.get().getPotassiumExteriorConcentration();
     }
     else {
       return this.potassiumExteriorConcentration;
     }
-  },
+  }
 
   /**
    * Create a particle of the specified type and add it to the model.
@@ -940,23 +931,22 @@ inherit( RecordAndPlaybackModel, NeuronModel, {
    * @returns {Particle}
    * @private
    */
-  createBackgroundParticle: function( particleType ) {
+  createBackgroundParticle( particleType ) {
     const newParticle = ParticleFactory.createParticle( particleType );
     this.backgroundParticles.add( newParticle );
-    const self = this;
-    newParticle.continueExistingProperty.lazyLink( function( newValue ) {
+    newParticle.continueExistingProperty.lazyLink( newValue => {
       if ( newValue === false ) {
-        self.backgroundParticles.remove( newParticle );
+        this.backgroundParticles.remove( newParticle );
       }
     } );
     return newParticle;
-  },
+  }
 
   // @private
-  removeAllParticles: function() {
+  removeAllParticles() {
     this.transientParticles.clear();
     this.backgroundParticles.clear();
-  },
+  }
 
   /**
    * Add the provided channel at the specified rotational position. Positions are specified in terms of where on the
@@ -966,7 +956,7 @@ inherit( RecordAndPlaybackModel, NeuronModel, {
    * @param {number} angle
    * @private
    */
-  addChannel: function( membraneChannelType, angle ) {
+  addChannel( membraneChannelType, angle ) {
     const membraneChannel = MembraneChannelFactory.createMembraneChannel( membraneChannelType, this, this.hodgkinHuxleyModel );
     const radius = this.axonMembrane.getCrossSectionDiameter() / 2;
     const newPosition = new Vector2( radius * Math.cos( angle ), radius * Math.sin( angle ) );
@@ -977,7 +967,7 @@ inherit( RecordAndPlaybackModel, NeuronModel, {
 
     // Add the channel and let everyone know it exists.
     this.membraneChannels.push( membraneChannel );
-  },
+  }
 
   /**
    * Get a boolean value that indicates whether the initiation of a new stimulus (i.e. action potential) is currently
@@ -986,81 +976,81 @@ inherit( RecordAndPlaybackModel, NeuronModel, {
    * @returns {boolean}
    * @public
    */
-  isStimulusInitiationLockedOut: function() {
+  isStimulusInitiationLockedOut() {
     return this.stimulusLockoutProperty.get();
-  },
+  }
 
   /**
    * @param {boolean} isVisible
    * @public
    */
-  setPotentialChartVisible: function( isVisible ) {
+  setPotentialChartVisible( isVisible ) {
     this.potentialChartVisibleProperty.set( isVisible );
-  },
+  }
 
   /**
    * @returns {boolean}
    * @public
    */
-  isConcentrationReadoutVisible: function() {
+  isConcentrationReadoutVisible() {
     return this.concentrationReadoutVisibleProperty.get();
-  },
+  }
 
   /**
    * @param {boolean} isVisible
    * @public
    */
-  setConcentrationReadoutVisible: function( isVisible ) {
+  setConcentrationReadoutVisible( isVisible ) {
     this.concentrationReadoutVisibleProperty.set( isVisible );
-  },
+  }
 
   /**
    * @returns {boolean}
    * @public
    */
-  isChargesShown: function() {
+  isChargesShown() {
     return this.chargesShownProperty.get();
-  },
+  }
 
   /**
    * @param {boolean} chargesShown
    * @public
    */
-  setChargesShown: function( chargesShown ) {
+  setChargesShown( chargesShown ) {
     this.chargesShownProperty.set( chargesShown );
-  },
+  }
 
   /**
    * @returns {boolean}
    * @public
    */
-  isPotentialChartVisible: function() {
+  isPotentialChartVisible() {
     return this.potentialChartVisibleProperty.get();
-  },
+  }
 
   /**
    * @param {boolean} lockout
    * @private
    */
-  setStimulusLockout: function( lockout ) {
+  setStimulusLockout( lockout ) {
     this.stimulusLockoutProperty.set( lockout );
     if ( !lockout ) {
       this.stimulusPulseInitiatedProperty.set( false );
     }
-  },
+  }
 
   /**
    * @returns {number}
    * @public
    */
-  getMembranePotential: function() {
+  getMembranePotential() {
     if ( this.isPlayback() ) {
       return this.neuronModelPlaybackStateProperty.get().getMembranePotential();
     }
     else {
       return this.hodgkinHuxleyModel.getMembraneVoltage();
     }
-  },
+  }
 
   /**
    * Set the playback state, which is the state that is presented to the user during playback.  The provided state
@@ -1068,7 +1058,7 @@ inherit( RecordAndPlaybackModel, NeuronModel, {
    * @param {NeuronModelState} state
    * @public
    */
-  setPlaybackState: function( state ) {
+  setPlaybackState( state ) {
     this.concentrationChangedProperty.set( false );
 
     // Set the membrane channel state.
@@ -1078,7 +1068,7 @@ inherit( RecordAndPlaybackModel, NeuronModel, {
     this.hodgkinHuxleyModel.setState( state.getHodgkinHuxleyModelState() );
 
     // Set the states of the membrane channels.
-    this.membraneChannels.forEach( function( membraneChannel ) {
+    this.membraneChannels.forEach( membraneChannel => {
       const mcs = state.getMembraneChannelStateMap().get( membraneChannel );
       // Error handling.
       if ( mcs === null ) {
@@ -1092,24 +1082,23 @@ inherit( RecordAndPlaybackModel, NeuronModel, {
     // Set the state of the playback particles.  This maps the particle mementos in to the playback particles so that
     // we don't have to delete and add back a bunch of particles at each step.
     const additionalPlaybackParticlesNeeded = state.getPlaybackParticleMementos().length - this.playbackParticles.length;
-    const self = this;
     if ( additionalPlaybackParticlesNeeded > 0 ) {
-      _.times( additionalPlaybackParticlesNeeded, function() {
+      _.times( additionalPlaybackParticlesNeeded, () => {
         const newPlaybackParticle = new PlaybackParticle();
-        self.playbackParticles.push( newPlaybackParticle );
+        this.playbackParticles.push( newPlaybackParticle );
       } );
     }
     else if ( additionalPlaybackParticlesNeeded < 0 ) {
-      _.times( Math.abs( additionalPlaybackParticlesNeeded ), function() {
-        self.playbackParticles.pop();// remove the last item
+      _.times( Math.abs( additionalPlaybackParticlesNeeded ), () => {
+        this.playbackParticles.pop();// remove the last item
       } );
     }
 
     // Set playback particle states from the mementos.
     let playbackParticleIndex = 0;
     const mementos = state.getPlaybackParticleMementos();
-    mementos.forEach( function( memento ) {
-      self.playbackParticles.get( playbackParticleIndex ).restoreFromMemento( memento );
+    mementos.forEach( memento => {
+      this.playbackParticles.get( playbackParticleIndex ).restoreFromMemento( memento );
       playbackParticleIndex++;
     } );
 
@@ -1120,13 +1109,13 @@ inherit( RecordAndPlaybackModel, NeuronModel, {
     this.concentrationChangedProperty.set( true );
 
     // If any one channel's state is changed, emit a channel representation changed event
-    const channelStateChanged = function( membraneChannel ) {
-      return membraneChannel.channelStateChangedProperty.get();
-    };
+    const channelStateChanged = membraneChannel => membraneChannel.channelStateChangedProperty.get();
     if ( _.some( this.membraneChannels, channelStateChanged ) ) {
       this.channelRepresentationChanged.emit();
     }
   }
-} );
+}
+
+neuron.register( 'NeuronModel', NeuronModel );
 
 export default NeuronModel;

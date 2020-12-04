@@ -7,7 +7,6 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-import inherit from '../../../../phet-core/js/inherit.js';
 import neuron from '../../neuron.js';
 import NeuronConstants from '../common/NeuronConstants.js';
 import MotionStrategy from './MotionStrategy.js';
@@ -22,42 +21,38 @@ const MIN_VELOCITY = 1000;  // In nanometers per second of sim time.
 const MAX_VELOCITY = 5000; // In nanometers per second of sim time.
 
 const RAND = {
-  nextInt: function( bounds ) {
-    return Math.floor( phet.joist.random.nextDouble() * bounds );
-  }
+  nextInt: bounds => Math.floor( phet.joist.random.nextDouble() * bounds )
 };
 
-/**
- * @param {Vector2} awayPoint - Point that should be moved away from.
- * @param {number} currentPositionX - Starting x position
- * @param {number} currentPositionY - Starting y position
- * @param {number} preFadeTime     - Time before fade out starts, in sim time
- * @param {number} fadeOutDuration - Time of fade out
- * @constructor
- */
-function WanderAwayThenFadeMotionStrategy( awayPoint, currentPositionX, currentPositionY, preFadeTime, fadeOutDuration ) {
+class WanderAwayThenFadeMotionStrategy extends MotionStrategy {
+  /**
+   * @param {Vector2} awayPoint - Point that should be moved away from.
+   * @param {number} currentPositionX - Starting x position
+   * @param {number} currentPositionY - Starting y position
+   * @param {number} preFadeTime     - Time before fade out starts, in sim time
+   * @param {number} fadeOutDuration - Time of fade out
+   */
+  constructor( awayPoint, currentPositionX, currentPositionY, preFadeTime, fadeOutDuration ) {
 
-  this.awayPoint = awayPoint;
-  this.preFadeCountdownTimer = preFadeTime;
-  this.fadeOutDuration = fadeOutDuration;
+    super();
+    this.awayPoint = awayPoint;
+    this.preFadeCountdownTimer = preFadeTime;
+    this.fadeOutDuration = fadeOutDuration;
 
-  // Set up random offsets so that all the particles using this motion strategy don't all get updated at the same time.
-  this.motionUpdateCountdownTimer = RAND.nextInt( CLOCK_TICKS_BEFORE_POSITION_UPDATE ) * NeuronConstants.DEFAULT_ACTION_POTENTIAL_CLOCK_DT;
-  this.velocityUpdateCountdownTimer = RAND.nextInt( CLOCK_TICKS_BEFORE_VELOCITY_UPDATE ) * NeuronConstants.DEFAULT_ACTION_POTENTIAL_CLOCK_DT;
+    // Set up random offsets so that all the particles using this motion strategy don't all get updated at the same time.
+    this.motionUpdateCountdownTimer = RAND.nextInt( CLOCK_TICKS_BEFORE_POSITION_UPDATE ) * NeuronConstants.DEFAULT_ACTION_POTENTIAL_CLOCK_DT;
+    this.velocityUpdateCountdownTimer = RAND.nextInt( CLOCK_TICKS_BEFORE_VELOCITY_UPDATE ) * NeuronConstants.DEFAULT_ACTION_POTENTIAL_CLOCK_DT;
 
-  this.velocityX = 0;
-  this.velocityY = 0;
+    this.velocityX = 0;
+    this.velocityY = 0;
 
-  // Set an initial velocity and direction.
-  this.updateVelocity( currentPositionX, currentPositionY );
-}
+    // Set an initial velocity and direction.
+    this.updateVelocity( currentPositionX, currentPositionY );
+  }
 
-neuron.register( 'WanderAwayThenFadeMotionStrategy', WanderAwayThenFadeMotionStrategy );
-
-inherit( MotionStrategy, WanderAwayThenFadeMotionStrategy, {
 
   // @public, @override
-  move: function( movableModelElement, fadableModelElement, dt ) {
+  move( movableModelElement, fadableModelElement, dt ) {
 
     this.motionUpdateCountdownTimer -= dt;
     if ( this.motionUpdateCountdownTimer <= 0 ) {
@@ -83,10 +78,10 @@ inherit( MotionStrategy, WanderAwayThenFadeMotionStrategy, {
         fadableModelElement.setFadeStrategy( new TimedFadeAwayStrategy( this.fadeOutDuration ) );
       }
     }
-  },
+  }
 
   // @private
-  updateVelocity: function( currentPositionX, currentPositionY ) {
+  updateVelocity( currentPositionX, currentPositionY ) {
     // Create a velocity vector that causes this to move away from the "away point".
     const awayAngle = Math.atan2( currentPositionY - this.awayPoint.y,
       currentPositionX - this.awayPoint.x ) + ( phet.joist.random.nextDouble() - 0.5 ) * Math.PI;
@@ -94,7 +89,8 @@ inherit( MotionStrategy, WanderAwayThenFadeMotionStrategy, {
     this.velocityX = newScalerVelocity * Math.cos( awayAngle );
     this.velocityY = newScalerVelocity * Math.sin( awayAngle );
   }
+}
 
-} );
+neuron.register( 'WanderAwayThenFadeMotionStrategy', WanderAwayThenFadeMotionStrategy );
 
 export default WanderAwayThenFadeMotionStrategy;

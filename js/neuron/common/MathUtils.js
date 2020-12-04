@@ -27,7 +27,7 @@ const MathUtils = {
    * @returns {number}
    * @public
    */
-  distanceBetween: function( posX, posY, otherPosX, otherPosY ) {
+  distanceBetween( posX, posY, otherPosX, otherPosY ) {
     distanceCalculatorVectorLHS.x = posX;
     distanceCalculatorVectorLHS.y = posY;
     distanceCalculatorVectorRHS.x = otherPosX;
@@ -42,7 +42,7 @@ const MathUtils = {
    * @returns {number}
    * @public
    */
-  round: function( val, places ) {
+  round( val, places ) {
     const factor = Math.pow( 10, places );
 
     // Shift the decimal the correct number of places

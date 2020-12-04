@@ -22,7 +22,7 @@ const MembraneChannelFactory = {
    * @returns {MembraneChannel}
    * @public
    */
-  createMembraneChannel: function( channelType, particleModel, hodgkinHuxleyModel ) {
+  createMembraneChannel( channelType, particleModel, hodgkinHuxleyModel ) {
     let membraneChannel = null;
     switch( channelType ) {
       case MembraneChannelTypes.SODIUM_LEAKAGE_CHANNEL:

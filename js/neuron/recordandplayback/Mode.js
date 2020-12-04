@@ -7,28 +7,25 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-import inherit from '../../../../phet-core/js/inherit.js';
 import neuron from '../../neuron.js';
 
-/**
- * @constructor
- */
-function Mode() {}
+class Mode {
+  /**
+   */
+  constructor() {}
 
-neuron.register( 'Mode', Mode );
-
-inherit( Object, Mode, {
 
   // @public
-  step: function( simulationTimeChange ) {
+  step( simulationTimeChange ) {
     throw new Error( 'step should be implemented in descendant classes.' );
-  },
-
-  // @public
-  toString: function() {
-    throw new Error( 'toString should be implemented in descendant classes.' );
   }
 
-} );
+  // @public
+  toString() {
+    throw new Error( 'toString should be implemented in descendant classes.' );
+  }
+}
+
+neuron.register( 'Mode', Mode );
 
 export default Mode;

@@ -7,33 +7,31 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-import inherit from '../../../../phet-core/js/inherit.js';
 import neuron from '../../neuron.js';
 import Mode from './Mode.js';
 
-/**
- * @param {RecordAndPlaybackModel} recordAndPlaybackModel
- * @constructor
- */
-function Live( recordAndPlaybackModel ) {
-  this.recordAndPlaybackModel = recordAndPlaybackModel;
+class Live extends Mode {
+  /**
+   * @param {RecordAndPlaybackModel} recordAndPlaybackModel
+   */
+  constructor( recordAndPlaybackModel ) {
+    super();
+    this.recordAndPlaybackModel = recordAndPlaybackModel;
+  }
+
+
+  // @public, @override
+  step( simulationTimeChange ) {
+    this.recordAndPlaybackModel.setTime( this.recordAndPlaybackModel.getTime() + simulationTimeChange );
+    this.recordAndPlaybackModel.stepInTime( simulationTimeChange );
+  }
+
+  // @public, @override
+  toString() {
+    return 'Live';
+  }
 }
 
 neuron.register( 'Live', Live );
-
-inherit( Mode, Live, {
-
-  // @public, @override
-  step: function( simulationTimeChange ) {
-    this.recordAndPlaybackModel.setTime( this.recordAndPlaybackModel.getTime() + simulationTimeChange );
-    this.recordAndPlaybackModel.stepInTime( simulationTimeChange );
-  },
-
-  // @public, @override
-  toString: function() {
-    return 'Live';
-  }
-
-} );
 
 export default Live;

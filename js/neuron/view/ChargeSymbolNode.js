@@ -9,7 +9,6 @@
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import Matrix3 from '../../../../dot/js/Matrix3.js';
 import Shape from '../../../../kite/js/Shape.js';
-import inherit from '../../../../phet-core/js/inherit.js';
 import Path from '../../../../scenery/js/nodes/Path.js';
 import Color from '../../../../scenery/js/util/Color.js';
 import neuron from '../../neuron.js';
@@ -44,68 +43,64 @@ const UNSCALED_PLUS_SIGN_SHAPE = new Shape()
   .lineTo( -UNSCALED_THICKNESS / 2, -UNSCALED_THICKNESS / 2 )
   .close();
 
-/**
- *
- * @param {NeuronModel} axonModel - Model where the potential is obtained.
- * @param {number} maxWidth - Max width in screen coords, which also defines max height.
- * @param {number} maxPotential - The potential at which the max size is shown.
- * @param {boolean} polarityReversed - Whether the polarity is reversed, meaning that a plus is shown for a negative
- * value and vice versa.
- */
-function ChargeSymbolNode( axonModel, maxWidth, maxPotential, polarityReversed ) {
-  const self = this;
-  Path.call( this, new Shape(), {
-    fill: FILL_COLOR,
-    lineWidth: EDGE_STROKE,
-    stroke: EDGE_COLOR
-  } );
+class ChargeSymbolNode extends Path {
+  /**
+   * @param {NeuronModel} axonModel - Model where the potential is obtained.
+   * @param {number} maxWidth - Max width in screen coords, which also defines max height.
+   * @param {number} maxPotential - The potential at which the max size is shown.
+   * @param {boolean} polarityReversed - Whether the polarity is reversed, meaning that a plus is shown for a negative
+   * value and vice versa.
+   */
+  constructor( axonModel, maxWidth, maxPotential, polarityReversed ) {
+    super( new Shape(), {
+      fill: FILL_COLOR,
+      lineWidth: EDGE_STROKE,
+      stroke: EDGE_COLOR
+    } );
 
-  // pre-allocate a matrix to use for scaling
-  const scalingMatrix = Matrix3.scaling( 1, 1 );
+    // pre-allocate a matrix to use for scaling
+    const scalingMatrix = Matrix3.scaling( 1, 1 );
 
-  // function to return the appropriate symbol size and shape based on the given membrane potential
-  function getSymbolShape() {
-    const membranePotential = axonModel.getMembranePotential();
-    const scale = ( maxWidth / UNSCALED_SYMBOL_WIDTH ) * ( membranePotential / maxPotential );
-    let shape;
-    if ( ( membranePotential > 0 && !polarityReversed ) ||
-         ( membranePotential < 0 && polarityReversed ) ) {
-      shape = UNSCALED_PLUS_SIGN_SHAPE;
+    // function to return the appropriate symbol size and shape based on the given membrane potential
+    function getSymbolShape() {
+      const membranePotential = axonModel.getMembranePotential();
+      const scale = ( maxWidth / UNSCALED_SYMBOL_WIDTH ) * ( membranePotential / maxPotential );
+      let shape;
+      if ( ( membranePotential > 0 && !polarityReversed ) ||
+           ( membranePotential < 0 && polarityReversed ) ) {
+        shape = UNSCALED_PLUS_SIGN_SHAPE;
+      }
+      else {
+        shape = UNSCALED_MINUS_SIGN_SHAPE;
+      }
+      scalingMatrix.setToScale( scale, scale );
+      return shape.transformed( scalingMatrix );
     }
-    else {
-      shape = UNSCALED_MINUS_SIGN_SHAPE;
-    }
-    scalingMatrix.setToScale( scale, scale );
-    return shape.transformed( scalingMatrix );
+
+    const updateRepresentation = () => {
+      this.setShape( getSymbolShape() );
+    };
+
+    axonModel.membranePotentialProperty.link( () => {
+      if ( axonModel.chargesShownProperty.get() ) {
+        updateRepresentation();
+      }
+    } );
+
+    axonModel.chargesShownProperty.link( chargesShown => {
+      if ( chargesShown ) {
+        updateRepresentation();
+      }
+    } );
   }
-
-  function updateRepresentation() {
-    self.setShape( getSymbolShape() );
-  }
-
-  axonModel.membranePotentialProperty.link( function() {
-    if ( axonModel.chargesShownProperty.get() ) {
-      updateRepresentation();
-    }
-  } );
-
-  axonModel.chargesShownProperty.link( function( chargesShown ) {
-    if ( chargesShown ) {
-      updateRepresentation();
-    }
-  } );
-}
-
-neuron.register( 'ChargeSymbolNode', ChargeSymbolNode );
-
-inherit( Path, ChargeSymbolNode, {
 
   // @public, @override
-  computeShapeBounds: function() {
+  computeShapeBounds() {
     // override bounds computation for better performance
     return FIXED_BOUNDS;
   }
+}
 
-} );
+neuron.register( 'ChargeSymbolNode', ChargeSymbolNode );
 
 export default ChargeSymbolNode;

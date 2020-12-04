@@ -11,7 +11,6 @@
  */
 
 import Vector2 from '../../../../dot/js/Vector2.js';
-import inherit from '../../../../phet-core/js/inherit.js';
 import neuron from '../../neuron.js';
 import MathUtils from '../common/MathUtils.js';
 import NeuronConstants from '../common/NeuronConstants.js';
@@ -24,33 +23,31 @@ import WanderAwayThenFadeMotionStrategy from './WanderAwayThenFadeMotionStrategy
 // Threshold at which particles will "bounce" back out of the channel rather than traversing it.
 const INACTIVATION_BOUNCE_THRESHOLD = 0.5;
 
-/**
- * @param {MembraneChannel} channel
- * @param {number} startingPositionX
- * @param {number} startingPositionY
- * @param {number} maxVelocity
- * @constructor
- */
-function DualGateChannelTraversalMotionStrategy( channel, startingPositionX, startingPositionY, maxVelocity ) {
-  maxVelocity = maxVelocity || NeuronConstants.DEFAULT_MAX_VELOCITY;
-  this.velocityVector = new Vector2( 0, 0 );
-  this.channel = channel;
-  this.maxVelocity = maxVelocity;
+class DualGateChannelTraversalMotionStrategy extends MotionStrategy {
+  /**
+   * @param {MembraneChannel} channel
+   * @param {number} startingPositionX
+   * @param {number} startingPositionY
+   * @param {number} maxVelocity
+   */
+  constructor( channel, startingPositionX, startingPositionY, maxVelocity ) {
+    super();
+    maxVelocity = maxVelocity || NeuronConstants.DEFAULT_MAX_VELOCITY;
+    this.velocityVector = new Vector2( 0, 0 );
+    this.channel = channel;
+    this.maxVelocity = maxVelocity;
 
-  // Holds array of objects with x and y properties (doesn't use vector for performance reasons)
-  // http://jsperf.com/object-notation-vs-constructor
-  this.traversalPoints = this.createTraversalPoints( channel, startingPositionX, startingPositionY ); // @private
-  this.currentDestinationIndex = 0; // @private
-  this.bouncing = false; // @private
-  this.setCourseForCurrentTraversalPoint( startingPositionX, startingPositionY );
-}
+    // Holds array of objects with x and y properties (doesn't use vector for performance reasons)
+    // http://jsperf.com/object-notation-vs-constructor
+    this.traversalPoints = this.createTraversalPoints( channel, startingPositionX, startingPositionY ); // @private
+    this.currentDestinationIndex = 0; // @private
+    this.bouncing = false; // @private
+    this.setCourseForCurrentTraversalPoint( startingPositionX, startingPositionY );
+  }
 
-neuron.register( 'DualGateChannelTraversalMotionStrategy', DualGateChannelTraversalMotionStrategy );
-
-inherit( MotionStrategy, DualGateChannelTraversalMotionStrategy, {
 
   // @public, @override
-  move: function( movableModelElement, fadableModelElement, dt ) {
+  move( movableModelElement, fadableModelElement, dt ) {
     assert && assert( this.currentDestinationIndex < this.traversalPoints.length );  // Error checking.
     let angularRange = 0;
     const currentPositionRefX = movableModelElement.getPositionX();
@@ -169,7 +166,7 @@ inherit( MotionStrategy, DualGateChannelTraversalMotionStrategy, {
         this.moveBasedOnCurrentVelocity( movableModelElement, dt );
       }
     }
-  },
+  }
 
   /**
    * @param {number} posX
@@ -177,15 +174,15 @@ inherit( MotionStrategy, DualGateChannelTraversalMotionStrategy, {
    * @param {Object} traversalPoint - object literal with x and y properties
    * @private
    */
-  distanceBetweenPosAndTraversalPoint: function( posX, posY, traversalPoint ) {
+  distanceBetweenPosAndTraversalPoint( posX, posY, traversalPoint ) {
     return MathUtils.distanceBetween( posX, posY, traversalPoint.x, traversalPoint.y );
-  },
+  }
 
   // @private
-  moveBasedOnCurrentVelocity: function( movable, dt ) {
+  moveBasedOnCurrentVelocity( movable, dt ) {
     movable.setPosition( movable.getPositionX() + this.velocityVector.x * dt,
       movable.getPositionY() + this.velocityVector.y * dt );
-  },
+  }
 
   /**
    * Create the points through which a particle must move when traversing
@@ -197,7 +194,7 @@ inherit( MotionStrategy, DualGateChannelTraversalMotionStrategy, {
    * @returns {Array.<Vector2>}
    * @private
    */
-  createTraversalPoints: function( channel, startingPositionX, startingPositionY ) {
+  createTraversalPoints( channel, startingPositionX, startingPositionY ) {
     const points = [];
     const ctr = channel.getCenterPosition();
     const r = channel.getChannelSize().height * 0.5;
@@ -237,19 +234,19 @@ inherit( MotionStrategy, DualGateChannelTraversalMotionStrategy, {
     }
 
     return points;
-  },
+  }
 
   // @private
-  setCourseForPoint: function( startPositionX, startPositionY, destination, velocityScaler ) {
+  setCourseForPoint( startPositionX, startPositionY, destination, velocityScaler ) {
     this.velocityVector.setXY( destination.x - startPositionX,
       destination.y - startPositionY );
     const scaleFactor = this.maxVelocity / this.velocityVector.magnitude;
     this.velocityVector.multiplyScalar( scaleFactor );
 
-  },
+  }
 
   // @private
-  setCourseForCurrentTraversalPoint: function( currentPositionX, currentPositionY ) {
+  setCourseForCurrentTraversalPoint( currentPositionX, currentPositionY ) {
     let angularRange = 0;
     if ( this.currentDestinationIndex < this.traversalPoints.length ) {
       const dest = this.traversalPoints[ this.currentDestinationIndex ];
@@ -291,6 +288,8 @@ inherit( MotionStrategy, DualGateChannelTraversalMotionStrategy, {
     }
 
   }
-} );
+}
+
+neuron.register( 'DualGateChannelTraversalMotionStrategy', DualGateChannelTraversalMotionStrategy );
 
 export default DualGateChannelTraversalMotionStrategy;

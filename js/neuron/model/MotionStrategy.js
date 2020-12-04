@@ -6,14 +6,11 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-import inherit from '../../../../phet-core/js/inherit.js';
 import neuron from '../../neuron.js';
 
-function MotionStrategy() { }
+class MotionStrategy {
+  constructor() { }
 
-neuron.register( 'MotionStrategy', MotionStrategy );
-
-inherit( Object, MotionStrategy, {
 
   /**
    * Move the associated model element according to the specified amount of time and the nature of the motion
@@ -24,10 +21,11 @@ inherit( Object, MotionStrategy, {
    * @param {number} dt
    * @public
    */
-  move: function( movableModelElement, fadableModelElement, dt ) {
+  move( movableModelElement, fadableModelElement, dt ) {
     throw new Error( 'move should be implemented in descendant classes of MotionStrategy.' );
   }
+}
 
-} );
+neuron.register( 'MotionStrategy', MotionStrategy );
 
 export default MotionStrategy;

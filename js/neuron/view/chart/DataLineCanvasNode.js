@@ -6,7 +6,6 @@
  */
 
 import Bounds2 from '../../../../../dot/js/Bounds2.js';
-import inherit from '../../../../../phet-core/js/inherit.js';
 import CanvasNode from '../../../../../scenery/js/nodes/CanvasNode.js';
 import neuron from '../../../neuron.js';
 
@@ -14,29 +13,25 @@ import neuron from '../../../neuron.js';
 const LINE_COLOR = '#ff5500'; // colorblind-friendly red
 const LINE_WIDTH = 1;
 
-/**
- * @param {number} width
- * @param {number} height
- * @param {DynamicSeries} dataSeries
- * @param {ModelViewTransform2} mvt - model-view transform for mapping data points to the chart
- * @constructor
- */
-function DataLineCanvasNode( width, height, dataSeries, mvt ) {
+class DataLineCanvasNode extends CanvasNode {
+  /**
+   * @param {number} width
+   * @param {number} height
+   * @param {DynamicSeries} dataSeries
+   * @param {ModelViewTransform2} mvt - model-view transform for mapping data points to the chart
+   */
+  constructor( width, height, dataSeries, mvt ) {
 
-  const self = this;
-  this.dataSeries = dataSeries; // @private
-  this.mvt = mvt; // @private
+    // call super-constructor
+    super( { pickable: false, canvasBounds: new Bounds2( 0, 0, width, height ) } );
 
-  // call super-constructor
-  CanvasNode.call( this, { pickable: false, canvasBounds: new Bounds2( 0, 0, width, height ) } );
+    this.dataSeries = dataSeries; // @private
+    this.mvt = mvt; // @private
 
-  // cause the canvas to get updated each time new data is added to the data series
-  dataSeries.addDynamicSeriesListener( () => self.invalidatePaint() );
-}
+    // cause the canvas to get updated each time new data is added to the data series
+    dataSeries.addDynamicSeriesListener( () => this.invalidatePaint() );
+  }
 
-neuron.register( 'DataLineCanvasNode', DataLineCanvasNode );
-
-inherit( CanvasNode, DataLineCanvasNode, {
 
   /**
    * method that paints the data line on the canvas
@@ -44,7 +39,7 @@ inherit( CanvasNode, DataLineCanvasNode, {
    * @protected
    * @override
    */
-  paintCanvas: function( context ) {
+  paintCanvas( context ) {
 
     context.save();
 
@@ -63,6 +58,8 @@ inherit( CanvasNode, DataLineCanvasNode, {
 
     context.restore();
   }
-} );
+}
+
+neuron.register( 'DataLineCanvasNode', DataLineCanvasNode );
 
 export default DataLineCanvasNode;

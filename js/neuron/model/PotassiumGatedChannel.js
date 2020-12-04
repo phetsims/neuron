@@ -7,7 +7,6 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-import inherit from '../../../../phet-core/js/inherit.js';
 import neuron from '../../neuron.js';
 import MathUtils from '../common/MathUtils.js';
 import NeuronConstants from '../common/NeuronConstants.js';
@@ -34,29 +33,26 @@ const N4_WHEN_FULLY_OPEN = 0.35;
 // and close.
 const MAX_STAGGER_DELAY = NeuronConstants.MIN_ACTION_POTENTIAL_CLOCK_DT * 10; // In seconds of sim time.
 
-/**
- * @param {NeuronModel} modelContainingParticles
- * @param {ModifiedHodgkinHuxleyModel} hodgkinHuxleyModel
- * @constructor
- */
-function PotassiumGatedChannel( modelContainingParticles, hodgkinHuxleyModel ) {
-  GatedChannel.call( this, CHANNEL_WIDTH, CHANNEL_HEIGHT, modelContainingParticles );
-  this.staggerDelay = phet.joist.random.nextDouble() * MAX_STAGGER_DELAY;
-  this.hodgkinHuxleyModel = hodgkinHuxleyModel;
-  this.setInteriorCaptureZone( new PieSliceShapedCaptureZone( this.getCenterPosition(), CHANNEL_WIDTH * 5, Math.PI, Math.PI * 0.5 ) );
-  this.channelColor = NeuronConstants.POTASSIUM_COLOR.colorUtilsDarker( 0.2 );
-  this.reset();
-}
+class PotassiumGatedChannel extends GatedChannel {
+  /**
+   * @param {NeuronModel} modelContainingParticles
+   * @param {ModifiedHodgkinHuxleyModel} hodgkinHuxleyModel
+   */
+  constructor( modelContainingParticles, hodgkinHuxleyModel ) {
+    super( CHANNEL_WIDTH, CHANNEL_HEIGHT, modelContainingParticles );
+    this.staggerDelay = phet.joist.random.nextDouble() * MAX_STAGGER_DELAY;
+    this.hodgkinHuxleyModel = hodgkinHuxleyModel;
+    this.setInteriorCaptureZone( new PieSliceShapedCaptureZone( this.getCenterPosition(), CHANNEL_WIDTH * 5, Math.PI, Math.PI * 0.5 ) );
+    this.channelColor = NeuronConstants.POTASSIUM_COLOR.colorUtilsDarker( 0.2 );
+    this.reset();
+  }
 
-neuron.register( 'PotassiumGatedChannel', PotassiumGatedChannel );
-
-inherit( GatedChannel, PotassiumGatedChannel, {
 
   // @public
-  stepInTime: function( dt ) {
+  stepInTime( dt ) {
     const prevOpenness = this.openness;
     const prevInActivationAmt = this.inactivationAmount;
-    GatedChannel.prototype.stepInTime.call( this, dt );
+    super.stepInTime( dt );
 
     // Update the openness factor based on the state of the HH model. This is very specific to the model and the type
     // of channel.  Note the non-linear mapping of conductance to the openness factor for the channels.  This is to
@@ -79,42 +75,43 @@ inherit( GatedChannel, PotassiumGatedChannel, {
     }
 
     this.notifyIfMembraneStateChanged( prevOpenness, prevInActivationAmt );
-  },
+  }
 
   // @public, @override
-  reset: function() {
-    GatedChannel.prototype.reset.call( this );
+  reset() {
+    super.reset();
     // Set up the capture time range, which will be used to control the rate of particle capture when this gate is
     // open.
     this.setMinInterCaptureTime( MIN_INTER_CAPTURE_TIME );
     this.setMaxInterCaptureTime( MAX_INTER_CAPTURE_TIME );
-  },
-
-  // @public
-  getChannelColor: function() {
-    return this.channelColor;
-  },
-
-  // @public
-  getEdgeColor: function() {
-    return NeuronConstants.POTASSIUM_COLOR;
-  },
-
-  // @public
-  getParticleTypeToCapture: function() {
-    return ParticleType.POTASSIUM_ION;
-  },
-
-  // @public
-  chooseCrossingDirection: function() {
-    return MembraneCrossingDirection.IN_TO_OUT;
-  },
-
-  // @public
-  getChannelType: function() {
-    return MembraneChannelTypes.POTASSIUM_GATED_CHANNEL;
   }
 
-} );
+  // @public
+  getChannelColor() {
+    return this.channelColor;
+  }
+
+  // @public
+  getEdgeColor() {
+    return NeuronConstants.POTASSIUM_COLOR;
+  }
+
+  // @public
+  getParticleTypeToCapture() {
+    return ParticleType.POTASSIUM_ION;
+  }
+
+  // @public
+  chooseCrossingDirection() {
+    return MembraneCrossingDirection.IN_TO_OUT;
+  }
+
+  // @public
+  getChannelType() {
+    return MembraneChannelTypes.POTASSIUM_GATED_CHANNEL;
+  }
+}
+
+neuron.register( 'PotassiumGatedChannel', PotassiumGatedChannel );
 
 export default PotassiumGatedChannel;

@@ -9,7 +9,6 @@
 
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
-import inherit from '../../../../phet-core/js/inherit.js';
 import Color from '../../../../scenery/js/util/Color.js';
 import neuron from '../../neuron.js';
 import NeuronConstants from '../common/NeuronConstants.js';
@@ -21,38 +20,35 @@ const MARGIN = CANVAS_LENGTH * 0.1; // space around the particles
 const STROKE_WIDTH = CANVAS_LENGTH / 32;
 const PRINT_DATA_URL_OF_SPRITE_SHEET = false; // very useful for debugging issues with the sprite sheet texture
 
-/**
- * @param {ModelViewTransform2} modelViewTransform
- * @constructor
- */
-function NeuronParticlesTexture( modelViewTransform ) {
-  this.modelViewTransform = modelViewTransform; // @private
+class NeuronParticlesTexture {
+  /**
+   * @param {ModelViewTransform2} modelViewTransform
+   */
+  constructor( modelViewTransform ) {
+    this.modelViewTransform = modelViewTransform; // @private
 
-  // create the canvas upon which the particle images will be drawn
-  this.canvas = document.createElement( 'canvas' );
-  this.canvas.width = CANVAS_LENGTH;
-  this.canvas.height = CANVAS_LENGTH;
-  this.canvasContext = this.canvas.getContext( '2d' );
+    // create the canvas upon which the particle images will be drawn
+    this.canvas = document.createElement( 'canvas' );
+    this.canvas.width = CANVAS_LENGTH;
+    this.canvas.height = CANVAS_LENGTH;
+    this.canvasContext = this.canvas.getContext( '2d' );
 
-  // create the particle images on the canvas
-  this.createParticleImages( this.canvasContext );
+    // create the particle images on the canvas
+    this.createParticleImages( this.canvasContext );
 
-  // for debugging
-  if ( PRINT_DATA_URL_OF_SPRITE_SHEET ) {
-    console.log( 'this.canvas..toDataURL() = ' + this.canvas.toDataURL() );
+    // for debugging
+    if ( PRINT_DATA_URL_OF_SPRITE_SHEET ) {
+      console.log( 'this.canvas..toDataURL() = ' + this.canvas.toDataURL() );
+    }
   }
-}
 
-neuron.register( 'NeuronParticlesTexture', NeuronParticlesTexture );
-
-inherit( Object, NeuronParticlesTexture, {
 
   /**
    * Draw the particles on the provided canvas.
    * @param {Canvas.context} context
    * @private
    */
-  createParticleImages: function( context ) {
+  createParticleImages( context ) {
 
     // clear the canvas
     this.canvasContext.clearRect( 0, 0, this.canvas.width, this.canvas.height );
@@ -87,14 +83,14 @@ inherit( Object, NeuronParticlesTexture, {
     context.closePath();
     context.fill();
     context.stroke();
-  },
+  }
 
   /**
    * calculates the center position of the tile for the given type
    * @param {ParticleType} particleType
    * @private
    */
-  getTilePosition: function( particleType ) {
+  getTilePosition( particleType ) {
 
     // allocate a vector if none was provided
     const posVector = new Vector2( CANVAS_LENGTH / 4, CANVAS_LENGTH / 4 );
@@ -105,7 +101,7 @@ inherit( Object, NeuronParticlesTexture, {
     }
 
     return posVector;
-  },
+  }
 
   /**
    * get the tile's normalized texture coordinates
@@ -113,7 +109,7 @@ inherit( Object, NeuronParticlesTexture, {
    * @returns {Bounds2}
    * @public
    */
-  getTexCoords: function( particleType ) {
+  getTexCoords( particleType ) {
     const coords = new Bounds2( 0, 0, 0, 0 );
     const tileCenterPosition = this.getTilePosition( particleType );
     const tileRadius = CANVAS_LENGTH / 4;
@@ -126,7 +122,8 @@ inherit( Object, NeuronParticlesTexture, {
 
     return coords;
   }
+}
 
-} );
+neuron.register( 'NeuronParticlesTexture', NeuronParticlesTexture );
 
 export default NeuronParticlesTexture;

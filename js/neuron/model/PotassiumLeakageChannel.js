@@ -8,7 +8,6 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-import inherit from '../../../../phet-core/js/inherit.js';
 import Color from '../../../../scenery/js/util/Color.js';
 import neuron from '../../neuron.js';
 import NeuronConstants from '../common/NeuronConstants.js';
@@ -28,65 +27,62 @@ const DEFAULT_PARTICLE_VELOCITY = 5000; // In nanometers per sec of sim time.
 const MIN_INTER_PARTICLE_CAPTURE_TIME = 0.002; // In seconds of sim time.
 const MAX_INTER_PARTICLE_CAPTURE_TIME = 0.004; // In seconds of sim time.
 
-/**
- * @param {NeuronModel} modelContainingParticles
- * @param {ModifiedHodgkinHuxleyModel} hodgkinHuxleyModel
- * @constructor
- */
-function PotassiumLeakageChannel( modelContainingParticles, hodgkinHuxleyModel ) {
-  AbstractLeakChannel.call( this, CHANNEL_WIDTH, CHANNEL_HEIGHT, modelContainingParticles );
+class PotassiumLeakageChannel extends AbstractLeakChannel {
+  /**
+   * @param {NeuronModel} modelContainingParticles
+   * @param {ModifiedHodgkinHuxleyModel} hodgkinHuxleyModel
+   */
+  constructor( modelContainingParticles, hodgkinHuxleyModel ) {
+    super( CHANNEL_WIDTH, CHANNEL_HEIGHT, modelContainingParticles );
 
-  // Set the speed at which particles will move through the channel.
-  this.setParticleVelocity( DEFAULT_PARTICLE_VELOCITY );
+    // Set the speed at which particles will move through the channel.
+    this.setParticleVelocity( DEFAULT_PARTICLE_VELOCITY );
 
-  // Set up the capture zones for this channel.
-  this.setInteriorCaptureZone( new PieSliceShapedCaptureZone( this.getCenterPosition(), CHANNEL_WIDTH * 5, Math.PI, Math.PI * 0.5 ) );
-  this.setExteriorCaptureZone( new PieSliceShapedCaptureZone( this.getCenterPosition(), CHANNEL_WIDTH * 5, 0, Math.PI * 0.5 ) );
+    // Set up the capture zones for this channel.
+    this.setInteriorCaptureZone( new PieSliceShapedCaptureZone( this.getCenterPosition(), CHANNEL_WIDTH * 5, Math.PI, Math.PI * 0.5 ) );
+    this.setExteriorCaptureZone( new PieSliceShapedCaptureZone( this.getCenterPosition(), CHANNEL_WIDTH * 5, 0, Math.PI * 0.5 ) );
 
-  // Set the rate of particle capture for leakage.
-  this.setMinInterCaptureTime( MIN_INTER_PARTICLE_CAPTURE_TIME );
-  this.setMaxInterCaptureTime( MAX_INTER_PARTICLE_CAPTURE_TIME );
+    // Set the rate of particle capture for leakage.
+    this.setMinInterCaptureTime( MIN_INTER_PARTICLE_CAPTURE_TIME );
+    this.setMaxInterCaptureTime( MAX_INTER_PARTICLE_CAPTURE_TIME );
 
-  this.channelColor = BASE_COLOR.colorUtilsDarker( 0.2 );
+    this.channelColor = BASE_COLOR.colorUtilsDarker( 0.2 );
 
-  // Start the capture timer now, since leak channels are always capturing particles.
-  this.restartCaptureCountdownTimer( false );
-}
+    // Start the capture timer now, since leak channels are always capturing particles.
+    this.restartCaptureCountdownTimer( false );
+  }
 
-neuron.register( 'PotassiumLeakageChannel', PotassiumLeakageChannel );
-
-inherit( AbstractLeakChannel, PotassiumLeakageChannel, {
 
   // @public
-  stepInTime: function( dt ) {
+  stepInTime( dt ) {
     const prevOpenness = this.openness;
     const prevInActivationAmt = this.inactivationAmount;
-    AbstractLeakChannel.prototype.stepInTime.call( this, dt );
+    super.stepInTime( dt );
     this.notifyIfMembraneStateChanged( prevOpenness, prevInActivationAmt );
-  },
+  }
 
   // @public
-  getChannelColor: function() {
+  getChannelColor() {
     return this.channelColor;
-  },
+  }
 
   // @public
-  getEdgeColor: function() {
+  getEdgeColor() {
     return BASE_COLOR;
-  },
+  }
 
   // @public
-  getParticleTypeToCapture: function() {
+  getParticleTypeToCapture() {
     return ParticleType.POTASSIUM_ION;
-  },
+  }
 
   // @public
-  getChannelType: function() {
+  getChannelType() {
     return MembraneChannelTypes.POTASSIUM_LEAKAGE_CHANNEL;
-  },
+  }
 
   // @public, @override
-  chooseCrossingDirection: function() {
+  chooseCrossingDirection() {
     // Generally, this channel leaks from in to out, since the concentration of potassium is greater on the inside of
     // the cell. However, the IPHY people requested that there should occasionally be some leakage in the other
     // direction for greater realism, hence the random choice below.
@@ -96,7 +92,8 @@ inherit( AbstractLeakChannel, PotassiumLeakageChannel, {
     }
     return direction;
   }
+}
 
-} );
+neuron.register( 'PotassiumLeakageChannel', PotassiumLeakageChannel );
 
 export default PotassiumLeakageChannel;

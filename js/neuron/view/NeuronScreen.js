@@ -17,8 +17,8 @@ import NeuronScreenView from './NeuronScreenView.js';
 class NeuronScreen extends Screen {
   constructor() {
     super(
-      function() { return new NeuronClockModelAdapter( new NeuronModel() ); }, // clock model adapter provides constant ticks to model
-      function( model ) { return new NeuronScreenView( model ); },
+      () => new NeuronClockModelAdapter( new NeuronModel() ), // clock model adapter provides constant ticks to model
+      model => new NeuronScreenView( model ),
       { backgroundColorProperty: new Property( '#ccfefa' ) }
     );
   }

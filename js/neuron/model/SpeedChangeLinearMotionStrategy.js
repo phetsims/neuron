@@ -8,29 +8,26 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-import inherit from '../../../../phet-core/js/inherit.js';
 import neuron from '../../neuron.js';
 import MotionStrategy from './MotionStrategy.js';
 
-/**
- * @param {Vector2} initialVelocity
- * @param {number} speedScaleFactor
- * @param {number} timeAtFirstSpeed
- * @constructor
- */
-function SpeedChangeLinearMotionStrategy( initialVelocity, speedScaleFactor, timeAtFirstSpeed ) {
-  this.velocityVectorX = initialVelocity.x;
-  this.velocityVectorY = initialVelocity.y;
-  this.speedScaleFactor = speedScaleFactor;
-  this.firstSpeedCountdownTimer = timeAtFirstSpeed;
-}
+class SpeedChangeLinearMotionStrategy extends MotionStrategy {
+  /**
+   * @param {Vector2} initialVelocity
+   * @param {number} speedScaleFactor
+   * @param {number} timeAtFirstSpeed
+   */
+  constructor( initialVelocity, speedScaleFactor, timeAtFirstSpeed ) {
+    super();
+    this.velocityVectorX = initialVelocity.x;
+    this.velocityVectorY = initialVelocity.y;
+    this.speedScaleFactor = speedScaleFactor;
+    this.firstSpeedCountdownTimer = timeAtFirstSpeed;
+  }
 
-neuron.register( 'SpeedChangeLinearMotionStrategy', SpeedChangeLinearMotionStrategy );
-
-inherit( MotionStrategy, SpeedChangeLinearMotionStrategy, {
 
   // @public, @override
-  move: function( movable, fadableModelElement, dt ) {
+  move( movable, fadableModelElement, dt ) {
     movable.setPosition( movable.getPositionX() + this.velocityVectorX * dt,
       movable.getPositionY() + this.velocityVectorY * dt );
     if ( this.firstSpeedCountdownTimer > 0 ) {
@@ -42,7 +39,8 @@ inherit( MotionStrategy, SpeedChangeLinearMotionStrategy, {
       }
     }
   }
+}
 
-} );
+neuron.register( 'SpeedChangeLinearMotionStrategy', SpeedChangeLinearMotionStrategy );
 
 export default SpeedChangeLinearMotionStrategy;
