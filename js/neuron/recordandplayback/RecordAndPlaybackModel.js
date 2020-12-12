@@ -21,15 +21,7 @@ import Record from './Record.js';
 
 class RecordAndPlaybackModel {
 
-  constructor() { }
-
-  /**
-   * TODO: ideally this could be in the constructor, https://github.com/phetsims/neuron/issues/146
-   * @public
-   * @param {number} maxRecordPoints
-   */
-  initialize( maxRecordPoints ) {
-    assert && assert( !this.initialized, 'already initialized' );
+  constructor( maxRecordPoints ) {
 
     this.playingProperty = new Property( true ); // True if playing, false if paused
     this.timeProperty = new Property( 0 ); // Current time of recording or playback
@@ -49,9 +41,6 @@ class RecordAndPlaybackModel {
     this.timeProperty.lazyLink( () => {
       this.updateRecordPlayBack();
     } );
-
-    this.resetAll();
-    this.initialized = true;
   }
 
   /**
@@ -127,7 +116,6 @@ class RecordAndPlaybackModel {
   }
 
   /**
-   * TODO: this isn't used, https://github.com/phetsims/neuron/issues/146
    * @public
    * @returns {boolean}
    */
@@ -196,7 +184,6 @@ class RecordAndPlaybackModel {
   }
 
   /**
-   * TODO: this isn't used, https://github.com/phetsims/neuron/issues/146
    * @public
    */
   setModePlayback() {
@@ -252,7 +239,6 @@ class RecordAndPlaybackModel {
   }
 
   /**
-   * TODO: this isn't used, https://github.com/phetsims/neuron/issues/146
    * Empty function handle, which can be overridden to provide custom functionality when record was pressed
    * during playback.  This is useful since many sims have other data (or charts) that must be cleared when
    * record is pressed during playback.
@@ -285,7 +271,6 @@ class RecordAndPlaybackModel {
   }
 
   /**
-   * TODO: this isn't used, https://github.com/phetsims/neuron/issues/146
    * @private
    * @returns {number}
    */
@@ -304,7 +289,6 @@ class RecordAndPlaybackModel {
   }
 
   /**
-   * TODO: this isn't used, https://github.com/phetsims/neuron/issues/146
    * @public
    */
   rewind() {
@@ -320,7 +304,6 @@ class RecordAndPlaybackModel {
   }
 
   /**
-   * TODO: this isn't used, https://github.com/phetsims/neuron/issues/146
    * @public
    * @param {number} point index of the item to be removed
    */

@@ -90,9 +90,9 @@ const BACKGROUND_PARTICLE_DEFAULT_OPACITY = 0.10; // default alpha in Java was 0
 class NeuronModel extends RecordAndPlaybackModel {
 
   constructor() {
-    super();
 
     const maxRecordPoints = Math.ceil( NeuronConstants.TIME_SPAN * 1000 / NeuronConstants.MIN_ACTION_POTENTIAL_CLOCK_DT );
+    super( maxRecordPoints );
 
     this.axonMembrane = new AxonMembrane();
 
@@ -215,8 +215,7 @@ class NeuronModel extends RecordAndPlaybackModel {
         angle += angleIncrement;
       }
 
-      // Now loop through the rest of the membrane's circumference adding
-      // the various types of gates.
+      // Now loop through the rest of the membrane's circumference adding the various types of gates.
       for ( let i = 0; i < totalNumChannels - 4; i++ ) {
         // Calculate the "urgency" for each type of gate.
         const gatedSodiumUrgency = NUM_GATED_SODIUM_CHANNELS / gatedSodiumChannelsAdded;
@@ -254,8 +253,6 @@ class NeuronModel extends RecordAndPlaybackModel {
         angle += angleIncrement;
       }
     } )();
-
-    this.initialize( maxRecordPoints );
 
     // Note: It is expected that the model will be reset once it has been created, and this will set the initial state,
     // including adding the particles to the model.
