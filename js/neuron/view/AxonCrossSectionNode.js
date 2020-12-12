@@ -18,6 +18,7 @@ const MEMBRANE_COLOR = Color.YELLOW;
 const LINE_WIDTH = 1;
 
 class AxonCrossSectionNode extends Node {
+
   /**
    * Constructor for the AxonCrossSectionNode
    * @param {NeuronModel} axonMembraneModel

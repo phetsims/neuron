@@ -10,10 +10,8 @@
 import neuron from '../../neuron.js';
 
 class ViewableParticle {
-  /**
-   */
-  constructor() {}
 
+  constructor() {}
 
   // @public, subclasses must implement
   getType() {

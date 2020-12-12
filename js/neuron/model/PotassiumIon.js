@@ -13,12 +13,10 @@ import Particle from './Particle.js';
 import ParticleType from './ParticleType.js';
 
 class PotassiumIon extends Particle {
-  /**
-   */
+
   constructor() {
     super();
   }
-
 
   // @public
   getType() {

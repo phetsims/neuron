@@ -23,6 +23,7 @@ const SIDE_HEIGHT_TO_CHANNEL_HEIGHT_RATIO = 1.3;
 const DEFAULT_PARTICLE_VELOCITY = 40000; // In nanometers per sec of sim time.
 
 class MembraneChannel {
+
   /**
    * @param {number} channelWidth
    * @param {number} channelHeight
@@ -78,7 +79,6 @@ class MembraneChannel {
     // Perform the initial update the shape of the channel rectangle.
     this.updateChannelRect();
   }
-
 
   /**
    * Implements the time-dependent behavior of the channel.

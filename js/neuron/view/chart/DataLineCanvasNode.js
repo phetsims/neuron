@@ -14,6 +14,7 @@ const LINE_COLOR = '#ff5500'; // colorblind-friendly red
 const LINE_WIDTH = 1;
 
 class DataLineCanvasNode extends CanvasNode {
+
   /**
    * @param {number} width
    * @param {number} height
@@ -31,7 +32,6 @@ class DataLineCanvasNode extends CanvasNode {
     // cause the canvas to get updated each time new data is added to the data series
     dataSeries.addDynamicSeriesListener( () => this.invalidatePaint() );
   }
-
 
   /**
    * method that paints the data line on the canvas

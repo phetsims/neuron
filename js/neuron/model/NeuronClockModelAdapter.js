@@ -32,6 +32,7 @@ const TICKS_PER_SINGLE_STEP = 4;
 const MAX_SIM_TICK_TIME = NOMINAL_TICK_TIME * 10; // empirically determined through testing of the simulation
 
 class NeuronClockModelAdapter {
+
   /**
    * Creates a NeuronClockModelAdapter.
    * @param {NeuronModel} model - model whose simulation timing is controlled by this adapter.  Note that the Adapter is
@@ -60,7 +61,6 @@ class NeuronClockModelAdapter {
     this.resetCallBacks = [];
     this.residualTime = 0;
   }
-
 
   // @public
   step( dt ) {

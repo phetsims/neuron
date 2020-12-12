@@ -11,6 +11,7 @@ import neuron from '../../neuron.js';
 import MotionStrategy from './MotionStrategy.js';
 
 class LinearMotionStrategy extends MotionStrategy {
+
   /**
    * @param {Vector2} velocity
    */
@@ -18,7 +19,6 @@ class LinearMotionStrategy extends MotionStrategy {
     super();
     this.velocity = velocity; // @private, in nanometers per second of simulation time
   }
-
 
   // @public
   move( movableModelElement, fadableModelElement, dt ) {

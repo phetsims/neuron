@@ -11,6 +11,7 @@
 import neuron from '../../neuron.js';
 
 class TravelingActionPotentialState {
+
   /**
    * @param {number} travelTimeCountdownTimer
    * @param {number} lingerCountdownTimer
@@ -19,7 +20,6 @@ class TravelingActionPotentialState {
     this.travelTimeCountdownTimer = travelTimeCountdownTimer; // @private
     this.lingerCountdownTimer = lingerCountdownTimer; // @private
   }
-
 
   // @public
   getLingerCountdownTimer() {

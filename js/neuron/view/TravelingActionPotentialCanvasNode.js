@@ -18,6 +18,7 @@ const FOREGROUND_COLOR = 'yellow';
 const FOREGROUND_LINE_WIDTH = 5;
 
 class TravelingActionPotentialCanvasNode extends CanvasNode {
+
   /**
    * @param {ModelViewTransform2} mvt
    * @param {Bounds2} bounds - bounds where the canvas should appear
@@ -27,7 +28,6 @@ class TravelingActionPotentialCanvasNode extends CanvasNode {
     this.mvt = mvt;
     this.travelingActionPotential = null; // @private - must hook up an action potential using methods defined below
   }
-
 
   /**
    * Attach the model of the action potential to this node.  This is done rather than creating an entirely new node

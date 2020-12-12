@@ -12,12 +12,10 @@ import Particle from './Particle.js';
 import ParticleType from './ParticleType.js';
 
 class SodiumIon extends Particle {
-  /**
-   */
+
   constructor() {
     super();
   }
-
 
   // @public, @override
   getType() {

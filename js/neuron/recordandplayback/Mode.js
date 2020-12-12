@@ -10,10 +10,8 @@
 import neuron from '../../neuron.js';
 
 class Mode {
-  /**
-   */
-  constructor() {}
 
+  constructor() {}
 
   // @public
   step( simulationTimeChange ) {

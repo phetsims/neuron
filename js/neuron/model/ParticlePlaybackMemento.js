@@ -14,6 +14,7 @@
 import neuron from '../../neuron.js';
 
 class ParticlePlaybackMemento {
+
   /**
    * @param {Particle} particle
    */
@@ -25,7 +26,6 @@ class ParticlePlaybackMemento {
     this.radius = particle.getRadius();
     this.representationColor = particle.getRepresentationColor();
   }
-
 
   // @public
   getPositionX() {

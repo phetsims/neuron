@@ -13,13 +13,13 @@
 import neuron from '../../neuron.js';
 
 class AxonMembraneState {
+
   /**
    * @param {TravelingActionPotentialState} travelingActionPotentialState
    */
   constructor( travelingActionPotentialState ) {
     this.travelingActionPotentialState = travelingActionPotentialState;  // @private
   }
-
 
   /**
    * Return the state of the traveling action potential.  If null, no traveling action potential exists.

@@ -21,6 +21,7 @@ const STROKE_WIDTH = CANVAS_LENGTH / 32;
 const PRINT_DATA_URL_OF_SPRITE_SHEET = false; // very useful for debugging issues with the sprite sheet texture
 
 class NeuronParticlesTexture {
+
   /**
    * @param {ModelViewTransform2} modelViewTransform
    */
@@ -41,7 +42,6 @@ class NeuronParticlesTexture {
       console.log( 'this.canvas..toDataURL() = ' + this.canvas.toDataURL() );
     }
   }
-
 
   /**
    * Draw the particles on the provided canvas.

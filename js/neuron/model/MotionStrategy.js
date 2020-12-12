@@ -9,8 +9,8 @@
 import neuron from '../../neuron.js';
 
 class MotionStrategy {
-  constructor() { }
 
+  constructor() { }
 
   /**
    * Move the associated model element according to the specified amount of time and the nature of the motion

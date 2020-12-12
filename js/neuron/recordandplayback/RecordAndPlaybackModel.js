@@ -20,6 +20,7 @@ import Playback from './Playback.js';
 import Record from './Record.js';
 
 class RecordAndPlaybackModel {
+
   constructor() { }
 
   /**
@@ -52,7 +53,6 @@ class RecordAndPlaybackModel {
     this.resetAll();
     this.initialized = true;
   }
-
 
   /**
    * Update the simulation model (should cause side effects to update the view), returning a snapshot of the state after the update.

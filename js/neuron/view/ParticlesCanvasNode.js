@@ -14,6 +14,7 @@ import neuron from '../../neuron.js';
 import ParticleType from '../model/ParticleType.js';
 
 class ParticlesCanvasNode extends CanvasNode {
+
   /**
    * @param {NeuronModel} neuronModel
    * @param {ModelViewTransform2} modelViewTransform
@@ -52,7 +53,6 @@ class ParticlesCanvasNode extends CanvasNode {
       this.invalidatePaint();
     } );
   }
-
 
   // @private
   renderSodiumParticles( particles, context ) {

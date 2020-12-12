@@ -23,6 +23,7 @@ const CURSOR_STROKE_COLOR = Color.DARK_GRAY;
 const CURSOR_STYLE = 'ew-resize';
 
 class ChartCursor extends Rectangle {
+
   /**
    * @param {MembranePotentialChart} membranePotentialChart
    */

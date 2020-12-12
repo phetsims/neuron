@@ -28,6 +28,7 @@ const MIN_INTER_PARTICLE_CAPTURE_TIME = 0.002; // In seconds of sim time.
 const MAX_INTER_PARTICLE_CAPTURE_TIME = 0.004; // In seconds of sim time.
 
 class PotassiumLeakageChannel extends AbstractLeakChannel {
+
   /**
    * @param {NeuronModel} modelContainingParticles
    * @param {ModifiedHodgkinHuxleyModel} hodgkinHuxleyModel
@@ -51,7 +52,6 @@ class PotassiumLeakageChannel extends AbstractLeakChannel {
     // Start the capture timer now, since leak channels are always capturing particles.
     this.restartCaptureCountdownTimer( false );
   }
-
 
   // @public
   stepInTime( dt ) {

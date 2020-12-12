@@ -15,6 +15,7 @@ import NeuronModel from '../model/NeuronModel.js';
 import NeuronScreenView from './NeuronScreenView.js';
 
 class NeuronScreen extends Screen {
+
   constructor() {
     super(
       () => new NeuronClockModelAdapter( new NeuronModel() ), // clock model adapter provides constant ticks to model

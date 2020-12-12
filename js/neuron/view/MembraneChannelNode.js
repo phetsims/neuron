@@ -17,6 +17,7 @@ import Color from '../../../../scenery/js/util/Color.js';
 import neuron from '../../neuron.js';
 
 class MembraneChannelNode extends Node {
+
   /**
    * @param {MembraneChannel} membraneChannelModel
    * @param {ModelViewTransform2D} mvt
@@ -183,7 +184,6 @@ class MembraneChannelNode extends Node {
     updatePosition();
     updateRotation();
   }
-
 
   /**
    * Add this node to the two specified parent nodes.  This is done in order to achieve a better layering effect that

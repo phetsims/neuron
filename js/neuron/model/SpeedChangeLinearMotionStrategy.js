@@ -12,6 +12,7 @@ import neuron from '../../neuron.js';
 import MotionStrategy from './MotionStrategy.js';
 
 class SpeedChangeLinearMotionStrategy extends MotionStrategy {
+
   /**
    * @param {Vector2} initialVelocity
    * @param {number} speedScaleFactor
@@ -24,7 +25,6 @@ class SpeedChangeLinearMotionStrategy extends MotionStrategy {
     this.speedScaleFactor = speedScaleFactor;
     this.firstSpeedCountdownTimer = timeAtFirstSpeed;
   }
-
 
   // @public, @override
   move( movable, fadableModelElement, dt ) {

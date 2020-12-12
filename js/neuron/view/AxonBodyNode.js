@@ -23,6 +23,7 @@ const LINE_WIDTH = 1;// STROKE
 const SHOW_GRADIENT_LINE = false;
 
 class AxonBodyNode extends Node {
+
   /**
    * Constructor for the AxonBodyNode
    * @param {NeuronModel} axonMembraneModel

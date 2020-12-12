@@ -34,6 +34,7 @@ const N4_WHEN_FULLY_OPEN = 0.35;
 const MAX_STAGGER_DELAY = NeuronConstants.MIN_ACTION_POTENTIAL_CLOCK_DT * 10; // In seconds of sim time.
 
 class PotassiumGatedChannel extends GatedChannel {
+
   /**
    * @param {NeuronModel} modelContainingParticles
    * @param {ModifiedHodgkinHuxleyModel} hodgkinHuxleyModel
@@ -46,7 +47,6 @@ class PotassiumGatedChannel extends GatedChannel {
     this.channelColor = NeuronConstants.POTASSIUM_COLOR.colorUtilsDarker( 0.2 );
     this.reset();
   }
-
 
   // @public
   stepInTime( dt ) {

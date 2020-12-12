@@ -40,6 +40,7 @@ function calculateInterpolatedPoint( proportion, points, outputPoint ) {
 }
 
 class TravelingActionPotential {
+
   /**
    * @param {AxonMembrane} axonMembrane
    */
@@ -79,7 +80,6 @@ class TravelingActionPotential {
     // create the initial shape
     this.updateShapeDescription(); // Also create an initialize Shape
   }
-
 
   /**
    * Step this model component forward by the specified time.  This will update the shape such that it will appear to

@@ -11,6 +11,7 @@ import neuron from '../../neuron.js';
 import Mode from './Mode.js';
 
 class Live extends Mode {
+
   /**
    * @param {RecordAndPlaybackModel} recordAndPlaybackModel
    */
@@ -18,7 +19,6 @@ class Live extends Mode {
     super();
     this.recordAndPlaybackModel = recordAndPlaybackModel;
   }
-
 
   // @public, @override
   step( simulationTimeChange ) {

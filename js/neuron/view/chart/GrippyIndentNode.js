@@ -18,6 +18,7 @@ import neuron from '../../../neuron.js';
 const STROKE_LINE_WIDTH = 0.5;
 
 class GrippyIndentNode extends Node {
+
   /**
    * @param {number} diameter
    * @param {Color} baseColor

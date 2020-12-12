@@ -23,8 +23,7 @@ import DelayBuffer from './DelayBuffer.js';
 const INTERNAL_TIME_STEP = 0.005; // In milliseconds, not seconds.
 const MAX_DELAY = 0.001; // In seconds of simulation time.
 class ModifiedHodgkinHuxleyModel {
-  /**
-   */
+
   constructor() {
 
     this.perNaChannels = 100; // @private
@@ -60,7 +59,6 @@ class ModifiedHodgkinHuxleyModel {
 
     this.reset();// reset and initialize
   }
-
 
   // @public
   reset() {

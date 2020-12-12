@@ -88,8 +88,7 @@ const FOREGROUND_PARTICLE_DEFAULT_OPACITY = 0.25;
 const BACKGROUND_PARTICLE_DEFAULT_OPACITY = 0.10; // default alpha in Java was 0.05, which isn't visible in the canvas so slightly increasing to 0.10
 
 class NeuronModel extends RecordAndPlaybackModel {
-  /**
-   */
+
   constructor() {
     super();
 
@@ -124,7 +123,6 @@ class NeuronModel extends RecordAndPlaybackModel {
     this.sodiumExteriorConcentration = NOMINAL_SODIUM_EXTERIOR_CONCENTRATION;
     this.potassiumInteriorConcentration = NOMINAL_POTASSIUM_INTERIOR_CONCENTRATION;
     this.potassiumExteriorConcentration = NOMINAL_POTASSIUM_EXTERIOR_CONCENTRATION;
-
 
     // @public
     this.potentialChartVisibleProperty = new Property( DEFAULT_FOR_MEMBRANE_CHART_VISIBILITY ); // @public

@@ -11,6 +11,7 @@ import neuron from '../../neuron.js';
 import MembraneChannel from './MembraneChannel.js';
 
 class AbstractLeakChannel extends MembraneChannel {
+
   /**
    * @param {number} channelWidth
    * @param {number} channelHeight
@@ -20,7 +21,6 @@ class AbstractLeakChannel extends MembraneChannel {
     super( channelWidth, channelHeight, modelContainingParticles );
     this.reset();
   }
-
 
   // @public
   stepInTime( dt ) {

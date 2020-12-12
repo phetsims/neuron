@@ -34,6 +34,7 @@ function map() {
 }
 
 class NeuronModelState {
+
   /**
    * @param {NeuronModel} neuronModel
    */
@@ -64,7 +65,6 @@ class NeuronModelState {
       this.particlePlaybackMementos.push( transientParticle.getPlaybackMemento() );
     }
   }
-
 
   // @public
   getAxonMembraneState() {

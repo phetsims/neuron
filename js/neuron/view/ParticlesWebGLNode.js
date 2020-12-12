@@ -28,6 +28,7 @@ const OPACITY_VALUES_PER_VERTEX = 1; // a single value from 0 to 1
 const scratchFloatArray = new Float32Array( 9 );
 
 class ParticlesWebGLNode extends WebGLNode {
+
   /**
    * @param {NeuronModel} neuronModel
    * @param {ModelViewTransform2} modelViewTransform
@@ -119,7 +120,6 @@ class ParticlesWebGLNode extends WebGLNode {
     } );
   }
 
-
   /**
    * Check if the provided particle is in the current rendering bounds and, if so, create a particle data object and
    * add it to the list that will be converted into vertex data in a subsequent step.
@@ -185,6 +185,7 @@ class ParticlesWebGLNode extends WebGLNode {
 neuron.register( 'ParticlesWebGLNode', ParticlesWebGLNode );
 
 class ParticlesPainter {
+
   /**
    * Constructor for the object that will do the actual painting for this node.  This constructor, rather than an
    * instance, is passed to the parent WebGLNode type.

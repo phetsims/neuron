@@ -44,6 +44,7 @@ const UNSCALED_PLUS_SIGN_SHAPE = new Shape()
   .close();
 
 class ChargeSymbolNode extends Path {
+
   /**
    * @param {NeuronModel} axonModel - Model where the potential is obtained.
    * @param {number} maxWidth - Max width in screen coords, which also defines max height.

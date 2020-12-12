@@ -16,6 +16,7 @@ import TimedFadeAwayStrategy from './TimedFadeAwayStrategy.js';
 import WanderAwayThenFadeMotionStrategy from './WanderAwayThenFadeMotionStrategy.js';
 
 class TraverseChannelAndFadeMotionStrategy extends MotionStrategy {
+
   /**
    * @param {MembraneChannel} channel
    * @param {number} startingPositionX
@@ -41,7 +42,6 @@ class TraverseChannelAndFadeMotionStrategy extends MotionStrategy {
 
     this.setCourseForCurrentTraversalPoint( startingPositionX, startingPositionY );
   }
-
 
   // @public, @override
   move( movableModelElement, fadableModelElement, dt ) {

@@ -55,6 +55,7 @@ const MAX_INTER_CAPTURE_TIME = 0.00013; // In seconds of sim time.
 const MAX_STAGGER_DELAY = NeuronConstants.MIN_ACTION_POTENTIAL_CLOCK_DT * 5; // In seconds of sim time.
 
 class SodiumDualGatedChannel extends GatedChannel {
+
   /**
    * @param {NeuronModel} modelContainingParticles
    * @param {ModifiedHodgkinHuxleyModel} hodgkinHuxleyModel
@@ -70,7 +71,6 @@ class SodiumDualGatedChannel extends GatedChannel {
     this.reset();
     this.channelColor = NeuronConstants.SODIUM_COLOR.colorUtilsDarker( 0.2 );
   }
-
 
   // @public
   stepInTime( dt ) {

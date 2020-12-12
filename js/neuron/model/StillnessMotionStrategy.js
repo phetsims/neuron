@@ -10,10 +10,10 @@ import neuron from '../../neuron.js';
 import MotionStrategy from './MotionStrategy.js';
 
 class StillnessMotionStrategy extends MotionStrategy {
+
   constructor() {
     super();
   }
-
 
   // @public, @override
   move( movableModelElement, fadableModelElement, dt ) {

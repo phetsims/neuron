@@ -34,6 +34,7 @@ const NOMINAL_LEAK_LEVEL = 0.005;
 const PEAK_NEGATIVE_CURRENT = 3.44;
 
 class SodiumLeakageChannel extends AbstractLeakChannel {
+
   /**
    * @param {number} channelWidth
    * @param {NeuronModel} modelContainingParticles
@@ -59,7 +60,6 @@ class SodiumLeakageChannel extends AbstractLeakChannel {
     // capturing particles.
     this.restartCaptureCountdownTimer( false );
   }
-
 
   // @public, @override
   stepInTime( dt ) {

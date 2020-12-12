@@ -23,6 +23,7 @@ import ViewableParticle from './ViewableParticle.js';
 const DEFAULT_PARTICLE_RADIUS = 0.75;  // In nanometers.
 
 class Particle extends ViewableParticle {
+
   /**
    * Construct a particle.
    * @param {number} xPos - initial X position of this particle
@@ -51,7 +52,6 @@ class Particle extends ViewableParticle {
     // @public - strategy for fading in and out
     this.fadeStrategy = NullFadeStrategy.getInstance();
   }
-
 
   // @public
   stepInTime( dt ) {

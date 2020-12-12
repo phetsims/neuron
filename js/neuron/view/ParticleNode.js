@@ -18,6 +18,7 @@ import ParticleType from '../model/ParticleType.js';
 const PARTICLE_EDGE_STROKE = 1;
 
 class ParticleNode extends Node {
+
   /**
    * @param {ViewableParticle} particle
    * @param {ModelViewTransform2D} modelViewTransform

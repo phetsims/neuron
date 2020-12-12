@@ -10,8 +10,8 @@
 import neuron from '../../neuron.js';
 
 class FadeStrategy {
-  constructor() {}
 
+  constructor() {}
 
   /**
    * Fade the associated model element according to the specified amount of time and the nature of the strategy.

@@ -47,7 +47,6 @@ class PieSliceShapedCaptureZone extends CaptureZone {
     this.updateShape();
   }
 
-
   // @public, @override
   getShape() {
     return this.zoneShape;

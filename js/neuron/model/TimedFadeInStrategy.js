@@ -12,6 +12,7 @@ import FadeStrategy from './FadeStrategy.js';
 import NullFadeStrategy from './NullFadeStrategy.js';
 
 class TimedFadeInStrategy extends FadeStrategy {
+
   /**
    * Constructor that assumes full fade in.
    *
@@ -23,7 +24,6 @@ class TimedFadeInStrategy extends FadeStrategy {
     this.fadeCountdownTimer = fadeTime; // @private
     this.opacityTarget = 1; // @private
   }
-
 
   // @public, @override
   updateOpacity( fadableModelElement, dt ) {

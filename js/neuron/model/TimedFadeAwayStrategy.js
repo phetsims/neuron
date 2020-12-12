@@ -13,6 +13,7 @@ import neuron from '../../neuron.js';
 import FadeStrategy from './FadeStrategy.js';
 
 class TimedFadeAwayStrategy extends FadeStrategy {
+
   /**
    * @param {number} fadeTime - time, in seconds of sim time, for this to fade away
    */
@@ -21,7 +22,6 @@ class TimedFadeAwayStrategy extends FadeStrategy {
     this.fadeTime = fadeTime; // @private
     this.fadeCountdownTimer = fadeTime;  // @private
   }
-
 
   // @public, @override
   updateOpacity( fadableModelElement, dt ) {

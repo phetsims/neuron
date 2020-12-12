@@ -10,6 +10,7 @@
 import neuron from '../../neuron.js';
 
 class DataPoint {
+
   /**
    * @param {number} time
    * @param {Object} state
@@ -18,7 +19,6 @@ class DataPoint {
     this.time = time; // @private
     this.state = state; // @private
   }
-
 
   // @public
   getTime() {

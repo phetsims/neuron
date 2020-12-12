@@ -15,6 +15,7 @@ import ChargeSymbolNode from './ChargeSymbolNode.js';
 const MAX_CHARGE_SYMBOL_SIZE = 10;
 
 class ChargeSymbolsLayerNode extends Node {
+
   /**
    * @param {NeuronModel} neuronModel
    * @param {ModelViewTransform2} mvt

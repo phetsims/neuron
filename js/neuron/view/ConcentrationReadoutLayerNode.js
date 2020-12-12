@@ -30,6 +30,7 @@ const READOUT_BOUNDS_DILATION = 2;
 const INVISIBLE_RECT_FILL = 'rgba( 0, 0, 0, 0 )';
 
 class ConcentrationReadoutLayerNode extends Node {
+
   /**
    * @param {NeuronModel} neuronModel
    * @param {Property.<number>} zoomProperty

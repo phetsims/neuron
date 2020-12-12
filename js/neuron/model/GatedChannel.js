@@ -10,6 +10,7 @@ import neuron from '../../neuron.js';
 import MembraneChannel from './MembraneChannel.js';
 
 class GatedChannel extends MembraneChannel {
+
   /**
    * @param {number} channelWidth
    * @param {number} channelHeight
@@ -19,7 +20,6 @@ class GatedChannel extends MembraneChannel {
     super( channelWidth, channelHeight, modelContainingParticles );
     this.setOpenness( 0 );  // Gated channels are assumed to be initially closed.
   }
-
 
   // @public
   reset() {

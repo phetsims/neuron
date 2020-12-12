@@ -19,6 +19,7 @@ import DelayElement from './DelayElement.js';
 const DIFFERENCE_RESOLUTION = 1E-15;
 
 class DelayBuffer {
+
   /**
    * @param {number} maxDelay // In seconds of simulation time.
    * @param {number} minTimeStep // sim the clock rate, often several orders of magnitude slower than real time.
@@ -42,7 +43,6 @@ class DelayBuffer {
     // Set the initial conditions.
     this.clear();
   }
-
 
   // @public
   addValue( value, deltaTime ) {

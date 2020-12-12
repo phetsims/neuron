@@ -10,10 +10,10 @@
 import neuron from '../../neuron.js';
 
 class CaptureZone {
-  /**
-   */
-  constructor() {}
 
+  constructor() {
+    // does nothing in abstract base class
+  }
 
   // @public
   isPointInZone( x, y ) {

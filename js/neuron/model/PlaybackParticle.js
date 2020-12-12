@@ -15,6 +15,7 @@ import PotassiumIon from './PotassiumIon.js';
 import ViewableParticle from './ViewableParticle.js';
 
 class PlaybackParticle extends ViewableParticle {
+
   /**
    * Construct a playback particle.
    * @param {Particle} particle - Real particle from which this playback particle should be constructed.
@@ -34,7 +35,6 @@ class PlaybackParticle extends ViewableParticle {
     this.radius = particle.getRadius();
     this.particleType = particle.getType();
   }
-
 
   /**
    * @public

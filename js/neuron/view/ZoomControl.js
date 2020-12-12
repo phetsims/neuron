@@ -18,6 +18,7 @@ import VSlider from '../../../../sun/js/VSlider.js';
 import neuron from '../../neuron.js';
 
 class ZoomControl extends VBox {
+
   /**
    * @param {Property.<number>} zoomProperty - property that indicates how far zoomed in the simulation is, between
    * @param {number} minZoom - the furthest out the sim can be zoomed (1)

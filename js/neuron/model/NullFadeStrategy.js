@@ -9,10 +9,10 @@ import neuron from '../../neuron.js';
 import FadeStrategy from './FadeStrategy.js';
 
 class NullFadeStrategy extends FadeStrategy {
+
   constructor() {
     super();
   }
-
 
   // @public, @override
   updateOpacity( fadableModelElement, dt ) {

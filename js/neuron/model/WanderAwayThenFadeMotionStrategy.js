@@ -25,6 +25,7 @@ const RAND = {
 };
 
 class WanderAwayThenFadeMotionStrategy extends MotionStrategy {
+
   /**
    * @param {Vector2} awayPoint - Point that should be moved away from.
    * @param {number} currentPositionX - Starting x position
@@ -49,7 +50,6 @@ class WanderAwayThenFadeMotionStrategy extends MotionStrategy {
     // Set an initial velocity and direction.
     this.updateVelocity( currentPositionX, currentPositionY );
   }
-
 
   // @public, @override
   move( movableModelElement, fadableModelElement, dt ) {

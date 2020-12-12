@@ -73,6 +73,7 @@ function updateEdgeShapes( context, thisNode, transformedChannelPosition, transf
 }
 
 class MembraneChannelGateCanvasNode extends CanvasNode {
+
   /**
    * @param {NeuronModel} neuronModel
    * @param {ModelViewTransform2} modelViewTransform
@@ -153,7 +154,6 @@ class MembraneChannelGateCanvasNode extends CanvasNode {
 
     this.invalidatePaint();
   }
-
 
   /**
    * Paint the canvas with all of the membrane channels

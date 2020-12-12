@@ -19,6 +19,7 @@ const MIN_TIME_TO_NEXT_JUMP = 0.0009;  // In seconds of sim time, not wall time.
 const MAX_TIME_TO_NEXT_JUMP = 0.0015;  // In seconds of sim time, not wall time.
 
 class SlowBrownianMotionStrategy extends MotionStrategy {
+
   /**
    * @param {number} initialPositionX
    * @param {number} initialPositionY
@@ -30,7 +31,6 @@ class SlowBrownianMotionStrategy extends MotionStrategy {
     // In seconds of sim time.
     this.timeUntilNextJump = this.generateNewJumpTime();
   }
-
 
   // @public, @override
   move( movableModelElement, fadableModelElement, dt ) {

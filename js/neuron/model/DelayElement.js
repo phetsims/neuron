@@ -10,6 +10,7 @@
 import neuron from '../../neuron.js';
 
 class DelayElement {
+
   /**
    * @param {number} value
    * @param {number} deltaTime
@@ -20,7 +21,6 @@ class DelayElement {
     this.value = value;
     this.deltaTime = deltaTime;
   }
-
 
   // @public
   setValueAndTime( value, deltaTime ) {

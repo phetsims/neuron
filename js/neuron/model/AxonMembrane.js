@@ -22,8 +22,7 @@ const BODY_LENGTH = NeuronConstants.DEFAULT_DIAMETER * 1.5;
 const BODY_TILT_ANGLE = Math.PI / 4;
 
 class AxonMembrane {
-  /**
-   */
+
   constructor() {
 
     // @public - events emitted by instances of this type
@@ -130,7 +129,6 @@ class AxonMembrane {
     this.abbc = new Vector2( 0, 0 );
     this.bbcd = new Vector2( 0, 0 );
   }
-
 
   /**
    * Step this model element forward in time by the specified delta.

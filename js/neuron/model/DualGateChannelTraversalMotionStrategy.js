@@ -24,6 +24,7 @@ import WanderAwayThenFadeMotionStrategy from './WanderAwayThenFadeMotionStrategy
 const INACTIVATION_BOUNCE_THRESHOLD = 0.5;
 
 class DualGateChannelTraversalMotionStrategy extends MotionStrategy {
+
   /**
    * @param {MembraneChannel} channel
    * @param {number} startingPositionX
@@ -44,7 +45,6 @@ class DualGateChannelTraversalMotionStrategy extends MotionStrategy {
     this.bouncing = false; // @private
     this.setCourseForCurrentTraversalPoint( startingPositionX, startingPositionY );
   }
-
 
   // @public, @override
   move( movableModelElement, fadableModelElement, dt ) {

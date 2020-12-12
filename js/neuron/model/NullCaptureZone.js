@@ -13,12 +13,10 @@ import neuron from '../../neuron.js';
 import CaptureZone from './CaptureZone.js';
 
 class NullCaptureZone extends CaptureZone {
-  /**
-   */
+
   constructor() {
     super( {} );
   }
-
 
   // @public
   getShape() {

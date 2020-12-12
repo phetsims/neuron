@@ -11,6 +11,7 @@ import platform from '../../../../phet-core/js/platform.js';
 import neuron from '../../neuron.js';
 
 class NeuronProfiler {
+
   /**
    * @param {Sim} sim - reference to the simulation being profiled
    * @param {number} setting - profiling to be done, values are:
@@ -83,7 +84,6 @@ class NeuronProfiler {
       }
     } );
   }
-
 
   /**
    * Initiate the collection of data for the specified duration.  Once the specified time has passed, the results

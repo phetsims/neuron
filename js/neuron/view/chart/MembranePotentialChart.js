@@ -51,6 +51,7 @@ const MIN_DISTANCE_SQUARED_BETWEEN_POINTS = 0.01;
 const UPDATE_PERIOD = NeuronConstants.DEFAULT_ACTION_POTENTIAL_CLOCK_DT; // in seconds of sim time (not wall time)
 
 class MembranePotentialChart extends Node {
+
   /**
    * @param {Dimension2} chartDimension
    * @param {NeuronClockModelAdapter} neuronClockModelAdapter
@@ -240,7 +241,6 @@ class MembranePotentialChart extends Node {
       this.visible = chartVisible;
     } );
   }
-
 
   /**
    * Add a data point to the graph.
