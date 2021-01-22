@@ -8,6 +8,7 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
+import dotRandom from '../../../../dot/js/dotRandom.js';
 import Color from '../../../../scenery/js/util/Color.js';
 import neuron from '../../neuron.js';
 import NeuronConstants from '../common/NeuronConstants.js';
@@ -87,7 +88,7 @@ class PotassiumLeakageChannel extends AbstractLeakChannel {
     // the cell. However, the IPHY people requested that there should occasionally be some leakage in the other
     // direction for greater realism, hence the random choice below.
     let direction = MembraneCrossingDirection.IN_TO_OUT;
-    if ( phet.joist.random.nextDouble() < 0.2 ) {
+    if ( dotRandom.nextDouble() < 0.2 ) {
       direction = MembraneCrossingDirection.OUT_TO_IN;
     }
     return direction;

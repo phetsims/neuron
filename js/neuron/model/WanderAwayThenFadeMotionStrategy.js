@@ -7,6 +7,7 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
+import dotRandom from '../../../../dot/js/dotRandom.js';
 import neuron from '../../neuron.js';
 import NeuronConstants from '../common/NeuronConstants.js';
 import MotionStrategy from './MotionStrategy.js';
@@ -21,7 +22,7 @@ const MIN_VELOCITY = 1000;  // In nanometers per second of sim time.
 const MAX_VELOCITY = 5000; // In nanometers per second of sim time.
 
 const RAND = {
-  nextInt: bounds => Math.floor( phet.joist.random.nextDouble() * bounds )
+  nextInt: bounds => Math.floor( dotRandom.nextDouble() * bounds )
 };
 
 class WanderAwayThenFadeMotionStrategy extends MotionStrategy {
@@ -84,8 +85,8 @@ class WanderAwayThenFadeMotionStrategy extends MotionStrategy {
   updateVelocity( currentPositionX, currentPositionY ) {
     // Create a velocity vector that causes this to move away from the "away point".
     const awayAngle = Math.atan2( currentPositionY - this.awayPoint.y,
-      currentPositionX - this.awayPoint.x ) + ( phet.joist.random.nextDouble() - 0.5 ) * Math.PI;
-    const newScalerVelocity = MIN_VELOCITY + phet.joist.random.nextDouble() * ( MAX_VELOCITY - MIN_VELOCITY );
+      currentPositionX - this.awayPoint.x ) + ( dotRandom.nextDouble() - 0.5 ) * Math.PI;
+    const newScalerVelocity = MIN_VELOCITY + dotRandom.nextDouble() * ( MAX_VELOCITY - MIN_VELOCITY );
     this.velocityX = newScalerVelocity * Math.cos( awayAngle );
     this.velocityY = newScalerVelocity * Math.sin( awayAngle );
   }

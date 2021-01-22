@@ -9,6 +9,7 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
+import dotRandom from '../../../../dot/js/dotRandom.js';
 import neuron from '../../neuron.js';
 import MotionStrategy from './MotionStrategy.js';
 
@@ -57,17 +58,17 @@ class SlowBrownianMotionStrategy extends MotionStrategy {
 
   // @private
   generateNewJumpTime() {
-    return MIN_TIME_TO_NEXT_JUMP + phet.joist.random.nextDouble() * ( MAX_TIME_TO_NEXT_JUMP - MIN_TIME_TO_NEXT_JUMP );
+    return MIN_TIME_TO_NEXT_JUMP + dotRandom.nextDouble() * ( MAX_TIME_TO_NEXT_JUMP - MIN_TIME_TO_NEXT_JUMP );
   }
 
   // @private
   generateNewJumpDistance() {
-    return MIN_JUMP_DISTANCE + phet.joist.random.nextDouble() * ( MAX_JUMP_DISTANCE - MIN_JUMP_DISTANCE );
+    return MIN_JUMP_DISTANCE + dotRandom.nextDouble() * ( MAX_JUMP_DISTANCE - MIN_JUMP_DISTANCE );
   }
 
   // @private
   generateNewJumpAngle() {
-    return phet.joist.random.nextDouble() * Math.PI * 2;
+    return dotRandom.nextDouble() * Math.PI * 2;
   }
 }
 

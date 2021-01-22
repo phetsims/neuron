@@ -9,6 +9,7 @@
 
 import Property from '../../../../axon/js/Property.js';
 import Dimension2 from '../../../../dot/js/Dimension2.js';
+import dotRandom from '../../../../dot/js/dotRandom.js';
 import Matrix3 from '../../../../dot/js/Matrix3.js';
 import Rectangle from '../../../../dot/js/Rectangle.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
@@ -188,7 +189,7 @@ class MembraneChannel {
   restartCaptureCountdownTimer( captureNow ) {
     if ( this.minInterCaptureTime !== Number.POSITIVE_INFINITY && this.maxInterCaptureTime !== Number.POSITIVE_INFINITY ) {
       assert && assert( this.maxInterCaptureTime >= this.minInterCaptureTime );
-      this.captureCountdownTimer = this.minInterCaptureTime + phet.joist.random.nextDouble() * ( this.maxInterCaptureTime - this.minInterCaptureTime );
+      this.captureCountdownTimer = this.minInterCaptureTime + dotRandom.nextDouble() * ( this.maxInterCaptureTime - this.minInterCaptureTime );
     }
     else {
       this.captureCountdownTimer = Number.POSITIVE_INFINITY;

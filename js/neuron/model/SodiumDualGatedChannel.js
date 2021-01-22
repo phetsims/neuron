@@ -7,6 +7,7 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
+import dotRandom from '../../../../dot/js/dotRandom.js';
 import neuron from '../../neuron.js';
 import MathUtils from '../common/MathUtils.js';
 import NeuronConstants from '../common/NeuronConstants.js';
@@ -228,7 +229,7 @@ class SodiumDualGatedChannel extends GatedChannel {
 
   // @private
   updateStaggerDelay() {
-    this.staggerDelay = phet.joist.random.nextDouble() * MAX_STAGGER_DELAY;
+    this.staggerDelay = dotRandom.nextDouble() * MAX_STAGGER_DELAY;
   }
 
   // @public, @override

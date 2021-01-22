@@ -11,6 +11,7 @@
 import createObservableArray from '../../../../axon/js/createObservableArray.js';
 import Emitter from '../../../../axon/js/Emitter.js';
 import Property from '../../../../axon/js/Property.js';
+import dotRandom from '../../../../dot/js/dotRandom.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import neuron from '../../neuron.js';
 import MathUtils from '../common/MathUtils.js';
@@ -599,7 +600,7 @@ class NeuronModel extends RecordAndPlaybackModel {
         const captureZone = membraneChannel.getExteriorCaptureZone();
         const numParticlesInZone = this.scanCaptureZoneForFreeParticles( captureZone, ParticleType.SODIUM_ION );
         if ( numParticlesInZone === 0 ) {
-          this.addBackgroundParticlesToZone( ParticleType.SODIUM_ION, captureZone, Math.floor( phet.joist.random.nextDouble() * 2 ) + 1 );
+          this.addBackgroundParticlesToZone( ParticleType.SODIUM_ION, captureZone, Math.floor( dotRandom.nextDouble() * 2 ) + 1 );
         }
       }
     } );
@@ -654,7 +655,7 @@ class NeuronModel extends RecordAndPlaybackModel {
         this.positionParticleOutsideMembrane( newParticle );
       }
       // Set the opacity.
-      if ( phet.joist.random.nextDouble() >= 0.5 ) { // replaced for nextBoolean
+      if ( dotRandom.nextDouble() >= 0.5 ) { // replaced for nextBoolean
         newParticle.setOpacity( FOREGROUND_PARTICLE_DEFAULT_OPACITY );
       }
       else {
@@ -708,11 +709,11 @@ class NeuronModel extends RecordAndPlaybackModel {
    */
   positionParticleInsideMembrane( particle ) {
     // Choose any angle.
-    const angle = phet.joist.random.nextDouble() * Math.PI * 2;
+    const angle = dotRandom.nextDouble() * Math.PI * 2;
 
     // Choose a distance from the cell center that is within the membrane. The multiplier value is created with the
     // intention of weighting the positions toward the outside in order to get an even distribution per unit area.
-    const multiplier = Math.max( phet.joist.random.nextDouble(), phet.joist.random.nextDouble() );
+    const multiplier = Math.max( dotRandom.nextDouble(), dotRandom.nextDouble() );
     const distance = ( this.crossSectionInnerRadius - particle.getRadius() * 2 ) * multiplier;
     particle.setPosition( distance * Math.cos( angle ), distance * Math.sin( angle ) );
   }
@@ -739,13 +740,13 @@ class NeuronModel extends RecordAndPlaybackModel {
   positionParticleOutsideMembrane( particle ) {
 
     // Choose any angle.
-    const angle = phet.joist.random.nextDouble() * Math.PI * 2;
+    const angle = dotRandom.nextDouble() * Math.PI * 2;
 
     // Choose a distance from the cell center that is outside of the
     // membrane. The multiplier value is created with the intention of
     // weighting the positions toward the outside in order to get an even
     // distribution per unit area.
-    const multiplier = phet.joist.random.nextDouble();
+    const multiplier = dotRandom.nextDouble();
     const distance = this.crossSectionOuterRadius + particle.getRadius() * 4 +
                      multiplier * this.crossSectionOuterRadius * 2.2;
 

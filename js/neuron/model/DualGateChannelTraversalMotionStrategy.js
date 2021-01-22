@@ -10,6 +10,7 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
+import dotRandom from '../../../../dot/js/dotRandom.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import neuron from '../../neuron.js';
 import MathUtils from '../common/MathUtils.js';
@@ -126,8 +127,8 @@ class DualGateChannelTraversalMotionStrategy extends MotionStrategy {
           // This particle should be back where it entered the
           // channel, and can head off in any direction except
           // back toward the membrane.
-          newVelocityVector.rotate( ( phet.joist.random.nextDouble() - 0.5 ) * Math.PI );
-          newVelocityVector.multiplyScalar( 0.3 + ( phet.joist.random.nextDouble() * 0.2 ) );
+          newVelocityVector.rotate( ( dotRandom.nextDouble() - 0.5 ) * Math.PI );
+          newVelocityVector.multiplyScalar( 0.3 + ( dotRandom.nextDouble() * 0.2 ) );
           movableModelElement.setMotionStrategy( new LinearMotionStrategy( newVelocityVector ) );
         }
         else {
@@ -137,10 +138,10 @@ class DualGateChannelTraversalMotionStrategy extends MotionStrategy {
           // up to work with a specific representation of the
           // inactivation gate, and will need to be changed if the
           // representation of the gate is changed.
-          newVelocityVector.multiplyScalar( 0.5 + ( phet.joist.random.nextDouble() * 0.3 ) );
+          newVelocityVector.multiplyScalar( 0.5 + ( dotRandom.nextDouble() * 0.3 ) );
           let maxRotation;
           let minRotation;
-          if ( phet.joist.random.nextDouble() > 0.3 ) {
+          if ( dotRandom.nextDouble() > 0.3 ) {
             // Move out to the right (assuming channel is vertical).
             // The angle at which we can move gets more restricted
             // as the inactivation gate closes.
@@ -156,7 +157,7 @@ class DualGateChannelTraversalMotionStrategy extends MotionStrategy {
             angularRange = ( 1 - this.channel.getInactivationAmount() ) * -Math.PI * 0.1;
             minRotation = maxRotation - angularRange;
           }
-          newVelocityVector.rotate( minRotation + phet.joist.random.nextDouble() * ( maxRotation - minRotation ) );
+          newVelocityVector.rotate( minRotation + dotRandom.nextDouble() * ( maxRotation - minRotation ) );
           movableModelElement.setMotionStrategy( new SpeedChangeLinearMotionStrategy( newVelocityVector, 0.2, 0.0002 ) );
         }
         fadableModelElement.setFadeStrategy( new TimedFadeAwayStrategy( 0.003 ) );
@@ -265,7 +266,7 @@ class DualGateChannelTraversalMotionStrategy extends MotionStrategy {
         let velocityRotationAngle = 0;
         let minRotation = 0;
         let maxRotation = 0;
-        if ( phet.joist.random.nextDouble() > 0.3 ) {
+        if ( dotRandom.nextDouble() > 0.3 ) {
           // Move out to the right (assuming channel is vertical). The angle at which we can move gets more restricted
           // as the inactivation gate closes.
           maxRotation = Math.PI * 0.4;
@@ -279,11 +280,11 @@ class DualGateChannelTraversalMotionStrategy extends MotionStrategy {
           angularRange = ( 1 - this.channel.getInactivationAmount() ) * -Math.PI * 0.1;
           minRotation = maxRotation - angularRange;
         }
-        velocityRotationAngle = minRotation + phet.joist.random.nextDouble() * ( maxRotation - minRotation );
+        velocityRotationAngle = minRotation + dotRandom.nextDouble() * ( maxRotation - minRotation );
         this.velocityVector.rotate( velocityRotationAngle );
       }
       else {
-        this.velocityVector.rotate( ( phet.joist.random.nextDouble() - 0.5 ) * ( Math.PI * 0.9 ) * this.maxVelocity / NeuronConstants.DEFAULT_MAX_VELOCITY );
+        this.velocityVector.rotate( ( dotRandom.nextDouble() - 0.5 ) * ( Math.PI * 0.9 ) * this.maxVelocity / NeuronConstants.DEFAULT_MAX_VELOCITY );
       }
     }
 

@@ -8,6 +8,7 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
+import dotRandom from '../../../../dot/js/dotRandom.js';
 import Color from '../../../../scenery/js/util/Color.js';
 import neuron from '../../neuron.js';
 import MathUtils from '../common/MathUtils.js';
@@ -110,7 +111,7 @@ class SodiumLeakageChannel extends AbstractLeakChannel {
       // everyone once in a while a sodium atom should leak the opposite
       // direction.  This was requested by the IPHY people in the review
       // held mid-April 2010.
-      if ( phet.joist.random.nextDouble() < 0.2 ) {
+      if ( dotRandom.nextDouble() < 0.2 ) {
         result = MembraneCrossingDirection.IN_TO_OUT;
       }
     }

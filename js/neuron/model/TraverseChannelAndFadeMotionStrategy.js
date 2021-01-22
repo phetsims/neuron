@@ -7,6 +7,7 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
+import dotRandom from '../../../../dot/js/dotRandom.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import neuron from '../../neuron.js';
 import MathUtils from '../common/MathUtils.js';
@@ -198,7 +199,7 @@ class TraverseChannelAndFadeMotionStrategy extends MotionStrategy {
     else {
       // All points have been traversed.  Change the direction a bit in
       // order to make things look a little more "Brownian".
-      this.velocityVector.rotate( ( phet.joist.random.nextDouble() - 0.5 ) * Math.PI * 0.9 );
+      this.velocityVector.rotate( ( dotRandom.nextDouble() - 0.5 ) * Math.PI * 0.9 );
     }
   }
 

@@ -8,6 +8,7 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
+import dotRandom from '../../../../dot/js/dotRandom.js';
 import DotUtils from '../../../../dot/js/Utils.js'; // eslint-disable-line require-statement-match
 import Vector2 from '../../../../dot/js/Vector2.js';
 import Shape from '../../../../kite/js/Shape.js';
@@ -78,7 +79,7 @@ class PieSliceShapedCaptureZone extends CaptureZone {
 
   // @public, assign a random point that is somewhere within the shape.
   assignNewParticlePosition( particle ) {
-    const placementAngle = this.rotationAngle + this.fixedRotationalOffset + ( phet.joist.random.nextDouble() - 0.5 ) * this.angleOfExtent;
+    const placementAngle = this.rotationAngle + this.fixedRotationalOffset + ( dotRandom.nextDouble() - 0.5 ) * this.angleOfExtent;
     const distanceFromOrigin = this.radius * 0.9;
     const xPos = this.originPoint.x + distanceFromOrigin * Math.cos( placementAngle );
     const yPos = this.originPoint.y + distanceFromOrigin * Math.sin( placementAngle );
