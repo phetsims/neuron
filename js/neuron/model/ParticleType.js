@@ -9,8 +9,8 @@
 import neuron from '../../neuron.js';
 
 const ParticleType = {
-  'SODIUM_ION': 'SODIUM_ION',
-  'POTASSIUM_ION': 'POTASSIUM_ION'
+  SODIUM_ION: 'SODIUM_ION',
+  POTASSIUM_ION: 'POTASSIUM_ION'
 };
 
 // verify that enum is immutable, without the runtime penalty in production code

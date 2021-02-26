@@ -4,8 +4,8 @@
 import neuron from '../../neuron.js';
 
 const ParticlePosition = {
-  'INSIDE_MEMBRANE': 'INSIDE_MEMBRANE',
-  'OUTSIDE_MEMBRANE': 'OUTSIDE_MEMBRANE'
+  INSIDE_MEMBRANE: 'INSIDE_MEMBRANE',
+  OUTSIDE_MEMBRANE: 'OUTSIDE_MEMBRANE'
 };
 
 // verify that enum is immutable, without the runtime penalty in production code
