@@ -116,7 +116,7 @@ class AxonMembrane {
     );
     this.axonBodyShape.close();
 
-    // @public - shape of the cross section of the membrane.	For now, and unless there is some reason to do otherwise,
+    // @public - shape of the cross section of the membrane. For now, and unless there is some reason to do otherwise,
     // the center of the cross section is positioned at the origin.
     this.crossSectionCircleCenter = Vector2.ZERO;
     this.crossSectionCircleRadius = NeuronConstants.DEFAULT_DIAMETER / 2;
