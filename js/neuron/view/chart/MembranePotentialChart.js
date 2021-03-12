@@ -92,7 +92,7 @@ class MembranePotentialChart extends Node {
     const gridShape = new Shape();
 
     // vertical grid lines
-    for ( var i = 0; i < numVerticalGridLines + 1; i++ ) {
+    for ( let i = 0; i < numVerticalGridLines + 1; i++ ) {
       gridShape.moveTo( i * chartDimension.width / numVerticalGridLines, 0 );
       gridShape.lineTo( i * chartDimension.width / numVerticalGridLines, chartDimension.height );
       plotNode.addChild( new Text( domainMap( i ), {
@@ -104,7 +104,7 @@ class MembranePotentialChart extends Node {
     }
 
     // horizontal grid lines
-    for ( i = 0; i < numHorizontalGridLines + 1; i++ ) {
+    for ( let i = 0; i < numHorizontalGridLines + 1; i++ ) {
       gridShape.moveTo( 0, i * chartDimension.height / numHorizontalGridLines );
       gridShape.lineTo( chartDimension.width, i * chartDimension.height / numHorizontalGridLines );
       plotNode.addChild( new Text( rangeMap( i ), {

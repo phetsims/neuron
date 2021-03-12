@@ -45,19 +45,19 @@ class ParticleNode extends Node {
 
       switch( particle.getType() ) {
         case ParticleType.SODIUM_ION:
-          var transformedRadius = modelViewTransform.modelToViewDeltaX( particle.getRadius() );
+          var transformedRadius = modelViewTransform.modelToViewDeltaX( particle.getRadius() ); // eslint-disable-line no-var
           representationShape = new Shape().ellipse( 0, 0, transformedRadius, transformedRadius );
           break;
 
         case ParticleType.POTASSIUM_ION:
           size = modelViewTransform.modelToViewDeltaX( particle.getRadius() * 2 ) * 0.85;
           representationShape = new Shape().rect( -size / 2, -size / 2, size, size );
-          var rotationTransform = Matrix3.rotationAround( Math.PI / 4, 0, 0 );
+          var rotationTransform = Matrix3.rotationAround( Math.PI / 4, 0, 0 ); // eslint-disable-line no-var
           representationShape = representationShape.transformed( rotationTransform );
           break;
 
         default:
-          var defaultSphereRadius = modelViewTransform.modelToViewDeltaX( particle.getRadius() );
+          var defaultSphereRadius = modelViewTransform.modelToViewDeltaX( particle.getRadius() ); // eslint-disable-line no-var
           representationShape = new Shape().ellipse( 0, 0, defaultSphereRadius, defaultSphereRadius );
           break;
       }

@@ -280,8 +280,8 @@ class ParticlesPainter {
       const particleDatum = this.node.particleData[ i ];
 
       // Tweak Alert!  The radii of the particles are adjusted here in order to look correct.
-      var adjustedParticleRadius;
-      var textureCoordinates;
+      let adjustedParticleRadius;
+      let textureCoordinates;
       if ( particleDatum.type === ParticleType.SODIUM_ION ) {
         adjustedParticleRadius = particleDatum.radius * 1.9;
         textureCoordinates = this.node.sodiumTextureCoords;
