@@ -88,7 +88,7 @@ class SodiumDualGatedChannel extends GatedChannel {
     let normalizedConductance = this.calculateNormalizedConductance();
 
     assert && assert( normalizedConductance >= 0 && normalizedConductance <= 1,
-      'SodiumDualGatedChannel normalized conductance out of range, = ' + normalizedConductance );
+      `SodiumDualGatedChannel normalized conductance out of range, = ${normalizedConductance}` );
 
     // Trim off some digits to limit very small changes.
     normalizedConductance = MathUtils.round( normalizedConductance, 4 );
@@ -166,7 +166,7 @@ class SodiumDualGatedChannel extends GatedChannel {
         break;
 
       default:
-        throw new Error( 'invalid gateState: ' + this.gateState );
+        throw new Error( `invalid gateState: ${this.gateState}` );
     }
 
     // Save values for the next time through.

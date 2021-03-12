@@ -53,7 +53,7 @@ class NeuronClockModelAdapter {
                     timeSpeed === TimeSpeed.NORMAL ? 1 :
                     timeSpeed === TimeSpeed.SLOW ? 0.5 :
                     null;
-      assert && assert( speed !== null, 'no speed found for TimeSpeed ' + timeSpeed );
+      assert && assert( speed !== null, `no speed found for TimeSpeed ${timeSpeed}` );
       return speed;
     } );
 

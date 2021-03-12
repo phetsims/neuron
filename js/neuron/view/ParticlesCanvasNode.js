@@ -111,7 +111,7 @@ class ParticlesCanvasNode extends CanvasNode {
           this.renderPotassiumParticles( particlesOfSameType, context );
           break;
         default:
-          throw new Error( 'invalid particleType: ' + particleType );
+          throw new Error( `invalid particleType: ${particleType}` );
       }
     } );
   }

@@ -32,7 +32,7 @@ class DataPoint {
 
   // @public
   toString() {
-    return 'time = ' + this.time + ', state = ' + this.state;
+    return `time = ${this.time}, state = ${this.state}`;
   }
 }
 

@@ -22,7 +22,7 @@ class NeuronProfiler {
    */
   constructor( sim, setting ) {
 
-    assert && assert( setting >= 1 && setting <= 3, 'invalid profiler setting, value = ' + setting );
+    assert && assert( setting >= 1 && setting <= 3, `invalid profiler setting, value = ${setting}` );
 
     this.setting = setting; // @public, read only
 
@@ -66,10 +66,10 @@ class NeuronProfiler {
 
           // compose the message that will present the data
           const message =
-            'average FPS over previous ' + testDurationInSeconds + ' seconds = ' +
-            Utils.toFixed( this.frameCount / ( this.dataCollectionDuration / 1000 ), 2 ) + '\n' +
-            'average frame processing time = ' + Utils.toFixed( averageFrameProcessingTime, 2 ) + ' ms\n' +
-            'max frame processing time = ' + Utils.toFixed( maxFrameProcessingTime, 2 ) + ' ms\n';
+            `average FPS over previous ${testDurationInSeconds} seconds = ${
+            Utils.toFixed( this.frameCount / ( this.dataCollectionDuration / 1000 ), 2 )}\n` +
+            `average frame processing time = ${Utils.toFixed( averageFrameProcessingTime, 2 )} ms\n` +
+            `max frame processing time = ${Utils.toFixed( maxFrameProcessingTime, 2 )} ms\n`;
 
           // display the message
           if ( platform.mobileSafari ) {

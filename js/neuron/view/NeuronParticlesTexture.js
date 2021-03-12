@@ -39,7 +39,7 @@ class NeuronParticlesTexture {
 
     // for debugging
     if ( PRINT_DATA_URL_OF_SPRITE_SHEET ) {
-      console.log( 'this.canvas..toDataURL() = ' + this.canvas.toDataURL() );
+      console.log( `this.canvas..toDataURL() = ${this.canvas.toDataURL()}` );
     }
   }
 

@@ -247,7 +247,7 @@ class AxonMembrane {
    */
   evaluateCurve( curve, proportion ) {
     if ( proportion < 0 || proportion > 1 ) {
-      throw new Error( 'proportion is out of range: ' + proportion );
+      throw new Error( `proportion is out of range: ${proportion}` );
     }
     this.linearInterpolation( curve.start, curve.control1, proportion, this.ab );
     this.linearInterpolation( curve.control1, curve.control2, proportion, this.bc );
