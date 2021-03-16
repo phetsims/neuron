@@ -67,7 +67,7 @@ class NeuronProfiler {
           // compose the message that will present the data
           const message =
             `average FPS over previous ${testDurationInSeconds} seconds = ${
-            Utils.toFixed( this.frameCount / ( this.dataCollectionDuration / 1000 ), 2 )}\n` +
+              Utils.toFixed( this.frameCount / ( this.dataCollectionDuration / 1000 ), 2 )}\n` +
             `average frame processing time = ${Utils.toFixed( averageFrameProcessingTime, 2 )} ms\n` +
             `max frame processing time = ${Utils.toFixed( maxFrameProcessingTime, 2 )} ms\n`;
 
