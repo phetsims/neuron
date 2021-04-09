@@ -43,23 +43,22 @@ class ParticleNode extends Node {
 
       assert && assert( particle.getType() === ParticleType.SODIUM_ION || particle.getType() === ParticleType.POTASSIUM_ION );
 
-      switch( particle.getType() ) {
-        case ParticleType.SODIUM_ION:
-          var transformedRadius = modelViewTransform.modelToViewDeltaX( particle.getRadius() ); // eslint-disable-line no-var
-          representationShape = new Shape().ellipse( 0, 0, transformedRadius, transformedRadius );
-          break;
+      const particleType = particle.getType();
+      if ( particleType === ParticleType.SODIUM_ION ) {
+        const transformedRadius = modelViewTransform.modelToViewDeltaX( particle.getRadius() );
+        representationShape = new Shape().ellipse( 0, 0, transformedRadius, transformedRadius );
+      }
+      else if ( particleType === ParticleType.POTASSIUM_ION ) {
+        size = modelViewTransform.modelToViewDeltaX( particle.getRadius() * 2 ) * 0.85;
+        representationShape = new Shape().rect( -size / 2, -size / 2, size, size );
+        const rotationTransform = Matrix3.rotationAround( Math.PI / 4, 0, 0 );
+        representationShape = representationShape.transformed( rotationTransform );
+      }
+      else {
 
-        case ParticleType.POTASSIUM_ION:
-          size = modelViewTransform.modelToViewDeltaX( particle.getRadius() * 2 ) * 0.85;
-          representationShape = new Shape().rect( -size / 2, -size / 2, size, size );
-          var rotationTransform = Matrix3.rotationAround( Math.PI / 4, 0, 0 ); // eslint-disable-line no-var
-          representationShape = representationShape.transformed( rotationTransform );
-          break;
-
-        default:
-          var defaultSphereRadius = modelViewTransform.modelToViewDeltaX( particle.getRadius() ); // eslint-disable-line no-var
-          representationShape = new Shape().ellipse( 0, 0, defaultSphereRadius, defaultSphereRadius );
-          break;
+        // This should never happen, but if it does, use an arbitrary shape.
+        const defaultSphereRadius = modelViewTransform.modelToViewDeltaX( particle.getRadius() );
+        representationShape = new Shape().ellipse( 0, 0, defaultSphereRadius, defaultSphereRadius );
       }
 
       representation.setShape( representationShape );
