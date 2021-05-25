@@ -1,4 +1,4 @@
-// Copyright 2014-2020, University of Colorado Boulder
+// Copyright 2014-2021, University of Colorado Boulder
 
 /**
  * A motion strategy for showing some slow Brownian motion, which is basically just an occasional small jump from its

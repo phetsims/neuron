@@ -1,4 +1,4 @@
-// Copyright 2014-2020, University of Colorado Boulder
+// Copyright 2014-2021, University of Colorado Boulder
 /**
  * Enum that defines the direction for something that is crossing a cell membrane.
  *
