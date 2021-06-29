@@ -51,7 +51,8 @@ class TraverseChannelAndFadeMotionStrategy extends MotionStrategy {
     const currentPositionRefY = movableModelElement.getPositionY();
 
     if ( dt < 0 ) {
-      return this.moveBack( movableModelElement, fadableModelElement, dt );
+      this.moveBack( movableModelElement, fadableModelElement, dt );
+      return;
     }
 
     if ( !this.channelHasBeenEntered ) {
