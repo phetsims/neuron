@@ -828,12 +828,14 @@ class NeuronModel extends RecordAndPlaybackModel {
       }
     }
     else if ( this.isPlayback() ) {
+
       // The playback particles should be showing and the simulation particles should be hidden.  Make sure that this
       // is the case.
       if ( !this.playbackParticlesVisibleProperty.get() ) {
+
         // Hide the simulation particles.  This is done by making a backup copy of them (so that they can be added
         // back later) and then removing them from the model.
-        this.transientParticlesBackup.addAll( this.transientParticles.slice() ); // TODO: https://github.com/phetsims/neuron/issues/147 is slice necessary here?
+        this.transientParticlesBackup.addAll( this.transientParticles );
         this.transientParticles.clear();
 
         // Note that we don't explicitly add the playback particles
