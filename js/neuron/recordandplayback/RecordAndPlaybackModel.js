@@ -9,7 +9,7 @@
  * though it can create additional complexity during playback.
  *
  * @author Sharfudeen Ashraf
- * @author Sam Reid
+ * @author Sam Reid (PhET Interactive Simulations)
  */
 
 import createObservableArray from '../../../../axon/js/createObservableArray.js';

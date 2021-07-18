@@ -3,7 +3,7 @@
 /**
  * Type representing the 'live' mode within the RecordAndPlaybackModel.
  *
- * @author Sam Reid
+ * @author Sam Reid (PhET Interactive Simulations)
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 

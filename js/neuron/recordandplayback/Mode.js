@@ -3,7 +3,7 @@
 /**
  * Base type representing a Mode in Record and PlayBack Model. The mode can be either playback, record or live.
  *
- * @author Sam Reid
+ * @author Sam Reid (PhET Interactive Simulations)
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 

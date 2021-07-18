@@ -3,7 +3,7 @@
  * The DataPoint is the basic data structure in recording, it keeps track of a state (which should be immutable)
  * and pairs it with a time at which the state occurred.
  *
- * @author Sam Reid
+ * @author Sam Reid (PhET Interactive Simulations)
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
