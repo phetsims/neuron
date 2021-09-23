@@ -214,11 +214,11 @@ class NeuronScreenView extends ScreenView {
     // is passed in as an isPlayingProperty because isPlayingProperty is used by StepButtons to figure out whether
     //  they should be enabled or not
     // the StepBackwardButton doesn't use the normal playingProperty for reasons stated below
-    const stepBackDisabledProperty = new DerivedProperty( [
+    const stepBackEnabledProperty = new DerivedProperty( [
         playingProperty,
         this.neuronModel.timeProperty
       ],
-      ( playing, time ) => playing || time <= this.neuronModel.getMinRecordedTime() || this.neuronModel.getRecordedTimeRange() <= 0
+      ( playing, time ) => !playing && time > this.neuronModel.getMinRecordedTime() && this.neuronModel.getRecordedTimeRange() > 0
     );
 
     // space between layout edge and controls like reset, zoom control, legend, speed panel, etc.
@@ -235,7 +235,7 @@ class NeuronScreenView extends ScreenView {
         },
         stepBackwardButtonOptions: {
           listener: () => { neuronClockModelAdapter.stepClockBackWhilePaused(); },
-          isPlayingProperty: stepBackDisabledProperty
+          enabledProperty: stepBackEnabledProperty
         },
         playPauseStepXSpacing: 5
       },
