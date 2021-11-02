@@ -81,7 +81,7 @@ class MembranePotentialChart extends Node {
     const numVerticalGridLines = 25;
     const numHorizontalGridLines = 8;
 
-    // create a function to generate horizontal labels (The dot.LinearFunction returns a map function which can be used
+    // create a function to generate horizontal labels (The LinearFunction returns a map function which can be used
     // to get the appropriate label value based on the index of each vertical line).
     const domainMap = new LinearFunction( 0, numVerticalGridLines, this.domain[ 0 ], this.domain[ 1 ] );
 
