@@ -16,7 +16,7 @@
  */
 
 import Bounds2 from '../../../../../dot/js/Bounds2.js';
-import dot from '../../../../../dot/js/dot.js';
+import LinearFunction from '../../../../../dot/js/LinearFunction.js';
 import Utils from '../../../../../dot/js/Utils.js';
 import DynamicSeries from '../../../../../griddle/js/DynamicSeries.js';
 import Shape from '../../../../../kite/js/Shape.js';
@@ -83,11 +83,11 @@ class MembranePotentialChart extends Node {
 
     // create a function to generate horizontal labels (The dot.LinearFunction returns a map function which can be used
     // to get the appropriate label value based on the index of each vertical line).
-    const domainMap = new dot.LinearFunction( 0, numVerticalGridLines, this.domain[ 0 ], this.domain[ 1 ] );
+    const domainMap = new LinearFunction( 0, numVerticalGridLines, this.domain[ 0 ], this.domain[ 1 ] );
 
     // To create Vertical Labels
     // Example:- for the value of 3 it returns a value of -50 and for 5 it returns 0 (because range is -100 to 100)
-    const rangeMap = new dot.LinearFunction( 0, numHorizontalGridLines, this.range[ 1 ], this.range[ 0 ] );
+    const rangeMap = new LinearFunction( 0, numHorizontalGridLines, this.range[ 1 ], this.range[ 0 ] );
 
     const gridShape = new Shape();
 
@@ -95,7 +95,7 @@ class MembranePotentialChart extends Node {
     for ( let i = 0; i < numVerticalGridLines + 1; i++ ) {
       gridShape.moveTo( i * chartDimension.width / numVerticalGridLines, 0 );
       gridShape.lineTo( i * chartDimension.width / numVerticalGridLines, chartDimension.height );
-      plotNode.addChild( new Text( domainMap( i ), {
+      plotNode.addChild( new Text( domainMap.evaluate( i ), {
         font: GRID_TICK_TEXT_FONT,
         //Text controls need to aligned to each grid line based on the line's orientation.
         centerX: i * chartDimension.width / numVerticalGridLines,
@@ -107,7 +107,7 @@ class MembranePotentialChart extends Node {
     for ( let i = 0; i < numHorizontalGridLines + 1; i++ ) {
       gridShape.moveTo( 0, i * chartDimension.height / numHorizontalGridLines );
       gridShape.lineTo( chartDimension.width, i * chartDimension.height / numHorizontalGridLines );
-      plotNode.addChild( new Text( rangeMap( i ), {
+      plotNode.addChild( new Text( rangeMap.evaluate( i ), {
         font: GRID_TICK_TEXT_FONT,
         centerY: i * chartDimension.height / numHorizontalGridLines,
         right: -6
