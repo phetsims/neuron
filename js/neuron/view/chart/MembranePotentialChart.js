@@ -24,10 +24,10 @@ import ModelViewTransform2 from '../../../../../phetcommon/js/view/ModelViewTran
 import CloseButton from '../../../../../scenery-phet/js/buttons/CloseButton.js';
 import PhetColorScheme from '../../../../../scenery-phet/js/PhetColorScheme.js';
 import PhetFont from '../../../../../scenery-phet/js/PhetFont.js';
-import HBox from '../../../../../scenery/js/nodes/HBox.js';
-import Node from '../../../../../scenery/js/nodes/Node.js';
-import Path from '../../../../../scenery/js/nodes/Path.js';
-import Text from '../../../../../scenery/js/nodes/Text.js';
+import { HBox } from '../../../../../scenery/js/imports.js';
+import { Node } from '../../../../../scenery/js/imports.js';
+import { Path } from '../../../../../scenery/js/imports.js';
+import { Text } from '../../../../../scenery/js/imports.js';
 import TextPushButton from '../../../../../sun/js/buttons/TextPushButton.js';
 import Panel from '../../../../../sun/js/Panel.js';
 import neuron from '../../../neuron.js';

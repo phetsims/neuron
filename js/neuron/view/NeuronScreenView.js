@@ -24,10 +24,10 @@ import PhetColorScheme from '../../../../scenery-phet/js/PhetColorScheme.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import TimeControlNode from '../../../../scenery-phet/js/TimeControlNode.js';
 import TimeSpeed from '../../../../scenery-phet/js/TimeSpeed.js';
-import Node from '../../../../scenery/js/nodes/Node.js';
-import Path from '../../../../scenery/js/nodes/Path.js';
-import Rectangle from '../../../../scenery/js/nodes/Rectangle.js';
-import SceneryUtils from '../../../../scenery/js/util/Utils.js'; // eslint-disable-line require-statement-match
+import { Node } from '../../../../scenery/js/imports.js';
+import { Path } from '../../../../scenery/js/imports.js';
+import { Rectangle } from '../../../../scenery/js/imports.js';
+import { Utils as SceneryUtils } from '../../../../scenery/js/imports.js';
 import RectangularPushButton from '../../../../sun/js/buttons/RectangularPushButton.js';
 import neuron from '../../neuron.js';
 import neuronStrings from '../../neuronStrings.js';

@@ -7,7 +7,7 @@
  */
 
 import Vector2 from '../../../../dot/js/Vector2.js';
-import Node from '../../../../scenery/js/nodes/Node.js';
+import { Node } from '../../../../scenery/js/imports.js';
 import neuron from '../../neuron.js';
 import ChargeSymbolNode from './ChargeSymbolNode.js';
 

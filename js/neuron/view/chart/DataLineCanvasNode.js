@@ -6,7 +6,7 @@
  */
 
 import Bounds2 from '../../../../../dot/js/Bounds2.js';
-import CanvasNode from '../../../../../scenery/js/nodes/CanvasNode.js';
+import { CanvasNode } from '../../../../../scenery/js/imports.js';
 import neuron from '../../../neuron.js';
 
 // constants

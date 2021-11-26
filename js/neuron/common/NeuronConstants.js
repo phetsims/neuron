@@ -9,7 +9,7 @@
 
 import PhetColorScheme from '../../../../scenery-phet/js/PhetColorScheme.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
-import Color from '../../../../scenery/js/util/Color.js';
+import { Color } from '../../../../scenery/js/imports.js';
 import neuron from '../../neuron.js';
 
 // constants
