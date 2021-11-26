@@ -1,4 +1,4 @@
-// Copyright 2014-2020, University of Colorado Boulder
+// Copyright 2014-2021, University of Colorado Boulder
 /**
  * Node that represents a membrane channel in the view, currently used only for drawing Membrane channel legends
  *

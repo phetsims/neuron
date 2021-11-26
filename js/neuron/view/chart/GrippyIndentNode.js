@@ -1,4 +1,4 @@
-// Copyright 2014-2020, University of Colorado Boulder
+// Copyright 2014-2021, University of Colorado Boulder
 /**
  /**
  * This node is meant to portray a small round indentation on a surface.  This is a modern user interface paradigm that
