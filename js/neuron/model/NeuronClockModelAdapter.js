@@ -15,7 +15,7 @@
  */
 
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
-import EnumerationProperty from '../../../../axon/js/EnumerationProperty.js';
+import EnumerationDeprecatedProperty from '../../../../axon/js/EnumerationDeprecatedProperty.js';
 import Property from '../../../../axon/js/Property.js';
 import TimeSpeed from '../../../../scenery-phet/js/TimeSpeed.js';
 import neuron from '../../neuron.js';
@@ -44,8 +44,8 @@ class NeuronClockModelAdapter {
 
     this.playingProperty = new Property( true ); // linked to playPause button
 
-    // @public {EnumerationProperty.<TimeSpeed>}
-    this.timeSpeedProperty = new EnumerationProperty( TimeSpeed, TimeSpeed.NORMAL );
+    // @public {EnumerationDeprecatedProperty.<TimeSpeed>}
+    this.timeSpeedProperty = new EnumerationDeprecatedProperty( TimeSpeed, TimeSpeed.NORMAL );
 
     // @public {DerivedProperty.<number>} - factor controlling simulation clock speed
     this.speedProperty = new DerivedProperty( [ this.timeSpeedProperty ], timeSpeed => {
