@@ -9,7 +9,7 @@
  */
 
 import dotRandom from '../../../../dot/js/dotRandom.js';
-import DotUtils from '../../../../dot/js/Utils.js'; // eslint-disable-line require-statement-match
+import Utils from '../../../../dot/js/Utils.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import Shape from '../../../../kite/js/Shape.js';
 import neuron from '../../neuron.js';
@@ -90,8 +90,8 @@ class PieSliceShapedCaptureZone extends CaptureZone {
   updateShape() {
 
     let startAngle = ( this.fixedRotationalOffset + this.rotationAngle + this.angleOfExtent / 2 ) - this.angleOfExtent;
-    startAngle = DotUtils.moduloBetweenDown( startAngle, 0, Math.PI * 2 );
-    const endAngle = DotUtils.moduloBetweenDown( this.angleOfExtent, 0, Math.PI * 2 );
+    startAngle = Utils.moduloBetweenDown( startAngle, 0, Math.PI * 2 );
+    const endAngle = Utils.moduloBetweenDown( this.angleOfExtent, 0, Math.PI * 2 );
     return new Shape().arc( this.originPoint.x, this.originPoint.y, this.radius, startAngle, endAngle, true );// ARC2D.PIE startPoint and endPoint is internally added to arc's path
   }
 }
