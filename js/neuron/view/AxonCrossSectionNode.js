@@ -7,7 +7,7 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-import Shape from '../../../../kite/js/Shape.js';
+import { Shape } from '../../../../kite/js/imports.js';
 import { Node } from '../../../../scenery/js/imports.js';
 import { Path } from '../../../../scenery/js/imports.js';
 import { Color } from '../../../../scenery/js/imports.js';

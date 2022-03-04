@@ -8,7 +8,7 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-import Shape from '../../../../kite/js/Shape.js';
+import { Shape } from '../../../../kite/js/imports.js';
 import neuron from '../../neuron.js';
 import CaptureZone from './CaptureZone.js';
 

@@ -9,10 +9,8 @@
 
 import Dimension2 from '../../../../dot/js/Dimension2.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
-import kite from '../../../../kite/js/kite.js';
-import Shape from '../../../../kite/js/Shape.js';
-import { CanvasNode } from '../../../../scenery/js/imports.js';
-import { Color } from '../../../../scenery/js/imports.js';
+import { kite, Shape } from '../../../../kite/js/imports.js';
+import { CanvasNode, Color } from '../../../../scenery/js/imports.js';
 import neuron from '../../neuron.js';
 import NeuronConstants from '../common/NeuronConstants.js';
 import MembraneChannelTypes from '../model/MembraneChannelTypes.js';
