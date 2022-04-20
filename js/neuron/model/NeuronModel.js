@@ -1,4 +1,4 @@
-// Copyright 2014-2021, University of Colorado Boulder
+// Copyright 2014-2022, University of Colorado Boulder
 /**
  * Model for the 'Neuron' screen. This class represents the main class for modeling the axon.  It acts as the central
  * place where the interaction between the membrane, the particles (i.e. ions), and the gates is all governed.
