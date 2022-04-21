@@ -45,7 +45,7 @@ class NeuronClockModelAdapter {
     this.playingProperty = new Property( true ); // linked to playPause button
 
     // @public {EnumerationDeprecatedProperty.<TimeSpeed>}
-    this.timeSpeedProperty = new EnumerationProperty( TimeSpeed, TimeSpeed.NORMAL );
+    this.timeSpeedProperty = new EnumerationProperty( TimeSpeed.NORMAL );
 
     // @public {DerivedProperty.<number>} - factor controlling simulation clock speed
     this.speedProperty = new DerivedProperty( [ this.timeSpeedProperty ], timeSpeed => {

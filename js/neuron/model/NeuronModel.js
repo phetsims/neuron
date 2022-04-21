@@ -847,10 +847,8 @@ class NeuronModel extends RecordAndPlaybackModel {
       // Trigger the event that lets the view know that the particles should be redrawn.
       this.particlesMoved.emit();
     }
-    else {
-      // Should never happen, debug if it does.
-      assert && assert( false, 'Neuron Model updateSimAndPlaybackParticleVisibility Error: Unrecognized record-and-playback mode.' );
-    }
+
+    // else ignore the state, which is null during init and reset
   }
 
   /**
