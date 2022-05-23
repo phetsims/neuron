@@ -6,7 +6,7 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-import Property from '../../../../axon/js/Property.js';
+import Multilink from '../../../../axon/js/Multilink.js';
 import Utils from '../../../../dot/js/Utils.js';
 import StringUtils from '../../../../phetcommon/js/util/StringUtils.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
@@ -113,7 +113,7 @@ class ConcentrationReadoutLayerNode extends Node {
 
     // Update the readout positions when the zoom factor or visibility changes.  Visibility is used as an optimization -
     // it prevents making updates when the readouts aren't visible.
-    Property.multilink( [ zoomProperty, neuronModel.concentrationReadoutVisibleProperty ], ( zoom, visible ) => {
+    Multilink.multilink( [ zoomProperty, neuronModel.concentrationReadoutVisibleProperty ], ( zoom, visible ) => {
         if ( visible ) {
           const maxExteriorReadoutWidth = Math.max( potassiumExteriorConcentrationReadoutRect.bounds.width,
             sodiumExteriorConcentrationReadoutRect.bounds.width );
