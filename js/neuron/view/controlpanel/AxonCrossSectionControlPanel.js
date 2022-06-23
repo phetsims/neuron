@@ -43,13 +43,13 @@ class AxonCrossSectionControlPanel extends Panel {
    */
   constructor( neuronModel, options ) {
 
-    const allIonsSimulatedCheckbox = new Checkbox( new Text( allIonsString, TEXT_OPTIONS ), neuronModel.allIonsSimulatedProperty, CHECKBOX_OPTIONS );
+    const allIonsSimulatedCheckbox = new Checkbox( neuronModel.allIonsSimulatedProperty, new Text( allIonsString, TEXT_OPTIONS ), CHECKBOX_OPTIONS );
     dilateTouchArea( allIonsSimulatedCheckbox );
-    const showChargesCheckbox = new Checkbox( new Text( chargesString, TEXT_OPTIONS ), neuronModel.chargesShownProperty, CHECKBOX_OPTIONS );
+    const showChargesCheckbox = new Checkbox( neuronModel.chargesShownProperty, new Text( chargesString, TEXT_OPTIONS ), CHECKBOX_OPTIONS );
     dilateTouchArea( showChargesCheckbox );
-    const showConcentrationsCheckbox = new Checkbox( new Text( concentrationsString, TEXT_OPTIONS ), neuronModel.concentrationReadoutVisibleProperty, CHECKBOX_OPTIONS );
+    const showConcentrationsCheckbox = new Checkbox( neuronModel.concentrationReadoutVisibleProperty, new Text( concentrationsString, TEXT_OPTIONS ), CHECKBOX_OPTIONS );
     dilateTouchArea( showConcentrationsCheckbox );
-    const showPotentialChartCheckbox = new Checkbox( new Text( potentialChartString, TEXT_OPTIONS ), neuronModel.potentialChartVisibleProperty, CHECKBOX_OPTIONS );
+    const showPotentialChartCheckbox = new Checkbox( neuronModel.potentialChartVisibleProperty, new Text( potentialChartString, TEXT_OPTIONS ), CHECKBOX_OPTIONS );
     dilateTouchArea( showPotentialChartCheckbox );
 
     const crossSectionControlContents = [];
