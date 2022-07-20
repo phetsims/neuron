@@ -9,11 +9,7 @@
  */
 
 import Vector2 from '../../../../dot/js/Vector2.js';
-import { Line } from '../../../../scenery/js/imports.js';
-import { Node } from '../../../../scenery/js/imports.js';
-import { Path } from '../../../../scenery/js/imports.js';
-import { Color } from '../../../../scenery/js/imports.js';
-import { LinearGradient } from '../../../../scenery/js/imports.js';
+import { Color, Line, LinearGradient, Node, Path } from '../../../../scenery/js/imports.js';
 import neuron from '../../neuron.js';
 import TravelingActionPotentialCanvasNode from './TravelingActionPotentialCanvasNode.js';
 

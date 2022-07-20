@@ -8,9 +8,7 @@
 import Matrix3 from '../../../../dot/js/Matrix3.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import { Shape } from '../../../../kite/js/imports.js';
-import { Node } from '../../../../scenery/js/imports.js';
-import { Path } from '../../../../scenery/js/imports.js';
-import { Color } from '../../../../scenery/js/imports.js';
+import { Color, Node, Path } from '../../../../scenery/js/imports.js';
 import neuron from '../../neuron.js';
 import ParticleType from '../model/ParticleType.js';
 

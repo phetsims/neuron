@@ -9,8 +9,7 @@
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import Matrix3 from '../../../../dot/js/Matrix3.js';
 import { Shape } from '../../../../kite/js/imports.js';
-import { Path } from '../../../../scenery/js/imports.js';
-import { Color } from '../../../../scenery/js/imports.js';
+import { Color, Path } from '../../../../scenery/js/imports.js';
 import neuron from '../../neuron.js';
 
 // constants

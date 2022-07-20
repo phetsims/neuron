@@ -10,7 +10,7 @@
 
 import Emitter from '../../../../axon/js/Emitter.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
-import { Shape, Cubic } from '../../../../kite/js/imports.js';
+import { Cubic, Shape } from '../../../../kite/js/imports.js';
 import neuron from '../../neuron.js';
 import NeuronConstants from '../common/NeuronConstants.js';
 import AxonMembraneState from './AxonMembraneState.js';

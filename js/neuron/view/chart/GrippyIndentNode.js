@@ -9,9 +9,7 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-import { Circle } from '../../../../../scenery/js/imports.js';
-import { Node } from '../../../../../scenery/js/imports.js';
-import { Color } from '../../../../../scenery/js/imports.js';
+import { Circle, Color, Node } from '../../../../../scenery/js/imports.js';
 import neuron from '../../../neuron.js';
 
 // constants

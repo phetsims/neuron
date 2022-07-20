@@ -8,9 +8,7 @@
  */
 
 import { Shape } from '../../../../kite/js/imports.js';
-import { Node } from '../../../../scenery/js/imports.js';
-import { Path } from '../../../../scenery/js/imports.js';
-import { Color } from '../../../../scenery/js/imports.js';
+import { Color, Node, Path } from '../../../../scenery/js/imports.js';
 import neuron from '../../neuron.js';
 
 // constants
