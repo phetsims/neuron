@@ -11,64 +11,64 @@ import neuron from './neuron.js';
 type StringsType = {
   'neuron': {
     'title': string;
-    'titleProperty': TReadOnlyProperty<string>;
+    'titleStringProperty': TReadOnlyProperty<string>;
   };
   'stimulateNeuron': string;
-  'stimulateNeuronProperty': TReadOnlyProperty<string>;
+  'stimulateNeuronStringProperty': TReadOnlyProperty<string>;
   'legend': string;
-  'legendProperty': TReadOnlyProperty<string>;
+  'legendStringProperty': TReadOnlyProperty<string>;
   'sodiumIon': string;
-  'sodiumIonProperty': TReadOnlyProperty<string>;
+  'sodiumIonStringProperty': TReadOnlyProperty<string>;
   'potassiumIon': string;
-  'potassiumIonProperty': TReadOnlyProperty<string>;
+  'potassiumIonStringProperty': TReadOnlyProperty<string>;
   'sodiumGatedChannel': string;
-  'sodiumGatedChannelProperty': TReadOnlyProperty<string>;
+  'sodiumGatedChannelStringProperty': TReadOnlyProperty<string>;
   'potassiumGatedChannel': string;
-  'potassiumGatedChannelProperty': TReadOnlyProperty<string>;
+  'potassiumGatedChannelStringProperty': TReadOnlyProperty<string>;
   'sodiumLeakChannel': string;
-  'sodiumLeakChannelProperty': TReadOnlyProperty<string>;
+  'sodiumLeakChannelStringProperty': TReadOnlyProperty<string>;
   'potassiumLeakChannel': string;
-  'potassiumLeakChannelProperty': TReadOnlyProperty<string>;
+  'potassiumLeakChannelStringProperty': TReadOnlyProperty<string>;
   'allIons': string;
-  'allIonsProperty': TReadOnlyProperty<string>;
+  'allIonsStringProperty': TReadOnlyProperty<string>;
   'potentialChart': string;
-  'potentialChartProperty': TReadOnlyProperty<string>;
+  'potentialChartStringProperty': TReadOnlyProperty<string>;
   'charges': string;
-  'chargesProperty': TReadOnlyProperty<string>;
+  'chargesStringProperty': TReadOnlyProperty<string>;
   'concentrations': string;
-  'concentrationsProperty': TReadOnlyProperty<string>;
+  'concentrationsStringProperty': TReadOnlyProperty<string>;
   'chartTitle': string;
-  'chartTitleProperty': TReadOnlyProperty<string>;
+  'chartTitleStringProperty': TReadOnlyProperty<string>;
   'chartYAxisLabel': string;
-  'chartYAxisLabelProperty': TReadOnlyProperty<string>;
+  'chartYAxisLabelStringProperty': TReadOnlyProperty<string>;
   'chartXAxisLabel': string;
-  'chartXAxisLabelProperty': TReadOnlyProperty<string>;
+  'chartXAxisLabelStringProperty': TReadOnlyProperty<string>;
   'chartClear': string;
-  'chartClearProperty': TReadOnlyProperty<string>;
+  'chartClearStringProperty': TReadOnlyProperty<string>;
   'showLegend': string;
-  'showLegendProperty': TReadOnlyProperty<string>;
+  'showLegendStringProperty': TReadOnlyProperty<string>;
   'units': {
     'mM': string;
-    'mMProperty': TReadOnlyProperty<string>;
+    'mMStringProperty': TReadOnlyProperty<string>;
   };
   'concentrationReadoutPattern': {
     '0label': {
       '1value': {
         '2units': string;
-        '2unitsProperty': TReadOnlyProperty<string>;
+        '2unitsStringProperty': TReadOnlyProperty<string>;
       }
     }
   };
   'potassiumChemicalSymbol': string;
-  'potassiumChemicalSymbolProperty': TReadOnlyProperty<string>;
+  'potassiumChemicalSymbolStringProperty': TReadOnlyProperty<string>;
   'sodiumChemicalSymbol': string;
-  'sodiumChemicalSymbolProperty': TReadOnlyProperty<string>;
+  'sodiumChemicalSymbolStringProperty': TReadOnlyProperty<string>;
   'fastForward': string;
-  'fastForwardProperty': TReadOnlyProperty<string>;
+  'fastForwardStringProperty': TReadOnlyProperty<string>;
   'normal': string;
-  'normalProperty': TReadOnlyProperty<string>;
+  'normalStringProperty': TReadOnlyProperty<string>;
   'slowMotion': string;
-  'slowMotionProperty': TReadOnlyProperty<string>;
+  'slowMotionStringProperty': TReadOnlyProperty<string>;
 };
 
 const neuronStrings = getStringModule( 'NEURON' ) as StringsType;
