@@ -11,7 +11,7 @@ import NeuronQueryParameters from './neuron/common/NeuronQueryParameters.js';
 import NeuronScreen from './neuron/view/NeuronScreen.js';
 import neuronStrings from './neuronStrings.js';
 
-const neuronTitleString = neuronStrings.neuron.title;
+const neuronTitleStringProperty = neuronStrings.neuron.titleStringProperty;
 
 const simOptions = {
   credits: {
@@ -27,7 +27,7 @@ const simOptions = {
 simLauncher.launch( () => {
 
   // create and start the sim
-  const sim = new Sim( neuronTitleString, [ new NeuronScreen() ], simOptions );
+  const sim = new Sim( neuronTitleStringProperty, [ new NeuronScreen() ], simOptions );
   sim.start();
 
   // This sim has some sim-specific profiling that can be done.  If the query parameter checked below is present,
