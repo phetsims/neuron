@@ -71,8 +71,8 @@ type StringsType = {
   'slowMotionStringProperty': TReadOnlyProperty<string>;
 };
 
-const neuronStrings = getStringModule( 'NEURON' ) as StringsType;
+const NeuronStrings = getStringModule( 'NEURON' ) as StringsType;
 
-neuron.register( 'neuronStrings', neuronStrings );
+neuron.register( 'NeuronStrings', NeuronStrings );
 
-export default neuronStrings;
+export default NeuronStrings;

@@ -27,7 +27,7 @@ import TimeSpeed from '../../../../scenery-phet/js/TimeSpeed.js';
 import { Node, Path, Rectangle, Utils as SceneryUtils } from '../../../../scenery/js/imports.js';
 import RectangularPushButton from '../../../../sun/js/buttons/RectangularPushButton.js';
 import neuron from '../../neuron.js';
-import neuronStrings from '../../neuronStrings.js';
+import NeuronStrings from '../../NeuronStrings.js';
 import NeuronConstants from '../common/NeuronConstants.js';
 import AxonBodyNode from './AxonBodyNode.js';
 import AxonCrossSectionNode from './AxonCrossSectionNode.js';
@@ -42,7 +42,7 @@ import ParticlesCanvasNode from './ParticlesCanvasNode.js';
 import ParticlesWebGLNode from './ParticlesWebGLNode.js';
 import ZoomControl from './ZoomControl.js';
 
-const stimulateNeuronString = neuronStrings.stimulateNeuron;
+const stimulateNeuronString = NeuronStrings.stimulateNeuron;
 
 // constants
 const BUTTON_FONT = new PhetFont( 18 );

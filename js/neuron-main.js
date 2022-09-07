@@ -9,9 +9,9 @@ import simLauncher from '../../joist/js/simLauncher.js';
 import NeuronProfiler from './neuron/common/NeuronProfiler.js';
 import NeuronQueryParameters from './neuron/common/NeuronQueryParameters.js';
 import NeuronScreen from './neuron/view/NeuronScreen.js';
-import neuronStrings from './neuronStrings.js';
+import NeuronStrings from './NeuronStrings.js';
 
-const neuronTitleStringProperty = neuronStrings.neuron.titleStringProperty;
+const neuronTitleStringProperty = NeuronStrings.neuron.titleStringProperty;
 
 const simOptions = {
   credits: {

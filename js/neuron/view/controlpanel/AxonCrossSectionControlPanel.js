@@ -13,15 +13,15 @@ import { Text, VBox } from '../../../../../scenery/js/imports.js';
 import Checkbox from '../../../../../sun/js/Checkbox.js';
 import Panel from '../../../../../sun/js/Panel.js';
 import neuron from '../../../neuron.js';
-import neuronStrings from '../../../neuronStrings.js';
+import NeuronStrings from '../../../NeuronStrings.js';
 import NeuronConstants from '../../common/NeuronConstants.js';
 
 // strings - labels for control panel checkboxes
-const allIonsString = neuronStrings.allIons;
-const chargesString = neuronStrings.charges;
-const concentrationsString = neuronStrings.concentrations;
-const potentialChartString = neuronStrings.potentialChart;
-const showLegendString = neuronStrings.showLegend;
+const allIonsString = NeuronStrings.allIons;
+const chargesString = NeuronStrings.charges;
+const concentrationsString = NeuronStrings.concentrations;
+const potentialChartString = NeuronStrings.potentialChart;
+const showLegendString = NeuronStrings.showLegend;
 
 // constants
 const CHECKBOX_OPTIONS = { boxWidth: 15 };

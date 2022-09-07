@@ -16,7 +16,7 @@ import PhetFont from '../../../../../scenery-phet/js/PhetFont.js';
 import { HBox, HStrut, Text, VBox } from '../../../../../scenery/js/imports.js';
 import Panel from '../../../../../sun/js/Panel.js';
 import neuron from '../../../neuron.js';
-import neuronStrings from '../../../neuronStrings.js';
+import NeuronStrings from '../../../NeuronStrings.js';
 import NeuronConstants from '../../common/NeuronConstants.js';
 import PotassiumGatedChannel from '../../model/PotassiumGatedChannel.js';
 import PotassiumIon from '../../model/PotassiumIon.js';
@@ -27,13 +27,13 @@ import SodiumLeakageChannel from '../../model/SodiumLeakageChannel.js';
 import MembraneChannelNode from '../MembraneChannelNode.js';
 import ParticleNode from '../ParticleNode.js';
 
-const legendString = neuronStrings.legend;
-const potassiumGatedChannelString = neuronStrings.potassiumGatedChannel;
-const potassiumIonString = neuronStrings.potassiumIon;
-const potassiumLeakChannelString = neuronStrings.potassiumLeakChannel;
-const sodiumGatedChannelString = neuronStrings.sodiumGatedChannel;
-const sodiumIonString = neuronStrings.sodiumIon;
-const sodiumLeakChannelString = neuronStrings.sodiumLeakChannel;
+const legendString = NeuronStrings.legend;
+const potassiumGatedChannelString = NeuronStrings.potassiumGatedChannel;
+const potassiumIonString = NeuronStrings.potassiumIon;
+const potassiumLeakChannelString = NeuronStrings.potassiumLeakChannel;
+const sodiumGatedChannelString = NeuronStrings.sodiumGatedChannel;
+const sodiumIonString = NeuronStrings.sodiumIon;
+const sodiumLeakChannelString = NeuronStrings.sodiumLeakChannel;
 
 // constants
 const LEGEND_TEXT_OPTIONS = { font: new PhetFont( { size: 12 } ) };

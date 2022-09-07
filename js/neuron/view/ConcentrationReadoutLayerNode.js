@@ -12,14 +12,14 @@ import StringUtils from '../../../../phetcommon/js/util/StringUtils.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import { Node, Rectangle, Text } from '../../../../scenery/js/imports.js';
 import neuron from '../../neuron.js';
-import neuronStrings from '../../neuronStrings.js';
+import NeuronStrings from '../../NeuronStrings.js';
 import PotassiumIon from '../model/PotassiumIon.js';
 import SodiumIon from '../model/SodiumIon.js';
 
-const concentrationReadoutPattern0Label1Value2UnitsString = neuronStrings.concentrationReadoutPattern[ '0label' ][ '1value' ][ '2units' ];
-const potassiumChemicalSymbolString = neuronStrings.potassiumChemicalSymbol;
-const sodiumChemicalSymbolString = neuronStrings.sodiumChemicalSymbol;
-const unitsMMString = neuronStrings.units.mM;
+const concentrationReadoutPattern0Label1Value2UnitsString = NeuronStrings.concentrationReadoutPattern[ '0label' ][ '1value' ][ '2units' ];
+const potassiumChemicalSymbolString = NeuronStrings.potassiumChemicalSymbol;
+const sodiumChemicalSymbolString = NeuronStrings.sodiumChemicalSymbol;
+const unitsMMString = NeuronStrings.units.mM;
 
 // constants that control aspects of the concentration readout.
 const CONCENTRATION_READOUT_NUM_PLACES = 5;

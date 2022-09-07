@@ -28,15 +28,15 @@ import { HBox, Node, Path, Text } from '../../../../../scenery/js/imports.js';
 import TextPushButton from '../../../../../sun/js/buttons/TextPushButton.js';
 import Panel from '../../../../../sun/js/Panel.js';
 import neuron from '../../../neuron.js';
-import neuronStrings from '../../../neuronStrings.js';
+import NeuronStrings from '../../../NeuronStrings.js';
 import NeuronConstants from '../../common/NeuronConstants.js';
 import ChartCursor from './ChartCursor.js';
 import DataLineCanvasNode from './DataLineCanvasNode.js';
 
-const chartClearString = neuronStrings.chartClear;
-const chartTitleString = neuronStrings.chartTitle;
-const chartXAxisLabelString = neuronStrings.chartXAxisLabel;
-const chartYAxisLabelString = neuronStrings.chartYAxisLabel;
+const chartClearString = NeuronStrings.chartClear;
+const chartTitleString = NeuronStrings.chartTitle;
+const chartXAxisLabelString = NeuronStrings.chartXAxisLabel;
+const chartYAxisLabelString = NeuronStrings.chartYAxisLabel;
 
 // constants
 const GRID_TICK_TEXT_FONT = new PhetFont( 8 );
