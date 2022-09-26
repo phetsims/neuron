@@ -5,70 +5,70 @@
  */
 /* eslint-disable */
 import getStringModule from '../../chipper/js/getStringModule.js';
-import TReadOnlyProperty from '../../axon/js/TReadOnlyProperty.js';
+import LinkableProperty from '../../axon/js/LinkableProperty.js';
 import neuron from './neuron.js';
 
 type StringsType = {
   'neuron': {
     'title': string;
-    'titleStringProperty': TReadOnlyProperty<string>;
+    'titleStringProperty': LinkableProperty<string>;
   };
   'stimulateNeuron': string;
-  'stimulateNeuronStringProperty': TReadOnlyProperty<string>;
+  'stimulateNeuronStringProperty': LinkableProperty<string>;
   'legend': string;
-  'legendStringProperty': TReadOnlyProperty<string>;
+  'legendStringProperty': LinkableProperty<string>;
   'sodiumIon': string;
-  'sodiumIonStringProperty': TReadOnlyProperty<string>;
+  'sodiumIonStringProperty': LinkableProperty<string>;
   'potassiumIon': string;
-  'potassiumIonStringProperty': TReadOnlyProperty<string>;
+  'potassiumIonStringProperty': LinkableProperty<string>;
   'sodiumGatedChannel': string;
-  'sodiumGatedChannelStringProperty': TReadOnlyProperty<string>;
+  'sodiumGatedChannelStringProperty': LinkableProperty<string>;
   'potassiumGatedChannel': string;
-  'potassiumGatedChannelStringProperty': TReadOnlyProperty<string>;
+  'potassiumGatedChannelStringProperty': LinkableProperty<string>;
   'sodiumLeakChannel': string;
-  'sodiumLeakChannelStringProperty': TReadOnlyProperty<string>;
+  'sodiumLeakChannelStringProperty': LinkableProperty<string>;
   'potassiumLeakChannel': string;
-  'potassiumLeakChannelStringProperty': TReadOnlyProperty<string>;
+  'potassiumLeakChannelStringProperty': LinkableProperty<string>;
   'allIons': string;
-  'allIonsStringProperty': TReadOnlyProperty<string>;
+  'allIonsStringProperty': LinkableProperty<string>;
   'potentialChart': string;
-  'potentialChartStringProperty': TReadOnlyProperty<string>;
+  'potentialChartStringProperty': LinkableProperty<string>;
   'charges': string;
-  'chargesStringProperty': TReadOnlyProperty<string>;
+  'chargesStringProperty': LinkableProperty<string>;
   'concentrations': string;
-  'concentrationsStringProperty': TReadOnlyProperty<string>;
+  'concentrationsStringProperty': LinkableProperty<string>;
   'chartTitle': string;
-  'chartTitleStringProperty': TReadOnlyProperty<string>;
+  'chartTitleStringProperty': LinkableProperty<string>;
   'chartYAxisLabel': string;
-  'chartYAxisLabelStringProperty': TReadOnlyProperty<string>;
+  'chartYAxisLabelStringProperty': LinkableProperty<string>;
   'chartXAxisLabel': string;
-  'chartXAxisLabelStringProperty': TReadOnlyProperty<string>;
+  'chartXAxisLabelStringProperty': LinkableProperty<string>;
   'chartClear': string;
-  'chartClearStringProperty': TReadOnlyProperty<string>;
+  'chartClearStringProperty': LinkableProperty<string>;
   'showLegend': string;
-  'showLegendStringProperty': TReadOnlyProperty<string>;
+  'showLegendStringProperty': LinkableProperty<string>;
   'units': {
     'mM': string;
-    'mMStringProperty': TReadOnlyProperty<string>;
+    'mMStringProperty': LinkableProperty<string>;
   };
   'concentrationReadoutPattern': {
     '0label': {
       '1value': {
         '2units': string;
-        '2unitsStringProperty': TReadOnlyProperty<string>;
+        '2unitsStringProperty': LinkableProperty<string>;
       }
     }
   };
   'potassiumChemicalSymbol': string;
-  'potassiumChemicalSymbolStringProperty': TReadOnlyProperty<string>;
+  'potassiumChemicalSymbolStringProperty': LinkableProperty<string>;
   'sodiumChemicalSymbol': string;
-  'sodiumChemicalSymbolStringProperty': TReadOnlyProperty<string>;
+  'sodiumChemicalSymbolStringProperty': LinkableProperty<string>;
   'fastForward': string;
-  'fastForwardStringProperty': TReadOnlyProperty<string>;
+  'fastForwardStringProperty': LinkableProperty<string>;
   'normal': string;
-  'normalStringProperty': TReadOnlyProperty<string>;
+  'normalStringProperty': LinkableProperty<string>;
   'slowMotion': string;
-  'slowMotionStringProperty': TReadOnlyProperty<string>;
+  'slowMotionStringProperty': LinkableProperty<string>;
 };
 
 const NeuronStrings = getStringModule( 'NEURON' ) as StringsType;
