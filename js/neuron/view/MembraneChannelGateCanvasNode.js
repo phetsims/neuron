@@ -9,7 +9,7 @@
 
 import Dimension2 from '../../../../dot/js/Dimension2.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
-import { kite, Shape } from '../../../../kite/js/imports.js';
+import { LineStyles, Shape } from '../../../../kite/js/imports.js';
 import { CanvasNode, Color } from '../../../../scenery/js/imports.js';
 import neuron from '../../neuron.js';
 import NeuronConstants from '../common/NeuronConstants.js';
@@ -106,7 +106,7 @@ class MembraneChannelGateCanvasNode extends CanvasNode {
       edgeShape.cubicCurveTo( width / 2, -height / 2, -width / 2, -height / 2, -width / 2, -height / 4 );
       edgeShape.close();
 
-      return edgeShape.getStrokedBounds( new kite.LineStyles( { lineWidth: 0.4 } ) );
+      return edgeShape.getStrokedBounds( new LineStyles( { lineWidth: 0.4 } ) );
     };
 
     this.edgeNodeBounds = computeEdgeBounds( this.membraneChannels.get( 0 ) );
