@@ -67,13 +67,13 @@ class ConcentrationReadoutLayerNode extends Node {
 
     // function to update the text for all four readouts
     function updateConcentrationReadoutValues() {
-      sodiumExteriorConcentrationReadout.text =
+      sodiumExteriorConcentrationReadout.string =
         createConcentrationReadoutString( sodiumChemicalSymbolString, neuronModel.getSodiumExteriorConcentration() );
-      sodiumInteriorConcentrationReadout.text =
+      sodiumInteriorConcentrationReadout.string =
         createConcentrationReadoutString( sodiumChemicalSymbolString, neuronModel.getSodiumInteriorConcentration() );
-      potassiumExteriorConcentrationReadout.text =
+      potassiumExteriorConcentrationReadout.string =
         createConcentrationReadoutString( potassiumChemicalSymbolString, neuronModel.getPotassiumExteriorConcentration() );
-      potassiumInteriorConcentrationReadout.text =
+      potassiumInteriorConcentrationReadout.string =
         createConcentrationReadoutString( potassiumChemicalSymbolString, neuronModel.getPotassiumInteriorConcentration() );
     }
 
