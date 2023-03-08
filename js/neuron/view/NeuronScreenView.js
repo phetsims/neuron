@@ -19,12 +19,11 @@ import ScreenView from '../../../../joist/js/ScreenView.js';
 import { Shape } from '../../../../kite/js/imports.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
-import MultiLineText from '../../../../scenery-phet/js/MultiLineText.js';
 import PhetColorScheme from '../../../../scenery-phet/js/PhetColorScheme.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import TimeControlNode from '../../../../scenery-phet/js/TimeControlNode.js';
 import TimeSpeed from '../../../../scenery-phet/js/TimeSpeed.js';
-import { Node, Path, Rectangle, Utils as SceneryUtils } from '../../../../scenery/js/imports.js';
+import { Node, Path, Rectangle, RichText, Utils as SceneryUtils } from '../../../../scenery/js/imports.js';
 import RectangularPushButton from '../../../../sun/js/buttons/RectangularPushButton.js';
 import neuron from '../../neuron.js';
 import NeuronStrings from '../../NeuronStrings.js';
@@ -256,7 +255,12 @@ class NeuronScreenView extends ScreenView {
     this.addChild( timeControlNode );
 
     const stimulateNeuronButton = new RectangularPushButton( {
-      content: new MultiLineText( stimulateNeuronString, { font: BUTTON_FONT, maxWidth: 120 } ),
+      content: new RichText( stimulateNeuronString, {
+        replaceNewlines: true,
+        align: 'center',
+        font: BUTTON_FONT,
+        maxWidth: 120
+      } ),
       listener: () => { this.neuronModel.initiateStimulusPulse(); },
       baseColor: PhetColorScheme.BUTTON_YELLOW,
       right: worldNodeClipArea.bounds.maxX,
