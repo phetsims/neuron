@@ -1,5 +1,5 @@
 {
-  "comment": "# neuron 1.1.27-rc.1 Wed May 10 2023 10:21:42 GMT-0600 (Mountain Daylight Time)",
+  "comment": "# neuron 1.1.27 Wed May 10 2023 13:19:51 GMT-0600 (Mountain Daylight Time)",
   "assert": {
     "sha": "7d27130a4d27da15aa7f8a21bbfb9245288c1b44",
     "branch": "HEAD"
@@ -33,7 +33,7 @@
     "branch": "HEAD"
   },
   "neuron": {
-    "sha": "2759ad7a0b2fd48adc46caabde08f4dc8c3b8b5f",
+    "sha": "406d8e7a35d2342ea69f0722f32048489dbb8dcc",
     "branch": "1.1"
   },
   "phet-core": {
