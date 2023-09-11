@@ -3,9 +3,9 @@ Implementation Notes for the Neuron Simulation, HTML5 Version
 
 This simulation was ported from a Java version. As such, there are a number of things that are done in the code that
 would likely have been done in a very different manner if this had been written from scratch as JavaScript. It is
-important to keep this in mind when maintaining this code, since otherwise there are likely to be a lot of moments
-where the maintainer is thinking things like, "Why the heck did they do this? I'm going to do it differently!", thus
-ending up with a mish-mash of coding styles.
+important to keep this in mind when maintaining this code, since otherwise there are likely to be a lot of moments where
+the maintainer is thinking things like, "Why the heck did they do this? I'm going to do it differently!", thus ending up
+with a mish-mash of coding styles.
 
 One particular area where this Java vs. JavaScript contrast is apparent is in the use of getters. In the Java code,
 there were many private variables that were accessed through getters. For the most part, these getters were retained,
@@ -24,8 +24,8 @@ which is yet another reason that any maintainer is likely to find a bit of a mix
 consistent, but far from perfect in this regard.
 
 When the code was first submitted to PhET, there were a number of places where events were signalled by toggling a
-boolean Property instead of simply triggering an event. It's hard to say why this was done, but it may just be that
-the original author wasn't familiar with events. Some of these were changed to be events, but there wasn't a concerted
+boolean Property instead of simply triggering an event. It's hard to say why this was done, but it may just be that the
+original author wasn't familiar with events. Some of these were changed to be events, but there wasn't a concerted
 effort to change them all, so there may still be some instances of this pattern (or perhaps "anti-pattern") in the code.
 
 Because this simulation consumes a fair amount of computational and graphical resources when an action potential is in
