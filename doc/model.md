@@ -5,8 +5,8 @@ The underlying model for action potentials depicted in this simulation is a Hodg
 mathematical model that was originally developed in the 1950s. Please see
 https://en.wikipedia.org/wiki/Hodgkin%E2%80%93Huxley_model for more information on this.
 
-The simulation portrays an action potential moving down an axon and ultimately reaching the cross section shown in
-the view. The moment when the animated action potential reaches the cross section is the moment when the underlying
+The simulation portrays an action potential moving down an axon and ultimately reaching the cross section shown in the
+view. The moment when the animated action potential reaches the cross section is the moment when the underlying
 Hodgkin-Huxley model is triggered. As the membrance potential changes in the model, selective membrane channels open on
 the axon's cross section, and sodium and potassium ions move across the membrane in order to illustrate that it is the
 motion of these ions that cause the change in electric potential across the membrane. The number of ions that cross the
