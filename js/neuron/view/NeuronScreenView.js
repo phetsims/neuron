@@ -58,6 +58,10 @@ class NeuronScreenView extends ScreenView {
    * constant clock. The clock adapter calculates the appropriate real time dt and dispatches it to the actual model.
    */
   constructor( neuronClockModelAdapter ) {
+
+    // A PhET wide decision was made to not update custom layout bounds even if they do not match the
+    // default layout bounds in ScreenView. Do not change these bounds as changes could break or disturb
+    // any phet-io instrumention. https://github.com/phetsims/phet-io/issues/1939
     super( { layoutBounds: new Bounds2( 0, 0, 834, 504 ) } );
 
     this.neuronModel = neuronClockModelAdapter.model; // model is neuron model
