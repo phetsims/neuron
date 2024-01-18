@@ -3,6 +3,8 @@
 /**
  * A node that represents a line created from a collection of points, intended to be used  to represent data on a
  * graph.  This is created as part of an effort to improve the performance of the dynamic chart in the Neuron sim.
+ *
+ * @author John Blanco (PhET Interactive Simulations)
  */
 
 import Bounds2 from '../../../../../dot/js/Bounds2.js';

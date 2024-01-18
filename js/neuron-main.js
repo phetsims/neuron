@@ -2,6 +2,8 @@
 
 /**
  * Main entry point for the neuron sim.
+ *
+ * @author Sam Reid
  */
 
 import Sim from '../../joist/js/Sim.js';

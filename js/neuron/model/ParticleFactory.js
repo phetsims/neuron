@@ -3,7 +3,7 @@
 /**
  * Factory class for Particle
  *
- * @Sharfudeen Ashraf (for Ghent University)
+ * @author Sharfudeen Ashraf (for Ghent University)
  */
 
 import neuron from '../../neuron.js';

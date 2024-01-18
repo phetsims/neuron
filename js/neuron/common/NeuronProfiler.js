@@ -4,6 +4,8 @@
  * Sim-specific code for profiling, created for testing optimizations.  This profiler can be triggered via a method call
  * and will then gather profiling data for the specified amount of time, and then log the collected information to the
  * console.  On iOS devices, it displays the information in an "alert" window.
+ *
+ * @author John Blanco (PhET Interactive Simulations)
  */
 
 import Utils from '../../../../dot/js/Utils.js';

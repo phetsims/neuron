@@ -1,5 +1,8 @@
 // Copyright 2014-2021, University of Colorado Boulder
 
+/**
+ * @author Sam Reid
+ */
 
 import neuron from '../../neuron.js';
 
