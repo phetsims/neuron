@@ -13,7 +13,7 @@
     "branch": "HEAD"
   },
   "chipper": {
-    "sha": "4f6e0d0b4cbdd54a4aa0d4a809fa2f2aaa40af8d",
+    "sha": "ccaf7ca8cab01abaeb7863bc2d34421a14ba637b",
     "branch": "HEAD"
   },
   "dot": {
@@ -33,7 +33,7 @@
     "branch": "HEAD"
   },
   "neuron": {
-    "sha": "f5854c6801867dfde6db40689dd50489141630c4",
+    "sha": "5289e8c462f296d3976c5884070da06b5c9efe48",
     "branch": "1.1"
   },
   "phet-core": {
