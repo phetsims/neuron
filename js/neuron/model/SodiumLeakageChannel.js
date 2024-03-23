@@ -1,4 +1,4 @@
-// Copyright 2014-2021, University of Colorado Boulder
+// Copyright 2014-2024, University of Colorado Boulder
 
 /**
  * Model representation of a membrane channel through which sodium 'leaks', meaning that it is always passing through
