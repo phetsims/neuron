@@ -32,7 +32,7 @@
         ],
         "parserOptions": {
           "project": [
-            "../neuron/tsconfig.json"
+            "../chipper/tsconfig/eslint-all/tsconfig.json"
           ]
         }
       }
