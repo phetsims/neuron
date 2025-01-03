@@ -86,7 +86,7 @@ class NeuronScreenView extends ScreenView {
 
     // Add a subtle outline to the zoomable area.
     const clipAreaBounds = worldNodeClipArea.bounds;
-    this.addChild( new Rectangle(
+    const worldFrameRectangle = new Rectangle(
       clipAreaBounds.x,
       clipAreaBounds.y,
       clipAreaBounds.width,
@@ -94,7 +94,8 @@ class NeuronScreenView extends ScreenView {
       0,
       0,
       { stroke: '#cccccc', lineWidth: 0.5 }
-    ) );
+    );
+    this.addChild( worldFrameRectangle );
 
     // Create and add the layers in the desired order.
     const axonBodyLayer = new Node();
@@ -239,14 +240,7 @@ class NeuronScreenView extends ScreenView {
         },
         playPauseStepXSpacing: 5
       },
-      speedRadioButtonGroupOnLeft: true,
-      wrapSpeedRadioButtonGroupInPanel: true,
-      speedRadioButtonGroupPanelOptions: {
-        fill: NeuronConstants.CONTROL_PANEL_BACKGROUND,
-        stroke: NeuronConstants.CONTROL_PANEL_STROKE,
-        xMargin: 8,
-        yMargin: 6
-      },
+      speedRadioButtonGroupPlacement: 'before',
       speedRadioButtonGroupOptions: {
         spacing: 8,
         touchAreaXDilation: 5
@@ -255,8 +249,8 @@ class NeuronScreenView extends ScreenView {
       centerY: centerYForLowerControls
     } );
 
-    timeControlNode.setButtonGroupXSpacing( timeControlNode.left - this.layoutBounds.minX + leftPadding );
     this.addChild( timeControlNode );
+    timeControlNode.initializeFlowLayout( this, worldFrameRectangle, 5 );
 
     const stimulateNeuronButton = new RectangularPushButton( {
       content: new RichText( stimulateNeuronString, {
