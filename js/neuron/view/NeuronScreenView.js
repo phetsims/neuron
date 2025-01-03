@@ -250,7 +250,6 @@ class NeuronScreenView extends ScreenView {
     } );
 
     this.addChild( timeControlNode );
-    timeControlNode.initializeFlowLayout( this, worldFrameRectangle, 5 );
 
     const stimulateNeuronButton = new RectangularPushButton( {
       content: new RichText( stimulateNeuronString, {
