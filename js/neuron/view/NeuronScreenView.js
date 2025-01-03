@@ -240,7 +240,7 @@ class NeuronScreenView extends ScreenView {
         },
         playPauseStepXSpacing: 5
       },
-      speedRadioButtonGroupPlacement: 'before',
+      speedRadioButtonGroupPlacement: 'left',
       speedRadioButtonGroupOptions: {
         spacing: 8,
         touchAreaXDilation: 5
