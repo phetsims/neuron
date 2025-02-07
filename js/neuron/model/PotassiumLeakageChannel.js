@@ -9,7 +9,7 @@
  */
 
 import dotRandom from '../../../../dot/js/dotRandom.js';
-import { Color } from '../../../../scenery/js/imports.js';
+import Color from '../../../../scenery/js/util/Color.js';
 import neuron from '../../neuron.js';
 import NeuronConstants from '../common/NeuronConstants.js';
 import AbstractLeakChannel from './AbstractLeakChannel.js';

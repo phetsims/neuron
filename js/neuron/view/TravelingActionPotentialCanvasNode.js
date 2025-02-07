@@ -8,7 +8,7 @@
  * @author John Blanco
  */
 
-import { CanvasNode } from '../../../../scenery/js/imports.js';
+import CanvasNode from '../../../../scenery/js/nodes/CanvasNode.js';
 import neuron from '../../neuron.js';
 
 // constants

@@ -10,7 +10,9 @@
 
 import Utils from '../../../../../dot/js/Utils.js';
 import Vector2 from '../../../../../dot/js/Vector2.js';
-import { Color, Rectangle, SimpleDragHandler } from '../../../../../scenery/js/imports.js';
+import SimpleDragHandler from '../../../../../scenery/js/input/SimpleDragHandler.js';
+import Rectangle from '../../../../../scenery/js/nodes/Rectangle.js';
+import Color from '../../../../../scenery/js/util/Color.js';
 import neuron from '../../../neuron.js';
 import GrippyIndentNode from './GrippyIndentNode.js';
 

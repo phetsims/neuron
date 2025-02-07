@@ -13,7 +13,8 @@
  */
 
 import Vector2 from '../../../../dot/js/Vector2.js';
-import { ShaderProgram, WebGLNode } from '../../../../scenery/js/imports.js';
+import WebGLNode from '../../../../scenery/js/nodes/WebGLNode.js';
+import ShaderProgram from '../../../../scenery/js/util/ShaderProgram.js';
 import neuron from '../../neuron.js';
 import ParticleType from '../model/ParticleType.js';
 import NeuronParticlesTexture from './NeuronParticlesTexture.js';

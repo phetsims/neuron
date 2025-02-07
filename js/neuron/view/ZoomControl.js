@@ -10,8 +10,9 @@
 import Dimension2 from '../../../../dot/js/Dimension2.js';
 import Range from '../../../../dot/js/Range.js';
 import Utils from '../../../../dot/js/Utils.js';
-import { Shape } from '../../../../kite/js/imports.js';
-import { Path, VBox } from '../../../../scenery/js/imports.js';
+import Shape from '../../../../kite/js/Shape.js';
+import VBox from '../../../../scenery/js/layout/nodes/VBox.js';
+import Path from '../../../../scenery/js/nodes/Path.js';
 import RectangularPushButton from '../../../../sun/js/buttons/RectangularPushButton.js';
 import VSlider from '../../../../sun/js/VSlider.js';
 import neuron from '../../neuron.js';

@@ -9,7 +9,8 @@
 
 import merge from '../../../../../phet-core/js/merge.js';
 import PhetFont from '../../../../../scenery-phet/js/PhetFont.js';
-import { Text, VBox } from '../../../../../scenery/js/imports.js';
+import VBox from '../../../../../scenery/js/layout/nodes/VBox.js';
+import Text from '../../../../../scenery/js/nodes/Text.js';
 import Checkbox from '../../../../../sun/js/Checkbox.js';
 import Panel from '../../../../../sun/js/Panel.js';
 import neuron from '../../../neuron.js';
