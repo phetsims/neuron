@@ -1,4 +1,4 @@
-// Copyright 2014-2024, University of Colorado Boulder
+// Copyright 2014-2025, University of Colorado Boulder
 
 /**
  * Model representation for the axon membrane.  Represents it as a cross section and a shape that is intended to look

@@ -1,4 +1,4 @@
-// Copyright 2014-2022, University of Colorado Boulder
+// Copyright 2014-2025, University of Colorado Boulder
 /**
  * Class that represents particles (generally ions) in the view.
  * @author John Blanco
