@@ -6,6 +6,7 @@
  * @author John Blanco
  */
 
+import { QueryStringMachine } from '../../../../query-string-machine/js/QueryStringMachineModule.js';
 import neuron from '../../neuron.js';
 
 const NeuronQueryParameters = QueryStringMachine.getAll( {
