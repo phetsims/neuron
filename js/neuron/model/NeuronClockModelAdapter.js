@@ -1,4 +1,4 @@
-// Copyright 2014-2015, University of Colorado Boulder
+// Copyright 2014-2016, University of Colorado Boulder
 
 /**
  * The clock for this simulation, which provide support for normal operation, play and pause, stepping backwards in
