@@ -33,7 +33,7 @@
     "branch": "HEAD"
   },
   "neuron": {
-    "sha": "40f41a25266a03b433b083cc04301546a30443f5",
+    "sha": "6300a37cbb4aca3885db2a1bf65ebeb4cc706840",
     "branch": "1.1"
   },
   "phet-core": {
@@ -41,7 +41,7 @@
     "branch": "HEAD"
   },
   "phetcommon": {
-    "sha": "fab575726c7bb48f623ee599f955b278c194366a",
+    "sha": "0a32765bb69c5f551a4cc211941ef7011213094f",
     "branch": "HEAD"
   },
   "phetmarks": {
