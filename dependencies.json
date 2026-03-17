@@ -9,7 +9,7 @@
     "branch": "HEAD"
   },
   "brand": {
-    "sha": "6d1d3c21e30e011d5f5e99165aadf80f7dc0731e",
+    "sha": "c9586039ff92d695c75f81c910175e134ec334d0",
     "branch": "HEAD"
   },
   "chipper": {
@@ -33,7 +33,7 @@
     "branch": "HEAD"
   },
   "neuron": {
-    "sha": "6300a37cbb4aca3885db2a1bf65ebeb4cc706840",
+    "sha": "d1bb179e816e5ec31633944ce10cddfb8f20f4f2",
     "branch": "1.1"
   },
   "phet-core": {
