@@ -25,7 +25,7 @@
     "branch": "HEAD"
   },
   "joist": {
-    "sha": "40cb2e4bfebc65a6ddb8f253e0c3377c175476de",
+    "sha": "ba02e32b76d660378509c9fdc860f3f0273fbad8",
     "branch": "HEAD"
   },
   "kite": {
@@ -33,7 +33,7 @@
     "branch": "HEAD"
   },
   "neuron": {
-    "sha": "e9a5bacf51ec09fea1022bf96d41260383b66ee9",
+    "sha": "d7de77020e4c8aee567dee0ba5db1d65324a3778",
     "branch": "1.1"
   },
   "phet-core": {
