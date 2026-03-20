@@ -10,7 +10,6 @@
 
 import dotRandom from '../../../../dot/js/dotRandom.js';
 import Color from '../../../../scenery/js/util/Color.js';
-import neuron from '../../neuron.js';
 import NeuronConstants from '../common/NeuronConstants.js';
 import AbstractLeakChannel from './AbstractLeakChannel.js';
 import MembraneChannelTypes from './MembraneChannelTypes.js';
@@ -94,7 +93,5 @@ class PotassiumLeakageChannel extends AbstractLeakChannel {
     return direction;
   }
 }
-
-neuron.register( 'PotassiumLeakageChannel', PotassiumLeakageChannel );
 
 export default PotassiumLeakageChannel;

@@ -6,8 +6,6 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-import neuron from '../../neuron.js';
-
 const BehaviourModeType = {
   pauseAtEndOfPlayback: true,
   recordAtEndOfPlayback: false
@@ -15,7 +13,5 @@ const BehaviourModeType = {
 
 // verify that enum is immutable, without the runtime penalty in production code
 if ( assert ) { Object.freeze( BehaviourModeType ); }
-
-neuron.register( 'BehaviourModeType', BehaviourModeType );
 
 export default BehaviourModeType;

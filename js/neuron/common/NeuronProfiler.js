@@ -10,7 +10,6 @@
 
 import Utils from '../../../../dot/js/Utils.js';
 import platform from '../../../../phet-core/js/platform.js';
-import neuron from '../../neuron.js';
 
 class NeuronProfiler {
 
@@ -106,7 +105,5 @@ class NeuronProfiler {
     this.frameProcessingTimes.length = 0;
   }
 }
-
-neuron.register( 'NeuronProfiler', NeuronProfiler );
 
 export default NeuronProfiler;

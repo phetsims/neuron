@@ -15,7 +15,6 @@
 import Emitter from '../../../../axon/js/Emitter.js';
 import Utils from '../../../../dot/js/Utils.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
-import neuron from '../../neuron.js';
 import TravelingActionPotentialState from './TravelingActionPotentialState.js';
 
 // constants
@@ -173,7 +172,5 @@ class TravelingActionPotential {
     return new TravelingActionPotentialState( this.travelTimeCountdownTimer, this.lingerCountdownTimer );
   }
 }
-
-neuron.register( 'TravelingActionPotential', TravelingActionPotential );
 
 export default TravelingActionPotential;

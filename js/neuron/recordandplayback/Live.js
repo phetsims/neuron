@@ -7,7 +7,6 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-import neuron from '../../neuron.js';
 import Mode from './Mode.js';
 
 class Live extends Mode {
@@ -31,7 +30,5 @@ class Live extends Mode {
     return 'Live';
   }
 }
-
-neuron.register( 'Live', Live );
 
 export default Live;

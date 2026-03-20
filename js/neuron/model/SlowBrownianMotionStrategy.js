@@ -10,7 +10,6 @@
  */
 
 import dotRandom from '../../../../dot/js/dotRandom.js';
-import neuron from '../../neuron.js';
 import MotionStrategy from './MotionStrategy.js';
 
 // constants
@@ -71,7 +70,5 @@ class SlowBrownianMotionStrategy extends MotionStrategy {
     return dotRandom.nextDouble() * Math.PI * 2;
   }
 }
-
-neuron.register( 'SlowBrownianMotionStrategy', SlowBrownianMotionStrategy );
 
 export default SlowBrownianMotionStrategy;

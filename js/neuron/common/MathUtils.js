@@ -8,7 +8,6 @@
 
 import Utils from '../../../../dot/js/Utils.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
-import neuron from '../../neuron.js';
 
 // These vectors are used as temporary objects for calculating distance without creating new Vector2 instances, see
 // the createTraversalPoint method.
@@ -57,7 +56,5 @@ const MathUtils = {
     return tmp / factor;
   }
 };
-
-neuron.register( 'MathUtils', MathUtils );
 
 export default MathUtils;

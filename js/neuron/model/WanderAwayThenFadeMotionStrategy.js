@@ -8,7 +8,6 @@
  */
 
 import dotRandom from '../../../../dot/js/dotRandom.js';
-import neuron from '../../neuron.js';
 import NeuronConstants from '../common/NeuronConstants.js';
 import MotionStrategy from './MotionStrategy.js';
 import TimedFadeAwayStrategy from './TimedFadeAwayStrategy.js';
@@ -91,7 +90,5 @@ class WanderAwayThenFadeMotionStrategy extends MotionStrategy {
     this.velocityY = newScalerVelocity * Math.sin( awayAngle );
   }
 }
-
-neuron.register( 'WanderAwayThenFadeMotionStrategy', WanderAwayThenFadeMotionStrategy );
 
 export default WanderAwayThenFadeMotionStrategy;

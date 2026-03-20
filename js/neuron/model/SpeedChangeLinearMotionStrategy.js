@@ -8,7 +8,6 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-import neuron from '../../neuron.js';
 import MotionStrategy from './MotionStrategy.js';
 
 class SpeedChangeLinearMotionStrategy extends MotionStrategy {
@@ -40,7 +39,5 @@ class SpeedChangeLinearMotionStrategy extends MotionStrategy {
     }
   }
 }
-
-neuron.register( 'SpeedChangeLinearMotionStrategy', SpeedChangeLinearMotionStrategy );
 
 export default SpeedChangeLinearMotionStrategy;

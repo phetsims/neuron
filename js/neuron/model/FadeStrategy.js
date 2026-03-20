@@ -7,8 +7,6 @@
  * @Sharfudeen Ashraf (for Ghent University)
  */
 
-import neuron from '../../neuron.js';
-
 class FadeStrategy {
 
   constructor() {}
@@ -30,7 +28,5 @@ class FadeStrategy {
     return true;
   }
 }
-
-neuron.register( 'FadeStrategy', FadeStrategy );
 
 export default FadeStrategy;

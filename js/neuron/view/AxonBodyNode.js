@@ -14,7 +14,6 @@ import Node from '../../../../scenery/js/nodes/Node.js';
 import Path from '../../../../scenery/js/nodes/Path.js';
 import Color from '../../../../scenery/js/util/Color.js';
 import LinearGradient from '../../../../scenery/js/util/LinearGradient.js';
-import neuron from '../../neuron.js';
 import TravelingActionPotentialCanvasNode from './TravelingActionPotentialCanvasNode.js';
 
 // constants
@@ -71,7 +70,5 @@ class AxonBodyNode extends Node {
     } );
   }
 }
-
-neuron.register( 'AxonBodyNode', AxonBodyNode );
 
 export default AxonBodyNode;

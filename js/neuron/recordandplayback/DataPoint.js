@@ -7,8 +7,6 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-import neuron from '../../neuron.js';
-
 class DataPoint {
 
   /**
@@ -35,7 +33,5 @@ class DataPoint {
     return `time = ${this.time}, state = ${this.state}`;
   }
 }
-
-neuron.register( 'DataPoint', DataPoint );
 
 export default DataPoint;

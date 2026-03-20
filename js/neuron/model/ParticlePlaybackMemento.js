@@ -11,8 +11,6 @@
  * @author Sharfudeen Ashraf
  */
 
-import neuron from '../../neuron.js';
-
 class ParticlePlaybackMemento {
 
   /**
@@ -57,7 +55,5 @@ class ParticlePlaybackMemento {
     return this.representationColor;
   }
 }
-
-neuron.register( 'ParticlePlaybackMemento', ParticlePlaybackMemento );
 
 export default ParticlePlaybackMemento;

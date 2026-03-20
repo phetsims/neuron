@@ -12,7 +12,6 @@ import dotRandom from '../../../../dot/js/dotRandom.js';
 import Utils from '../../../../dot/js/Utils.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import Shape from '../../../../kite/js/Shape.js';
-import neuron from '../../neuron.js';
 import CaptureZone from './CaptureZone.js';
 
 // isPointZone method of captureZone is refactored to use Vector components, this class wide
@@ -95,7 +94,5 @@ class PieSliceShapedCaptureZone extends CaptureZone {
     return new Shape().arc( this.originPoint.x, this.originPoint.y, this.radius, startAngle, endAngle, true );// ARC2D.PIE startPoint and endPoint is internally added to arc's path
   }
 }
-
-neuron.register( 'PieSliceShapedCaptureZone', PieSliceShapedCaptureZone );
 
 export default PieSliceShapedCaptureZone;

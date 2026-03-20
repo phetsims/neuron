@@ -14,7 +14,6 @@ import Circle from '../../../../scenery/js/nodes/Circle.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
 import Path from '../../../../scenery/js/nodes/Path.js';
 import Color from '../../../../scenery/js/util/Color.js';
-import neuron from '../../neuron.js';
 
 class MembraneChannelNode extends Node {
 
@@ -202,7 +201,5 @@ class MembraneChannelNode extends Node {
     edgeLayer.removeChild( this.edgeLayer );
   }
 }
-
-neuron.register( 'MembraneChannelNode', MembraneChannelNode );
 
 export default MembraneChannelNode;

@@ -11,7 +11,6 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-import neuron from '../../neuron.js';
 import NeuronConstants from '../common/NeuronConstants.js';
 import DelayBuffer from './DelayBuffer.js';
 
@@ -401,7 +400,5 @@ class ModifiedHodgkinHuxleyModel {
     this.timeSinceActionPotential = 0;
   }
 }
-
-neuron.register( 'ModifiedHodgkinHuxleyModel', ModifiedHodgkinHuxleyModel );
 
 export default ModifiedHodgkinHuxleyModel;

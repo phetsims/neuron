@@ -9,7 +9,6 @@
  */
 
 import Shape from '../../../../kite/js/Shape.js';
-import neuron from '../../neuron.js';
 import CaptureZone from './CaptureZone.js';
 
 class NullCaptureZone extends CaptureZone {
@@ -48,7 +47,5 @@ class NullCaptureZone extends CaptureZone {
     // necessary to override, but does nothing in this particular subclass
   }
 }
-
-neuron.register( 'NullCaptureZone', NullCaptureZone );
 
 export default NullCaptureZone;

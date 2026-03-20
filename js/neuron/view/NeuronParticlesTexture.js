@@ -10,7 +10,6 @@
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import Color from '../../../../scenery/js/util/Color.js';
-import neuron from '../../neuron.js';
 import NeuronConstants from '../common/NeuronConstants.js';
 import ParticleType from '../model/ParticleType.js';
 
@@ -123,7 +122,5 @@ class NeuronParticlesTexture {
     return coords;
   }
 }
-
-neuron.register( 'NeuronParticlesTexture', NeuronParticlesTexture );
 
 export default NeuronParticlesTexture;

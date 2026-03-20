@@ -7,8 +7,6 @@
  *@author Sharfudeen Ashraf (for Ghent University)
  */
 
-import neuron from '../../neuron.js';
-
 class CaptureZone {
 
   constructor() {
@@ -40,7 +38,5 @@ class CaptureZone {
     throw new Error( 'setOriginPoint should be implemented in descendant classes.' );
   }
 }
-
-neuron.register( 'CaptureZone', CaptureZone );
 
 export default CaptureZone;

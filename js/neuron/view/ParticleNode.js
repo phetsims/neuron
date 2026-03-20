@@ -11,7 +11,6 @@ import Shape from '../../../../kite/js/Shape.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
 import Path from '../../../../scenery/js/nodes/Path.js';
 import Color from '../../../../scenery/js/util/Color.js';
-import neuron from '../../neuron.js';
 import ParticleType from '../model/ParticleType.js';
 
 // constants
@@ -70,7 +69,5 @@ class ParticleNode extends Node {
     updateRepresentation( particle.getOpacity() );
   }
 }
-
-neuron.register( 'ParticleNode', ParticleNode );
 
 export default ParticleNode;

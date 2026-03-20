@@ -6,7 +6,6 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-import neuron from '../../neuron.js';
 import MembraneChannelTypes from './MembraneChannelTypes.js';
 import PotassiumGatedChannel from './PotassiumGatedChannel.js';
 import PotassiumLeakageChannel from './PotassiumLeakageChannel.js';
@@ -43,7 +42,5 @@ const MembraneChannelFactory = {
     return membraneChannel;
   }
 };
-
-neuron.register( 'MembraneChannelFactory', MembraneChannelFactory );
 
 export default MembraneChannelFactory;

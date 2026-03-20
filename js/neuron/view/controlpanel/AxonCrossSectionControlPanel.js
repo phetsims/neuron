@@ -13,7 +13,6 @@ import VBox from '../../../../../scenery/js/layout/nodes/VBox.js';
 import Text from '../../../../../scenery/js/nodes/Text.js';
 import Checkbox from '../../../../../sun/js/Checkbox.js';
 import Panel from '../../../../../sun/js/Panel.js';
-import neuron from '../../../neuron.js';
 import NeuronStrings from '../../../NeuronStrings.js';
 import NeuronConstants from '../../common/NeuronConstants.js';
 
@@ -87,5 +86,4 @@ class AxonCrossSectionControlPanel extends Panel {
   }
 }
 
-neuron.register( 'AxonCrossSectionControlPanel', AxonCrossSectionControlPanel );
 export default AxonCrossSectionControlPanel;

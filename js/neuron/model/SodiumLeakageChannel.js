@@ -10,7 +10,6 @@
 
 import dotRandom from '../../../../dot/js/dotRandom.js';
 import Color from '../../../../scenery/js/util/Color.js';
-import neuron from '../../neuron.js';
 import MathUtils from '../common/MathUtils.js';
 import NeuronConstants from '../common/NeuronConstants.js';
 import AbstractLeakChannel from './AbstractLeakChannel.js';
@@ -153,7 +152,5 @@ class SodiumLeakageChannel extends AbstractLeakChannel {
     }
   }
 }
-
-neuron.register( 'SodiumLeakageChannel', SodiumLeakageChannel );
 
 export default SodiumLeakageChannel;

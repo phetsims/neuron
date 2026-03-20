@@ -7,7 +7,6 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-import neuron from '../../neuron.js';
 import FadeStrategy from './FadeStrategy.js';
 import NullFadeStrategy from './NullFadeStrategy.js';
 
@@ -36,7 +35,5 @@ class TimedFadeInStrategy extends FadeStrategy {
     }
   }
 }
-
-neuron.register( 'TimedFadeInStrategy', TimedFadeInStrategy );
 
 export default TimedFadeInStrategy;

@@ -7,8 +7,6 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-import neuron from '../../neuron.js';
-
 class DelayElement {
 
   /**
@@ -28,7 +26,5 @@ class DelayElement {
     this.deltaTime = deltaTime;
   }
 }
-
-neuron.register( 'DelayElement', DelayElement );
 
 export default DelayElement;

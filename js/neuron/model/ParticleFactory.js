@@ -6,7 +6,6 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-import neuron from '../../neuron.js';
 import ParticleType from './ParticleType.js';
 import PotassiumIon from './PotassiumIon.js';
 import SodiumIon from './SodiumIon.js';
@@ -34,7 +33,5 @@ const ParticleFactory = {
     return newParticle;
   }
 };
-
-neuron.register( 'ParticleFactory', ParticleFactory );
 
 export default ParticleFactory;

@@ -7,7 +7,6 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-import neuron from '../../neuron.js';
 import DataPoint from './DataPoint.js';
 import Mode from './Mode.js';
 
@@ -41,7 +40,5 @@ class Record extends Mode {
     return 'Record';
   }
 }
-
-neuron.register( 'Record', Record );
 
 export default Record;

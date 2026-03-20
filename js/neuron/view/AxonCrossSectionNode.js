@@ -11,7 +11,6 @@ import Shape from '../../../../kite/js/Shape.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
 import Path from '../../../../scenery/js/nodes/Path.js';
 import Color from '../../../../scenery/js/util/Color.js';
-import neuron from '../../neuron.js';
 
 // constants
 const MEMBRANE_COLOR = Color.YELLOW;
@@ -49,7 +48,5 @@ class AxonCrossSectionNode extends Node {
     this.addChild( innerMembrane );
   }
 }
-
-neuron.register( 'AxonCrossSectionNode', AxonCrossSectionNode );
 
 export default AxonCrossSectionNode;

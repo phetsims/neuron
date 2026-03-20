@@ -10,7 +10,6 @@
  */
 
 import CanvasNode from '../../../../scenery/js/nodes/CanvasNode.js';
-import neuron from '../../neuron.js';
 import ParticleType from '../model/ParticleType.js';
 
 class ParticlesCanvasNode extends CanvasNode {
@@ -127,7 +126,5 @@ class ParticlesCanvasNode extends CanvasNode {
     this.renderParticles( this.neuronModel.playbackParticles, context );
   }
 }
-
-neuron.register( 'ParticlesCanvasNode', ParticlesCanvasNode );
 
 export default ParticlesCanvasNode;

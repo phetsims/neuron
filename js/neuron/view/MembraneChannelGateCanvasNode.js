@@ -13,7 +13,6 @@ import Shape from '../../../../kite/js/Shape.js';
 import LineStyles from '../../../../kite/js/util/LineStyles.js';
 import CanvasNode from '../../../../scenery/js/nodes/CanvasNode.js';
 import Color from '../../../../scenery/js/util/Color.js';
-import neuron from '../../neuron.js';
 import NeuronConstants from '../common/NeuronConstants.js';
 import MembraneChannelTypes from '../model/MembraneChannelTypes.js';
 
@@ -265,7 +264,5 @@ class MembraneChannelGateCanvasNode extends CanvasNode {
     } );
   }
 }
-
-neuron.register( 'MembraneChannelGateCanvasNode', MembraneChannelGateCanvasNode );
 
 export default MembraneChannelGateCanvasNode;

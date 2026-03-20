@@ -7,7 +7,6 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-import neuron from '../../neuron.js';
 import BehaviourModeType from './BehaviourModeType.js';
 import Mode from './Mode.js';
 
@@ -56,7 +55,5 @@ class Playback extends Mode {
     return 'Playback';
   }
 }
-
-neuron.register( 'Playback', Playback );
 
 export default Playback;

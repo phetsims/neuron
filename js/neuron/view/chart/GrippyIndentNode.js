@@ -12,7 +12,6 @@
 import Circle from '../../../../../scenery/js/nodes/Circle.js';
 import Node from '../../../../../scenery/js/nodes/Node.js';
 import Color from '../../../../../scenery/js/util/Color.js';
-import neuron from '../../../neuron.js';
 
 // constants
 const STROKE_LINE_WIDTH = 0.5;
@@ -41,7 +40,5 @@ class GrippyIndentNode extends Node {
     } ) );
   }
 }
-
-neuron.register( 'GrippyIndentNode', GrippyIndentNode );
 
 export default GrippyIndentNode;

@@ -5,7 +5,6 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-import neuron from '../../neuron.js';
 import FadeStrategy from './FadeStrategy.js';
 
 class NullFadeStrategy extends FadeStrategy {
@@ -29,7 +28,5 @@ class NullFadeStrategy extends FadeStrategy {
     return NullFadeStrategy.instance;
   }
 }
-
-neuron.register( 'NullFadeStrategy', NullFadeStrategy );
 
 export default NullFadeStrategy;

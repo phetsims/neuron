@@ -7,8 +7,6 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-import neuron from '../../neuron.js';
-
 class Mode {
 
   constructor() {}
@@ -23,7 +21,5 @@ class Mode {
     throw new Error( 'toString should be implemented in descendant classes.' );
   }
 }
-
-neuron.register( 'Mode', Mode );
 
 export default Mode;

@@ -8,8 +8,6 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-import neuron from '../../neuron.js';
-
 class TravelingActionPotentialState {
 
   /**
@@ -31,7 +29,5 @@ class TravelingActionPotentialState {
     return this.travelTimeCountdownTimer;
   }
 }
-
-neuron.register( 'TravelingActionPotentialState', TravelingActionPotentialState );
 
 export default TravelingActionPotentialState;

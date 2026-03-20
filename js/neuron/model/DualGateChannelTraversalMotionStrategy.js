@@ -12,7 +12,6 @@
 
 import dotRandom from '../../../../dot/js/dotRandom.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
-import neuron from '../../neuron.js';
 import MathUtils from '../common/MathUtils.js';
 import NeuronConstants from '../common/NeuronConstants.js';
 import LinearMotionStrategy from './LinearMotionStrategy.js';
@@ -290,7 +289,5 @@ class DualGateChannelTraversalMotionStrategy extends MotionStrategy {
 
   }
 }
-
-neuron.register( 'DualGateChannelTraversalMotionStrategy', DualGateChannelTraversalMotionStrategy );
 
 export default DualGateChannelTraversalMotionStrategy;

@@ -12,7 +12,6 @@ import Emitter from '../../../../axon/js/Emitter.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import { Cubic } from '../../../../kite/js/segments/Segment.js';
 import Shape from '../../../../kite/js/Shape.js';
-import neuron from '../../neuron.js';
 import NeuronConstants from '../common/NeuronConstants.js';
 import AxonMembraneState from './AxonMembraneState.js';
 import TravelingActionPotential from './TravelingActionPotential.js';
@@ -276,7 +275,5 @@ class AxonMembrane {
     return out;
   }
 }
-
-neuron.register( 'AxonMembrane', AxonMembrane );
 
 export default AxonMembrane;

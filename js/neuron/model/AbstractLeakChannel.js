@@ -7,7 +7,6 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-import neuron from '../../neuron.js';
 import MembraneChannel from './MembraneChannel.js';
 
 class AbstractLeakChannel extends MembraneChannel {
@@ -32,7 +31,5 @@ class AbstractLeakChannel extends MembraneChannel {
     this.setOpenness( 1 );  // Leak channels are always fully open.
   }
 }
-
-neuron.register( 'AbstractLeakChannel', AbstractLeakChannel );
 
 export default AbstractLeakChannel;

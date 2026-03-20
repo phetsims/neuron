@@ -15,7 +15,6 @@ import Rectangle from '../../../../dot/js/Rectangle.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import PhetColorScheme from '../../../../scenery-phet/js/PhetColorScheme.js';
 import Color from '../../../../scenery/js/util/Color.js';
-import neuron from '../../neuron.js';
 import NullCaptureZone from './NullCaptureZone.js';
 import TraverseChannelAndFadeMotionStrategy from './TraverseChannelAndFadeMotionStrategy.js';
 
@@ -369,7 +368,5 @@ class MembraneChannel {
     throw new Error( 'getChannelType should be implemented in descendant classes.' );
   }
 }
-
-neuron.register( 'MembraneChannel', MembraneChannel );
 
 export default MembraneChannel;

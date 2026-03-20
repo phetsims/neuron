@@ -6,7 +6,6 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-import neuron from '../../neuron.js';
 import NeuronConstants from '../common/NeuronConstants.js';
 import Particle from './Particle.js';
 import ParticleType from './ParticleType.js';
@@ -27,7 +26,5 @@ class SodiumIon extends Particle {
     return NeuronConstants.SODIUM_COLOR;
   }
 }
-
-neuron.register( 'SodiumIon', SodiumIon );
 
 export default SodiumIon;

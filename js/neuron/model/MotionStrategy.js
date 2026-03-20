@@ -6,8 +6,6 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-import neuron from '../../neuron.js';
-
 class MotionStrategy {
 
   constructor() { }
@@ -25,7 +23,5 @@ class MotionStrategy {
     throw new Error( 'move should be implemented in descendant classes of MotionStrategy.' );
   }
 }
-
-neuron.register( 'MotionStrategy', MotionStrategy );
 
 export default MotionStrategy;

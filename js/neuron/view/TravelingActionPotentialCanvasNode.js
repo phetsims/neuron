@@ -9,7 +9,6 @@
  */
 
 import CanvasNode from '../../../../scenery/js/nodes/CanvasNode.js';
-import neuron from '../../neuron.js';
 
 // constants
 const BACKGROUND_COLOR = '#CC66FF';
@@ -102,7 +101,5 @@ class TravelingActionPotentialCanvasNode extends CanvasNode {
     }
   }
 }
-
-neuron.register( 'TravelingActionPotentialCanvasNode', TravelingActionPotentialCanvasNode );
 
 export default TravelingActionPotentialCanvasNode;

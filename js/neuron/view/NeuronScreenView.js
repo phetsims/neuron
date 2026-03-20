@@ -29,7 +29,6 @@ import Rectangle from '../../../../scenery/js/nodes/Rectangle.js';
 import RichText from '../../../../scenery/js/nodes/RichText.js';
 import SceneryUtils from '../../../../scenery/js/util/Utils.js'; // eslint-disable-line phet/default-import-match-filename
 import RectangularPushButton from '../../../../sun/js/buttons/RectangularPushButton.js';
-import neuron from '../../neuron.js';
 import NeuronStrings from '../../NeuronStrings.js';
 import NeuronConstants from '../common/NeuronConstants.js';
 import AxonBodyNode from './AxonBodyNode.js';
@@ -327,5 +326,4 @@ class NeuronScreenView extends ScreenView {
   }
 }
 
-neuron.register( 'NeuronScreenView', NeuronScreenView );
 export default NeuronScreenView;

@@ -9,7 +9,6 @@
 
 import Bounds2 from '../../../../../dot/js/Bounds2.js';
 import CanvasNode from '../../../../../scenery/js/nodes/CanvasNode.js';
-import neuron from '../../../neuron.js';
 
 // constants
 const LINE_COLOR = '#ff5500'; // colorblind-friendly red
@@ -61,7 +60,5 @@ class DataLineCanvasNode extends CanvasNode {
     context.restore();
   }
 }
-
-neuron.register( 'DataLineCanvasNode', DataLineCanvasNode );
 
 export default DataLineCanvasNode;

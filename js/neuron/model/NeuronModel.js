@@ -13,7 +13,6 @@ import Emitter from '../../../../axon/js/Emitter.js';
 import Property from '../../../../axon/js/Property.js';
 import dotRandom from '../../../../dot/js/dotRandom.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
-import neuron from '../../neuron.js';
 import MathUtils from '../common/MathUtils.js';
 import NeuronConstants from '../common/NeuronConstants.js';
 import RecordAndPlaybackModel from '../recordandplayback/RecordAndPlaybackModel.js';
@@ -1111,7 +1110,5 @@ class NeuronModel extends RecordAndPlaybackModel {
     }
   }
 }
-
-neuron.register( 'NeuronModel', NeuronModel );
 
 export default NeuronModel;

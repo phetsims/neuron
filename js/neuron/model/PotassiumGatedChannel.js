@@ -8,7 +8,6 @@
  */
 
 import dotRandom from '../../../../dot/js/dotRandom.js';
-import neuron from '../../neuron.js';
 import MathUtils from '../common/MathUtils.js';
 import NeuronConstants from '../common/NeuronConstants.js';
 import GatedChannel from './GatedChannel.js';
@@ -112,7 +111,5 @@ class PotassiumGatedChannel extends GatedChannel {
     return MembraneChannelTypes.POTASSIUM_GATED_CHANNEL;
   }
 }
-
-neuron.register( 'PotassiumGatedChannel', PotassiumGatedChannel );
 
 export default PotassiumGatedChannel;

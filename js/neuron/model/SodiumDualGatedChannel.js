@@ -8,7 +8,6 @@
  */
 
 import dotRandom from '../../../../dot/js/dotRandom.js';
-import neuron from '../../neuron.js';
 import MathUtils from '../common/MathUtils.js';
 import NeuronConstants from '../common/NeuronConstants.js';
 import DualGateChannelTraversalMotionStrategy from './DualGateChannelTraversalMotionStrategy.js';
@@ -263,7 +262,5 @@ class SodiumDualGatedChannel extends GatedChannel {
     return MembraneChannelTypes.SODIUM_GATED_CHANNEL;
   }
 }
-
-neuron.register( 'SodiumDualGatedChannel', SodiumDualGatedChannel );
 
 export default SodiumDualGatedChannel;

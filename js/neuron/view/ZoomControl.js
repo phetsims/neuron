@@ -15,7 +15,6 @@ import VBox from '../../../../scenery/js/layout/nodes/VBox.js';
 import Path from '../../../../scenery/js/nodes/Path.js';
 import RectangularPushButton from '../../../../sun/js/buttons/RectangularPushButton.js';
 import VSlider from '../../../../sun/js/VSlider.js';
-import neuron from '../../neuron.js';
 
 class ZoomControl extends VBox {
 
@@ -98,7 +97,5 @@ class ZoomControl extends VBox {
     zoomProperty.set( originalZoomValue );
   }
 }
-
-neuron.register( 'ZoomControl', ZoomControl );
 
 export default ZoomControl;

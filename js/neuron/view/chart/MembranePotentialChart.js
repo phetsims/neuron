@@ -30,7 +30,6 @@ import Path from '../../../../../scenery/js/nodes/Path.js';
 import Text from '../../../../../scenery/js/nodes/Text.js';
 import TextPushButton from '../../../../../sun/js/buttons/TextPushButton.js';
 import Panel from '../../../../../sun/js/Panel.js';
-import neuron from '../../../neuron.js';
 import NeuronStrings from '../../../NeuronStrings.js';
 import NeuronConstants from '../../common/NeuronConstants.js';
 import ChartCursor from './ChartCursor.js';
@@ -392,7 +391,5 @@ class MembranePotentialChart extends Node {
     this.clock.playingProperty.set( playing );
   }
 }
-
-neuron.register( 'MembranePotentialChart', MembranePotentialChart );
 
 export default MembranePotentialChart;

@@ -8,7 +8,6 @@
 
 import Vector2 from '../../../../dot/js/Vector2.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
-import neuron from '../../neuron.js';
 import ChargeSymbolNode from './ChargeSymbolNode.js';
 
 // Max size of the charge symbols, tweak as needed.
@@ -118,7 +117,5 @@ class ChargeSymbolsLayerNode extends Node {
     addChargeSymbols();
   }
 }
-
-neuron.register( 'ChargeSymbolsLayerNode', ChargeSymbolsLayerNode );
 
 export default ChargeSymbolsLayerNode;

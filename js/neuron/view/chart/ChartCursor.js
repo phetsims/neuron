@@ -13,7 +13,6 @@ import Vector2 from '../../../../../dot/js/Vector2.js';
 import SimpleDragHandler from '../../../../../scenery/js/input/SimpleDragHandler.js';
 import Rectangle from '../../../../../scenery/js/nodes/Rectangle.js';
 import Color from '../../../../../scenery/js/util/Color.js';
-import neuron from '../../../neuron.js';
 import GrippyIndentNode from './GrippyIndentNode.js';
 
 // constants
@@ -105,5 +104,4 @@ class ChartCursor extends Rectangle {
   }
 }
 
-neuron.register( 'ChartCursor', ChartCursor );
 export default ChartCursor;

@@ -10,8 +10,6 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-import neuron from '../../neuron.js';
-
 class AxonMembraneState {
 
   /**
@@ -30,7 +28,5 @@ class AxonMembraneState {
     return this.travelingActionPotentialState;
   }
 }
-
-neuron.register( 'AxonMembraneState', AxonMembraneState );
 
 export default AxonMembraneState;

@@ -6,7 +6,6 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-import neuron from '../../neuron.js';
 import MembraneChannel from './MembraneChannel.js';
 
 class GatedChannel extends MembraneChannel {
@@ -27,7 +26,5 @@ class GatedChannel extends MembraneChannel {
     this.setInactivationAmount( 0 );  // ...but not inactivated.
   }
 }
-
-neuron.register( 'GatedChannel', GatedChannel );
 
 export default GatedChannel;

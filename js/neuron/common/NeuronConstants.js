@@ -10,7 +10,6 @@
 import PhetColorScheme from '../../../../scenery-phet/js/PhetColorScheme.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import Color from '../../../../scenery/js/util/Color.js';
-import neuron from '../../neuron.js';
 
 // constants
 const CLOCK_FRAME_RATE = 60;
@@ -47,7 +46,5 @@ const NeuronConstants = {
 
 // verify that enum is immutable, without the runtime penalty in production code
 if ( assert ) { Object.freeze( NeuronConstants ); }
-
-neuron.register( 'NeuronConstants', NeuronConstants );
 
 export default NeuronConstants;

@@ -9,7 +9,6 @@
 
 import dotRandom from '../../../../dot/js/dotRandom.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
-import neuron from '../../neuron.js';
 import MathUtils from '../common/MathUtils.js';
 import NeuronConstants from '../common/NeuronConstants.js';
 import MotionStrategy from './MotionStrategy.js';
@@ -214,7 +213,5 @@ class TraverseChannelAndFadeMotionStrategy extends MotionStrategy {
     return MathUtils.distanceBetween( posX, posY, traversalPoint.x, traversalPoint.y );
   }
 }
-
-neuron.register( 'TraverseChannelAndFadeMotionStrategy', TraverseChannelAndFadeMotionStrategy );
 
 export default TraverseChannelAndFadeMotionStrategy;

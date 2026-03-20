@@ -7,8 +7,6 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-import neuron from '../../neuron.js';
-
 class ViewableParticle {
 
   constructor() {}
@@ -49,7 +47,5 @@ class ViewableParticle {
     throw new Error( 'getOpacity should be implemented in descendant classes.' );
   }
 }
-
-neuron.register( 'ViewableParticle', ViewableParticle );
 
 export default ViewableParticle;

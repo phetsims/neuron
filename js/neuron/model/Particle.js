@@ -12,7 +12,6 @@
  */
 
 import Property from '../../../../axon/js/Property.js';
-import neuron from '../../neuron.js';
 import MotionStrategy from './MotionStrategy.js';
 import NullFadeStrategy from './NullFadeStrategy.js';
 import ParticlePlaybackMemento from './ParticlePlaybackMemento.js';
@@ -133,7 +132,5 @@ class Particle extends ViewableParticle {
     return this.opacity;
   }
 }
-
-neuron.register( 'Particle', Particle );
 
 export default Particle;

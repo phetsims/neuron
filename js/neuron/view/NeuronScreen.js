@@ -9,7 +9,6 @@
 
 import Property from '../../../../axon/js/Property.js';
 import Screen from '../../../../joist/js/Screen.js';
-import neuron from '../../neuron.js';
 import NeuronClockModelAdapter from '../model/NeuronClockModelAdapter.js';
 import NeuronModel from '../model/NeuronModel.js';
 import NeuronScreenView from './NeuronScreenView.js';
@@ -25,5 +24,4 @@ class NeuronScreen extends Screen {
   }
 }
 
-neuron.register( 'NeuronScreen', NeuronScreen );
 export default NeuronScreen;

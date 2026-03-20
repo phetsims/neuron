@@ -10,7 +10,6 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-import neuron from '../../neuron.js';
 import PotassiumIon from './PotassiumIon.js';
 import ViewableParticle from './ViewableParticle.js';
 
@@ -97,7 +96,5 @@ class PlaybackParticle extends ViewableParticle {
     return this.particleType;
   }
 }
-
-neuron.register( 'PlaybackParticle', PlaybackParticle );
 
 export default PlaybackParticle;

@@ -9,7 +9,6 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-import neuron from '../../neuron.js';
 import FadeStrategy from './FadeStrategy.js';
 
 class TimedFadeAwayStrategy extends FadeStrategy {
@@ -34,7 +33,5 @@ class TimedFadeAwayStrategy extends FadeStrategy {
     return fadeableModelElement.getOpacity() > 0;
   }
 }
-
-neuron.register( 'TimedFadeAwayStrategy', TimedFadeAwayStrategy );
 
 export default TimedFadeAwayStrategy;

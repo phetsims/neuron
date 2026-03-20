@@ -6,8 +6,6 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-import neuron from '../../neuron.js';
-
 const ParticleType = {
   SODIUM_ION: 'SODIUM_ION',
   POTASSIUM_ION: 'POTASSIUM_ION'
@@ -15,7 +13,5 @@ const ParticleType = {
 
 // verify that enum is immutable, without the runtime penalty in production code
 if ( assert ) { Object.freeze( ParticleType ); }
-
-neuron.register( 'ParticleType', ParticleType );
 
 export default ParticleType;

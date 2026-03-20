@@ -7,7 +7,6 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-import neuron from '../../neuron.js';
 import NeuronConstants from '../common/NeuronConstants.js';
 import Particle from './Particle.js';
 import ParticleType from './ParticleType.js';
@@ -28,7 +27,5 @@ class PotassiumIon extends Particle {
     return NeuronConstants.POTASSIUM_COLOR;
   }
 }
-
-neuron.register( 'PotassiumIon', PotassiumIon );
 
 export default PotassiumIon;

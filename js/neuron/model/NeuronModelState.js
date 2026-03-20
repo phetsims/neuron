@@ -7,8 +7,6 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-import neuron from '../../neuron.js';
-
 /*
  * JavaScript object dictionary only supports String as keys, but the channel's state are stored against Membrane
  * Channel object(key). This "map" utility supports this functionality by allowing any object to be used as key.
@@ -111,7 +109,5 @@ class NeuronModelState {
     return this.potassiumExteriorConcentration;
   }
 }
-
-neuron.register( 'NeuronModelState', NeuronModelState );
 
 export default NeuronModelState;

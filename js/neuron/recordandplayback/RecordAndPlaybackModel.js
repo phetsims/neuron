@@ -14,7 +14,6 @@
 
 import createObservableArray from '../../../../axon/js/createObservableArray.js';
 import Property from '../../../../axon/js/Property.js';
-import neuron from '../../neuron.js';
 import Live from './Live.js';
 import Playback from './Playback.js';
 import Record from './Record.js';
@@ -359,7 +358,5 @@ class RecordAndPlaybackModel {
     this.setPlaying( false );
   }
 }
-
-neuron.register( 'RecordAndPlaybackModel', RecordAndPlaybackModel );
 
 export default RecordAndPlaybackModel;

@@ -11,7 +11,6 @@ import Matrix3 from '../../../../dot/js/Matrix3.js';
 import Shape from '../../../../kite/js/Shape.js';
 import Path from '../../../../scenery/js/nodes/Path.js';
 import Color from '../../../../scenery/js/util/Color.js';
-import neuron from '../../neuron.js';
 
 // constants
 const EDGE_STROKE = 0.3;
@@ -101,7 +100,5 @@ class ChargeSymbolNode extends Path {
     return FIXED_BOUNDS;
   }
 }
-
-neuron.register( 'ChargeSymbolNode', ChargeSymbolNode );
 
 export default ChargeSymbolNode;

@@ -11,7 +11,6 @@
  */
 
 import Utils from '../../../../dot/js/Utils.js';
-import neuron from '../../neuron.js';
 import DelayElement from './DelayElement.js';
 
 // This value is used to tell if two numbers are different.  It was needed due to some floating point resolution
@@ -167,7 +166,5 @@ class DelayBuffer {
     this.filling = true;
   }
 }
-
-neuron.register( 'DelayBuffer', DelayBuffer );
 
 export default DelayBuffer;

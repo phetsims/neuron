@@ -18,7 +18,6 @@ import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import EnumerationProperty from '../../../../axon/js/EnumerationProperty.js';
 import Property from '../../../../axon/js/Property.js';
 import TimeSpeed from '../../../../scenery-phet/js/TimeSpeed.js';
-import neuron from '../../neuron.js';
 
 // the following constants could easily be turned into options if there was a need to reuse and thus generalize
 // this class.
@@ -151,7 +150,5 @@ class NeuronClockModelAdapter {
     _.times( TICKS_PER_SINGLE_STEP, () => { this.tick( -NOMINAL_TICK_TIME ); } );
   }
 }
-
-neuron.register( 'NeuronClockModelAdapter', NeuronClockModelAdapter );
 
 export default NeuronClockModelAdapter;

@@ -7,7 +7,6 @@
  * @author Sharfudeen Ashraf (for Ghent University)
  */
 
-import neuron from '../../neuron.js';
 import MotionStrategy from './MotionStrategy.js';
 
 class LinearMotionStrategy extends MotionStrategy {
@@ -28,7 +27,5 @@ class LinearMotionStrategy extends MotionStrategy {
       currentPositionRefY + this.velocity.y * dt );
   }
 }
-
-neuron.register( 'LinearMotionStrategy', LinearMotionStrategy );
 
 export default LinearMotionStrategy;
