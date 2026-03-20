@@ -76,4 +76,6 @@ type StringsType = {
 
 const NeuronStrings = getStringModule( 'NEURON' ) as StringsType;
 
+neuron.register( 'NeuronStrings', NeuronStrings );
+
 export default NeuronStrings;
