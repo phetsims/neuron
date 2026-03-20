@@ -38,6 +38,6 @@ simLauncher.launch( () => {
   if ( NeuronQueryParameters.neuronProfiler >= 1 ) {
 
     // create and hook up the neuron profiler
-    window.phet.neuron.profiler = new NeuronProfiler( sim, NeuronQueryParameters.neuronProfiler );
+    NeuronProfiler.instance = new NeuronProfiler( sim, NeuronQueryParameters.neuronProfiler );
   }
 } );

@@ -106,4 +106,7 @@ class NeuronProfiler {
   }
 }
 
+// @public {NeuronProfiler|null} - singleton instance, set during sim startup
+NeuronProfiler.instance = null;
+
 export default NeuronProfiler;

@@ -15,6 +15,7 @@ import dotRandom from '../../../../dot/js/dotRandom.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import MathUtils from '../common/MathUtils.js';
 import NeuronConstants from '../common/NeuronConstants.js';
+import NeuronProfiler from '../common/NeuronProfiler.js';
 import RecordAndPlaybackModel from '../recordandplayback/RecordAndPlaybackModel.js';
 import AxonMembrane from './AxonMembrane.js';
 import MembraneChannelFactory from './MembraneChannelFactory.js';
@@ -147,11 +148,11 @@ class NeuronModel extends RecordAndPlaybackModel {
       // potential voltages and current flows.
       this.hodgkinHuxleyModel.stimulate();
 
-      if ( window.phet.neuron.profiler && window.phet.neuron.profiler.setting === 1 ) {
+      if ( NeuronProfiler.instance && NeuronProfiler.instance.setting === 1 ) {
         // If enabled, start collecting profiling data, which will automatically be spat out to the console (or as
         // an alert dialog on iOS) when completed.  The duration value is empirically determined to be the time for
         // the particles to appear, cross the membrane, and fade out.
-        window.phet.neuron.profiler.startDataAnalysis( 6000 );
+        NeuronProfiler.instance.startDataAnalysis( 6000 );
       }
     } );
 
@@ -685,18 +686,18 @@ class NeuronModel extends RecordAndPlaybackModel {
       this.stimulusPulseInitiatedProperty.set( true );
       this.axonMembrane.initiateTravelingActionPotential();
       this.updateStimulusLockoutState();
-      if ( window.phet.neuron.profiler && window.phet.neuron.profiler.setting === 2 ) {
+      if ( NeuronProfiler.instance && NeuronProfiler.instance.setting === 2 ) {
         // If enabled, start collecting profiling data, which will automatically be spat out to the console (or as
         // an alert dialog on iOS) when completed.  The duration value is empirically determined to be the time for
         // the traveling action potential to make it to the cross section.
-        window.phet.neuron.profiler.startDataAnalysis( 3000 );
+        NeuronProfiler.instance.startDataAnalysis( 3000 );
       }
-      else if ( window.phet.neuron.profiler && window.phet.neuron.profiler.setting === 3 ) {
+      else if ( NeuronProfiler.instance && NeuronProfiler.instance.setting === 3 ) {
         // If enabled, start collecting profiling data, which will automatically be spat out to the console (or as
         // an alert dialog on iOS) when completed.  The duration value is empirically determined to be the time for
         // the traveling action potential to make it to the cross section, the particles to appear, cross the
         // membrane, and then fade out.
-        window.phet.neuron.profiler.startDataAnalysis( 9500 );
+        NeuronProfiler.instance.startDataAnalysis( 9500 );
       }
     }
   }
