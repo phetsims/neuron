@@ -1,4 +1,4 @@
-// Copyright 2014-2020, University of Colorado Boulder
+// Copyright 2014-2026, University of Colorado Boulder
 
 /**
  * A strategy that controls fading in for a particle based on time.
